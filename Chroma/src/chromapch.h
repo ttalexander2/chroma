@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Chroma/Log.h"
+
 #include <iostream>
 #include <memory>
 #include <utility>

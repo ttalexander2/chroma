@@ -10,6 +10,12 @@ workspace "Chroma"
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-${cfg.architecture}"
 
+-- Include directories relative to root folder (solution directory)
+IncludeDir = {}
+IncludeDir["GLFW"] = "Chroma/third_party/GLFW/include"
+
+include "Chroma/third_party/GLFW"
+
 project "Chroma"
     location "Chroma"
     kind "SharedLib"
@@ -30,7 +36,14 @@ project "Chroma"
     includedirs
     {
         "%{prj.name}/src",
-        "%{prj.name}/third_party/spdlog/include"
+        "%{prj.name}/third_party/spdlog/include",
+        "%{IncludeDir.GLFW}"
+    }
+
+    links
+    {
+        "GLFW",
+        "opengl32.lib"
     }
 
     filter "system:windows"
