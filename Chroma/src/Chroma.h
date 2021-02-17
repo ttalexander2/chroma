@@ -2,8 +2,10 @@
 
 //Include directories for applications using the chroma engine
 
-#include "Engine/Application.h"
+#include "Chroma/Application.h"
+#include "Chroma/Log.h"
 
 // -----------Entry Point-------------
-#include "Engine/EntryPoint.h"
+#include "Chroma/EntryPoint.h"
 // -----------------------------------
+

@@ -1,5 +1,7 @@
 #include "Application.h"
 
+#include <stdio.h>
+
 namespace Chroma
 {
 	
@@ -8,7 +10,10 @@ namespace Chroma
 
 	void Application::Run() {
 
-		while (true) {}
+		while (true) 
+		{
+			
+		}
 	}
 
 }
