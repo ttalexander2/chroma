@@ -9,3 +9,5 @@
 #else
 	#error Chroma only builds on windows at the moment!
 #endif
+
+#define BIT(x) (1 << x)

@@ -1,3 +1,6 @@
 [submodule "Chroma/third_party/spdlog"]
 	path = Chroma/third_party/spdlog
 	url = https://github.com/ttalexander2/spdlog
+[submodule "Chroma/third_party/GLFW"]
+	path = Chroma/third_party/GLFW
+	url = https://github.com/ttalexander2/glfw

@@ -18,6 +18,9 @@ project "Chroma"
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
     objdir ("obj/" .. outputdir .. "/%{prj.name}")
 
+    pchheader "chromapch.h"
+    pchsource "%{prj.name}/src/chromapch.cpp"
+
     files
     {
         "%{prj.name}/src/**.h",
@@ -26,6 +29,7 @@ project "Chroma"
 
     includedirs
     {
+        "%{prj.name}/src",
         "%{prj.name}/third_party/spdlog/include"
     }
 

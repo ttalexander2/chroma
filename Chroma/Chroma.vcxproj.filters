@@ -4,6 +4,9 @@
     <Filter Include="Chroma">
       <UniqueIdentifier>{1F05C3AB-0BA7-ED81-F461-01D6E0A274D2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Chroma\Events">
+      <UniqueIdentifier>{23D8F922-8F98-7559-58D3-BED6C452BA35}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Chroma.h" />
@@ -16,9 +19,22 @@
     <ClInclude Include="src\Chroma\EntryPoint.h">
       <Filter>Chroma</Filter>
     </ClInclude>
+    <ClInclude Include="src\Chroma\Events\ApplicationEvent.h">
+      <Filter>Chroma\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Chroma\Events\Event.h">
+      <Filter>Chroma\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Chroma\Events\KeyEvent.h">
+      <Filter>Chroma\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Chroma\Events\MouseEvent.h">
+      <Filter>Chroma\Events</Filter>
+    </ClInclude>
     <ClInclude Include="src\Chroma\Log.h">
       <Filter>Chroma</Filter>
     </ClInclude>
+    <ClInclude Include="src\chromapch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Chroma\Application.cpp">
@@ -27,5 +43,6 @@
     <ClCompile Include="src\Chroma\Log.cpp">
       <Filter>Chroma</Filter>
     </ClCompile>
+    <ClCompile Include="src\chromapch.cpp" />
   </ItemGroup>
 </Project>
