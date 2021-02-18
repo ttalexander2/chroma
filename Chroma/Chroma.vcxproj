@@ -55,22 +55,22 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>..\bin\Debug-windows-${cfg.architecture}\Chroma\</OutDir>
-    <IntDir>..\obj\Debug-windows-${cfg.architecture}\Chroma\</IntDir>
+    <OutDir>..\bin\Debug-windows-x86_64\Chroma\</OutDir>
+    <IntDir>..\obj\Debug-windows-x86_64\Chroma\</IntDir>
     <TargetName>Chroma</TargetName>
     <TargetExt>.dll</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>..\bin\Release-windows-${cfg.architecture}\Chroma\</OutDir>
-    <IntDir>..\obj\Release-windows-${cfg.architecture}\Chroma\</IntDir>
+    <OutDir>..\bin\Release-windows-x86_64\Chroma\</OutDir>
+    <IntDir>..\obj\Release-windows-x86_64\Chroma\</IntDir>
     <TargetName>Chroma</TargetName>
     <TargetExt>.dll</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>..\bin\Dist-windows-${cfg.architecture}\Chroma\</OutDir>
-    <IntDir>..\obj\Dist-windows-${cfg.architecture}\Chroma\</IntDir>
+    <OutDir>..\bin\Dist-windows-x86_64\Chroma\</OutDir>
+    <IntDir>..\obj\Dist-windows-x86_64\Chroma\</IntDir>
     <TargetName>Chroma</TargetName>
     <TargetExt>.dll</TargetExt>
   </PropertyGroup>
@@ -79,22 +79,21 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>chromapch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>CHROMA_PLATFORM_WINDOWS;CHROMA_BUILD_DLL;CHROMA_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;third_party\spdlog\include;third_party\GLFW\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>CHROMA_PLATFORM_WINDOWS;CHROMA_BUILD_DLL;GLFW_INCLUDE_NONE;CHROMA_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>src;third_party\spdlog\include;third_party\GLFW\include;third_party\Glad\include;third_party\imgui;third_party\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <LanguageStandard_C>Default</LanguageStandard_C>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <ImportLibrary>..\bin\Debug-windows-${cfg.architecture}\Chroma\Chroma.lib</ImportLibrary>
+      <ImportLibrary>..\bin\Debug-windows-x86_64\Chroma\Chroma.lib</ImportLibrary>
     </Link>
     <PostBuildEvent>
-      <Command>IF EXIST ..\bin\Debug-windows-${cfg.architecture}\Chroma\Chroma.dll\ (xcopy /Q /E /Y /I ..\bin\Debug-windows-${cfg.architecture}\Chroma\Chroma.dll ..\bin\Debug-windows-${cfg.architecture}\Sandbox &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Debug-windows-${cfg.architecture}\Chroma\Chroma.dll ..\bin\Debug-windows-${cfg.architecture}\Sandbox &gt; nul)</Command>
+      <Command>IF EXIST ..\bin\Debug-windows-x86_64\Chroma\Chroma.dll\ (xcopy /Q /E /Y /I ..\bin\Debug-windows-x86_64\Chroma\Chroma.dll "..\bin\Debug-windows-x86_64\Sandbox\" &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Debug-windows-x86_64\Chroma\Chroma.dll "..\bin\Debug-windows-x86_64\Sandbox\" &gt; nul)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -102,8 +101,8 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>chromapch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>CHROMA_PLATFORM_WINDOWS;CHROMA_BUILD_DLL;CHROMA_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;third_party\spdlog\include;third_party\GLFW\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>CHROMA_PLATFORM_WINDOWS;CHROMA_BUILD_DLL;GLFW_INCLUDE_NONE;CHROMA_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>src;third_party\spdlog\include;third_party\GLFW\include;third_party\Glad\include;third_party\imgui;third_party\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -111,17 +110,16 @@
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <LanguageStandard_C>Default</LanguageStandard_C>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <ImportLibrary>..\bin\Release-windows-${cfg.architecture}\Chroma\Chroma.lib</ImportLibrary>
+      <ImportLibrary>..\bin\Release-windows-x86_64\Chroma\Chroma.lib</ImportLibrary>
     </Link>
     <PostBuildEvent>
-      <Command>IF EXIST ..\bin\Release-windows-${cfg.architecture}\Chroma\Chroma.dll\ (xcopy /Q /E /Y /I ..\bin\Release-windows-${cfg.architecture}\Chroma\Chroma.dll ..\bin\Release-windows-${cfg.architecture}\Sandbox &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Release-windows-${cfg.architecture}\Chroma\Chroma.dll ..\bin\Release-windows-${cfg.architecture}\Sandbox &gt; nul)</Command>
+      <Command>IF EXIST ..\bin\Release-windows-x86_64\Chroma\Chroma.dll\ (xcopy /Q /E /Y /I ..\bin\Release-windows-x86_64\Chroma\Chroma.dll "..\bin\Release-windows-x86_64\Sandbox\" &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Release-windows-x86_64\Chroma\Chroma.dll "..\bin\Release-windows-x86_64\Sandbox\" &gt; nul)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
@@ -129,8 +127,8 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>chromapch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>CHROMA_PLATFORM_WINDOWS;CHROMA_BUILD_DLL;CHROMA_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;third_party\spdlog\include;third_party\GLFW\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>CHROMA_PLATFORM_WINDOWS;CHROMA_BUILD_DLL;GLFW_INCLUDE_NONE;CHROMA_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>src;third_party\spdlog\include;third_party\GLFW\include;third_party\Glad\include;third_party\imgui;third_party\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -138,17 +136,16 @@
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <LanguageStandard_C>Default</LanguageStandard_C>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <ImportLibrary>..\bin\Dist-windows-${cfg.architecture}\Chroma\Chroma.lib</ImportLibrary>
+      <ImportLibrary>..\bin\Dist-windows-x86_64\Chroma\Chroma.lib</ImportLibrary>
     </Link>
     <PostBuildEvent>
-      <Command>IF EXIST ..\bin\Dist-windows-${cfg.architecture}\Chroma\Chroma.dll\ (xcopy /Q /E /Y /I ..\bin\Dist-windows-${cfg.architecture}\Chroma\Chroma.dll ..\bin\Dist-windows-${cfg.architecture}\Sandbox &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Dist-windows-${cfg.architecture}\Chroma\Chroma.dll ..\bin\Dist-windows-${cfg.architecture}\Sandbox &gt; nul)</Command>
+      <Command>IF EXIST ..\bin\Dist-windows-x86_64\Chroma\Chroma.dll\ (xcopy /Q /E /Y /I ..\bin\Dist-windows-x86_64\Chroma\Chroma.dll "..\bin\Dist-windows-x86_64\Sandbox\" &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Dist-windows-x86_64\Chroma\Chroma.dll "..\bin\Dist-windows-x86_64\Sandbox\" &gt; nul)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -160,14 +157,27 @@
     <ClInclude Include="src\Chroma\Events\Event.h" />
     <ClInclude Include="src\Chroma\Events\KeyEvent.h" />
     <ClInclude Include="src\Chroma\Events\MouseEvent.h" />
+    <ClInclude Include="src\Chroma\ImGui\ImGuiLayer.h" />
+    <ClInclude Include="src\Chroma\Input.h" />
+    <ClInclude Include="src\Chroma\KeyCodes.h" />
+    <ClInclude Include="src\Chroma\Layer.h" />
+    <ClInclude Include="src\Chroma\LayerStack.h" />
     <ClInclude Include="src\Chroma\Log.h" />
+    <ClInclude Include="src\Chroma\MouseButtonCodes.h" />
     <ClInclude Include="src\Chroma\Window.h" />
+    <ClInclude Include="src\Platform\OpenGL\imgui_impl_opengl3.h" />
+    <ClInclude Include="src\Platform\Windows\WindowsInput.h" />
     <ClInclude Include="src\Platform\Windows\WindowsWindow.h" />
     <ClInclude Include="src\chromapch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Chroma\Application.cpp" />
+    <ClCompile Include="src\Chroma\ImGui\ImGuiLayer.cpp" />
+    <ClCompile Include="src\Chroma\Layer.cpp" />
+    <ClCompile Include="src\Chroma\LayerStack.cpp" />
     <ClCompile Include="src\Chroma\Log.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="src\Platform\Windows\WindowsInput.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp" />
     <ClCompile Include="src\chromapch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
@@ -176,6 +186,12 @@
   <ItemGroup>
     <ProjectReference Include="third_party\GLFW\GLFW.vcxproj">
       <Project>{154B857C-0182-860D-AA6E-6C109684020F}</Project>
+    </ProjectReference>
+    <ProjectReference Include="third_party\Glad\Glad.vcxproj">
+      <Project>{BDD6857C-A90D-870D-52FA-6C103E10030F}</Project>
+    </ProjectReference>
+    <ProjectReference Include="third_party\imgui\ImGui.vcxproj">
+      <Project>{C0FF640D-2C14-8DBE-F595-301E616989EF}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

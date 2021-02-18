@@ -11,7 +11,7 @@ namespace Chroma
 		None = 0,
 		WindowClose, WindowResize, WindowFocus, WindowLostFocus, WindowMoved,
 		AppTick, AppUpdate, AppRender,
-		KeyPressed, KeyReleased,
+		KeyPressed, KeyReleased, KeyTyped,
 		MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled
 	};
 
@@ -45,6 +45,8 @@ namespace Chroma
 		{
 			return GetCategoryFlags() & category;
 		}
+
+		bool IsHandled() const { return m_Handled; }
 	protected:
 		bool m_Handled = false;
 	};

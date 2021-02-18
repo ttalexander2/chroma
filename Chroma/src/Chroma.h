@@ -8,6 +8,9 @@
 #include "Chroma/Events/ApplicationEvent.h"
 #include "Chroma/Events/KeyEvent.h"
 #include "Chroma/Events/MouseEvent.h"
+#include "Chroma/Layer.h"
+#include "Chroma/ImGui/ImGuiLayer.h"
+#include "Chroma/Input.h"
 
 // -----------Entry Point-------------
 #include "Chroma/EntryPoint.h"

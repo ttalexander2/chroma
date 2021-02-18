@@ -18,4 +18,6 @@
 	#define CHROMA_CORE_ASSERT(x, ...)
 #endif
 
+#define CHROMA_BIND_EVENT_FN(event_function) std::bind(&event_function, this, std::placeholders::_1)
+
 #define BIT(x) (1 << x)
