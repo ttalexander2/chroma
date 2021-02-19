@@ -149,8 +149,6 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\Chroma\Renderer\Shader.h" />
-    <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h" />
     <ClInclude Include="src\Chroma.h" />
     <ClInclude Include="src\Chroma\Application.h" />
     <ClInclude Include="src\Chroma\Core.h" />
@@ -167,20 +165,22 @@
     <ClInclude Include="src\Chroma\Log.h" />
     <ClInclude Include="src\Chroma\MouseButtonCodes.h" />
     <ClInclude Include="src\Chroma\Renderer\GraphicsContext.h" />
+    <ClInclude Include="src\Chroma\Renderer\Shader.h" />
     <ClInclude Include="src\Chroma\Window.h" />
+    <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h" />
     <ClInclude Include="src\Platform\Windows\WindowsInput.h" />
     <ClInclude Include="src\Platform\Windows\WindowsWindow.h" />
     <ClInclude Include="src\chromapch.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Chroma\Renderer\Shader.cpp" />
-    <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp" />
     <ClCompile Include="src\Chroma\Application.cpp" />
     <ClCompile Include="src\Chroma\ImGui\ImGuiBuild.cpp" />
     <ClCompile Include="src\Chroma\ImGui\ImGuiLayer.cpp" />
     <ClCompile Include="src\Chroma\Layer.cpp" />
     <ClCompile Include="src\Chroma\LayerStack.cpp" />
     <ClCompile Include="src\Chroma\Log.cpp" />
+    <ClCompile Include="src\Chroma\Renderer\Shader.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsInput.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp" />
     <ClCompile Include="src\chromapch.cpp">
