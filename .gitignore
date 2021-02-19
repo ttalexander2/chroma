@@ -4,6 +4,8 @@
 \obj
 \.vs
 
+Sandbox\imgui.ini
+
 
 # Files
 *.user

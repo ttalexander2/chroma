@@ -1,8 +1,10 @@
 #pragma once
 
 #include "Chroma/Window.h"
+#include "Chroma/Renderer/GraphicsContext.h"
 
 #include <GLFW/glfw3.h>
+
 
 namespace Chroma
 {
@@ -29,6 +31,7 @@ namespace Chroma
 		virtual void Shutdown();
 	private:
 		GLFWwindow* m_Window;
+		GraphicsContext* m_Context;
 
 		struct WindowData
 		{

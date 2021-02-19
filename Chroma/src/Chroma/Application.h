@@ -10,6 +10,8 @@
 #include <glm/glm.hpp>
 #include <Chroma/ImGui/ImGuiLayer.h>
 
+#include "Chroma/Renderer/Shader.h"
+
 namespace Chroma
 {
 	class CHROMA_API Application
@@ -42,6 +44,9 @@ namespace Chroma
 		ImGuiLayer* m_ImGuiLayer;
 		bool m_Running = true;
 		LayerStack m_LayerStack;
+
+		unsigned int m_VertexArray, m_VertexBuffer, m_IndexBuffer;
+		std::unique_ptr<Shader> m_Shader;
 	};
 
 	// Game entry point, defined in game project
