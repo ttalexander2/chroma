@@ -8,6 +8,7 @@
 #include "Chroma/Layer.h"
 #include "Chroma/LayerStack.h"
 #include <glm/glm.hpp>
+#include <Chroma/ImGui/ImGuiLayer.h>
 
 namespace Chroma
 {
@@ -29,6 +30,8 @@ namespace Chroma
 		inline Window& GetWindow() { return *m_Window; }
 		inline static Application& GetInstance() { return *s_Instance; }
 
+		inline ImGuiLayer& GetImGuiLayer() { return *m_ImGuiLayer; }
+
 	private:
 
 		static Application* s_Instance;
@@ -36,6 +39,7 @@ namespace Chroma
 		bool OnWindowClose(WindowCloseEvent& e);
 
 		std::unique_ptr<Window> m_Window;
+		ImGuiLayer* m_ImGuiLayer;
 		bool m_Running = true;
 		LayerStack m_LayerStack;
 	};

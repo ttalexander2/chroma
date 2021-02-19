@@ -1,5 +1,5 @@
 workspace "Chroma"
-    architecture "x86_64"
+    architecture "x64"
     startproject "Sandbox"
     configurations { 
         "Debug", 
@@ -26,8 +26,10 @@ group "" -- end of dependencies
 
 project "Chroma"
     location "Chroma"
-    kind "SharedLib"
+    kind "StaticLib"
     language "C++"
+    cppdialect "C++17"
+    staticruntime "on"
 
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
     objdir ("obj/" .. outputdir .. "/%{prj.name}")
@@ -39,6 +41,11 @@ project "Chroma"
     {
         "%{prj.name}/src/**.h",
         "%{prj.name}/src/**.cpp"
+    }
+
+    defines
+    {
+        "_CRT_SECURE_NO_WARNINGS"
     }
 
     includedirs
@@ -60,8 +67,6 @@ project "Chroma"
     }
 
     filter "system:windows"
-        cppdialect "C++17"
-        staticruntime "On"
         systemversion "latest"
 
         defines
@@ -79,17 +84,17 @@ project "Chroma"
     filter "configurations:Debug"
         defines "CHROMA_DEBUG"
         runtime "Debug"
-        symbols "On"
+        symbols "on"
 
     filter "configurations:Release"
         defines "CHROMA_RELEASE"
         runtime "Release"
-        optimize "On"
+        optimize "on"
 
     filter "configurations:Dist"
         defines "CHROMA_DIST"
         runtime "Release"
-        optimize "On"
+        optimize "on"
 
 
 
@@ -99,6 +104,8 @@ project "Sandbox"
     location "Sandbox"
     kind "ConsoleApp"
     language "C++"
+    cppdialect "C++17"
+    staticruntime "on"
 
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
     objdir ("obj/" .. outputdir .. "/%{prj.name}")
@@ -113,7 +120,8 @@ project "Sandbox"
     {
         "Chroma/third_party/spdlog/include",
         "Chroma/src",
-        "%{IncludeDir.glm}"
+        "%{IncludeDir.glm}",
+        "%{IncludeDir.ImGui}"
     }
 
     links
@@ -122,8 +130,6 @@ project "Sandbox"
     }
 
     filter "system:windows"
-        cppdialect "C++17"
-        staticruntime "On"
         systemversion "latest"
 
         defines
@@ -134,14 +140,14 @@ project "Sandbox"
     filter "configurations:Debug"
         defines "CHROMA_DEBUG"
         runtime "Debug"
-        symbols "On"
+        symbols "on"
 
     filter "configurations:Release"
         defines "CHROMA_RELEASE"
         runtime "Release"
-        optimize "On"
+        optimize "on"
 
     filter "configurations:Dist"
         defines "CHROMA_DIST"
         runtime "Release"
-        optimize "On"
+        optimize "on"

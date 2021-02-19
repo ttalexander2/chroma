@@ -1,5 +1,5 @@
 #include <Chroma.h>
-#include <Chroma/ImGui/ImGuiLayer.h>
+#include <imgui.h>
 
 
 
@@ -22,6 +22,11 @@ public:
 	{
 
 	}
+
+	void OnImGuiRender() override
+	{
+
+	}
 };
 
 class Sandbox : public Chroma::Application
@@ -31,7 +36,6 @@ public:
 	Sandbox()
 	{
 		PushLayer(new ExampleLayer());
-		PushOverlay(new Chroma::ImGuiLayer());
 	}
 
 	~Sandbox()

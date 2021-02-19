@@ -1,11 +1,15 @@
 #pragma once
 
 #ifdef CHROMA_PLATFORM_WINDOWS
+#if HZ_DYNAMIC_LINK
 	#ifdef CHROMA_BUILD_DLL
 		#define CHROMA_API __declspec(dllexport)
 	#else
 		#define	CHROMA_API __declspec(dllimport)	
 	#endif
+#else
+#define CHROMA_API
+#endif
 #else
 	#error Chroma only builds on windows at the moment!
 #endif
