@@ -5,7 +5,7 @@
 #include "Chroma/Events/KeyEvent.h"
 #include "Chroma/Events/MouseEvent.h"
 #include "Chroma/Events/Event.h"
-#include "Platform/OpenGL/OpenGLContext.h"
+#include "Chroma/Platform/OpenGL/OpenGLContext.h"
 
 #include <glad/glad.h>
 

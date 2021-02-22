@@ -14,6 +14,8 @@
 #include <unordered_map>
 #include <unordered_set>
 
+#include <cstdint>
+
 
 #ifdef CHROMA_PLATFORM_WINDOWS
 	#include <Windows.h>
