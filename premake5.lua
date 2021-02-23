@@ -16,6 +16,7 @@ IncludeDir["GLFW"] = "Chroma/third_party/GLFW/include"
 IncludeDir["Glad"] = "Chroma/third_party/Glad/include"
 IncludeDir["ImGui"] = "Chroma/third_party/imgui"
 IncludeDir["glm"] = "Chroma/third_party/glm"
+IncludeDir["stb_image"] = "Chroma/third_party/stb_image"
 
 group "Dependencies"
     include "Chroma/third_party/GLFW"
@@ -40,7 +41,11 @@ project "Chroma"
     files
     {
         "%{prj.name}/src/**.h",
-        "%{prj.name}/src/**.cpp"
+        "%{prj.name}/src/**.cpp",
+        "%{prj.name}/third_party/stb_image/**.h",
+        "%{prj.name}/third_party/stb_image/**.cpp",
+        "%{prj.name}/third_party/glm/glm/**.hpp",
+        "%{prj.name}/third_party/glm/glm/**.inl"
     }
 
     defines
@@ -55,7 +60,9 @@ project "Chroma"
         "%{IncludeDir.GLFW}",
         "%{IncludeDir.Glad}",
         "%{IncludeDir.ImGui}",
-        "%{IncludeDir.glm}"
+        "%{IncludeDir.glm}",
+        "%{IncludeDir.stb_image}"
+
     }
 
     links

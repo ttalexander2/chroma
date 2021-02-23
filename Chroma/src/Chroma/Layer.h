@@ -2,6 +2,7 @@
 
 #include "Chroma/Core.h"
 #include "Chroma/Events/Event.h"
+#include "Chroma/Core/Timestep.h"
 
 namespace Chroma
 {
@@ -17,7 +18,7 @@ namespace Chroma
 
 		virtual void OnAttach() {}
 		virtual void OnDetach() {}
-		virtual void OnUpdate() {}
+		virtual void OnUpdate(Timestep time) {}
 		virtual void OnImGuiRender() {}
 		virtual void OnEvent(Event& event) {}
 

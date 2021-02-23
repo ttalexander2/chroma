@@ -4,14 +4,20 @@
 #include <Chroma/Renderer/Buffer.h>
 #include <Chroma/Renderer/RenderCommand.h>
 #include <Chroma/Renderer/Renderer.h>
-
+#include <Chroma/Renderer/OrthographicCamera.h>
+#include <glm/ext/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <Chroma/Core.h>
 
 
 class ExampleLayer : public Chroma::Layer
 {
 public:
-	ExampleLayer() : Layer("Example")
+	ExampleLayer() 
+		: Layer("Example") ,m_Camera(-1.6f, 1.6f, -0.9f, 0.9f)
 	{
+
+
 		m_VertexArray.reset(Chroma::VertexArray::Create());
 
 		float vertices[3 * 7] = {
@@ -19,7 +25,7 @@ public:
 			 0.5f, -0.5f, 0.0f, 1.0f, 0.4f, 0.1f, 1.0f,
 			 0.0f,  0.5f, 0.0f, 0.0f, 0.5f, 0.2f, 1.0f
 		};
-		std::shared_ptr<Chroma::VertexBuffer> vertexBuffer;
+		Chroma::Ref<Chroma::VertexBuffer> vertexBuffer;
 		vertexBuffer.reset(Chroma::VertexBuffer::Create(vertices, sizeof(vertices)));
 
 		//Layout no longer exists after as its scope only exists in this section. Used to test setting the layout.
@@ -38,7 +44,7 @@ public:
 
 		unsigned int indices[3] = { 0, 1, 2 };
 
-		std::shared_ptr<Chroma::IndexBuffer> indexBuffer;
+		Chroma::Ref<Chroma::IndexBuffer> indexBuffer;
 
 		indexBuffer.reset(Chroma::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
 
@@ -46,19 +52,20 @@ public:
 
 		m_SquareVA.reset(Chroma::VertexArray::Create());
 
-		float squareVertices[3 * 4] = {
-			-0.75f, -0.75f, 0.0f,
-			  0.75f, -0.75f, 0.0f,
-			  0.75f,  0.75f, 0.0f,
-			 -0.75f,  0.75f, 0.0f,
+		float squareVertices[5 * 4] = {
+			 -0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
+			  0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+			  0.5f,  0.5f, 0.0f, 1.0f, 1.0f,
+			 -0.5f,  0.5f, 0.0f, 0.0f, 1.0f
 		};
 
 
-		std::shared_ptr<Chroma::VertexBuffer> squareVB;
+		Chroma::Ref<Chroma::VertexBuffer> squareVB;
 		squareVB.reset(Chroma::VertexBuffer::Create(squareVertices, sizeof(squareVertices)));
 
 		Chroma::BufferLayout squareVBLayout = {
-			{Chroma::ShaderDataType::Float3, "a_Position" }
+			{ Chroma::ShaderDataType::Float3, "a_Position" },
+			{ Chroma::ShaderDataType::Float2, "a_TexCoord" }
 		};
 
 		squareVB->SetLayout(squareVBLayout);
@@ -67,7 +74,7 @@ public:
 
 		uint32_t squareIndices[6] = { 0, 1, 2, 2, 3, 0 };
 
-		std::shared_ptr<Chroma::IndexBuffer> squareIB;
+		Chroma::Ref<Chroma::IndexBuffer> squareIB;
 		squareIB.reset(Chroma::IndexBuffer::Create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t)));
 		m_SquareVA->SetIndexBuffer(squareIB);
 
@@ -78,6 +85,9 @@ public:
 			layout(location = 0) in vec3 a_Position;
 			layout(location = 1) in vec4 a_Color;
 
+			uniform mat4 u_ViewProjection;
+			uniform mat4 u_Transform;
+
 			out vec3 v_Position;
 			out vec4 v_Color;
 			
@@ -85,21 +95,24 @@ public:
 			{
 				v_Position = a_Position;
 				v_Color = a_Color;
-				gl_Position = vec4(a_Position, 1.0);
+				gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
 			}
 		)";
 
-		std::string vertexSourceBlue = R"(
+		std::string vertexFlatColorSrc = R"(
 			#version 330 core
 
 			layout(location = 0) in vec3 a_Position;
+
+			uniform mat4 u_ViewProjection;
+			uniform mat4 u_Transform;
 
 			out vec3 v_Position;
 			
 			void main()
 			{
 				v_Position = a_Position;
-				gl_Position = vec4(a_Position, 1.0);
+				gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
 			}
 		)";
 
@@ -117,40 +130,153 @@ public:
 			}
 		)";
 
-		std::string fragmentSourceBlue = R"(
+		std::string fragmentFlatColorSrc = R"(
 			#version 330 core
 
 			layout(location = 0) out vec4 color;
 
 			in vec3 v_Position;
+
+			uniform vec4 u_Color;
 			
 			void main()
 			{
-				color = vec4(0.2, 0.3, 0.8, 1.0);
+				color = u_Color + vec4(v_Position/2 + 0.3, 1.0);
 			}
 		)";
 
-		m_ShaderBlue.reset(new Chroma::Shader(vertexSourceBlue, fragmentSourceBlue));
-		m_Shader.reset(new Chroma::Shader(vertexSource, fragmentSource));
+		std::string vertexTextureSrc = R"(
+			#version 330 core
+
+			layout(location = 0) in vec3 a_Position;
+			layout(location = 1) in vec2 a_TextCoord;
+
+			uniform mat4 u_ViewProjection;
+			uniform mat4 u_Transform;
+
+			out vec2 v_TextCoord;
+			
+			void main()
+			{
+				v_TextCoord = a_TextCoord;
+				gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
+			}
+		)";
+
+		std::string fragmentTextureSrc = R"(
+			#version 330 core
+
+			layout(location = 0) out vec4 color;
+
+			in vec2 v_TextCoord;
+
+			uniform sampler2D u_Texture;
+			
+			void main()
+			{
+				color = texture(u_Texture, v_TextCoord);
+			}
+		)";
+
+		m_FlatShader.reset(Chroma::Shader::Create(vertexFlatColorSrc, fragmentFlatColorSrc));
+		m_Shader.reset(Chroma::Shader::Create(vertexSource, fragmentSource));
+		m_TextureShader.reset(Chroma::Shader::Create(vertexTextureSrc, fragmentTextureSrc));
+
+		m_Texture = Chroma::Texture2D::Create("assets/textures/grid.png");
+		m_TextureShader->UploadUniformInt("u_Texture", 0);
+		m_TextureShader->Bind();
+
+
+
+		m_SquarePosition = glm::vec3(0.0f);
 	}
 
-	void OnUpdate() override
+	void OnUpdate(Chroma::Timestep time) override
 	{
-		if (Chroma::Input::IsKeyPressed(CHROMA_KEY_TAB))
+
+		glm::vec3 position = m_Camera.GetPosition();
+
+		if (Chroma::Input::IsKeyPressed(CHROMA_KEY_UP))
 		{
-			CHROMA_TRACE("Tab key is pressed!");
+			position.y += 5.0f * time;
 		}
+
+		if (Chroma::Input::IsKeyPressed(CHROMA_KEY_DOWN))
+		{
+			position.y -= 5.0f * time;
+		}
+
+		if (Chroma::Input::IsKeyPressed(CHROMA_KEY_LEFT))
+		{
+			position.x -= 5.0f * time;
+		}
+
+		if (Chroma::Input::IsKeyPressed(CHROMA_KEY_RIGHT))
+		{
+			position.x += 5.0f * time;
+		}
+
+		if (Chroma::Input::IsKeyPressed(CHROMA_KEY_W))
+		{
+			m_SquarePosition.y += 5.0f * time;
+		}
+
+		if (Chroma::Input::IsKeyPressed(CHROMA_KEY_S))
+		{
+			m_SquarePosition.y -= 5.0f * time;
+		}
+
+		if (Chroma::Input::IsKeyPressed(CHROMA_KEY_A))
+		{
+			m_SquarePosition.x -= 5.0f * time;
+		}
+
+		if (Chroma::Input::IsKeyPressed(CHROMA_KEY_D))
+		{
+			m_SquarePosition.x += 5.0f * time;
+		}
+
+		m_Camera.SetPosition(position);
+
+		float rotation = m_Camera.GetRotation();
+
+		if (Chroma::Input::IsKeyPressed(CHROMA_KEY_KP_ADD))
+		{
+			rotation += 20.0f * time;
+		}
+
+		if (Chroma::Input::IsKeyPressed(CHROMA_KEY_KP_SUBTRACT))
+		{
+			rotation -= 20.0f * time;
+		}
+
+		m_Camera.SetRotation(rotation);
+
 
 		Chroma::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
 		Chroma::RenderCommand::Clear();
 
-		Chroma::Renderer::BeginScene();
+		Chroma::Renderer::BeginScene(m_Camera);
 
-		m_ShaderBlue->Bind();
-		Chroma::Renderer::Submit(m_SquareVA);
+		glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.3f));
 
-		m_Shader->Bind();
-		Chroma::Renderer::Submit(m_VertexArray);
+		for (int i = 0; i < 5; i++)
+		{
+
+			m_FlatShader->UploadUniformFloat4("u_Color", m_SquareColor);
+
+
+			glm::vec3 pos(i * 0.33f, 0.0f, 0.0f);
+			pos += m_SquarePosition;
+			glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * scale;
+			Chroma::Renderer::Submit(m_FlatShader, m_SquareVA, transform);
+		}
+
+		m_Texture->Bind();
+		Chroma::Renderer::Submit(m_TextureShader, m_SquareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+		
+		// Triangle
+		// Chroma::Renderer::Submit(m_Shader, m_VertexArray);
 
 		Chroma::Renderer::EndScene();
 	}
@@ -162,14 +288,25 @@ public:
 
 	void OnImGuiRender() override
 	{
+		ImGui::Begin("Settings");
+		ImGui::ColorPicker4("Square Color", glm::value_ptr(m_SquareColor));
+		ImGui::End();
 
 	}
 
 private:
-	std::shared_ptr<Chroma::VertexArray> m_VertexArray;
-	std::shared_ptr<Chroma::VertexArray> m_SquareVA;
-	std::shared_ptr<Chroma::Shader> m_Shader;
-	std::shared_ptr<Chroma::Shader> m_ShaderBlue;
+	Chroma::Ref<Chroma::VertexArray> m_VertexArray;
+	Chroma::Ref<Chroma::VertexArray> m_SquareVA;
+	Chroma::Ref<Chroma::Shader> m_Shader;
+	Chroma::Ref<Chroma::Shader> m_FlatShader;
+	Chroma::Ref<Chroma::Shader> m_TextureShader;
+
+	Chroma::Ref<Chroma::Texture2D> m_Texture;
+
+	Chroma::OrthographicCamera m_Camera;
+
+	glm::vec3 m_SquarePosition;
+	glm::vec4 m_SquareColor;
 
 };
 

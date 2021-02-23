@@ -7,6 +7,9 @@
 #include "Chroma/MouseButtonCodes.h"
 #include "Chroma/Renderer/Renderer.h"
 
+#include "Chroma/Core/Timestep.h"
+#include <GLFW/glfw3.h>
+
 namespace Chroma
 {
 	
@@ -17,7 +20,7 @@ namespace Chroma
 		CHROMA_CORE_INFO("Chroma Engine v0.1");
 		CHROMA_CORE_ASSERT(!s_Instance, "Application already exists!");
 		s_Instance = this;
-		m_Window = std::unique_ptr<Window>(Window::Create());
+		m_Window = Scope<Window>(Window::Create());
 		m_Window->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
 
 		m_ImGuiLayer = new ImGuiLayer();
@@ -79,11 +82,14 @@ namespace Chroma
 	{
 		while (m_Running)
 		{
+			float time = (float)glfwGetTime(); // Platform::GetTime
+			Timestep timestep = time - m_LastFrameTime;
+			m_LastFrameTime = time;
 
 			for (Layer* layer : m_LayerStack)
 			{
 				if (layer->IsEnabled())
-					layer->OnUpdate();
+					layer->OnUpdate(timestep);
 			}
 
 

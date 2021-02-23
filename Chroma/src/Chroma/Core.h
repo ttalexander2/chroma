@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #ifdef CHROMA_PLATFORM_WINDOWS
 #if HZ_DYNAMIC_LINK
 	#ifdef CHROMA_BUILD_DLL
@@ -25,3 +27,14 @@
 #define CHROMA_BIND_EVENT_FN(event_function) std::bind(&event_function, this, std::placeholders::_1)
 
 #define BIT(x) (1 << x)
+
+namespace Chroma
+{
+
+	// TODO: Replace unique_ptr and shared_ptr with new reference counter class
+	template<typename T>
+	using Scope = std::unique_ptr<T>;
+
+	template<typename T>
+	using Ref = std::shared_ptr<T>; // Possible overhead from atomic increment/decrement, but likely negligible
+}
