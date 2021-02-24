@@ -57,17 +57,38 @@
     <ClInclude Include="src\Chroma.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\Chroma\Application.h">
-      <Filter>src\Chroma</Filter>
+    <ClInclude Include="src\Chroma\Core\Application.h">
+      <Filter>src\Chroma\Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Chroma\Core.h">
-      <Filter>src\Chroma</Filter>
+    <ClInclude Include="src\Chroma\Core\Core.h">
+      <Filter>src\Chroma\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Chroma\Core\EntryPoint.h">
+      <Filter>src\Chroma\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Chroma\Core\Input.h">
+      <Filter>src\Chroma\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Chroma\Core\KeyCodes.h">
+      <Filter>src\Chroma\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Chroma\Core\Layer.h">
+      <Filter>src\Chroma\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Chroma\Core\LayerStack.h">
+      <Filter>src\Chroma\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Chroma\Core\Log.h">
+      <Filter>src\Chroma\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Chroma\Core\MouseButtonCodes.h">
+      <Filter>src\Chroma\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Chroma\Core\Timestep.h">
       <Filter>src\Chroma\Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Chroma\EntryPoint.h">
-      <Filter>src\Chroma</Filter>
+    <ClInclude Include="src\Chroma\Core\Window.h">
+      <Filter>src\Chroma\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Chroma\Events\ApplicationEvent.h">
       <Filter>src\Chroma\Events</Filter>
@@ -83,24 +104,6 @@
     </ClInclude>
     <ClInclude Include="src\Chroma\ImGui\ImGuiLayer.h">
       <Filter>src\Chroma\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Chroma\Input.h">
-      <Filter>src\Chroma</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Chroma\KeyCodes.h">
-      <Filter>src\Chroma</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Chroma\Layer.h">
-      <Filter>src\Chroma</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Chroma\LayerStack.h">
-      <Filter>src\Chroma</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Chroma\Log.h">
-      <Filter>src\Chroma</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Chroma\MouseButtonCodes.h">
-      <Filter>src\Chroma</Filter>
     </ClInclude>
     <ClInclude Include="src\Chroma\Platform\OpenGL\OpenGLBuffer.h">
       <Filter>src\Chroma\Platform\OpenGL</Filter>
@@ -135,6 +138,9 @@
     <ClInclude Include="src\Chroma\Renderer\OrthographicCamera.h">
       <Filter>src\Chroma\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\Chroma\Renderer\OrthographicCameraController.h">
+      <Filter>src\Chroma\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\Chroma\Renderer\RenderCommand.h">
       <Filter>src\Chroma\Renderer</Filter>
     </ClInclude>
@@ -152,9 +158,6 @@
     </ClInclude>
     <ClInclude Include="src\Chroma\Renderer\VertexArray.h">
       <Filter>src\Chroma\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Chroma\Window.h">
-      <Filter>src\Chroma</Filter>
     </ClInclude>
     <ClInclude Include="src\chromapch.h">
       <Filter>src</Filter>
@@ -1403,23 +1406,23 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Chroma\Application.cpp">
-      <Filter>src\Chroma</Filter>
+    <ClCompile Include="src\Chroma\Core\Application.cpp">
+      <Filter>src\Chroma\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Chroma\Core\Layer.cpp">
+      <Filter>src\Chroma\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Chroma\Core\LayerStack.cpp">
+      <Filter>src\Chroma\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Chroma\Core\Log.cpp">
+      <Filter>src\Chroma\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Chroma\ImGui\ImGuiBuild.cpp">
       <Filter>src\Chroma\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="src\Chroma\ImGui\ImGuiLayer.cpp">
       <Filter>src\Chroma\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Chroma\Layer.cpp">
-      <Filter>src\Chroma</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Chroma\LayerStack.cpp">
-      <Filter>src\Chroma</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Chroma\Log.cpp">
-      <Filter>src\Chroma</Filter>
     </ClCompile>
     <ClCompile Include="src\Chroma\Platform\OpenGL\OpenGLBuffer.cpp">
       <Filter>src\Chroma\Platform\OpenGL</Filter>
@@ -1449,6 +1452,9 @@
       <Filter>src\Chroma\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Chroma\Renderer\OrthographicCamera.cpp">
+      <Filter>src\Chroma\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Chroma\Renderer\OrthographicCameraController.cpp">
       <Filter>src\Chroma\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Chroma\Renderer\RenderCommand.cpp">

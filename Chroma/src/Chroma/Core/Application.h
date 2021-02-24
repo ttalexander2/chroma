@@ -3,10 +3,10 @@
 #include "chromapch.h"
 
 #include "Core.h"
-#include "Chroma/Window.h"
+#include "Chroma/Core/Window.h"
 #include "Chroma/Events/ApplicationEvent.h"
-#include "Chroma/Layer.h"
-#include "Chroma/LayerStack.h"
+#include "Chroma/Core/Layer.h"
+#include "Chroma/Core/LayerStack.h"
 #include <glm/glm.hpp>
 #include <Chroma/ImGui/ImGuiLayer.h>
 
@@ -43,10 +43,12 @@ namespace Chroma
 		float m_LastFrameTime = 0.0f;
 
 		bool OnWindowClose(WindowCloseEvent& e);
+		bool OnWindowResize(WindowResizeEvent& e);
 
 		Scope<Window> m_Window;
 		ImGuiLayer* m_ImGuiLayer;
 		bool m_Running = true;
+		bool m_Minimized = false;
 		LayerStack m_LayerStack;
 	};
 

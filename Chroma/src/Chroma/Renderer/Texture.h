@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Chroma/Core.h>
+#include <Chroma/Core/Core.h>
 #include <string>
 
 namespace Chroma

@@ -1,6 +1,6 @@
 #include "chromapch.h"
 #include "ImGuiLayer.h"
-#include "Chroma/Application.h"
+#include "Chroma/Core/Application.h"
 
 #include "imgui.h"
 #include "backends/imgui_impl_glfw.h"

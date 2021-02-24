@@ -1,7 +1,7 @@
 #include "chromapch.h"
 #include "WindowsInput.h"
 
-#include "Chroma/Application.h"
+#include "Chroma/Core/Application.h"
 #include <GLFW/glfw3.h>
 
 namespace Chroma

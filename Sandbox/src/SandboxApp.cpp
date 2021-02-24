@@ -7,16 +7,17 @@
 #include <Chroma/Renderer/OrthographicCamera.h>
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include <Chroma/Core.h>
+#include <Chroma/Core/Core.h>
 
 
 class ExampleLayer : public Chroma::Layer
 {
 public:
 	ExampleLayer() 
-		: Layer("Example") ,m_Camera(-1.6f, 1.6f, -0.9f, 0.9f)
+		: Layer("Example") ,m_CameraController(1920.0f/1080.0f, false)
 	{
 
+		m_SquareColor = { 0.3f, 0.3f, 0.7f, 1.0f };
 
 		m_VertexArray.reset(Chroma::VertexArray::Create());
 
@@ -145,48 +146,19 @@ public:
 			}
 		)";
 
-		std::string vertexTextureSrc = R"(
-			#version 330 core
 
-			layout(location = 0) in vec3 a_Position;
-			layout(location = 1) in vec2 a_TextCoord;
+		m_FlatShader = Chroma::Shader::Create("Flat Color Shader", vertexFlatColorSrc, fragmentFlatColorSrc);
+		m_Shader = Chroma::Shader::Create("Position Shader", vertexSource, fragmentSource);
+		m_ShaderLibrary.Load("assets/shaders/Texture.glsl");
 
-			uniform mat4 u_ViewProjection;
-			uniform mat4 u_Transform;
+		m_TextureShader = m_ShaderLibrary.Get("Texture");
 
-			out vec2 v_TextCoord;
-			
-			void main()
-			{
-				v_TextCoord = a_TextCoord;
-				gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
-			}
-		)";
-
-		std::string fragmentTextureSrc = R"(
-			#version 330 core
-
-			layout(location = 0) out vec4 color;
-
-			in vec2 v_TextCoord;
-
-			uniform sampler2D u_Texture;
-			
-			void main()
-			{
-				color = texture(u_Texture, v_TextCoord);
-			}
-		)";
-
-		m_FlatShader.reset(Chroma::Shader::Create(vertexFlatColorSrc, fragmentFlatColorSrc));
-		m_Shader.reset(Chroma::Shader::Create(vertexSource, fragmentSource));
-		m_TextureShader.reset(Chroma::Shader::Create(vertexTextureSrc, fragmentTextureSrc));
+		
 
 		m_Texture = Chroma::Texture2D::Create("assets/textures/grid.png");
+		m_TransparentTexture = Chroma::Texture2D::Create("assets/textures/Catalyst Logo.bmp");
 		m_TextureShader->UploadUniformInt("u_Texture", 0);
 		m_TextureShader->Bind();
-
-
 
 		m_SquarePosition = glm::vec3(0.0f);
 	}
@@ -194,69 +166,14 @@ public:
 	void OnUpdate(Chroma::Timestep time) override
 	{
 
-		glm::vec3 position = m_Camera.GetPosition();
-
-		if (Chroma::Input::IsKeyPressed(CHROMA_KEY_UP))
-		{
-			position.y += 5.0f * time;
-		}
-
-		if (Chroma::Input::IsKeyPressed(CHROMA_KEY_DOWN))
-		{
-			position.y -= 5.0f * time;
-		}
-
-		if (Chroma::Input::IsKeyPressed(CHROMA_KEY_LEFT))
-		{
-			position.x -= 5.0f * time;
-		}
-
-		if (Chroma::Input::IsKeyPressed(CHROMA_KEY_RIGHT))
-		{
-			position.x += 5.0f * time;
-		}
-
-		if (Chroma::Input::IsKeyPressed(CHROMA_KEY_W))
-		{
-			m_SquarePosition.y += 5.0f * time;
-		}
-
-		if (Chroma::Input::IsKeyPressed(CHROMA_KEY_S))
-		{
-			m_SquarePosition.y -= 5.0f * time;
-		}
-
-		if (Chroma::Input::IsKeyPressed(CHROMA_KEY_A))
-		{
-			m_SquarePosition.x -= 5.0f * time;
-		}
-
-		if (Chroma::Input::IsKeyPressed(CHROMA_KEY_D))
-		{
-			m_SquarePosition.x += 5.0f * time;
-		}
-
-		m_Camera.SetPosition(position);
-
-		float rotation = m_Camera.GetRotation();
-
-		if (Chroma::Input::IsKeyPressed(CHROMA_KEY_KP_ADD))
-		{
-			rotation += 20.0f * time;
-		}
-
-		if (Chroma::Input::IsKeyPressed(CHROMA_KEY_KP_SUBTRACT))
-		{
-			rotation -= 20.0f * time;
-		}
-
-		m_Camera.SetRotation(rotation);
-
+		m_CameraController.OnUpdate(time);
 
 		Chroma::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
 		Chroma::RenderCommand::Clear();
 
-		Chroma::Renderer::BeginScene(m_Camera);
+		Chroma::Renderer::BeginScene(m_CameraController.GetCamera());
+
+		
 
 		glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.3f));
 
@@ -271,9 +188,16 @@ public:
 			glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * scale;
 			Chroma::Renderer::Submit(m_FlatShader, m_SquareVA, transform);
 		}
+		
+
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), m_SquarePosition);
+
 
 		m_Texture->Bind();
-		Chroma::Renderer::Submit(m_TextureShader, m_SquareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+		Chroma::Renderer::Submit(m_TextureShader, m_SquareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.0f)));
+
+		m_TransparentTexture->Bind();
+		Chroma::Renderer::Submit(m_TextureShader, m_SquareVA, glm::scale(glm::mat4(1.0f), glm::vec3(0.6f)));
 		
 		// Triangle
 		// Chroma::Renderer::Submit(m_Shader, m_VertexArray);
@@ -283,7 +207,15 @@ public:
 
 	void OnEvent(Chroma::Event& event) override
 	{
+		m_CameraController.OnEvent(event);
 
+		if (event.GetEventType() == Chroma::EventType::WindowResize)
+		{
+			auto& re = (Chroma::WindowResizeEvent&)event;
+
+			re.GetWidth();
+			re.GetHeight();
+		}
 	}
 
 	void OnImGuiRender() override
@@ -295,15 +227,16 @@ public:
 	}
 
 private:
+	Chroma::ShaderLibrary m_ShaderLibrary;
 	Chroma::Ref<Chroma::VertexArray> m_VertexArray;
 	Chroma::Ref<Chroma::VertexArray> m_SquareVA;
 	Chroma::Ref<Chroma::Shader> m_Shader;
 	Chroma::Ref<Chroma::Shader> m_FlatShader;
 	Chroma::Ref<Chroma::Shader> m_TextureShader;
 
-	Chroma::Ref<Chroma::Texture2D> m_Texture;
+	Chroma::Ref<Chroma::Texture2D> m_Texture, m_TransparentTexture;
 
-	Chroma::OrthographicCamera m_Camera;
+	Chroma::OrthographicCameraController m_CameraController;
 
 	glm::vec3 m_SquarePosition;
 	glm::vec4 m_SquareColor;

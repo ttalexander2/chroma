@@ -150,21 +150,22 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\Chroma.h" />
-    <ClInclude Include="src\Chroma\Application.h" />
-    <ClInclude Include="src\Chroma\Core.h" />
+    <ClInclude Include="src\Chroma\Core\Application.h" />
+    <ClInclude Include="src\Chroma\Core\Core.h" />
+    <ClInclude Include="src\Chroma\Core\EntryPoint.h" />
+    <ClInclude Include="src\Chroma\Core\Input.h" />
+    <ClInclude Include="src\Chroma\Core\KeyCodes.h" />
+    <ClInclude Include="src\Chroma\Core\Layer.h" />
+    <ClInclude Include="src\Chroma\Core\LayerStack.h" />
+    <ClInclude Include="src\Chroma\Core\Log.h" />
+    <ClInclude Include="src\Chroma\Core\MouseButtonCodes.h" />
     <ClInclude Include="src\Chroma\Core\Timestep.h" />
-    <ClInclude Include="src\Chroma\EntryPoint.h" />
+    <ClInclude Include="src\Chroma\Core\Window.h" />
     <ClInclude Include="src\Chroma\Events\ApplicationEvent.h" />
     <ClInclude Include="src\Chroma\Events\Event.h" />
     <ClInclude Include="src\Chroma\Events\KeyEvent.h" />
     <ClInclude Include="src\Chroma\Events\MouseEvent.h" />
     <ClInclude Include="src\Chroma\ImGui\ImGuiLayer.h" />
-    <ClInclude Include="src\Chroma\Input.h" />
-    <ClInclude Include="src\Chroma\KeyCodes.h" />
-    <ClInclude Include="src\Chroma\Layer.h" />
-    <ClInclude Include="src\Chroma\LayerStack.h" />
-    <ClInclude Include="src\Chroma\Log.h" />
-    <ClInclude Include="src\Chroma\MouseButtonCodes.h" />
     <ClInclude Include="src\Chroma\Platform\OpenGL\OpenGLBuffer.h" />
     <ClInclude Include="src\Chroma\Platform\OpenGL\OpenGLContext.h" />
     <ClInclude Include="src\Chroma\Platform\OpenGL\OpenGLRendererAPI.h" />
@@ -176,13 +177,13 @@
     <ClInclude Include="src\Chroma\Renderer\Buffer.h" />
     <ClInclude Include="src\Chroma\Renderer\GraphicsContext.h" />
     <ClInclude Include="src\Chroma\Renderer\OrthographicCamera.h" />
+    <ClInclude Include="src\Chroma\Renderer\OrthographicCameraController.h" />
     <ClInclude Include="src\Chroma\Renderer\RenderCommand.h" />
     <ClInclude Include="src\Chroma\Renderer\Renderer.h" />
     <ClInclude Include="src\Chroma\Renderer\RendererAPI.h" />
     <ClInclude Include="src\Chroma\Renderer\Shader.h" />
     <ClInclude Include="src\Chroma\Renderer\Texture.h" />
     <ClInclude Include="src\Chroma\Renderer\VertexArray.h" />
-    <ClInclude Include="src\Chroma\Window.h" />
     <ClInclude Include="src\chromapch.h" />
     <ClInclude Include="third_party\glm\glm\common.hpp" />
     <ClInclude Include="third_party\glm\glm\detail\_features.hpp" />
@@ -600,12 +601,12 @@
     <ClInclude Include="third_party\stb_image\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Chroma\Application.cpp" />
+    <ClCompile Include="src\Chroma\Core\Application.cpp" />
+    <ClCompile Include="src\Chroma\Core\Layer.cpp" />
+    <ClCompile Include="src\Chroma\Core\LayerStack.cpp" />
+    <ClCompile Include="src\Chroma\Core\Log.cpp" />
     <ClCompile Include="src\Chroma\ImGui\ImGuiBuild.cpp" />
     <ClCompile Include="src\Chroma\ImGui\ImGuiLayer.cpp" />
-    <ClCompile Include="src\Chroma\Layer.cpp" />
-    <ClCompile Include="src\Chroma\LayerStack.cpp" />
-    <ClCompile Include="src\Chroma\Log.cpp" />
     <ClCompile Include="src\Chroma\Platform\OpenGL\OpenGLBuffer.cpp" />
     <ClCompile Include="src\Chroma\Platform\OpenGL\OpenGLContext.cpp" />
     <ClCompile Include="src\Chroma\Platform\OpenGL\OpenGLRendererAPI.cpp" />
@@ -616,6 +617,7 @@
     <ClCompile Include="src\Chroma\Platform\Windows\WindowsWindow.cpp" />
     <ClCompile Include="src\Chroma\Renderer\Buffer.cpp" />
     <ClCompile Include="src\Chroma\Renderer\OrthographicCamera.cpp" />
+    <ClCompile Include="src\Chroma\Renderer\OrthographicCameraController.cpp" />
     <ClCompile Include="src\Chroma\Renderer\RenderCommand.cpp" />
     <ClCompile Include="src\Chroma\Renderer\Renderer.cpp" />
     <ClCompile Include="src\Chroma\Renderer\RendererAPI.cpp" />

@@ -2,7 +2,7 @@
 
 #include "chromapch.h"
 
-#include "Chroma/Core.h"
+#include "Chroma/Core/Core.h"
 #include "Chroma/Events/Event.h"
 
 namespace Chroma

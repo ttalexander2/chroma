@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Chroma/Layer.h"
+#include "Chroma/Core/Layer.h"
 #include "Chroma/Events/Event.h"
 #include "Chroma/Events/MouseEvent.h"
 #include "Chroma/Events/KeyEvent.h"

@@ -64,6 +64,7 @@ namespace Chroma
 				data.Height = height;
 
 				WindowResizeEvent event(width, height);
+				CHROMA_CORE_WARN("{0}, {1}", width, height);
 				data.EventCallback(event);
 		});
 

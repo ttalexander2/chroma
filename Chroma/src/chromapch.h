@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Chroma/Log.h"
+#include "Chroma/Core/Log.h"
 
 #include <iostream>
 #include <memory>

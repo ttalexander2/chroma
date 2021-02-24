@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Chroma/Core.h"
-#include "Chroma/KeyCodes.h"
-#include "Chroma/MouseButtonCodes.h"
+#include "Chroma/Core/Core.h"
+#include "Chroma/Core/KeyCodes.h"
+#include "Chroma/Core/MouseButtonCodes.h"
 
 namespace Chroma
 {

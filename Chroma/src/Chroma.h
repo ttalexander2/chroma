@@ -3,15 +3,16 @@
 //Include directories for applications using the chroma engine
 
 
-#include "Chroma/Application.h"
-#include "Chroma/Layer.h"
-#include "Chroma/Log.h"
+#include "Chroma/Core/Application.h"
+#include "Chroma/Core/Layer.h"
+#include "Chroma/Core/Log.h"
 
 #include "Chroma/Core/Timestep.h"
 
-#include "Chroma/Input.h"
-#include "Chroma/KeyCodes.h"
-#include "Chroma/MouseButtonCodes.h"
+#include "Chroma/Core/Input.h"
+#include "Chroma/Core/KeyCodes.h"
+#include "Chroma/Core/MouseButtonCodes.h"
+#include "Chroma/Renderer/OrthographicCameraController.h"
 
 #include "Chroma/ImGui/ImGuiLayer.h"
 
@@ -28,6 +29,6 @@
 // -----------------------------------
 
 // -----------Entry Point-------------
-#include "Chroma/EntryPoint.h"
+#include "Chroma/Core/EntryPoint.h"
 // -----------------------------------
 

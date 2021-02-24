@@ -1,10 +1,10 @@
 #include "chromapch.h"
 #include "Application.h"
 
-#include "Chroma/Log.h"
-#include "Chroma/Input.h"
-#include "Chroma/KeyCodes.h"
-#include "Chroma/MouseButtonCodes.h"
+#include "Chroma/Core/Log.h"
+#include "Chroma/Core/Input.h"
+#include "Chroma/Core/KeyCodes.h"
+#include "Chroma/Core/MouseButtonCodes.h"
 #include "Chroma/Renderer/Renderer.h"
 
 #include "Chroma/Core/Timestep.h"
@@ -22,6 +22,8 @@ namespace Chroma
 		s_Instance = this;
 		m_Window = Scope<Window>(Window::Create());
 		m_Window->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
+
+		Renderer::Init();
 
 		m_ImGuiLayer = new ImGuiLayer();
 		PushOverlay(m_ImGuiLayer);
@@ -58,6 +60,7 @@ namespace Chroma
 	{
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<WindowCloseEvent>(CHROMA_BIND_EVENT_FN(Application::OnWindowClose));
+		dispatcher.Dispatch<WindowResizeEvent>(CHROMA_BIND_EVENT_FN(Application::OnWindowResize));
 
 		for (auto it = m_LayerStack.end(); it != m_LayerStack.begin(); )
 		{
@@ -70,6 +73,20 @@ namespace Chroma
 			if (e.IsHandled())
 				break;
 		}
+	}
+
+	bool Application::OnWindowResize(WindowResizeEvent& e)
+	{
+		if (e.GetWidth() == 0 || e.GetHeight() == 0)
+		{
+			m_Minimized = true;
+			return false;
+		}
+		m_Minimized = false;
+
+		Renderer::OnWindowResize(e.GetWidth(), e.GetHeight());
+
+		return false;
 	}
 
 	bool Application::OnWindowClose(WindowCloseEvent& e)
@@ -86,11 +103,16 @@ namespace Chroma
 			Timestep timestep = time - m_LastFrameTime;
 			m_LastFrameTime = time;
 
-			for (Layer* layer : m_LayerStack)
+			if (!m_Minimized)
 			{
-				if (layer->IsEnabled())
-					layer->OnUpdate(timestep);
+				for (Layer* layer : m_LayerStack)
+				{
+					if (layer->IsEnabled())
+						layer->OnUpdate(timestep);
+				}
 			}
+
+
 
 
 			m_ImGuiLayer->Begin();

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Chroma/Window.h"
+#include "Chroma/Core/Window.h"
 #include "Chroma/Renderer/GraphicsContext.h"
 
 #include <GLFW/glfw3.h>

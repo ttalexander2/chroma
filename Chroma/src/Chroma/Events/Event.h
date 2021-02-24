@@ -1,7 +1,7 @@
 #pragma once
 
 #include "chromapch.h"
-#include "Chroma/Core.h"
+#include "Chroma/Core/Core.h"
 
 namespace Chroma
 {
