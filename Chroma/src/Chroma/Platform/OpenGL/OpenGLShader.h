@@ -20,15 +20,25 @@ namespace Chroma
 
 		virtual const std::string& GetName() const override { return m_Name; }
 
-		virtual void UploadUniformInt(const std::string& name, int value) override;
+		virtual void SetUniformInt(const std::string& name, int value) override;
+		virtual void SetUniformIntArray(const std::string& name, int* values, int count) override;
+		virtual void SetUniformFloat(const std::string& name, float value) override;
+		virtual void SetUniformFloat2(const std::string& name, const glm::vec2& value) override;
+		virtual void SetUniformFloat3(const std::string& name, const glm::vec3& value) override;
+		virtual void SetUniformFloat4(const std::string& name, const glm::vec4& value) override;
+		virtual void SetUniformMat3(const std::string& name, const glm::mat3& value) override;
+		virtual void SetUniformMat4(const std::string& name, const glm::mat4& value) override;
+
+		void UploadUniformInt(const std::string& name, int value);
+		void  UploadUniformIntArray(const std::string& name, int* values, int count);
 
 		void UploadUniformFloat(const std::string& name, float value);
 		void UploadUniformFloat2(const std::string& name, const glm::vec2& value);
 		void UploadUniformFloat3(const std::string& name, const glm::vec3& value);
-		virtual void UploadUniformFloat4(const std::string& name, const glm::vec4& value) override;
+		void UploadUniformFloat4(const std::string& name, const glm::vec4& value);
 
-		void UploadUniformMat3(const std::string& name, const glm::mat3& uniform);
-		void UploadUniformMat4(const std::string& name, const glm::mat4& uniform);
+		void UploadUniformMat3(const std::string& name, const glm::mat3& value);
+		void UploadUniformMat4(const std::string& name, const glm::mat4& value);
 
 	private:
 		std::string ReadFile(const std::string& filePath);

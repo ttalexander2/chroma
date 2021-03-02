@@ -149,6 +149,8 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Chroma\Profiler\Instrumentor.h" />
+    <ClInclude Include="src\Chroma\Renderer\Renderer2D.h" />
     <ClInclude Include="src\Chroma.h" />
     <ClInclude Include="src\Chroma\Core\Application.h" />
     <ClInclude Include="src\Chroma\Core\Core.h" />
@@ -601,6 +603,7 @@
     <ClInclude Include="third_party\stb_image\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Chroma\Renderer\Renderer2D.cpp" />
     <ClCompile Include="src\Chroma\Core\Application.cpp" />
     <ClCompile Include="src\Chroma\Core\Layer.cpp" />
     <ClCompile Include="src\Chroma\Core\LayerStack.cpp" />

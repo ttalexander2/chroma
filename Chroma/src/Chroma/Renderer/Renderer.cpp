@@ -1,8 +1,7 @@
 #include "chromapch.h"
 #include "Renderer.h"
 
-// TEMPORARY
-#include "Chroma/Platform/OpenGL/OpenGLShader.h"
+#include "Chroma/Renderer/Renderer2D.h"
 
 namespace Chroma
 {
@@ -11,6 +10,7 @@ namespace Chroma
 	void Renderer::Init()
 	{
 		RenderCommand::Init();
+		Renderer2D::Init();
 	}
 
 	void Renderer::OnWindowResize(uint32_t width, uint32_t height)
@@ -30,8 +30,8 @@ namespace Chroma
 	void Renderer::Submit(const Ref<Shader>& shader, const Ref<VertexArray>& vertexArray, const glm::mat4& transform)
 	{
 		shader->Bind();
-		std::dynamic_pointer_cast<OpenGLShader>(shader)->UploadUniformMat4("u_ViewProjection", m_SceneData->ViewProjectionMatrix);
-		std::dynamic_pointer_cast<OpenGLShader>(shader)->UploadUniformMat4("u_Transform", transform);
+		shader->SetUniformMat4("u_ViewProjection", m_SceneData->ViewProjectionMatrix);
+		shader->SetUniformMat4("u_Transform", transform);
 
 		vertexArray->Bind();
 		RenderCommand::DrawIndexed(vertexArray);

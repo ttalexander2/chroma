@@ -186,6 +186,12 @@ namespace Chroma
 		glUniform1i(location, value);
 	}
 
+	void OpenGLShader::UploadUniformIntArray(const std::string& name, int* values, int count)
+	{
+		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
+		glUniform1iv(location, count, values);
+	}
+
 	void OpenGLShader::UploadUniformFloat(const std::string& name, float value)
 	{
 		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
@@ -210,16 +216,50 @@ namespace Chroma
 		glUniform4f(location, value.x, value.y, value.z, value.w);
 	}
 
-	void OpenGLShader::UploadUniformMat3(const std::string& name, const glm::mat3& matrix)
+	void OpenGLShader::UploadUniformMat3(const std::string& name, const glm::mat3& value)
 	{
 		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
-		glUniformMatrix3fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
+		glUniformMatrix3fv(location, 1, GL_FALSE, glm::value_ptr(value));
 	}
 
-	void OpenGLShader::UploadUniformMat4(const std::string& name, const glm::mat4& matrix)
+	void OpenGLShader::UploadUniformMat4(const std::string& name, const glm::mat4& value)
 	{
 		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
-		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
+		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(value));
+	}
+
+	void OpenGLShader::SetUniformInt(const std::string& name, int value)
+	{
+		UploadUniformInt(name, value);
+	}
+
+	void OpenGLShader::SetUniformIntArray(const std::string& name, int* values, int count)
+	{
+		UploadUniformIntArray(name, values, count);
+	}
+	void OpenGLShader::SetUniformFloat(const std::string& name, float value)
+	{
+		UploadUniformFloat(name, value);
+	}
+	void OpenGLShader::SetUniformFloat2(const std::string& name, const glm::vec2& value)
+	{
+		UploadUniformFloat2(name, value);
+	}
+	void OpenGLShader::SetUniformFloat3(const std::string& name, const glm::vec3& value)
+	{
+		UploadUniformFloat3(name, value);
+	}
+	void OpenGLShader::SetUniformFloat4(const std::string& name, const glm::vec4& value)
+	{
+		UploadUniformFloat4(name, value);
+	}
+	void OpenGLShader::SetUniformMat3(const std::string& name, const glm::mat3& uniform)
+	{
+		UploadUniformMat3(name, uniform);
+	}
+	void OpenGLShader::SetUniformMat4(const std::string& name, const glm::mat4& uniform)
+	{
+		UploadUniformMat4(name, uniform);
 	}
 
 }

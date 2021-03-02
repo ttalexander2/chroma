@@ -7,12 +7,12 @@
 
 namespace Chroma
 {
-	VertexArray* VertexArray::Create()
+	Ref<VertexArray> VertexArray::Create()
 	{
 		switch (Renderer::GetAPI())
 		{
 			case RendererAPI::API::None: CHROMA_CORE_ASSERT(false, "RendererAPI::API::None not supported!"); return nullptr;
-			case RendererAPI::API::OpenGL: return new OpenGLVertexArray();
+			case RendererAPI::API::OpenGL: return std::make_shared<OpenGLVertexArray>();
 
 		}
 

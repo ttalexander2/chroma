@@ -1,13 +1,10 @@
 #include <Chroma.h>
 #include <imgui.h>
-#include <Chroma/Renderer/VertexArray.h>
-#include <Chroma/Renderer/Buffer.h>
-#include <Chroma/Renderer/RenderCommand.h>
-#include <Chroma/Renderer/Renderer.h>
-#include <Chroma/Renderer/OrthographicCamera.h>
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include <Chroma/Core/Core.h>
+#include <Chroma/Core/EntryPoint.h>
+
+#include "Sandbox2D.h"
 
 
 class ExampleLayer : public Chroma::Layer
@@ -19,7 +16,7 @@ public:
 
 		m_SquareColor = { 0.3f, 0.3f, 0.7f, 1.0f };
 
-		m_VertexArray.reset(Chroma::VertexArray::Create());
+		m_VertexArray = Chroma::VertexArray::Create();
 
 		float vertices[3 * 7] = {
 			-0.5f, -0.5f, 0.0f, 0.8f, 0.0f, 1.0f, 1.0f,
@@ -27,7 +24,7 @@ public:
 			 0.0f,  0.5f, 0.0f, 0.0f, 0.5f, 0.2f, 1.0f
 		};
 		Chroma::Ref<Chroma::VertexBuffer> vertexBuffer;
-		vertexBuffer.reset(Chroma::VertexBuffer::Create(vertices, sizeof(vertices)));
+		vertexBuffer = Chroma::VertexBuffer::Create(vertices, sizeof(vertices));
 
 		//Layout no longer exists after as its scope only exists in this section. Used to test setting the layout.
 		{
@@ -47,11 +44,11 @@ public:
 
 		Chroma::Ref<Chroma::IndexBuffer> indexBuffer;
 
-		indexBuffer.reset(Chroma::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
+		indexBuffer = Chroma::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t));
 
 		m_VertexArray->SetIndexBuffer(indexBuffer);
 
-		m_SquareVA.reset(Chroma::VertexArray::Create());
+		m_SquareVA = Chroma::VertexArray::Create();
 
 		float squareVertices[5 * 4] = {
 			 -0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
@@ -62,7 +59,7 @@ public:
 
 
 		Chroma::Ref<Chroma::VertexBuffer> squareVB;
-		squareVB.reset(Chroma::VertexBuffer::Create(squareVertices, sizeof(squareVertices)));
+		squareVB = Chroma::VertexBuffer::Create(squareVertices, sizeof(squareVertices));
 
 		Chroma::BufferLayout squareVBLayout = {
 			{ Chroma::ShaderDataType::Float3, "a_Position" },
@@ -76,7 +73,7 @@ public:
 		uint32_t squareIndices[6] = { 0, 1, 2, 2, 3, 0 };
 
 		Chroma::Ref<Chroma::IndexBuffer> squareIB;
-		squareIB.reset(Chroma::IndexBuffer::Create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t)));
+		squareIB = Chroma::IndexBuffer::Create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t));
 		m_SquareVA->SetIndexBuffer(squareIB);
 
 
@@ -157,7 +154,7 @@ public:
 
 		m_Texture = Chroma::Texture2D::Create("assets/textures/grid.png");
 		m_TransparentTexture = Chroma::Texture2D::Create("assets/textures/Catalyst Logo.bmp");
-		m_TextureShader->UploadUniformInt("u_Texture", 0);
+		m_TextureShader->SetUniformInt("u_Texture", 0);
 		m_TextureShader->Bind();
 
 		m_SquarePosition = glm::vec3(0.0f);
@@ -180,7 +177,7 @@ public:
 		for (int i = 0; i < 5; i++)
 		{
 
-			m_FlatShader->UploadUniformFloat4("u_Color", m_SquareColor);
+			m_FlatShader->SetUniformFloat4("u_Color", m_SquareColor);
 
 
 			glm::vec3 pos(i * 0.33f, 0.0f, 0.0f);
@@ -249,8 +246,10 @@ class Sandbox : public Chroma::Application
 public:
 	Sandbox()
 	{
-		PushLayer(new ExampleLayer());
+		//PushLayer(new ExampleLayer());
+		PushLayer(new Sandbox2D());
 	}
+
 
 	~Sandbox()
 	{

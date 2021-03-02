@@ -24,7 +24,7 @@ namespace Chroma
 
 		virtual void SetViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height) = 0;
 
-		virtual void DrawIndexed(const Ref<VertexArray>& vertexArray) = 0;
+		virtual void DrawIndexed(const Ref<VertexArray>& vertexArray, uint32_t indexCount = 0) = 0;
 
 		inline static API GetAPI() { return s_API; }
 

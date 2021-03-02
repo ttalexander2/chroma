@@ -9,6 +9,8 @@
 
 #include "Chroma/Core/Timestep.h"
 
+#include "Chroma/Profiler/Instrumentor.h"
+
 #include "Chroma/Core/Input.h"
 #include "Chroma/Core/KeyCodes.h"
 #include "Chroma/Core/MouseButtonCodes.h"
@@ -18,6 +20,7 @@
 
 // -----------Render------------------
 #include "Chroma/Renderer/Renderer.h"
+#include "Chroma/Renderer/Renderer2D.h"
 #include "Chroma/Renderer/RenderCommand.h"
 
 #include "Chroma/Renderer/Buffer.h"
@@ -26,9 +29,5 @@
 #include "Chroma/Renderer/VertexArray.h"
 
 #include "Chroma/Renderer/OrthographicCamera.h"
-// -----------------------------------
-
-// -----------Entry Point-------------
-#include "Chroma/Core/EntryPoint.h"
 // -----------------------------------
 

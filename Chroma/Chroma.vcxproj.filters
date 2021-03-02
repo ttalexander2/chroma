@@ -1404,6 +1404,8 @@
     <ClInclude Include="third_party\stb_image\stb_image.h">
       <Filter>third_party\stb_image</Filter>
     </ClInclude>
+    <ClInclude Include="src\Chroma\Renderer\Renderer2D.h" />
+    <ClInclude Include="src\Chroma\Profiler\Instrumentor.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Chroma\Core\Application.cpp">
@@ -1481,5 +1483,6 @@
     <ClCompile Include="third_party\stb_image\stb_image.cpp">
       <Filter>third_party\stb_image</Filter>
     </ClCompile>
+    <ClCompile Include="src\Chroma\Renderer\Renderer2D.cpp" />
   </ItemGroup>
 </Project>
