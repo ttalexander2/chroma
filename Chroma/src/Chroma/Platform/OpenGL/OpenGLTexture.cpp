@@ -21,6 +21,8 @@ namespace Chroma
 		m_Width = width;
 		m_Height = height;
 
+		CHROMA_CORE_TRACE("{0}: Channels: {1}", path, channels);
+
 		if (channels == 4)
 		{
 			m_InternalFormat = GL_RGBA8;
@@ -29,7 +31,7 @@ namespace Chroma
 		else if (channels == 3)
 		{
 			m_InternalFormat = GL_RGB8;
-			m_DataFormat = GL_RGBA;
+			m_DataFormat = GL_RGB;
 		}
 
 		CHROMA_CORE_ASSERT(internalFormat & dataFormat, "Texture format not supported!");
@@ -37,7 +39,7 @@ namespace Chroma
 		glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID);
 		glTextureStorage2D(m_RendererID, 1, m_InternalFormat, m_Width, m_Height);
 
-		glTextureParameteri(m_RendererID, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTextureParameteri(m_RendererID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTextureParameteri(m_RendererID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
 		glTextureSubImage2D(m_RendererID, 0, 0, 0, width, height, m_DataFormat, GL_UNSIGNED_BYTE, data);
@@ -56,7 +58,7 @@ namespace Chroma
 		glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID);
 		glTextureStorage2D(m_RendererID, 1, m_InternalFormat, m_Width, m_Height);
 
-		glTextureParameteri(m_RendererID, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTextureParameteri(m_RendererID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTextureParameteri(m_RendererID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	}
 
