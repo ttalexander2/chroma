@@ -12,7 +12,7 @@ Sandbox2D::Sandbox2D()
 
 void Sandbox2D::OnAttach()
 {
-	m_Texture = Chroma::Texture2D::Create("assets/textures/02.png");
+	m_Texture = Chroma::Texture2D::Create("assets/textures/megagfilms.png");
 }
 
 void Sandbox2D::OnUpdate(Chroma::Timestep ts)
@@ -40,18 +40,20 @@ void Sandbox2D::OnUpdate(Chroma::Timestep ts)
 
 		for (float y = -5.0f; y < 5.0f; y += 0.1f)
 		{
+			float y_triston = (y + 5.0f) / 10.0f;
 			for (float x = -5.0f; x < 5.0f; x += 0.1f)
 			{
+				float x_triston = (x + 5.0f) / 10.0f;
 				numQuads++;
 				glm::vec4 color = { (x + 5.0f) / 10.0f, 0.4f,  (y + 5.0f) / 10.0, 1.0f };
-				Chroma::Renderer2D::DrawQuad({ x, y, 0.0f }, { 0.08f, 0.08f }, m_Texture);
+				Chroma::Renderer2D::DrawQuadTriston({ x, y, 0.0f}, { 0.08f, 0.08f }, m_Texture, {x_triston, y_triston});
 			}
 		}
 
-		Chroma::Renderer2D::DrawQuad({ 0.2f, -0.6f }, { 0.4f, 0.8f }, m_SquareColor);
-		Chroma::Renderer2D::DrawQuad({ -0.4f, -0.3f }, { 0.2f, 0.3f }, m_SquareColor, rotation);
+		//Chroma::Renderer2D::DrawQuad({ 0.2f, -0.6f }, { 0.4f, 0.8f }, m_SquareColor);
+		//Chroma::Renderer2D::DrawQuad({ -0.4f, -0.3f }, { 0.2f, 0.3f }, m_SquareColor, rotation);
 
-		Chroma::Renderer2D::DrawQuad({ 0.2f, 0.3f, 0.0f }, { 0.4f, 0.4f }, m_Texture);
+		//Chroma::Renderer2D::DrawQuad({ 0.2f, 0.3f, 0.0f }, { 0.4f, 0.4f }, m_Texture);
 
 		Chroma::Renderer2D::EndScene();
 
