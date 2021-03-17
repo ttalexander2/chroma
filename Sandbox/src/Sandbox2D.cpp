@@ -13,9 +13,14 @@ Sandbox2D::Sandbox2D()
 void Sandbox2D::OnAttach()
 {
 	m_Texture = Chroma::Texture2D::Create("assets/textures/megagfilms.png");
+
+	Chroma::FramebufferSpecification fbspec;
+	fbspec.Width = 1920;
+	fbspec.Height = 1080;
+	m_Framebuffer = Chroma::Framebuffer::Create(fbspec);
 }
 
-void Sandbox2D::OnUpdate(Chroma::Timestep ts)
+void Sandbox2D::OnUpdate(Chroma::Time ts)
 {
 	CHROMA_PROFILE_FUNCTION();
 	// Update
@@ -30,11 +35,18 @@ void Sandbox2D::OnUpdate(Chroma::Timestep ts)
 		Chroma::RenderCommand::SetClearColor({ 0.0f, 0.0f , 0.0f , 1.0f });
 		Chroma::RenderCommand::Clear();
 		Chroma::Renderer2D::ResetStats();
+		m_Framebuffer->Bind();
 
 		static float rotation = 0.0f;
 		rotation += ts * 5.0f;
 
+		Chroma::RenderCommand::SetClearColor({ 0.0f, 0.0f , 0.0f , 1.0f });
+		Chroma::RenderCommand::Clear();
+
+
+
 		Chroma::Renderer2D::BeginScene(m_CameraController.GetCamera());
+
 
 		int numQuads = 0;
 
@@ -55,6 +67,8 @@ void Sandbox2D::OnUpdate(Chroma::Timestep ts)
 
 		Chroma::Renderer2D::EndScene();
 
+		m_Framebuffer->Unbind();
+
 	}
 }
 
@@ -69,7 +83,6 @@ void Sandbox2D::OnImGuiRender()
 	ImGui::Text("Vertices: %d", stats.GetTotalVertexCount());
 	ImGui::Text("Indices: %d", stats.GetTotalIndexCount());
 
-
 	ImGui::ColorPicker4("Square Color", glm::value_ptr(m_SquareColor));
 
 	for (auto& result : m_ProfileResults)
@@ -81,6 +94,13 @@ void Sandbox2D::OnImGuiRender()
 	}
 
 	m_ProfileResults.clear();
+
+	ImGui::End();
+
+	ImGui::Begin("Viewport");
+
+	uint32_t textureID = m_Framebuffer->GetColorAttachmentRendererID();
+	ImGui::Image((void*)textureID, ImGui::GetWindowSize());
 
 	ImGui::End();
 }

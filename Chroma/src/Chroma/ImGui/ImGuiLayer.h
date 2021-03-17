@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Chroma/Core/Layer.h"
 #include "Chroma/Events/Event.h"
 #include "Chroma/Events/MouseEvent.h"
 #include "Chroma/Events/KeyEvent.h"
@@ -8,20 +7,23 @@
 
 namespace Chroma
 {
-	class CHROMA_API ImGuiLayer : public Layer
+	class CHROMA_API ImGuiLayer
 	{
 	public:
 		ImGuiLayer();
 		~ImGuiLayer();
 
-		virtual void OnAttach() override;
-		virtual void OnDetach() override;
-		virtual void OnImGuiRender() override;
+		virtual void OnAttach();
+		virtual void OnDetach();
+		virtual void OnEvent(Event& e);
 
 		void Begin();
 		void End();
+
+		void BlockEvents(bool block) { m_BlockEvents = block; }
 										
-	private:							
+	private:			
+		bool m_BlockEvents = true;
 		float m_Time;					
 	};
 }

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Chroma/Renderer/OrthographicCamera.h"
-#include "Chroma/Core/Timestep.h"
+#include "Chroma/Core/Time.h"
 
 #include "Chroma/Events/ApplicationEvent.h"
 #include "Chroma/Events/MouseEvent.h"
@@ -14,7 +14,7 @@ namespace Chroma
 		OrthographicCameraController(float aspect_ratio, bool rotation = false);
 
 		void OnEvent(Event& e);
-		void OnUpdate(Timestep ts);
+		void OnUpdate(Time ts);
 
 		OrthographicCamera& GetCamera() { return m_Camera; }
 		const OrthographicCamera& GetCamera() const { return m_Camera; }

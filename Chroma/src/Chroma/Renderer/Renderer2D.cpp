@@ -215,6 +215,8 @@ namespace Chroma
 
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture, const glm::vec4& color, float rotation)
 	{
+		constexpr size_t quadVertexCount = 4;
+		constexpr glm::vec2 textureCoords[] = { { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f } };
 
 		if (s_Data.QuadIndexCount + 6 >= s_Data.MaxIndices)
 			FlushAndReset();

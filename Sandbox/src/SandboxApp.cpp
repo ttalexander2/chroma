@@ -160,7 +160,7 @@ public:
 		m_SquarePosition = glm::vec3(0.0f);
 	}
 
-	void OnUpdate(Chroma::Timestep time) override
+	void OnUpdate(Chroma::Time time) override
 	{
 
 		m_CameraController.OnUpdate(time);

@@ -4,10 +4,9 @@
 
 
 #include "Chroma/Core/Application.h"
-#include "Chroma/Core/Layer.h"
 #include "Chroma/Core/Log.h"
 
-#include "Chroma/Core/Timestep.h"
+#include "Chroma/Core/Time.h"
 
 #include "Chroma/Profiler/Instrumentor.h"
 
@@ -27,6 +26,7 @@
 #include "Chroma/Renderer/Shader.h"
 #include "Chroma/Renderer/Texture.h"
 #include "Chroma/Renderer/VertexArray.h"
+#include "Chroma/Renderer/Framebuffer.h"
 
 #include "Chroma/Renderer/OrthographicCamera.h"
 // -----------------------------------

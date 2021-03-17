@@ -22,6 +22,7 @@ group "Dependencies"
     include "Chroma/third_party/GLFW"
     include "Chroma/third_party/Glad"
     include "Chroma/third_party/imgui"
+    include "Chroma/third_party/glm"
 group "" -- end of dependencies
 
 
@@ -44,8 +45,6 @@ project "Chroma"
         "%{prj.name}/src/**.cpp",
         "%{prj.name}/third_party/stb_image/**.h",
         "%{prj.name}/third_party/stb_image/**.cpp",
-        "%{prj.name}/third_party/glm/glm/**.hpp",
-        "%{prj.name}/third_party/glm/glm/**.inl"
     }
 
     defines
@@ -109,6 +108,59 @@ project "Chroma"
 
 project "Sandbox"
     location "Sandbox"
+    kind "ConsoleApp"
+    language "C++"
+    cppdialect "C++17"
+    staticruntime "on"
+
+    targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+    objdir ("obj/" .. outputdir .. "/%{prj.name}")
+
+    files
+    {
+        "%{prj.name}/src/**.h",
+        "%{prj.name}/src/**.cpp"
+    }
+
+    includedirs
+    {
+        "Chroma/third_party/spdlog/include",
+        "Chroma/src",
+        "%{IncludeDir.glm}",
+        "%{IncludeDir.ImGui}"
+    }
+
+    links
+    {
+        "Chroma"
+    }
+
+    filter "system:windows"
+        systemversion "latest"
+
+        defines
+        {
+            "CHROMA_PLATFORM_WINDOWS",
+        }
+    
+    filter "configurations:Debug"
+        defines "CHROMA_DEBUG"
+        runtime "Debug"
+        symbols "on"
+
+    filter "configurations:Release"
+        defines "CHROMA_RELEASE"
+        runtime "Release"
+        optimize "on"
+
+    filter "configurations:Dist"
+        defines "CHROMA_DIST"
+        runtime "Release"
+        optimize "on"
+
+
+project "Polychrome"
+    location "Polychrome"
     kind "ConsoleApp"
     language "C++"
     cppdialect "C++17"

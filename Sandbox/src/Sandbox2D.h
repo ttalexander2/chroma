@@ -9,7 +9,7 @@ public:
 	~Sandbox2D() = default;
 
 	void OnAttach() override;
-	void OnUpdate(Chroma::Timestep ts) override;
+	void OnUpdate(Chroma::Time ts) override;
 	virtual void OnImGuiRender() override;
 	void OnEvent(Chroma::Event& e) override;
 private:
@@ -30,4 +30,6 @@ private:
 	std::vector<ProfileResult> m_ProfileResults;
 
 	Chroma::Ref<Chroma::Texture2D> m_Texture;
+
+	Chroma::Ref<Chroma::Framebuffer> m_Framebuffer;
 };

@@ -13,7 +13,7 @@ namespace Chroma
 
 	}
 
-	void OrthographicCameraController::OnUpdate(Timestep ts)
+	void OrthographicCameraController::OnUpdate(Time ts)
 	{
 		if (Input::IsKeyPressed(CHROMA_KEY_A))
 			m_CameraPosition.x -= m_CameraTranslationSpeed * ts;

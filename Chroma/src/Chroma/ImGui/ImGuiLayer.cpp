@@ -14,7 +14,6 @@
 namespace Chroma
 {
 	ImGuiLayer::ImGuiLayer()
-		: Layer("ImGuiLayer")
 	{
 
 	}
@@ -43,7 +42,7 @@ namespace Chroma
 			style.Colors[ImGuiCol_WindowBg].w = 1.0f;
 		}
 
-		Application& app = Application::GetInstance();
+		Application& app = Application::Get();
 		GLFWwindow* window = static_cast<GLFWwindow*>(app.GetWindow().GetNativeWindow());
 
 		ImGui_ImplGlfw_InitForOpenGL(window, true);
@@ -58,10 +57,14 @@ namespace Chroma
 
 	}
 
-	void ImGuiLayer::OnImGuiRender()
+	void ImGuiLayer::OnEvent(Event& e)
 	{
-		static bool show = true;
-		ImGui::ShowDemoWindow(&show);
+		if (m_BlockEvents)
+		{
+			ImGuiIO& io = ImGui::GetIO();
+			e.Handled |= e.IsInCategory(EventCategoryMouse) & io.WantCaptureMouse;
+			e.Handled |= e.IsInCategory(EventCategoryKeyboard) & io.WantCaptureKeyboard;
+		}
 	}
 
 	void ImGuiLayer::Begin()
@@ -74,7 +77,7 @@ namespace Chroma
 	void ImGuiLayer::End()
 	{
 		ImGuiIO& io = ImGui::GetIO();
-		Application& app = Application::GetInstance();
+		Application& app = Application::Get();
 		io.DisplaySize = ImVec2(app.GetWindow().GetWidth(), app.GetWindow().GetHeight());
 
 		//Rendering

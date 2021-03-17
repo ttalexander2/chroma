@@ -17,6 +17,8 @@ namespace Chroma
 			Vulkan = 3
 		};
 	public:
+		virtual ~RendererAPI() = default;
+
 		virtual void Init() = 0;
 
 		virtual void SetClearColor(const glm::vec4& color) = 0;
