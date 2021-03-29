@@ -5,6 +5,7 @@
 #include "Chroma/Platform/OpenGL/OpenGLVertexArray.h"
 #include "Chroma/Renderer/RendererAPI.h"
 
+
 namespace Chroma
 {
 	Ref<VertexArray> VertexArray::Create()
@@ -12,7 +13,7 @@ namespace Chroma
 		switch (Renderer::GetAPI())
 		{
 			case RendererAPI::API::None: CHROMA_CORE_ASSERT(false, "RendererAPI::API::None not supported!"); return nullptr;
-			case RendererAPI::API::OpenGL: return std::make_shared<OpenGLVertexArray>();
+			case RendererAPI::API::OpenGL: return CreateRef<OpenGLVertexArray>();
 
 		}
 

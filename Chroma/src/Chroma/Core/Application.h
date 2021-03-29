@@ -18,7 +18,7 @@ namespace Chroma
 	class CHROMA_API Application
 	{
 	public:
-		Application(const std::string& title = "Chroma Engine", unsigned int width = 1280, unsigned int height = 720);
+		Application(const std::string& title = "Chroma Engine", unsigned int width = 1920, unsigned int height = 1080);
 		virtual ~Application();
 
 		void Run();

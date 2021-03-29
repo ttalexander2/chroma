@@ -11,15 +11,60 @@ namespace Polychrome
 {
 
 	EditorApp::EditorApp()
-		: Application("Polychrome Editor", 1280U, 720U), m_CameraController(1920.0f / 1080.0f)
+		: Application("Polychrome Editor", 1920U, 1080U), m_CameraController(1920.0f / 1080.0f)
 	{
+		struct A
+		{
+			int x = 0;
+		};
+		struct B
+		{
+			int x = 0;
+		};
+		struct C
+		{
+			int x = 0;
+		};
+
+		Chroma::Scene s;
+		
+		Chroma::EntityID entity = s.NewEntity();
+		Chroma::Component<A> comp = s.AddComponent<A>(entity);
+		comp = s.GetComponent<A>(entity);
+		comp->x = 2;
+		Chroma::Component<B> comp2 = s.AddComponent<B>(entity);
+		comp2->x = 7;
+
+		s.AddComponent<A>(entity);
+		s.AddComponent<A>(entity);
+		s.AddComponent<A>(entity);
+		s.AddComponent<A>(entity);
+
+		auto components = s.GetComponents<A>(entity);
+		for (Chroma::Component<A> component : components)
+		{
+			CHROMA_INFO("{0}->A->x: {1}", entity, component->x);
+		}
+
+		CHROMA_INFO("");
+
+		for (Chroma::Component<A> component : components)
+		{
+			component->x++;
+			CHROMA_INFO("{0}->A->x: {1}", entity, component->x);
+		}
+
+		for (EntityID id : s.View<A, B>())
+
+		s.DestroyEntity(entity);
+
 	}
 
 	void EditorApp::Initialize()
 	{
 		m_Texture = Chroma::Texture2D::Create("assets/textures/megagfilms.png");
 
-		Chroma::FramebufferSpecification fbspec;
+		Chroma::FramebufferInfo fbspec;
 		fbspec.Width = 1920;
 		fbspec.Height = 1080;
 		m_Framebuffer = Chroma::Framebuffer::Create(fbspec);

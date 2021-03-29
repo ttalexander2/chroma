@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "Chroma/Renderer/Buffer.h"
+#include "Chroma/Math/Math.h"
 
 namespace Chroma
 {

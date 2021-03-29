@@ -17,6 +17,8 @@
 
 #include "Chroma/ImGui/ImGuiLayer.h"
 
+#include "Chroma/Scene/Scene.h"
+
 // -----------Render------------------
 #include "Chroma/Renderer/Renderer.h"
 #include "Chroma/Renderer/Renderer2D.h"
@@ -30,4 +32,6 @@
 
 #include "Chroma/Renderer/OrthographicCamera.h"
 // -----------------------------------
+
+#include "Chroma/Math/Math.h"
 

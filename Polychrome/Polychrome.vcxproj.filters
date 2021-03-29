@@ -8,4 +8,8 @@
     <ClInclude Include="src\EditorApp.h" />
     <ClInclude Include="src\Viewport.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="assets\shaders\FlatColor.glsl" />
+    <None Include="assets\shaders\Texture.glsl" />
+  </ItemGroup>
 </Project>

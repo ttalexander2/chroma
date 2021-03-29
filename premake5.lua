@@ -17,6 +17,7 @@ IncludeDir["Glad"] = "Chroma/third_party/Glad/include"
 IncludeDir["ImGui"] = "Chroma/third_party/imgui"
 IncludeDir["glm"] = "Chroma/third_party/glm"
 IncludeDir["stb_image"] = "Chroma/third_party/stb_image"
+IncludeDir["entt"] = "Chroma/third_party/entt"
 
 group "Dependencies"
     include "Chroma/third_party/GLFW"
@@ -30,7 +31,7 @@ project "Chroma"
     location "Chroma"
     kind "StaticLib"
     language "C++"
-    cppdialect "C++17"
+    cppdialect "C++20"
     staticruntime "on"
 
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
@@ -45,6 +46,7 @@ project "Chroma"
         "%{prj.name}/src/**.cpp",
         "%{prj.name}/third_party/stb_image/**.h",
         "%{prj.name}/third_party/stb_image/**.cpp",
+        "%{prj.name}/third_party/entt/**.hpp",
     }
 
     defines
@@ -60,7 +62,8 @@ project "Chroma"
         "%{IncludeDir.Glad}",
         "%{IncludeDir.ImGui}",
         "%{IncludeDir.glm}",
-        "%{IncludeDir.stb_image}"
+        "%{IncludeDir.stb_image}",
+        "%{IncludeDir.entt}"
 
     }
 
@@ -110,7 +113,7 @@ project "Sandbox"
     location "Sandbox"
     kind "ConsoleApp"
     language "C++"
-    cppdialect "C++17"
+    cppdialect "C++20"
     staticruntime "on"
 
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
@@ -127,7 +130,8 @@ project "Sandbox"
         "Chroma/third_party/spdlog/include",
         "Chroma/src",
         "%{IncludeDir.glm}",
-        "%{IncludeDir.ImGui}"
+        "%{IncludeDir.ImGui}",
+        "%{IncludeDir.entt}"
     }
 
     links
@@ -163,7 +167,7 @@ project "Polychrome"
     location "Polychrome"
     kind "ConsoleApp"
     language "C++"
-    cppdialect "C++17"
+    cppdialect "C++20"
     staticruntime "on"
 
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
@@ -180,7 +184,8 @@ project "Polychrome"
         "Chroma/third_party/spdlog/include",
         "Chroma/src",
         "%{IncludeDir.glm}",
-        "%{IncludeDir.ImGui}"
+        "%{IncludeDir.ImGui}",
+        "%{IncludeDir.entt}"
     }
 
     links

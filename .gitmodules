@@ -10,3 +10,9 @@
 [submodule "Chroma/third_party/glm"]
 	path = Chroma/third_party/glm
 	url = https://github.com/ttalexander2/glm
+[submodule "third_party/--force"]
+	path = third_party/--force
+	url = https://github.com/ttalexander2/premake-core.git
+[submodule "third_party/premake-core"]
+	path = third_party/premake-core
+	url = https://github.com/ttalexander2/premake-core.git

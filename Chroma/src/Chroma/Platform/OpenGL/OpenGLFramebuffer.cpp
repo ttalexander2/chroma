@@ -8,7 +8,7 @@ namespace Chroma
 {
 	static const uint32_t s_MaxFramebufferSize = 8192;
 
-	OpenGLFramebuffer::OpenGLFramebuffer(const FramebufferSpecification& spec)
+	OpenGLFramebuffer::OpenGLFramebuffer(const FramebufferInfo& spec)
 		:m_Specification(spec)
 	{
 		Resize();

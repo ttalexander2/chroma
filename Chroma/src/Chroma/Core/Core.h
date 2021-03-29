@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <glm/glm.hpp>
 
 #ifdef CHROMA_PLATFORM_WINDOWS
 #if HZ_DYNAMIC_LINK
@@ -47,4 +48,5 @@ namespace Chroma
 	{
 		return std::make_shared<T>(std::forward<Args>(args)...);
 	}
+
 }
