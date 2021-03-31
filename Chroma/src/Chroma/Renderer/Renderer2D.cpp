@@ -166,7 +166,7 @@ namespace Chroma
 
 		glm::mat4 transform;
 
-		if (rotation == 0 )
+		if (rotation == 0)
 			transform = glm::translate(glm::mat4(1.0f), position)
 			* glm::scale(glm::mat4(1.0f), size);
 		else

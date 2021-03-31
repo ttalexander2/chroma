@@ -209,7 +209,6 @@ project "Polychrome"
         "{COPY} ../Chroma/lib/Windows/x64/fmodL.dll %{cfg.targetdir}",
         "{ECHO} Copying assets to %{cfg.targetdir}/assets",
         "{COPY} assets %{cfg.targetdir}/assets",
-
     }
 
 

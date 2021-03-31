@@ -131,13 +131,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\Sandbox2D.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="src\Sandbox2D.cpp" />
-    <ClCompile Include="src\SandboxApp.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Chroma\Chroma.vcxproj">
       <Project>{1F05C3AB-0BA7-ED81-F461-01D6E0A274D2}</Project>
     </ProjectReference>
