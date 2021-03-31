@@ -18,6 +18,7 @@ IncludeDir["ImGui"] = "Chroma/third_party/imgui"
 IncludeDir["glm"] = "Chroma/third_party/glm"
 IncludeDir["stb_image"] = "Chroma/third_party/stb_image"
 IncludeDir["entt"] = "Chroma/third_party/entt"
+IncludeDir["FMOD"] = "Chroma/third_party/fmod"
 
 group "Dependencies"
     include "Chroma/third_party/GLFW"
@@ -63,7 +64,8 @@ project "Chroma"
         "%{IncludeDir.ImGui}",
         "%{IncludeDir.glm}",
         "%{IncludeDir.stb_image}",
-        "%{IncludeDir.entt}"
+        "%{IncludeDir.entt}",
+        "%{IncludeDir.FMOD}"
 
     }
 
@@ -72,7 +74,7 @@ project "Chroma"
         "GLFW",
         "Glad",
         "ImGui",
-        "opengl32.lib"
+        "opengl32.lib",
     }
 
     filter "system:windows"
@@ -85,9 +87,10 @@ project "Chroma"
             "GLFW_INCLUDE_NONE"
         }
 
-        postbuildcommands
+        links
         {
-            ("{COPY} %{cfg.buildtarget.relpath} \"../bin/" .. outputdir .. "/Sandbox/\"")
+            "Chroma/lib/Windows/x64/fmodL_vc.lib",
+            "Chroma/lib/Windows/x64/fmodstudioL_vc.lib"
         }
     
     filter "configurations:Debug"
@@ -131,7 +134,8 @@ project "Sandbox"
         "Chroma/src",
         "%{IncludeDir.glm}",
         "%{IncludeDir.ImGui}",
-        "%{IncludeDir.entt}"
+        "%{IncludeDir.entt}",
+        "%{IncludeDir.FMOD}"
     }
 
     links
@@ -146,7 +150,8 @@ project "Sandbox"
         {
             "CHROMA_PLATFORM_WINDOWS",
         }
-    
+
+
     filter "configurations:Debug"
         defines "CHROMA_DEBUG"
         runtime "Debug"
@@ -185,13 +190,28 @@ project "Polychrome"
         "Chroma/src",
         "%{IncludeDir.glm}",
         "%{IncludeDir.ImGui}",
-        "%{IncludeDir.entt}"
+        "%{IncludeDir.entt}",
+        "%{IncludeDir.FMOD}"
+
     }
 
     links
     {
         "Chroma"
     }
+
+
+    postbuildcommands
+    {
+        "{ECHO} Copying ../Chroma/lib/Windows/x64/fmodstudioL.dll to %{cfg.targetdir}",
+        "{COPY} ../Chroma/lib/Windows/x64/fmodstudioL.dll %{cfg.targetdir}",
+        "{ECHO} Copying ../Chroma/lib/Windows/x64/fmodL.dll to %{cfg.targetdir}",
+        "{COPY} ../Chroma/lib/Windows/x64/fmodL.dll %{cfg.targetdir}",
+        "{ECHO} Copying assets to %{cfg.targetdir}/assets",
+        "{COPY} assets %{cfg.targetdir}/assets",
+
+    }
+
 
     filter "system:windows"
         systemversion "latest"

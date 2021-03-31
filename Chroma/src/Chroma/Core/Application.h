@@ -7,11 +7,12 @@
 #include "Chroma/Events/ApplicationEvent.h"
 #include <glm/glm.hpp>
 #include <Chroma/ImGui/ImGuiLayer.h>
-#include <Chroma/Core/Time.h>
+#include "Chroma/Core/Time.h"
 
 #include "Chroma/Renderer/Shader.h"
-#include <Chroma/Renderer/Buffer.h>
-#include <Chroma/Renderer/VertexArray.h>
+#include "Chroma/Renderer/Buffer.h"
+#include "Chroma/Renderer/VertexArray.h"
+#include "Chroma/Scene/Scene.h"
 
 namespace Chroma
 {
@@ -25,17 +26,30 @@ namespace Chroma
 
 		void ProcessEvents(Event& e);
 
-		virtual void Initialize() = 0;
-		virtual void Update(Time time) = 0;
-		virtual void Draw(Time time) = 0;
-		virtual void ImGuiDraw(Time time) = 0;
+		virtual void EarlyInit() {};
+		virtual void Init() {};
+		virtual void LateInit() {};
 
-		virtual void OnEvent(Event& e) = 0;
+		virtual void EarlyUpdate(Time time) {};
+		virtual void Update(Time time) {};
+		virtual void LateUpdate(Time time) {};
+
+		virtual void PreDraw(Time time) {};
+		virtual void Draw(Time time) {};
+		virtual void PostDraw(Time time) {};
+
+		virtual void ImGuiDraw(Time time) {};
+
+		virtual void OnEvent(Event& e) {};
 
 		Window& GetWindow() { return *m_Window; }
 		static Application& Get() { return *s_Instance; }
 
 		ImGuiLayer* GetImGuiLayer() { return m_ImGuiLayer; }
+
+	public:
+
+		Ref<Scene> m_ActiveScene;
 
 	private:
 

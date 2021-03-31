@@ -7,6 +7,9 @@
     <Filter Include="src\Chroma">
       <UniqueIdentifier>{56DE2109-4296-6356-AB9D-3CB29774FE46}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Chroma\Audio">
+      <UniqueIdentifier>{D7541DED-C34D-3C3F-EC7F-21C4D8D71B4B}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Chroma\Core">
       <UniqueIdentifier>{6E68118B-DAF3-7E4F-E304-02444F0FDB4F}</UniqueIdentifier>
     </Filter>
@@ -40,9 +43,6 @@
     <Filter Include="third_party">
       <UniqueIdentifier>{0FB18DF1-7B66-06E7-045B-00BE700FFDEA}</UniqueIdentifier>
     </Filter>
-    <Filter Include="third_party\entt">
-      <UniqueIdentifier>{B9774DF9-A570-6C4B-CEA2-51D0BAFA4B57}</UniqueIdentifier>
-    </Filter>
     <Filter Include="third_party\stb_image">
       <UniqueIdentifier>{6940486C-D5AC-0367-9EA0-9BC40ACC25CF}</UniqueIdentifier>
     </Filter>
@@ -50,6 +50,12 @@
   <ItemGroup>
     <ClInclude Include="src\Chroma.h">
       <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Chroma\Audio\Audio.h">
+      <Filter>src\Chroma\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Chroma\Audio\ChromaFMOD.h">
+      <Filter>src\Chroma\Audio</Filter>
     </ClInclude>
     <ClInclude Include="src\Chroma\Core\Application.h">
       <Filter>src\Chroma\Core</Filter>
@@ -159,20 +165,38 @@
     <ClInclude Include="src\Chroma\Renderer\VertexArray.h">
       <Filter>src\Chroma\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\Chroma\Scene\Component.h">
+      <Filter>src\Chroma\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Chroma\Scene\ComponentPool.h">
+      <Filter>src\Chroma\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Chroma\Scene\ECS.h">
+      <Filter>src\Chroma\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Chroma\Scene\Entity.h">
+      <Filter>src\Chroma\Scene</Filter>
+    </ClInclude>
     <ClInclude Include="src\Chroma\Scene\Scene.h">
+      <Filter>src\Chroma\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Chroma\Scene\System.h">
       <Filter>src\Chroma\Scene</Filter>
     </ClInclude>
     <ClInclude Include="src\chromapch.h">
       <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="third_party\entt\entt.hpp">
-      <Filter>third_party\entt</Filter>
     </ClInclude>
     <ClInclude Include="third_party\stb_image\stb_image.h">
       <Filter>third_party\stb_image</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Chroma\Audio\Audio.cpp">
+      <Filter>src\Chroma\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Chroma\Audio\ChromaFMOD.cpp">
+      <Filter>src\Chroma\Audio</Filter>
+    </ClCompile>
     <ClCompile Include="src\Chroma\Core\Application.cpp">
       <Filter>src\Chroma\Core</Filter>
     </ClCompile>
@@ -247,6 +271,9 @@
     </ClCompile>
     <ClCompile Include="src\Chroma\Renderer\VertexArray.cpp">
       <Filter>src\Chroma\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Chroma\Scene\Scene.cpp">
+      <Filter>src\Chroma\Scene</Filter>
     </ClCompile>
     <ClCompile Include="src\chromapch.cpp">
       <Filter>src</Filter>

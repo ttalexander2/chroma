@@ -8,6 +8,7 @@
 #include "Chroma/Renderer/Renderer.h"
 
 #include "Chroma/Core/Time.h"
+#include "Chroma/Audio/Audio.h"
 #include <GLFW/glfw3.h>
 #include <imgui.h>
 
@@ -31,6 +32,8 @@ namespace Chroma
 		Renderer::Init();
 
 		m_ImGuiLayer = new ImGuiLayer();
+
+		Audio::Init();
 
 	}
 
@@ -70,7 +73,9 @@ namespace Chroma
 
 	void Application::Run()
 	{
-		this->Initialize();
+		this->EarlyInit();
+		this->Init();
+		this->LateInit();
 		m_ImGuiLayer->OnAttach();
 
 		while (m_Running)
@@ -79,8 +84,13 @@ namespace Chroma
 			Time timestep = time - m_LastFrameTime;
 			m_LastFrameTime = time;
 
+			this->EarlyUpdate(timestep);
 			this->Update(timestep);
+			this->LateUpdate(timestep);
+
+			this->PreDraw(timestep);
 			this->Draw(timestep);
+			this->PostDraw(timestep);
 
 			m_ImGuiLayer->Begin();
 
@@ -89,9 +99,12 @@ namespace Chroma
 			m_ImGuiLayer->End();
 
 			m_Window->OnUpdate();
+
+			Audio::Update();
 		}
 
 		m_ImGuiLayer->OnDetach();
+		Audio::Shutdown();
 	}
 
 }

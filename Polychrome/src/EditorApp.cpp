@@ -6,6 +6,7 @@
 #include <Chroma/Core/EntryPoint.h>
 #include <imgui.h>
 #include <glm/gtc/type_ptr.hpp>
+#include <fmod_studio.hpp>
 
 namespace Polychrome
 {
@@ -13,54 +14,89 @@ namespace Polychrome
 	EditorApp::EditorApp()
 		: Application("Polychrome Editor", 1920U, 1080U), m_CameraController(1920.0f / 1080.0f)
 	{
-		struct A
-		{
-			int x = 0;
-		};
-		struct B
-		{
-			int x = 0;
-		};
-		struct C
+
+
+		struct Component_A
 		{
 			int x = 0;
 		};
 
-		Chroma::Scene s;
+		struct Component_B
+		{
+			int x = 0;
+		};
+
+		struct Component_C
+		{
+			int x = 0;
+		};
+
+		Chroma::Scene scene;
 		
-		Chroma::EntityID entity = s.NewEntity();
-		Chroma::Component<A> comp = s.AddComponent<A>(entity);
-		comp = s.GetComponent<A>(entity);
+		Chroma::EntityID entity = scene.NewEntity();
+		Chroma::Component<Component_A> comp = scene.CreateComponent<Component_A>(entity);
+		comp = scene.GetComponent<Component_A>(entity);
 		comp->x = 2;
-		Chroma::Component<B> comp2 = s.AddComponent<B>(entity);
+		Chroma::Component<Component_B> comp2 = scene.CreateComponent<Component_B>(entity);
 		comp2->x = 7;
 
-		s.AddComponent<A>(entity);
-		s.AddComponent<A>(entity);
-		s.AddComponent<A>(entity);
-		s.AddComponent<A>(entity);
+		auto entity4 = scene.NewEntity();
 
-		auto components = s.GetComponents<A>(entity);
-		for (Chroma::Component<A> component : components)
+		scene.CreateComponent<Component_A>(entity4);
+		scene.CreateComponent<Component_A>(entity4);
+		scene.CreateComponent<Component_B>(entity4);
+		scene.CreateComponent<Component_B>(entity4);
+		scene.CreateComponent<Component_C>(entity4);
+		scene.CreateComponent<Component_C>(entity4);
+
+		scene.CreateComponent<Component_A>(entity);
+		scene.CreateComponent<Component_A>(entity);
+		scene.CreateComponent<Component_A>(entity);
+		scene.CreateComponent<Component_A>(entity);
+
+		auto components = scene.GetComponents<Component_A>(entity);
+		for (Chroma::Component<Component_A> component : components)
 		{
 			CHROMA_INFO("{0}->A->x: {1}", entity, component->x);
 		}
 
 		CHROMA_INFO("");
 
-		for (Chroma::Component<A> component : components)
+		for (Chroma::Component<Component_A> component : components)
 		{
 			component->x++;
 			CHROMA_INFO("{0}->A->x: {1}", entity, component->x);
 		}
 
-		for (EntityID id : s.View<A, B>())
+		for (Chroma::EntityID id : scene.View<Component_A, Component_B>())
+		{
+			auto a = scene.GetComponent<Component_A>(id);
+			auto b = scene.GetComponent<Component_B>(id);
+			CHROMA_INFO("ENTITY [{0}]: a->{1}, b->{2}", id, a->x, b->x);
+		}
 
-		s.DestroyEntity(entity);
+		Chroma::EntityID e2 = scene.NewEntity();
+
+		scene.CreateComponent<Component_A>(e2);
+		scene.CreateComponent<Component_B>(e2);
+
+		for (Chroma::EntityID id : scene.View<Component_A, Component_B>())
+		{
+			auto a = scene.GetComponent<Component_A>(id);
+			auto b = scene.GetComponent<Component_B>(id);
+			CHROMA_INFO("ENTITY [{0}]: a->{1}, b->{2}", id, a->x, b->x);
+		}
+
+
+		CHROMA_INFO("");
+
+		scene.DestroyEntity(entity);
+
+		this->m_ActiveScene = CreateRef<Chroma::Scene>(scene);
 
 	}
 
-	void EditorApp::Initialize()
+	void EditorApp::Init()
 	{
 		m_Texture = Chroma::Texture2D::Create("assets/textures/megagfilms.png");
 
@@ -68,10 +104,24 @@ namespace Polychrome
 		fbspec.Width = 1920;
 		fbspec.Height = 1080;
 		m_Framebuffer = Chroma::Framebuffer::Create(fbspec);
+
+		Chroma::Audio::LoadBank("assets/fmod/Desktop/Master.bank", FMOD_STUDIO_LOAD_BANK_NORMAL);
+		Chroma::Audio::LoadBank("assets/fmod/Desktop/Master.strings.bank", FMOD_STUDIO_LOAD_BANK_NORMAL);
+
+		Chroma::Audio::LoadEvent("event:/Music/Test");
+		Chroma::Audio::PlayEvent("event:/Music/Test");
 	}
 
 	void EditorApp::Update(Chroma::Time time)
 	{
+
+		
+		if (Chroma::Input::IsKeyPressed(CHROMA_KEY_ENTER))
+		{
+			Chroma::Audio::PlayEventIfStopped("event:/FX/Sigil");
+		}
+
+
 		CHROMA_PROFILE_FUNCTION();
 		// Update
 		{
@@ -107,14 +157,14 @@ namespace Polychrome
 			{
 				numQuads++;
 				glm::vec4 color = { (x + 5.0f) / 10.0f, 0.4f,  (y + 5.0f) / 10.0, 1.0f };
-				Chroma::Renderer2D::DrawQuad({ x, y, 0.0f }, { 0.08f, 0.08f }, m_SquareColor);
+				Chroma::Renderer2D::DrawQuad({ x, y }, { 0.08f, 0.08f }, m_SquareColor);
 			}
 		}
 
 		Chroma::Renderer2D::DrawQuad({ 0.2f, -0.6f }, { 0.4f, 0.8f }, m_SquareColor);
 		Chroma::Renderer2D::DrawQuad({ -0.4f, -0.3f }, { 0.2f, 0.3f }, m_SquareColor, rotation);
 
-		Chroma::Renderer2D::DrawQuad({ 0.2f, 0.3f, 0.0f }, { 0.4f, 0.4f }, m_Texture);
+		Chroma::Renderer2D::DrawQuad({ 0.2f, 0.3f }, { 0.4f, 0.4f }, m_Texture);
 
 		Chroma::Renderer2D::EndScene();
 

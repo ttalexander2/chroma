@@ -35,7 +35,7 @@ namespace Polychrome
 		height = glm::round(height);
 		width = glm::round(width);
 
-		if (s_ViewportSize != *((glm::vec2*)&ImVec2{width, height}) && width > 0 && height > 0)
+		if ((s_ViewportSize.x != width || s_ViewportSize.y != height) && width > 0 && height > 0)
 		{
 			frame_buffer->Resize((uint32_t)width, (uint32_t)height);
 			s_ViewportSize = { width, height };

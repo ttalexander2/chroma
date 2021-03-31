@@ -19,6 +19,8 @@
 
 #include "Chroma/Scene/Scene.h"
 
+#include "Chroma/Audio/Audio.h"
+
 // -----------Render------------------
 #include "Chroma/Renderer/Renderer.h"
 #include "Chroma/Renderer/Renderer2D.h"

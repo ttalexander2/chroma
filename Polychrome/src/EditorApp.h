@@ -11,7 +11,7 @@ namespace Polychrome
 		EditorApp();
 		~EditorApp() = default;
 
-		void Initialize() override;
+		void Init() override;
 		void OnEvent(Chroma::Event& e) override;
 		void Update(Chroma::Time time) override;
 		void Draw(Chroma::Time time) override;

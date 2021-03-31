@@ -77,7 +77,7 @@
       <PrecompiledHeaderFile>chromapch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;CHROMA_PLATFORM_WINDOWS;CHROMA_BUILD_DLL;GLFW_INCLUDE_NONE;CHROMA_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;third_party\spdlog\include;third_party\GLFW\include;third_party\Glad\include;third_party\imgui;third_party\glm;third_party\stb_image;third_party\entt;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;third_party\spdlog\include;third_party\GLFW\include;third_party\Glad\include;third_party\imgui;third_party\glm;third_party\stb_image;third_party\entt;third_party\fmod;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -88,11 +88,8 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;lib\Windows\x64\fmodL_vc.lib;lib\Windows\x64\fmodstudioL_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
-    <PostBuildEvent>
-      <Command>IF EXIST ..\bin\Debug-windows-x86_64\Chroma\Chroma.lib\ (xcopy /Q /E /Y /I ..\bin\Debug-windows-x86_64\Chroma\Chroma.lib "..\bin\Debug-windows-x86_64\Sandbox\" &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Debug-windows-x86_64\Chroma\Chroma.lib "..\bin\Debug-windows-x86_64\Sandbox\" &gt; nul)</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -100,7 +97,7 @@
       <PrecompiledHeaderFile>chromapch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;CHROMA_PLATFORM_WINDOWS;CHROMA_BUILD_DLL;GLFW_INCLUDE_NONE;CHROMA_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;third_party\spdlog\include;third_party\GLFW\include;third_party\Glad\include;third_party\imgui;third_party\glm;third_party\stb_image;third_party\entt;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;third_party\spdlog\include;third_party\GLFW\include;third_party\Glad\include;third_party\imgui;third_party\glm;third_party\stb_image;third_party\entt;third_party\fmod;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -115,11 +112,8 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;lib\Windows\x64\fmodL_vc.lib;lib\Windows\x64\fmodstudioL_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
-    <PostBuildEvent>
-      <Command>IF EXIST ..\bin\Release-windows-x86_64\Chroma\Chroma.lib\ (xcopy /Q /E /Y /I ..\bin\Release-windows-x86_64\Chroma\Chroma.lib "..\bin\Release-windows-x86_64\Sandbox\" &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Release-windows-x86_64\Chroma\Chroma.lib "..\bin\Release-windows-x86_64\Sandbox\" &gt; nul)</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
     <ClCompile>
@@ -127,7 +121,7 @@
       <PrecompiledHeaderFile>chromapch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;CHROMA_PLATFORM_WINDOWS;CHROMA_BUILD_DLL;GLFW_INCLUDE_NONE;CHROMA_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;third_party\spdlog\include;third_party\GLFW\include;third_party\Glad\include;third_party\imgui;third_party\glm;third_party\stb_image;third_party\entt;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;third_party\spdlog\include;third_party\GLFW\include;third_party\Glad\include;third_party\imgui;third_party\glm;third_party\stb_image;third_party\entt;third_party\fmod;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -142,14 +136,13 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;lib\Windows\x64\fmodL_vc.lib;lib\Windows\x64\fmodstudioL_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
-    <PostBuildEvent>
-      <Command>IF EXIST ..\bin\Dist-windows-x86_64\Chroma\Chroma.lib\ (xcopy /Q /E /Y /I ..\bin\Dist-windows-x86_64\Chroma\Chroma.lib "..\bin\Dist-windows-x86_64\Sandbox\" &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Dist-windows-x86_64\Chroma\Chroma.lib "..\bin\Dist-windows-x86_64\Sandbox\" &gt; nul)</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\Chroma.h" />
+    <ClInclude Include="src\Chroma\Audio\Audio.h" />
+    <ClInclude Include="src\Chroma\Audio\ChromaFMOD.h" />
     <ClInclude Include="src\Chroma\Core\Application.h" />
     <ClInclude Include="src\Chroma\Core\Core.h" />
     <ClInclude Include="src\Chroma\Core\EntryPoint.h" />
@@ -186,12 +179,18 @@
     <ClInclude Include="src\Chroma\Renderer\Shader.h" />
     <ClInclude Include="src\Chroma\Renderer\Texture.h" />
     <ClInclude Include="src\Chroma\Renderer\VertexArray.h" />
+    <ClInclude Include="src\Chroma\Scene\Component.h" />
+    <ClInclude Include="src\Chroma\Scene\ComponentPool.h" />
+    <ClInclude Include="src\Chroma\Scene\ECS.h" />
+    <ClInclude Include="src\Chroma\Scene\Entity.h" />
     <ClInclude Include="src\Chroma\Scene\Scene.h" />
+    <ClInclude Include="src\Chroma\Scene\System.h" />
     <ClInclude Include="src\chromapch.h" />
-    <ClInclude Include="third_party\entt\entt.hpp" />
     <ClInclude Include="third_party\stb_image\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Chroma\Audio\Audio.cpp" />
+    <ClCompile Include="src\Chroma\Audio\ChromaFMOD.cpp" />
     <ClCompile Include="src\Chroma\Core\Application.cpp" />
     <ClCompile Include="src\Chroma\Core\Log.cpp" />
     <ClCompile Include="src\Chroma\Core\Time.cpp" />
@@ -217,6 +216,7 @@
     <ClCompile Include="src\Chroma\Renderer\Shader.cpp" />
     <ClCompile Include="src\Chroma\Renderer\Texture.cpp" />
     <ClCompile Include="src\Chroma\Renderer\VertexArray.cpp" />
+    <ClCompile Include="src\Chroma\Scene\Scene.cpp" />
     <ClCompile Include="src\chromapch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
