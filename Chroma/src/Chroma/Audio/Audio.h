@@ -41,6 +41,7 @@ namespace Chroma
 		static void SetChannelVolume(int channelId, float volume_db);
 		static bool IsPlaying(int channelId);
 		static bool IsEventPlaying(const std::string& eventName);
+		static bool IsEventStopped(const std::string& eventName);
 		static float dbToVolume(float db);
 		static float volumeTodb(float volume);
 		static FMOD_VECTOR VectorToFmod(const Math::vec3& vector);

@@ -140,6 +140,8 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Chroma\Camera.h" />
+    <ClInclude Include="src\Chroma\Scene\Entity.h" />
     <ClInclude Include="src\Chroma.h" />
     <ClInclude Include="src\Chroma\Audio\Audio.h" />
     <ClInclude Include="src\Chroma\Audio\ChromaFMOD.h" />
@@ -182,13 +184,13 @@
     <ClInclude Include="src\Chroma\Scene\Component.h" />
     <ClInclude Include="src\Chroma\Scene\ComponentPool.h" />
     <ClInclude Include="src\Chroma\Scene\ECS.h" />
-    <ClInclude Include="src\Chroma\Scene\Entity.h" />
     <ClInclude Include="src\Chroma\Scene\Scene.h" />
     <ClInclude Include="src\Chroma\Scene\System.h" />
     <ClInclude Include="src\chromapch.h" />
     <ClInclude Include="third_party\stb_image\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Chroma\Scene\Entity.cpp" />
     <ClCompile Include="src\Chroma\Audio\Audio.cpp" />
     <ClCompile Include="src\Chroma\Audio\ChromaFMOD.cpp" />
     <ClCompile Include="src\Chroma\Core\Application.cpp" />

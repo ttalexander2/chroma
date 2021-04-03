@@ -33,31 +33,35 @@ namespace Polychrome
 
 		Chroma::Scene scene;
 		
-		Chroma::EntityID entity = scene.NewEntity();
-		Chroma::Component<Component_A> comp = scene.CreateComponent<Component_A>(entity);
+		Chroma::Entity entity = scene.NewEntity();
+		Chroma::Component<Component_A> comp = scene.AddComponent<Component_A>(entity);
+
 		comp = scene.GetComponent<Component_A>(entity);
 		comp->x = 2;
-		Chroma::Component<Component_B> comp2 = scene.CreateComponent<Component_B>(entity);
+		Chroma::Component<Component_B> comp2 = scene.AddComponent<Component_B>(entity);
 		comp2->x = 7;
+
+		CHROMA_INFO("ENTITY HAS COMPONENT_A: {0}", entity.HasComponent<Component_A>() ? "True" : "False");
+		CHROMA_INFO("ENTITY HAS COMPONENT_C: {0}", entity.HasComponent<Component_C>() ? "True" : "False");
 
 		auto entity4 = scene.NewEntity();
 
-		scene.CreateComponent<Component_A>(entity4);
-		scene.CreateComponent<Component_A>(entity4);
-		scene.CreateComponent<Component_B>(entity4);
-		scene.CreateComponent<Component_B>(entity4);
-		scene.CreateComponent<Component_C>(entity4);
-		scene.CreateComponent<Component_C>(entity4);
+		scene.AddComponent<Component_A>(entity4);
+		scene.AddComponent<Component_A>(entity4);
+		scene.AddComponent<Component_B>(entity4);
+		scene.AddComponent<Component_B>(entity4);
+		scene.AddComponent<Component_C>(entity4);
+		scene.AddComponent<Component_C>(entity4);
 
-		scene.CreateComponent<Component_A>(entity);
-		scene.CreateComponent<Component_A>(entity);
-		scene.CreateComponent<Component_A>(entity);
-		scene.CreateComponent<Component_A>(entity);
+		scene.AddComponent<Component_A>(entity);
+		scene.AddComponent<Component_A>(entity);
+		scene.AddComponent<Component_A>(entity);
+		scene.AddComponent<Component_A>(entity);
 
 		auto components = scene.GetComponents<Component_A>(entity);
 		for (Chroma::Component<Component_A> component : components)
 		{
-			CHROMA_INFO("{0}->A->x: {1}", entity, component->x);
+			CHROMA_INFO("{0}\n{1}", entity, component);
 		}
 
 		CHROMA_INFO("");
@@ -68,23 +72,24 @@ namespace Polychrome
 			CHROMA_INFO("{0}->A->x: {1}", entity, component->x);
 		}
 
-		for (Chroma::EntityID id : scene.View<Component_A, Component_B>())
+		for (Chroma::Entity ent : scene.View<Component_A, Component_B>())
 		{
-			auto a = scene.GetComponent<Component_A>(id);
-			auto b = scene.GetComponent<Component_B>(id);
-			CHROMA_INFO("ENTITY [{0}]: a->{1}, b->{2}", id, a->x, b->x);
+			auto a = ent.GetComponent<Component_A>();
+			auto b = ent.GetComponent<Component_B>();
+			Chroma::Entity q = a.GetScene()->GetEntity(a.GetEntityID());
+			CHROMA_INFO("ENTITY [{0}]: a->{1}, b->{2}", ent.GetID(), a->x, b->x);
 		}
 
-		Chroma::EntityID e2 = scene.NewEntity();
+		Chroma::Entity e2 = scene.NewEntity();
 
-		scene.CreateComponent<Component_A>(e2);
-		scene.CreateComponent<Component_B>(e2);
+		scene.AddComponent<Component_A>(e2);
+		scene.AddComponent<Component_B>(e2);
 
-		for (Chroma::EntityID id : scene.View<Component_A, Component_B>())
+		for (Chroma::Entity id : scene.View<Component_A, Component_B>())
 		{
-			auto a = scene.GetComponent<Component_A>(id);
-			auto b = scene.GetComponent<Component_B>(id);
-			CHROMA_INFO("ENTITY [{0}]: a->{1}, b->{2}", id, a->x, b->x);
+			//auto a = scene.GetComponent<Component_A>(id);
+			//auto b = scene.GetComponent<Component_B>(id);
+			//CHROMA_INFO("ENTITY [{0}]: a->{1}, b->{2}", id, a->x, b->x);
 		}
 
 
@@ -109,13 +114,14 @@ namespace Polychrome
 		Chroma::Audio::LoadBank("assets/fmod/Desktop/Master.strings.bank", FMOD_STUDIO_LOAD_BANK_NORMAL);
 
 		Chroma::Audio::LoadEvent("event:/Music/Test");
-		Chroma::Audio::PlayEvent("event:/Music/Test");
+
 	}
 
 	void EditorApp::Update(Chroma::Time time)
 	{
 
-		
+		Chroma::Audio::PlayEventIfStopped("event:/Music/Test");
+
 		if (Chroma::Input::IsKeyPressed(CHROMA_KEY_ENTER))
 		{
 			Chroma::Audio::PlayEventIfStopped("event:/FX/Sigil");

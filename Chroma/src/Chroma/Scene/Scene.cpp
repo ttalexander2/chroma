@@ -1,11 +1,12 @@
 #include "chromapch.h"
 
 #include "Scene.h"
+#include "Entity.h"
 
 namespace Chroma
 {
 
-	EntityID Scene::NewEntity()
+	Entity Scene::NewEntity()
 	{
 		if (!m_FreeEntities.empty())
 		{
@@ -13,14 +14,16 @@ namespace Chroma
 			m_FreeEntities.pop_back();
 			EntityID newID = CreateEntityId(newIndex, GetEntityVersion(m_Entities[newIndex]));
 			m_Entities[newIndex] = newID;
-			return m_Entities[newIndex];
+			Entity entity = { newID, this };
+			return { m_Entities[newIndex], this };
 		}
 		m_Entities.push_back(CreateEntityId(EntityIndex(m_Entities.size()), 0));
-		return m_Entities.back();
+		return { m_Entities.back(), this };
 	}
 
-	void Scene::DestroyEntity(EntityID id)
+	void Scene::DestroyEntity(Entity entity)
 	{
+		EntityID id = entity.m_EntityID;
 		EntityID newID = CreateEntityId(EntityIndex(-1), GetEntityVersion(id) + 1);
 		m_Entities[GetEntityIndex(id)] = newID;
 		m_FreeEntities.push_back(GetEntityIndex(id));
@@ -30,6 +33,14 @@ namespace Chroma
 		}
 	}
 
+	Entity Scene::ConvertIDToEntity(EntityID e, Scene& scene)
+	{
+		return Entity(e, &scene);
+	}
 
+	Entity Scene::GetEntity(EntityID e)
+	{
+		return Scene::ConvertIDToEntity(e, *this);
+	}
 
 }

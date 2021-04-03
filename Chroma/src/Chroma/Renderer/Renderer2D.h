@@ -7,6 +7,7 @@ namespace Chroma
 	class Renderer2D
 	{
 	public:
+
 		static void Init();
 		static void Shutdown();
 

@@ -1,19 +1,26 @@
 #pragma once
 
+#include <numeric>
+
 namespace Chroma
 {
 	const size_t MAX_COMPONENTS = 64;
 	const size_t MIN_ENTITIES = 512;
 
 	/*
-	* EntityID - 32 bits
+	* Entity - 32 bits
 	*
 	*	|32 bits				| 32 bits				|
 	*	|unique_ID				| version				|
 	*/
 
-	typedef unsigned long long EntityID;
-	typedef unsigned long EntityIndex;
-	typedef unsigned long EntityVersion;
-	typedef unsigned int ComponentTypeID;
+
+	typedef uint64_t EntityID;
+	typedef uint32_t EntityIndex;
+	typedef uint32_t EntityVersion;
+
+	const uint64_t ENTITY_NULL = std::numeric_limits<uint64_t>::max();
+
+
+
 }
