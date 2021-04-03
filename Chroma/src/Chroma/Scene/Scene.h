@@ -37,14 +37,14 @@ namespace Chroma
 			//this is a little sus
 			int componentID = GetComponentTypeID<T>();
 
-			if (m_ComponentPools.size() <= componentID)
-			{
-				m_ComponentPools.resize(componentID + 1, nullptr);
-			}
+			//if (m_ComponentPools.size() <= componentID)
+			//{
+			//	m_ComponentPools.resize(componentID + 1, nullptr);
+			//}
 
-			if (m_ComponentPools[componentID] == nullptr)
+			if (m_ComponentPools.size() <= componentID || m_ComponentPools[componentID] == nullptr)
 			{
-				m_ComponentPools[componentID] = new ComponentPool<T>();
+				m_ComponentPools.push_back(new ComponentPool<T>());
 			}
 
 			//Placement new operator to add new T() to address given by get(id)
@@ -118,7 +118,7 @@ namespace Chroma
 
 			int componentID = GetComponentTypeID<T>();
 
-			if (m_ComponentPools[componentID] == nullptr)
+			if (m_ComponentPools.size() <= componentID || m_ComponentPools[componentID] == nullptr)
 				return false;
 			
 			AbstractComponentPool* pool = m_ComponentPools[componentID];
@@ -128,11 +128,15 @@ namespace Chroma
 		template<typename T>
 		void RemoveComponents(EntityID id)
 		{
-			
+			int componentId = GetComponentTypeID<T>();
+
 			if (m_Entities[GetEntityIndex(id)] != id)
 				return;
 
-			int componentId = GetComponentTypeID<T>();
+			if (m_ComponentPools.size() <= componentId || m_ComponentPools[componentId] == nullptr)
+				return;
+
+
 			ComponentPool<T>* pool = (ComponentPool<T>*)m_ComponentPools[componentId];
 			pool->RemoveAll(id);
 			pool->Repack();
@@ -148,6 +152,10 @@ namespace Chroma
 		void RemoveComponent(Component<T> component)
 		{
 			int componentId = GetComponentTypeID<T>();
+
+			if (m_ComponentPools.size() <= componentId || m_ComponentPools[componentId] == nullptr)
+				return;
+
 			ComponentPool<T>* pool = (ComponentPool<T>*)m_ComponentPools[componentId];
 			pool->Remove(component.m_Ptr);
 			pool->Repack();
@@ -189,6 +197,9 @@ namespace Chroma
 				int smallest = 0;
 				for (int id : componentIds)
 				{
+					if (m_Scene->m_ComponentPools.size() <= id || m_Scene->m_ComponentPools[id] == nullptr)
+						continue;
+
 					AbstractComponentPool* pool = m_Scene->m_ComponentPools[id];
 					if (pool->Count() < smallestSize || smallestSize == -1)
 					{
@@ -196,21 +207,24 @@ namespace Chroma
 					}
 				}
 
-				for (EntityID id : *m_Scene->m_ComponentPools[smallest]->GetEntities())
+				for (EntityID e_id : *m_Scene->m_ComponentPools[smallest]->GetEntities())
 				{
 					bool valid = true;
 					for (int id : componentIds)
 					{
 						if (id == smallest)
 							continue;
-						if (!m_Scene->m_ComponentPools[id]->HasEntity(id))
+						if (m_Scene->m_ComponentPools.size() <= id || m_Scene->m_ComponentPools[id] == nullptr)
+							continue;
+
+						if (!m_Scene->m_ComponentPools[id]->HasEntity(e_id))
 						{
 							valid = false;
 							break;
 						}
 					}
 					if (valid)
-						m_Entities.emplace(Scene::ConvertIDToEntity(id, scene));
+						m_Entities.emplace(Scene::ConvertIDToEntity(e_id, scene));
 				}
 			}
 

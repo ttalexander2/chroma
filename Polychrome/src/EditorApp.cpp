@@ -120,7 +120,7 @@ namespace Polychrome
 	void EditorApp::Update(Chroma::Time time)
 	{
 
-		Chroma::Audio::PlayEventIfStopped("event:/Music/Test");
+		//Chroma::Audio::PlayEventIfStopped("event:/Music/Test");
 
 		if (Chroma::Input::IsKeyPressed(CHROMA_KEY_ENTER))
 		{
