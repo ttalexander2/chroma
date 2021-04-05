@@ -23,11 +23,21 @@ namespace Chroma
 			Top,
 			Near,
 			Far,
-			Count
+			Count,
+			Combinations = Count * (Count - 1) / 2
 		};
 
+		template<Plane a, Plane b, Plane c>
+		glm::vec3 Intersection(const glm::vec3* crosses) const;
+
+		template<Plane i, Plane j>
+		struct ij2k
+		{
+			enum { k = i * (9 - i) / 2 + j - 1 };
+		};
 
 		glm::vec4 m_Planes[Count];
+		glm::vec3 m_Points[8];
 
 	};
 }
