@@ -76,16 +76,23 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>chromapch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;CHROMA_PLATFORM_WINDOWS;CHROMA_BUILD_DLL;GLFW_INCLUDE_NONE;CHROMA_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;GLM_FORCE_MESSAGES;GLM_FORCE_INTRINSICS;GLM_FORCE_INLINE;GLM_FORCE_ALIGNED_GENTYPES;CHROMA_PLATFORM_WINDOWS;CHROMA_BUILD_DLL;GLFW_INCLUDE_NONE;CHROMA_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>src;third_party\spdlog\include;third_party\GLFW\include;third_party\Glad\include;third_party\imgui;third_party\glm;third_party\stb_image;third_party\entt;third_party\fmod;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
-      <Optimization>Disabled</Optimization>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
       <AdditionalDependencies>opengl32.lib;lib\Windows\x64\fmodL_vc.lib;lib\Windows\x64\fmodstudioL_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -96,7 +103,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>chromapch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;CHROMA_PLATFORM_WINDOWS;CHROMA_BUILD_DLL;GLFW_INCLUDE_NONE;CHROMA_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;GLM_FORCE_MESSAGES;GLM_FORCE_INTRINSICS;GLM_FORCE_INLINE;GLM_FORCE_ALIGNED_GENTYPES;CHROMA_PLATFORM_WINDOWS;CHROMA_BUILD_DLL;GLFW_INCLUDE_NONE;CHROMA_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>src;third_party\spdlog\include;third_party\GLFW\include;third_party\Glad\include;third_party\imgui;third_party\glm;third_party\stb_image;third_party\entt;third_party\fmod;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -120,7 +127,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>chromapch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;CHROMA_PLATFORM_WINDOWS;CHROMA_BUILD_DLL;GLFW_INCLUDE_NONE;CHROMA_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;GLM_FORCE_MESSAGES;GLM_FORCE_INTRINSICS;GLM_FORCE_INLINE;GLM_FORCE_ALIGNED_GENTYPES;CHROMA_PLATFORM_WINDOWS;CHROMA_BUILD_DLL;GLFW_INCLUDE_NONE;CHROMA_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>src;third_party\spdlog\include;third_party\GLFW\include;third_party\Glad\include;third_party\imgui;third_party\glm;third_party\stb_image;third_party\entt;third_party\fmod;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -140,11 +147,10 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\Chroma\Camera.h" />
-    <ClInclude Include="src\Chroma\Scene\Entity.h" />
     <ClInclude Include="src\Chroma.h" />
     <ClInclude Include="src\Chroma\Audio\Audio.h" />
     <ClInclude Include="src\Chroma\Audio\ChromaFMOD.h" />
+    <ClInclude Include="src\Chroma\Camera.h" />
     <ClInclude Include="src\Chroma\Core\Application.h" />
     <ClInclude Include="src\Chroma\Core\Core.h" />
     <ClInclude Include="src\Chroma\Core\EntryPoint.h" />
@@ -159,7 +165,29 @@
     <ClInclude Include="src\Chroma\Events\KeyEvent.h" />
     <ClInclude Include="src\Chroma\Events\MouseEvent.h" />
     <ClInclude Include="src\Chroma\ImGui\ImGuiLayer.h" />
+    <ClInclude Include="src\Chroma\Math\Common.h" />
+    <ClInclude Include="src\Chroma\Math\Exponential.h" />
+    <ClInclude Include="src\Chroma\Math\Ext.h" />
+    <ClInclude Include="src\Chroma\Math\Fwd.h" />
+    <ClInclude Include="src\Chroma\Math\Geometric.h" />
+    <ClInclude Include="src\Chroma\Math\Integer.h" />
+    <ClInclude Include="src\Chroma\Math\Mat2x2.h" />
+    <ClInclude Include="src\Chroma\Math\Mat2x3.h" />
+    <ClInclude Include="src\Chroma\Math\Mat2x4.h" />
+    <ClInclude Include="src\Chroma\Math\Mat3x2.h" />
+    <ClInclude Include="src\Chroma\Math\Mat3x3.h" />
+    <ClInclude Include="src\Chroma\Math\Mat3x4.h" />
+    <ClInclude Include="src\Chroma\Math\Mat4x2.h" />
+    <ClInclude Include="src\Chroma\Math\Mat4x3.h" />
+    <ClInclude Include="src\Chroma\Math\Mat4x4.h" />
     <ClInclude Include="src\Chroma\Math\Math.h" />
+    <ClInclude Include="src\Chroma\Math\Matrix.h" />
+    <ClInclude Include="src\Chroma\Math\Packing.h" />
+    <ClInclude Include="src\Chroma\Math\Trigonometric.h" />
+    <ClInclude Include="src\Chroma\Math\Vec2.h" />
+    <ClInclude Include="src\Chroma\Math\Vec3.h" />
+    <ClInclude Include="src\Chroma\Math\Vec4.h" />
+    <ClInclude Include="src\Chroma\Math\Vector_Relational.h" />
     <ClInclude Include="src\Chroma\Platform\OpenGL\OpenGLBuffer.h" />
     <ClInclude Include="src\Chroma\Platform\OpenGL\OpenGLContext.h" />
     <ClInclude Include="src\Chroma\Platform\OpenGL\OpenGLFramebuffer.h" />
@@ -171,6 +199,7 @@
     <ClInclude Include="src\Chroma\Profiler\Instrumentor.h" />
     <ClInclude Include="src\Chroma\Renderer\Buffer.h" />
     <ClInclude Include="src\Chroma\Renderer\Framebuffer.h" />
+    <ClInclude Include="src\Chroma\Renderer\Frustum.h" />
     <ClInclude Include="src\Chroma\Renderer\GraphicsContext.h" />
     <ClInclude Include="src\Chroma\Renderer\OrthographicCamera.h" />
     <ClInclude Include="src\Chroma\Renderer\OrthographicCameraController.h" />
@@ -184,13 +213,13 @@
     <ClInclude Include="src\Chroma\Scene\Component.h" />
     <ClInclude Include="src\Chroma\Scene\ComponentPool.h" />
     <ClInclude Include="src\Chroma\Scene\ECS.h" />
+    <ClInclude Include="src\Chroma\Scene\Entity.h" />
     <ClInclude Include="src\Chroma\Scene\Scene.h" />
     <ClInclude Include="src\Chroma\Scene\System.h" />
     <ClInclude Include="src\chromapch.h" />
     <ClInclude Include="third_party\stb_image\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Chroma\Scene\Entity.cpp" />
     <ClCompile Include="src\Chroma\Audio\Audio.cpp" />
     <ClCompile Include="src\Chroma\Audio\ChromaFMOD.cpp" />
     <ClCompile Include="src\Chroma\Core\Application.cpp" />
@@ -209,6 +238,7 @@
     <ClCompile Include="src\Chroma\Platform\Windows\WindowsWindow.cpp" />
     <ClCompile Include="src\Chroma\Renderer\Buffer.cpp" />
     <ClCompile Include="src\Chroma\Renderer\Framebuffer.cpp" />
+    <ClCompile Include="src\Chroma\Renderer\Frustum.cpp" />
     <ClCompile Include="src\Chroma\Renderer\OrthographicCamera.cpp" />
     <ClCompile Include="src\Chroma\Renderer\OrthographicCameraController.cpp" />
     <ClCompile Include="src\Chroma\Renderer\RenderCommand.cpp" />
@@ -218,6 +248,7 @@
     <ClCompile Include="src\Chroma\Renderer\Shader.cpp" />
     <ClCompile Include="src\Chroma\Renderer\Texture.cpp" />
     <ClCompile Include="src\Chroma\Renderer\VertexArray.cpp" />
+    <ClCompile Include="src\Chroma\Scene\Entity.cpp" />
     <ClCompile Include="src\Chroma\Scene\Scene.cpp" />
     <ClCompile Include="src\chromapch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>

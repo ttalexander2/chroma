@@ -80,21 +80,21 @@ namespace Chroma
 
 		while (m_Running)
 		{
-			float time = (float)glfwGetTime(); // Platform::GetTime
-			Time timestep = time - m_LastFrameTime;
+			double time = glfwGetTime(); // Platform::GetTime
+			m_Time = time - m_LastFrameTime;
 			m_LastFrameTime = time;
 
-			this->EarlyUpdate(timestep);
-			this->Update(timestep);
-			this->LateUpdate(timestep);
+			this->EarlyUpdate(m_Time);
+			this->Update(m_Time);
+			this->LateUpdate(m_Time);
 
-			this->PreDraw(timestep);
-			this->Draw(timestep);
-			this->PostDraw(timestep);
+			this->PreDraw(m_Time);
+			this->Draw(m_Time);
+			this->PostDraw(m_Time);
 
 			m_ImGuiLayer->Begin();
 
-			this->ImGuiDraw(timestep);
+			this->ImGuiDraw(m_Time);
 
 			m_ImGuiLayer->End();
 

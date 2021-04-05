@@ -2,6 +2,7 @@
 #include "OpenGLFramebuffer.h"
 
 #include <glad/glad.h>
+#include <Chroma.h>
 
 
 namespace Chroma

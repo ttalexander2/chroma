@@ -6,7 +6,7 @@ namespace Chroma
 	class Time
 	{
 	public:
-		Time(float time = 0.0f)
+		Time(double time = 0.0f)
 			: m_Time(time)
 		{
 			m_Instance = this;
@@ -14,14 +14,14 @@ namespace Chroma
 
 		static Time* Current() { return Time::m_Instance; }
 
-		operator float() const { return m_Time; }
+		operator double() const { return m_Time; }
 
-		float GetSeconds() const { return m_Time; }
-		float GetMilliseconds() const { return m_Time * 1000.0f; }
+		double GetSeconds() const { return m_Time; }
+		double GetMilliseconds() const { return m_Time * 1000.0; }
 
 
 	private:
-		float m_Time;
+		double m_Time;
 		static Time* m_Instance;
 	};
 }

@@ -52,7 +52,11 @@ project "Chroma"
 
     defines
     {
-        "_CRT_SECURE_NO_WARNINGS"
+        "_CRT_SECURE_NO_WARNINGS",
+        "GLM_FORCE_MESSAGES",
+        "GLM_FORCE_INTRINSICS",
+        "GLM_FORCE_INLINE",
+        "GLM_FORCE_ALIGNED_GENTYPES"
     }
 
     includedirs
@@ -97,6 +101,7 @@ project "Chroma"
         defines "CHROMA_DEBUG"
         runtime "Debug"
         symbols "on"
+        optimize "on"
 
     filter "configurations:Release"
         defines "CHROMA_RELEASE"

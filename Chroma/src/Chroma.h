@@ -35,6 +35,8 @@
 #include "Chroma/Renderer/Framebuffer.h"
 
 #include "Chroma/Renderer/OrthographicCamera.h"
+
+#include "Chroma/Renderer/Frustum.h"
 // -----------------------------------
 
 #include "Chroma/Math/Math.h"

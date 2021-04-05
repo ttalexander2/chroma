@@ -1,6 +1,8 @@
 #pragma once
 #include <Chroma/Renderer/OrthographicCamera.h>
 #include <Chroma/Renderer/Texture.h>
+#include <Chroma/Math/Math.h>
+#include <Chroma/Renderer/Frustum.h>
 
 namespace Chroma
 {
@@ -15,17 +17,17 @@ namespace Chroma
 		static void EndScene();
 		static void Flush();
 
-		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color, float rotation = 0.0f);
-		static void DrawQuad(const glm::vec3& position, const glm::vec3& size, const glm::vec4& color, float rotation = 0.0f);
+		static void DrawQuad(const Math::vec2& position, const Math::vec2& size, const Math::vec4& color, float rotation = 0.0f);
+		static void DrawQuad(const Math::vec3& position, const Math::vec3& size, const Math::vec4& color, float rotation = 0.0f);
 
-		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& texture, float rotation);
-		static void DrawQuad(const glm::vec3& position, const glm::vec3& size, const Ref<Texture2D>& texture, float rotation);
+		static void DrawQuad(const Math::vec2& position, const Math::vec2& size, const Ref<Texture2D>& texture, float rotation);
+		static void DrawQuad(const Math::vec3& position, const Math::vec3& size, const Ref<Texture2D>& texture, float rotation);
 
-		static void DrawQuad(const glm::mat4& transform, const glm::vec4& color = glm::vec4(1.0f));
-		static void DrawQuad(const glm::mat4& transform, const Ref<Texture2D>& texture, const glm::vec4& color = glm::vec4(1.0f));
+		static void DrawQuad(const Math::mat4& transform, const Math::vec4& color = Math::vec4(1.0f));
+		static void DrawQuad(const Math::mat4& transform, const Ref<Texture2D>& texture, const Math::vec4& color = Math::vec4(1.0f));
 
-		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& texture, const glm::vec4& color = glm::vec4(1.0f), float rotation = 0.0f);
-		static void DrawQuad(const glm::vec3& position, const glm::vec3& size, const Ref<Texture2D>& texture, const glm::vec4& color = glm::vec4(1.0f), float rotation = 0.0f);
+		static void DrawQuad(const Math::vec2& position, const Math::vec2& size, const Ref<Texture2D>& texture, const Math::vec4& color = Math::vec4(1.0f), float rotation = 0.0f);
+		static void DrawQuad(const Math::vec3& position, const Math::vec3& size, const Ref<Texture2D>& texture, const Math::vec4& color = Math::vec4(1.0f), float rotation = 0.0f);
 
 		//Stats
 		struct Statistics

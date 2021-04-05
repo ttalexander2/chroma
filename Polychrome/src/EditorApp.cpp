@@ -119,7 +119,7 @@ namespace Polychrome
 
 	void EditorApp::Update(Chroma::Time time)
 	{
-
+		
 		//Chroma::Audio::PlayEventIfStopped("event:/Music/Test");
 
 		if (Chroma::Input::IsKeyPressed(CHROMA_KEY_ENTER))
@@ -155,17 +155,22 @@ namespace Polychrome
 		Chroma::Renderer2D::BeginScene(m_CameraController.GetCamera());
 
 
-		int numQuads = 0;
-
-		for (float y = -5.0f; y < 5.0f; y += 0.1f)
 		{
-			for (float x = -5.0f; x < 5.0f; x += 0.1f)
+			CHROMA_PROFILE_SCOPE("Draw all the squares");
+			int numQuads = 0;
+			for (int y = -50; y < 50; y++)
 			{
-				numQuads++;
-				glm::vec4 color = { (x + 5.0f) / 10.0f, 0.4f,  (y + 5.0f) / 10.0, 1.0f };
-				Chroma::Renderer2D::DrawQuad({ x, y }, { 0.08f, 0.08f }, m_SquareColor);
+				for (int x = -50; x < 50; x++)
+				{
+					numQuads++;
+					Chroma::Renderer2D::DrawQuad({ x, y }, { 0.8f, 0.8f }, m_SquareColor);
+				}
 			}
 		}
+
+
+
+
 
 		Chroma::Renderer2D::DrawQuad({ 0.2f, -0.6f }, { 0.4f, 0.8f }, m_SquareColor);
 		Chroma::Renderer2D::DrawQuad({ -0.4f, -0.3f }, { 0.2f, 0.3f }, m_SquareColor, rotation);
@@ -187,6 +192,10 @@ namespace Polychrome
 		ImGui::Text("Quads: %d", stats.QuadCount);
 		ImGui::Text("Vertices: %d", stats.GetTotalVertexCount());
 		ImGui::Text("Indices: %d", stats.GetTotalIndexCount());
+		ImGui::Separator();
+		ImGui::Text("Time: %.5f", this->GetTime());
+		ImGui::Text("FPS (no VSync): %.5f", this->GetTime()*60.0*1000);
+		ImGui::Separator();
 
 		ImGui::ColorPicker4("Square Color", glm::value_ptr(m_SquareColor));
 

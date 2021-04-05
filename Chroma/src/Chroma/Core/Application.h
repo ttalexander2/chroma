@@ -47,6 +47,8 @@ namespace Chroma
 
 		ImGuiLayer* GetImGuiLayer() { return m_ImGuiLayer; }
 
+		Time GetTime() { return m_Time; }
+
 	public:
 
 		Ref<Scene> m_ActiveScene;
@@ -55,7 +57,8 @@ namespace Chroma
 
 		static Application* s_Instance;
 
-		float m_LastFrameTime = 0.0f;
+		double m_LastFrameTime = 0.0f;
+		Time m_Time;
 
 		bool OnWindowClose(WindowCloseEvent& e);
 		bool OnWindowResize(WindowResizeEvent& e);
