@@ -179,6 +179,7 @@ namespace Chroma
 
 		glm::vec3 p2 = position + size;
 
+
 		//CHROMA_CORE_WARN("POS: ({0}, {1}, {2}), SIZE: ({3}, {4}, {5})", position.x, position.y, position.z, size.x, size.y, size.z);
 
 		if (!s_CullingFrustum.CubeIntersects(glm::min(position, p2), glm::max(position, p2)))

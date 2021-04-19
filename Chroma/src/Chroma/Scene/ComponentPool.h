@@ -5,6 +5,7 @@
 #include <string>
 
 #include "ECS.h"
+#include "Component.h"
 
 namespace Chroma
 {
@@ -12,10 +13,12 @@ namespace Chroma
 	{
 	public:
 		virtual void RemoveAll(EntityID id) = 0;
+		virtual void Remove(Component* comp) = 0;
 		virtual void Repack() = 0;
 		inline virtual size_t Count() = 0;
 		virtual bool HasEntity(EntityID id) = 0;
 		virtual std::vector<EntityID>* GetEntities() = 0;
+		virtual std::vector<Component*> GetAbstractComponents(EntityID id) = 0;
 
 	};
 
@@ -45,6 +48,8 @@ namespace Chroma
 				m_SparseComponents[id] = {};
 			}
 			m_SparseComponents[id].push_back(m_PackedComponents.size() - 1);
+
+			m_PackedComponents.back().SetComparisonID();
 			return &m_PackedComponents[m_SparseComponents[id].back()];
 		}
 
@@ -59,6 +64,17 @@ namespace Chroma
 			for (uint32_t i : m_SparseComponents[id])
 			{
 				results.push_back(&m_PackedComponents[i]);
+			}
+
+			return results;
+		}
+
+		std::vector<Component*> GetAbstractComponents(EntityID id) override
+		{
+			std::vector<Component*> results;
+			for (uint32_t i : m_SparseComponents[id])
+			{
+				results.push_back(static_cast<Component*>(&m_PackedComponents[i]));
 			}
 
 			return results;
@@ -89,13 +105,36 @@ namespace Chroma
 
 		}
 
+		void Remove(Component* component) override
+		{
+
+			int toRemove = -1;
+			for (int i = m_PackedComponents.size() - 1; i >= 0; i--)
+			{
+
+				if (m_PackedComponents[i] == *component)
+				{
+					m_PackedComponents.erase(m_PackedComponents.begin() + i);
+					toRemove = i;
+					break;
+				}
+
+			}
+
+			if (toRemove == -1)
+				return;
+
+			m_PackedEntityIds.erase(m_PackedEntityIds.begin() + toRemove);
+
+		}
+
 		void Remove(T* component)
 		{
 
 			int toRemove = -1;
 			for (int i = m_PackedEntityIds.size() - 1; i >= 0; i--)
 			{
-				if (&m_PackedComponents[i] == component)
+				if (m_PackedComponents[i] == *component)
 				{
 					m_PackedComponents.erase(m_PackedComponents.begin() + i);
 					toRemove = i;
@@ -142,6 +181,10 @@ namespace Chroma
 		std::unordered_map<EntityID, std::vector<uint32_t>> m_SparseComponents = { };
 		std::vector<EntityID> m_PackedEntityIds = { };
 		std::vector<T> m_PackedComponents = { };
+
+		
+
+
 	};
 
 }

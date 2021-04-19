@@ -78,7 +78,7 @@
       <WarningLevel>Level3</WarningLevel>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;GLM_FORCE_MESSAGES;GLM_FORCE_INTRINSICS;GLM_FORCE_INLINE;GLM_FORCE_ALIGNED_GENTYPES;CHROMA_PLATFORM_WINDOWS;CHROMA_BUILD_DLL;GLFW_INCLUDE_NONE;CHROMA_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;third_party\spdlog\include;third_party\GLFW\include;third_party\Glad\include;third_party\imgui;third_party\glm;third_party\stb_image;third_party\entt;third_party\fmod;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;third_party\spdlog\include;third_party\GLFW\include;third_party\Glad\include;third_party\imgui;third_party\glm;third_party\stb_image;third_party\entt;third_party\fmod;third_party\lua;third_party\json\single_include\nlohmann;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -104,7 +104,7 @@
       <PrecompiledHeaderFile>chromapch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;GLM_FORCE_MESSAGES;GLM_FORCE_INTRINSICS;GLM_FORCE_INLINE;GLM_FORCE_ALIGNED_GENTYPES;CHROMA_PLATFORM_WINDOWS;CHROMA_BUILD_DLL;GLFW_INCLUDE_NONE;CHROMA_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;third_party\spdlog\include;third_party\GLFW\include;third_party\Glad\include;third_party\imgui;third_party\glm;third_party\stb_image;third_party\entt;third_party\fmod;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;third_party\spdlog\include;third_party\GLFW\include;third_party\Glad\include;third_party\imgui;third_party\glm;third_party\stb_image;third_party\entt;third_party\fmod;third_party\lua;third_party\json\single_include\nlohmann;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -128,7 +128,7 @@
       <PrecompiledHeaderFile>chromapch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;GLM_FORCE_MESSAGES;GLM_FORCE_INTRINSICS;GLM_FORCE_INLINE;GLM_FORCE_ALIGNED_GENTYPES;CHROMA_PLATFORM_WINDOWS;CHROMA_BUILD_DLL;GLFW_INCLUDE_NONE;CHROMA_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;third_party\spdlog\include;third_party\GLFW\include;third_party\Glad\include;third_party\imgui;third_party\glm;third_party\stb_image;third_party\entt;third_party\fmod;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;third_party\spdlog\include;third_party\GLFW\include;third_party\Glad\include;third_party\imgui;third_party\glm;third_party\stb_image;third_party\entt;third_party\fmod;third_party\lua;third_party\json\single_include\nlohmann;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -151,6 +151,12 @@
     <ClInclude Include="src\Chroma\Audio\Audio.h" />
     <ClInclude Include="src\Chroma\Audio\ChromaFMOD.h" />
     <ClInclude Include="src\Chroma\Camera.h" />
+    <ClInclude Include="src\Chroma\Components\AudioSource.h" />
+    <ClInclude Include="src\Chroma\Components\BoxCollider2D.h" />
+    <ClInclude Include="src\Chroma\Components\CircleCollider2D.h" />
+    <ClInclude Include="src\Chroma\Components\SpriteRenderer.h" />
+    <ClInclude Include="src\Chroma\Components\Tag.h" />
+    <ClInclude Include="src\Chroma\Components\Transform.h" />
     <ClInclude Include="src\Chroma\Core\Application.h" />
     <ClInclude Include="src\Chroma\Core\Core.h" />
     <ClInclude Include="src\Chroma\Core\EntryPoint.h" />
@@ -212,11 +218,44 @@
     <ClInclude Include="src\Chroma\Renderer\VertexArray.h" />
     <ClInclude Include="src\Chroma\Scene\Component.h" />
     <ClInclude Include="src\Chroma\Scene\ComponentPool.h" />
+    <ClInclude Include="src\Chroma\Scene\ComponentRef.h" />
     <ClInclude Include="src\Chroma\Scene\ECS.h" />
-    <ClInclude Include="src\Chroma\Scene\Entity.h" />
+    <ClInclude Include="src\Chroma\Scene\EntityRef.h" />
     <ClInclude Include="src\Chroma\Scene\Scene.h" />
     <ClInclude Include="src\Chroma\Scene\System.h" />
+    <ClInclude Include="src\Chroma\Systems\CollisionSystem.h" />
+    <ClInclude Include="src\Chroma\Utilities\ContainerHelpers.h" />
+    <ClInclude Include="src\Chroma\Utilities\Json.h" />
     <ClInclude Include="src\chromapch.h" />
+    <ClInclude Include="third_party\json\single_include\nlohmann\json.hpp" />
+    <ClInclude Include="third_party\lua\lapi.h" />
+    <ClInclude Include="third_party\lua\lauxlib.h" />
+    <ClInclude Include="third_party\lua\lcode.h" />
+    <ClInclude Include="third_party\lua\lctype.h" />
+    <ClInclude Include="third_party\lua\ldebug.h" />
+    <ClInclude Include="third_party\lua\ldo.h" />
+    <ClInclude Include="third_party\lua\lfunc.h" />
+    <ClInclude Include="third_party\lua\lgc.h" />
+    <ClInclude Include="third_party\lua\ljumptab.h" />
+    <ClInclude Include="third_party\lua\llex.h" />
+    <ClInclude Include="third_party\lua\llimits.h" />
+    <ClInclude Include="third_party\lua\lmem.h" />
+    <ClInclude Include="third_party\lua\lobject.h" />
+    <ClInclude Include="third_party\lua\lopcodes.h" />
+    <ClInclude Include="third_party\lua\lopnames.h" />
+    <ClInclude Include="third_party\lua\lparser.h" />
+    <ClInclude Include="third_party\lua\lprefix.h" />
+    <ClInclude Include="third_party\lua\lstate.h" />
+    <ClInclude Include="third_party\lua\lstring.h" />
+    <ClInclude Include="third_party\lua\ltable.h" />
+    <ClInclude Include="third_party\lua\ltests.h" />
+    <ClInclude Include="third_party\lua\ltm.h" />
+    <ClInclude Include="third_party\lua\lua.h" />
+    <ClInclude Include="third_party\lua\luaconf.h" />
+    <ClInclude Include="third_party\lua\lualib.h" />
+    <ClInclude Include="third_party\lua\lundump.h" />
+    <ClInclude Include="third_party\lua\lvm.h" />
+    <ClInclude Include="third_party\lua\lzio.h" />
     <ClInclude Include="third_party\stb_image\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
@@ -248,7 +287,8 @@
     <ClCompile Include="src\Chroma\Renderer\Shader.cpp" />
     <ClCompile Include="src\Chroma\Renderer\Texture.cpp" />
     <ClCompile Include="src\Chroma\Renderer\VertexArray.cpp" />
-    <ClCompile Include="src\Chroma\Scene\Entity.cpp" />
+    <ClCompile Include="src\Chroma\Scene\Component.cpp" />
+    <ClCompile Include="src\Chroma\Scene\EntityRef.cpp" />
     <ClCompile Include="src\Chroma\Scene\Scene.cpp" />
     <ClCompile Include="src\chromapch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>

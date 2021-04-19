@@ -7,7 +7,7 @@ namespace Polychrome
 	class Viewport
 	{
 	public:
-		static void Render(Chroma::Ref<Chroma::Framebuffer> frame_buffer);
+		static void Draw(Chroma::Ref<Chroma::Framebuffer> frame_buffer);
 		
 	};
 }

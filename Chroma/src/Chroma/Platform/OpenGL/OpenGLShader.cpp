@@ -18,7 +18,7 @@ namespace Chroma
 		if (type == "fragment" || type == "pixel")
 			return GL_FRAGMENT_SHADER;
 
-		CHROMA_CORE_ASSERT(false, "Unknown shader type '{0}'", type);
+		CHROMA_ASSERT(false, "Unknown shader type '{0}'", type);
 	}
 
 	OpenGLShader::OpenGLShader(const std::string& filePath) :

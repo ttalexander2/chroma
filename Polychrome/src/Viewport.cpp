@@ -10,7 +10,7 @@ namespace Polychrome
 	static Chroma::Window* s_ViewportWindow;
 
 
-	void Viewport::Render(Chroma::Ref<Chroma::Framebuffer> frame_buffer)
+	void Viewport::Draw(Chroma::Ref<Chroma::Framebuffer> frame_buffer)
 	{
 		ImGui::Begin("Viewport");
 

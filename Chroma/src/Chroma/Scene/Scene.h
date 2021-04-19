@@ -4,36 +4,64 @@
 #include <set>
 #include <string>
 
+#include "Chroma/Core/Core.h"
 #include "ECS.h"
-#include "Component.h"
+#include "ComponentRef.h"
 #include "ComponentPool.h"
+#include "Chroma/Core/Time.h"
+#include "Component.h"
+
+#include "Chroma/Core/Log.h"
 
 
 namespace Chroma
 {
 	//Forward Declaration
-	class Entity;
+	class EntityRef;
 
 
 	class Scene
 	{
 	public:
-		Scene() {}
-		~Scene() {}
+		Scene();
+		~Scene() = default;
 
-		Entity NewEntity();
+		EntityRef NewEntity();
 
-		void DestroyEntity(Entity id);
+		void DestroyEntity(EntityRef id);
 
-		template<typename T>
-		static void SetComponentTypeName(std::string name)
+		void Serialize();
+		Ref<Scene> Deserialize();
+
+		template <typename T>
+		void RegisterComponent()
 		{
+			CHROMA_ASSERT(std::is_convertible<T*, Component*>::value, "Must inherrit Component to register as component");
 
+			unsigned int id = GetComponentTypeID<T>();
+
+			m_ComponentIDs[typeid(T).hash_code()] = id;
+
+			//std::function<ComponentRef<Component>(Scene*, EntityRef)> func = [=](Scene* scene, EntityRef entity) -> return scene->AddComponent<T>(entity);
+
+
+			//m_ComponentFactory[id] = func;
+
+			if (m_ComponentPools.size() <= id || m_ComponentPools[id] == nullptr)
+			{
+				m_ComponentPools.push_back(new ComponentPool<T>());
+			}
+
+			T comp = T();
+
+			m_ComponentNames[id] = comp.Name();
 		}
 		
 		template<typename T>
-		Component<T> AddComponent(EntityID id)
+		ComponentRef<T> AddComponent(EntityID id)
 		{
+			CHROMA_ASSERT(m_ComponentIDs.find(typeid(T).hash_code()) != m_ComponentIDs.end(), "Component not registered: " + typeid(T).name);
+
 			//this is a little sus
 			int componentID = GetComponentTypeID<T>();
 
@@ -50,36 +78,36 @@ namespace Chroma
 			//Placement new operator to add new T() to address given by get(id)
 			ComponentPool<T> *pool = (ComponentPool<T>*)m_ComponentPools[componentID];
 
-			return *new Component<T>(pool->Add(id), id, this);
+			return ComponentRef<T>(pool->Add(id), id, this);
 		}
 
 		template<typename T>
-		Component<T> AddComponent(Entity id)
+		ComponentRef<T> AddComponent(EntityRef id)
 		{
 			return AddComponent<T>((EntityID)id);
 		}
 
 		template<typename T>
-		Component<T> GetComponent(EntityID id)
+		ComponentRef<T> GetComponent(EntityID id)
 		{
 			
 			int componentID = GetComponentTypeID<T>();
 
 			if (!HasComponent<T>(id))
-				return *new Component<T>(nullptr, id,  nullptr);
+				return ComponentRef<T>(nullptr, id,  nullptr);
 
 			ComponentPool<T> *pool = (ComponentPool<T>*)m_ComponentPools[componentID];
-			return *new Component<T>(pool->GetFirst(id), id, this);
+			return ComponentRef<T>(pool->GetFirst(id), id, this);
 		}
 
 		template<typename T>
-		Component<T> GetComponent(Entity id)
+		ComponentRef<T> GetComponent(EntityRef id)
 		{
 			return GetComponent<T>((EntityID)id);
 		}
 
 		template<typename T>
-		std::vector<Component<T>> GetComponents(EntityID id)
+		std::vector<ComponentRef<T>> GetComponents(EntityID id)
 		{
 			
 			int componentID = GetComponentTypeID<T>();
@@ -92,22 +120,22 @@ namespace Chroma
 
 			ComponentPool<T>* pool = (ComponentPool<T>*)m_ComponentPools[componentID];
 			std::vector<T*> raw =  pool->Get(id);
-			std::vector<Component<T>> refs;
+			std::vector<ComponentRef<T>> refs;
 			for (T* item : raw)
 			{
-				refs.push_back(*new Component<T>(item, id, this));
+				refs.push_back(ComponentRef<T>(item, id, this));
 			}
 			return refs;
 		}
 
 		template<typename T>
-		std::vector<Component<T>> GetComponents(Entity id)
+		std::vector<ComponentRef<T>> GetComponents(EntityRef id)
 		{
 			return GetComponents<T>((EntityID)id);
 		}
 
 		template<typename T>
-		bool HasComponent(Entity id)
+		bool HasComponent(EntityRef id)
 		{
 			return HasComponent<T>((EntityID)id);
 		}
@@ -143,13 +171,13 @@ namespace Chroma
 		}
 
 		template<typename T>
-		void RemoveComponents(Entity id)
+		void RemoveComponents(EntityRef id)
 		{
 			RemoveComponents<T>((EntityID)id);
 		}
 
 		template<typename T>
-		void RemoveComponent(Component<T> component)
+		void RemoveComponent(ComponentRef<T> component)
 		{
 			int componentId = GetComponentTypeID<T>();
 
@@ -161,6 +189,22 @@ namespace Chroma
 			pool->Repack();
 		}
 
+		void RemoveComponent(ComponentRef<Component> component)
+		{
+			unsigned int componentId = m_ComponentIDs[typeid(*component.m_Ptr).hash_code()];
+
+			if (m_ComponentPools.size() <= componentId || m_ComponentPools[componentId] == nullptr)
+				return;
+
+			AbstractComponentPool* pool = (AbstractComponentPool*)m_ComponentPools[componentId];
+			pool->Remove(component.m_Ptr);
+			pool->Repack();
+		}
+
+		std::vector<ComponentRef<Component>>  GetAllComponents(EntityRef entity);
+
+		std::vector<ComponentRef<Component>>  GetAllComponents(EntityID entity);
+
 
 		template<typename... ComponentTypes>
 		struct SceneView
@@ -168,24 +212,34 @@ namespace Chroma
 			friend class Scene;
 
 		public:
-			std::set<Entity>::iterator begin()
+			std::set<EntityRef>::iterator begin()
 			{
 				return m_Entities.begin();
 			}
 
-			std::set<Entity>::iterator end()
+			std::set<EntityRef>::iterator end()
 			{
 				return m_Entities.end();
 			}
 
-			const std::set<Entity>::const_iterator begin() const
+			const std::set<EntityRef>::const_iterator begin() const
 			{
 				return m_Entities.begin();
 			}
 
-			const std::set<Entity>::const_iterator end() const
+			const std::set<EntityRef>::const_iterator end() const
 			{
 				return m_Entities.end();
+			}
+
+			size_t size()
+			{
+				return m_Entities.size();
+			}
+
+			const size_t size() const
+			{
+				return m_Entities.size();
 			}
 
 		private:
@@ -195,17 +249,21 @@ namespace Chroma
 				int componentIds[] = { scene.GetComponentTypeID<ComponentTypes>()... };
 				size_t smallestSize = -1;
 				int smallest = 0;
+
+
 				for (int id : componentIds)
 				{
-					if (m_Scene->m_ComponentPools.size() <= id || m_Scene->m_ComponentPools[id] == nullptr)
+					if (id >= m_Scene->m_ComponentPools.size() || m_Scene->m_ComponentPools[id] == nullptr)
 						continue;
 
 					AbstractComponentPool* pool = m_Scene->m_ComponentPools[id];
-					if (pool->Count() < smallestSize || smallestSize == -1)
+					if (smallestSize == -1 || (pool->Count() < smallestSize) && pool->Count() > 0)
 					{
 						smallest = id;
 					}
 				}
+
+				CHROMA_CORE_ERROR("COMPONENT SIZE: {0}", (*m_Scene->m_ComponentPools[smallest]->GetEntities()).size());
 
 				for (EntityID e_id : *m_Scene->m_ComponentPools[smallest]->GetEntities())
 				{
@@ -219,6 +277,7 @@ namespace Chroma
 
 						if (!m_Scene->m_ComponentPools[id]->HasEntity(e_id))
 						{
+							CHROMA_CORE_ERROR("THIS SHOULDNT HAPPEN");
 							valid = false;
 							break;
 						}
@@ -230,7 +289,7 @@ namespace Chroma
 
 
 		private:
-			std::set<Entity> m_Entities;
+			std::set<EntityRef> m_Entities;
 			Scene* m_Scene{ nullptr };
 		};
 
@@ -238,12 +297,43 @@ namespace Chroma
 		template<typename... ComponentTypes>
 		SceneView<ComponentTypes...> View()
 		{
-			return *new SceneView<ComponentTypes...>(*this);
+			return SceneView<ComponentTypes...>(*this);
 		}
 
-		static Entity ConvertIDToEntity(EntityID e, Scene& scene);
+		static EntityRef ConvertIDToEntity(EntityID e, Scene& scene);
 
-		Entity GetEntity(EntityID e);
+		EntityRef GetEntity(EntityID e);
+
+		std::vector<EntityID> GetEntities()
+		{
+			return m_Entities;
+		}
+
+		template <class T>
+		unsigned int GetComponentTypeID()
+		{
+			static unsigned int s_ComponentId = m_ComponentTypeCounter++;
+			return s_ComponentId;
+		}
+
+		std::unordered_map<unsigned int, std::function<ComponentRef<Component>(Scene*, EntityRef)>> GetComponentFactory()
+		{
+			return m_ComponentFactory;
+		}
+
+
+#pragma region UpdateLoop
+
+		void EarlyInit();
+		void Init();
+		void LateInit();
+
+		void EarlyUpdate(Time delta);
+		void Update(Time delta);
+		void LateUpdate(Time delta);
+
+#pragma endregion
+
 
 	private:
 
@@ -269,13 +359,6 @@ namespace Chroma
 
 		#define INVALID_ENTITY CreateEntity(EntityIndex(-1), 0)
 
-		template <class T>
-		int GetComponentTypeID()
-		{
-			static unsigned int s_ComponentId = m_ComponentTypeCounter++;
-			return s_ComponentId;
-		}
-
 
 	private:
 
@@ -283,11 +366,15 @@ namespace Chroma
 		std::vector<EntityID> m_Entities;
 		std::vector<EntityID> m_FreeEntities;
 
+		std::unordered_map<size_t, unsigned int> m_ComponentIDs;
+		std::unordered_map<unsigned int, std::function<ComponentRef<Component>(Scene*, EntityRef)>> m_ComponentFactory;
+		std::unordered_map<unsigned int, std::string> m_ComponentNames;
+
 		std::vector<AbstractComponentPool*> m_ComponentPools;
 
 		unsigned int m_ComponentTypeCounter = 0;
 
-		friend class Entity;
+		friend class EntityRef;
 
 		
 	};

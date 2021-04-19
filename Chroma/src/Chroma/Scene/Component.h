@@ -1,53 +1,64 @@
 #pragma once
 
-#include "ECS.h"
-#include "Scene.h"
-#include "spdlog/fmt/ostr.h"
+
+#include "Chroma/Utilities/Json.h"
+#include "Chroma/Scene/ECS.h"
+#include "Chroma/Core/Log.h"
+#include <string>
+
+namespace Polychrome
+{
+	class Inspector;
+}
 
 namespace Chroma
 {
-	//Forward Declarations
-	class Entity;
 
 	template <class T>
-	class Component
+	class ComponentPool;
+
+	struct Component
 	{
-		friend class Scene;
-	public:
-		T* operator->() { return m_Ptr; }
-		Scene* GetScene() { return m_Scene; }
-		EntityID GetEntityID() { return m_Entity; }
+		virtual void Serialize() {};
+		virtual void Deserialize() {};
 
-		bool IsNull() { return m_Ptr == nullptr || m_Scene == nullptr; }
-
-		template<typename OStream>
-		friend OStream& operator<<(OStream& os, const Component<T>& t)
+		bool operator == (const Component& other)
 		{
-			return os << "Component: " << FindTypeName(typeid(T).name()) << " (Entity " << t.m_Entity << ")";
+			return this->GetComparisonID() == other.GetComparisonID();
 		}
 
+		const virtual std::string Name() const = 0;
+
+		virtual void DrawImGui() {};
 
 	private:
-		Component<typename T>(T* ptr, EntityID id, Scene* scene)
-			: m_Ptr(ptr), m_Entity(id), m_Scene(scene)
+
+		const virtual bool IsTag() const { return false; }
+		const virtual bool IsTransform() const { return false; }
+
+		unsigned int comparison_id = 0;
+
+
+		void SetComparisonID()
 		{
+			comparison_id = component_counter;
+			component_counter++;
 		}
 
-		static std::string FindTypeName(const std::string& str)
+		const unsigned int GetComparisonID() const
 		{
-			size_t i = str.find_last_of("::");
-			if (i >= str.size())
-				return str;
-			return str.substr(i+1);
+			return comparison_id;
 		}
 
-	private:
-		EntityID m_Entity;
-		T* m_Ptr;
-		Scene* m_Scene;
 
+
+		static unsigned int component_counter;
+
+		template <class T>
+		friend class ComponentPool;
+		friend class Polychrome::Inspector;
+		friend class Tag;
+		friend class Transform;
 	};
-
-
 }
 

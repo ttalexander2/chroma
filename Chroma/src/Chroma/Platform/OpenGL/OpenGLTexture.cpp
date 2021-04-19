@@ -17,7 +17,7 @@ namespace Chroma
 		int width, height, channels;
 		stbi_set_flip_vertically_on_load(1);
 		stbi_uc* data = stbi_load(path.c_str(), &width, &height, &channels, 0);
-		CHROMA_CORE_ASSERT(data, "Failed to load image \'{0}\'", path);
+		CHROMA_ASSERT(data, "Failed to load image \'{0}\'", path);
 		m_Width = width;
 		m_Height = height;
 
@@ -34,7 +34,7 @@ namespace Chroma
 			m_DataFormat = GL_RGB;
 		}
 
-		CHROMA_CORE_ASSERT(internalFormat & dataFormat, "Texture format not supported!");
+		CHROMA_ASSERT(internalFormat & dataFormat, "Texture format not supported!");
 
 		glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID);
 		glTextureStorage2D(m_RendererID, 1, m_InternalFormat, m_Width, m_Height);

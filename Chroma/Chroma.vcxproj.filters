@@ -10,6 +10,9 @@
     <Filter Include="src\Chroma\Audio">
       <UniqueIdentifier>{D7541DED-C34D-3C3F-EC7F-21C4D8D71B4B}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Chroma\Components">
+      <UniqueIdentifier>{AB61694C-17CE-2447-E0C1-BCA44CED46AF}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Chroma\Core">
       <UniqueIdentifier>{6E68118B-DAF3-7E4F-E304-02444F0FDB4F}</UniqueIdentifier>
     </Filter>
@@ -40,8 +43,26 @@
     <Filter Include="src\Chroma\Scene">
       <UniqueIdentifier>{F33359EE-DF2C-7840-085F-5DC5F4B6574C}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Chroma\Systems">
+      <UniqueIdentifier>{5D2AC81D-490E-8973-B26E-83C69E7173F5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Chroma\Utilities">
+      <UniqueIdentifier>{416608E8-2DF5-91B1-D613-A6ACC281A257}</UniqueIdentifier>
+    </Filter>
     <Filter Include="third_party">
       <UniqueIdentifier>{0FB18DF1-7B66-06E7-045B-00BE700FFDEA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\json">
+      <UniqueIdentifier>{384A50F9-2443-6F4B-4D75-54D039CD4E57}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\json\single_include">
+      <UniqueIdentifier>{AC30277F-1814-36BF-2117-64FB8D79FC0F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\json\single_include\nlohmann">
+      <UniqueIdentifier>{368E8E98-220B-82DB-4B88-82EF37641E6F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\lua">
+      <UniqueIdentifier>{40412974-ACCC-9638-B5DD-192D21E8F238}</UniqueIdentifier>
     </Filter>
     <Filter Include="third_party\stb_image">
       <UniqueIdentifier>{6940486C-D5AC-0367-9EA0-9BC40ACC25CF}</UniqueIdentifier>
@@ -59,6 +80,24 @@
     </ClInclude>
     <ClInclude Include="src\Chroma\Camera.h">
       <Filter>src\Chroma</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Chroma\Components\AudioSource.h">
+      <Filter>src\Chroma\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Chroma\Components\BoxCollider2D.h">
+      <Filter>src\Chroma\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Chroma\Components\CircleCollider2D.h">
+      <Filter>src\Chroma\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Chroma\Components\SpriteRenderer.h">
+      <Filter>src\Chroma\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Chroma\Components\Tag.h">
+      <Filter>src\Chroma\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Chroma\Components\Transform.h">
+      <Filter>src\Chroma\Components</Filter>
     </ClInclude>
     <ClInclude Include="src\Chroma\Core\Application.h">
       <Filter>src\Chroma\Core</Filter>
@@ -243,10 +282,13 @@
     <ClInclude Include="src\Chroma\Scene\ComponentPool.h">
       <Filter>src\Chroma\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="src\Chroma\Scene\ComponentRef.h">
+      <Filter>src\Chroma\Scene</Filter>
+    </ClInclude>
     <ClInclude Include="src\Chroma\Scene\ECS.h">
       <Filter>src\Chroma\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="src\Chroma\Scene\Entity.h">
+    <ClInclude Include="src\Chroma\Scene\EntityRef.h">
       <Filter>src\Chroma\Scene</Filter>
     </ClInclude>
     <ClInclude Include="src\Chroma\Scene\Scene.h">
@@ -255,8 +297,104 @@
     <ClInclude Include="src\Chroma\Scene\System.h">
       <Filter>src\Chroma\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="src\Chroma\Systems\CollisionSystem.h">
+      <Filter>src\Chroma\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Chroma\Utilities\ContainerHelpers.h">
+      <Filter>src\Chroma\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Chroma\Utilities\Json.h">
+      <Filter>src\Chroma\Utilities</Filter>
+    </ClInclude>
     <ClInclude Include="src\chromapch.h">
       <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\json\single_include\nlohmann\json.hpp">
+      <Filter>third_party\json\single_include\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\lua\lapi.h">
+      <Filter>third_party\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\lua\lauxlib.h">
+      <Filter>third_party\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\lua\lcode.h">
+      <Filter>third_party\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\lua\lctype.h">
+      <Filter>third_party\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\lua\ldebug.h">
+      <Filter>third_party\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\lua\ldo.h">
+      <Filter>third_party\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\lua\lfunc.h">
+      <Filter>third_party\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\lua\lgc.h">
+      <Filter>third_party\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\lua\ljumptab.h">
+      <Filter>third_party\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\lua\llex.h">
+      <Filter>third_party\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\lua\llimits.h">
+      <Filter>third_party\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\lua\lmem.h">
+      <Filter>third_party\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\lua\lobject.h">
+      <Filter>third_party\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\lua\lopcodes.h">
+      <Filter>third_party\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\lua\lopnames.h">
+      <Filter>third_party\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\lua\lparser.h">
+      <Filter>third_party\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\lua\lprefix.h">
+      <Filter>third_party\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\lua\lstate.h">
+      <Filter>third_party\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\lua\lstring.h">
+      <Filter>third_party\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\lua\ltable.h">
+      <Filter>third_party\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\lua\ltests.h">
+      <Filter>third_party\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\lua\ltm.h">
+      <Filter>third_party\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\lua\lua.h">
+      <Filter>third_party\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\lua\luaconf.h">
+      <Filter>third_party\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\lua\lualib.h">
+      <Filter>third_party\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\lua\lundump.h">
+      <Filter>third_party\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\lua\lvm.h">
+      <Filter>third_party\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\lua\lzio.h">
+      <Filter>third_party\lua</Filter>
     </ClInclude>
     <ClInclude Include="third_party\stb_image\stb_image.h">
       <Filter>third_party\stb_image</Filter>
@@ -347,7 +485,10 @@
     <ClCompile Include="src\Chroma\Renderer\VertexArray.cpp">
       <Filter>src\Chroma\Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="src\Chroma\Scene\Entity.cpp">
+    <ClCompile Include="src\Chroma\Scene\Component.cpp">
+      <Filter>src\Chroma\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Chroma\Scene\EntityRef.cpp">
       <Filter>src\Chroma\Scene</Filter>
     </ClCompile>
     <ClCompile Include="src\Chroma\Scene\Scene.cpp">

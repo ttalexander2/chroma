@@ -51,7 +51,7 @@ namespace Chroma
 
 	public:
 
-		Ref<Scene> m_ActiveScene;
+		Scene* m_ActiveScene;
 
 	private:
 

@@ -19,12 +19,14 @@ IncludeDir["glm"] = "Chroma/third_party/glm"
 IncludeDir["stb_image"] = "Chroma/third_party/stb_image"
 IncludeDir["entt"] = "Chroma/third_party/entt"
 IncludeDir["FMOD"] = "Chroma/third_party/fmod"
+IncludeDir["lua"] = "Chroma/third_party/lua"
 
 group "Dependencies"
     include "Chroma/third_party/GLFW"
     include "Chroma/third_party/Glad"
     include "Chroma/third_party/imgui"
     include "Chroma/third_party/glm"
+    include "Chroma/third_party/lua"
 group "" -- end of dependencies
 
 
@@ -48,6 +50,8 @@ project "Chroma"
         "%{prj.name}/third_party/stb_image/**.h",
         "%{prj.name}/third_party/stb_image/**.cpp",
         "%{prj.name}/third_party/entt/**.hpp",
+        "%{prj.name}/third_party/lua/**.h",
+        "%{prj.name}/third_party/json/single_include/nlohmann/**.hpp"
     }
 
     defines
@@ -69,7 +73,9 @@ project "Chroma"
         "%{IncludeDir.glm}",
         "%{IncludeDir.stb_image}",
         "%{IncludeDir.entt}",
-        "%{IncludeDir.FMOD}"
+        "%{IncludeDir.FMOD}",
+        "%{IncludeDir.lua}",
+        "%{prj.name}/third_party/json/single_include/nlohmann"
 
     }
 
@@ -98,21 +104,34 @@ project "Chroma"
         }
     
     filter "configurations:Debug"
-        defines "CHROMA_DEBUG"
+        defines 
+        {
+            "CHROMA_DEBUG"
+        }
         runtime "Debug"
-        symbols "on"
-        optimize "on"
+        symbols "On"
+        optimize "On"
+
 
     filter "configurations:Release"
-        defines "CHROMA_RELEASE"
+        defines 
+        {
+            "CHROMA_RELEASE"
+        }
         runtime "Release"
-        optimize "on"
+        optimize "On"
 
     filter "configurations:Dist"
         defines "CHROMA_DIST"
         runtime "Release"
-        optimize "on"
+        optimize "On"
 
+
+    filter { "files:**.hpp" }
+        optimize "Speed"
+    
+    filter { "files:**.inl" }
+        optimize "Speed"
 
 
 
@@ -161,16 +180,17 @@ project "Sandbox"
         defines "CHROMA_DEBUG"
         runtime "Debug"
         symbols "on"
+        optimize "Debug"
 
     filter "configurations:Release"
         defines "CHROMA_RELEASE"
         runtime "Release"
-        optimize "on"
+        optimize "On"
 
     filter "configurations:Dist"
         defines "CHROMA_DIST"
         runtime "Release"
-        optimize "on"
+        optimize "On"
 
 
 project "Polychrome"
@@ -228,14 +248,15 @@ project "Polychrome"
     filter "configurations:Debug"
         defines "CHROMA_DEBUG"
         runtime "Debug"
-        symbols "on"
+        symbols "On"
+        optimize "Debug"
 
     filter "configurations:Release"
         defines "CHROMA_RELEASE"
         runtime "Release"
-        optimize "on"
+        optimize "On"
 
     filter "configurations:Dist"
         defines "CHROMA_DIST"
         runtime "Release"
-        optimize "on"
+        optimize "On"

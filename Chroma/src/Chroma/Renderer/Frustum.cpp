@@ -85,8 +85,6 @@ namespace Chroma
 				return false;
 		}
 
-		//CHROMA_CORE_ERROR("Here");
-
 		int out;
 		out = 0; for (int i = 0; i < 8; i++) out += ((m_Points[i].x > max.x) ? 1 : 0); if (out == 8) return false;
 		out = 0; for (int i = 0; i < 8; i++) out += ((m_Points[i].x < min.x) ? 1 : 0); if (out == 8) return false;

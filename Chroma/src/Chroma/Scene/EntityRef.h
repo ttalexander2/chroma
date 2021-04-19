@@ -7,11 +7,12 @@
 namespace Chroma
 {
 
-	class Entity
+	class EntityRef
 	{
 	public:
-		Entity(EntityID id, Scene* scene);
-		Entity(const Entity& other) = default;
+		EntityRef(EntityID id);
+		EntityRef(EntityID id, Scene& scene);
+		EntityRef(const EntityRef& other) = default;
 
 		inline EntityID GetID() const { return m_EntityID; }
 
@@ -23,22 +24,24 @@ namespace Chroma
 		}
 
 		template<typename T>
-		Component<T> AddComponent()
+		ComponentRef<T> AddComponent()
 		{
 			return m_Scene->AddComponent<T>(m_EntityID);
 		}
 
 		template<typename T>
-		Component<T> GetComponent()
+		ComponentRef<T> GetComponent()
 		{
 			return m_Scene->GetComponent<T>(m_EntityID);
 		}
 
 		template<typename T>
-		std::vector<Component<T>> GetComponents()
+		std::vector<ComponentRef<T>> GetComponents()
 		{
 			return m_Scene->GetComponents<T>(m_EntityID);
 		}
+
+		std::vector<ComponentRef<Component>> GetAllComponents();
 
 		template<typename T>
 		void RemoveComponents()
@@ -47,7 +50,7 @@ namespace Chroma
 		}
 
 		template<typename T>
-		void RemoveComponent(Component<T> component)
+		void RemoveComponent(ComponentRef<T> component)
 		{
 			RemoveComponent<T>(component);
 		}
@@ -55,13 +58,18 @@ namespace Chroma
 		explicit operator EntityID() const { return m_EntityID; }
 		operator bool() const { return m_EntityID != ENTITY_NULL; }
 
-		bool operator==(const Entity& e) const
+		bool operator==(const EntityRef& e) const
 		{
 			return (this->m_EntityID == e.m_EntityID && this->m_Scene == e.m_Scene);
 		}
 
+		bool operator<(const EntityRef& b) const
+		{
+			return (this->m_EntityID < b.m_EntityID);
+		}
+
 		template<typename OStream>
-		friend OStream& operator<<(OStream& os, const Entity& e)
+		friend OStream& operator<<(OStream& os, const EntityRef& e)
 		{
 			return os << "Entity " << e.m_EntityID << "";
 		}
@@ -69,7 +77,7 @@ namespace Chroma
 
 	private:
 		EntityID m_EntityID{ ENTITY_NULL };
-		Scene* m_Scene = nullptr;
+		Ref<Scene> m_Scene;
 
 		friend class Scene;
 	};
