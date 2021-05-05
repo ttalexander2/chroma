@@ -21,6 +21,23 @@ namespace Chroma
 			return "Tag";
 		}
 
+		const bool AllowMultiple() const override { return false; };
+
+		void Serialize(YAML::Emitter& out) override
+		{
+			out << YAML::Key << "EntityName";
+			out << YAML::Value << EntityName;
+		}
+
+		void Deserialize(YAML::Node& node) override
+		{
+			auto val = node["EntityName"];
+			if (val)
+			{
+				EntityName = val.as<std::string>();
+			}
+		}
+
 	private:
 
 		const bool IsTag() const override

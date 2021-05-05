@@ -46,6 +46,10 @@ namespace Chroma
 		static float volumeTodb(float volume);
 		static FMOD_VECTOR VectorToFmod(const Math::vec3& vector);
 
+		static std::vector<std::string> GetEventPathList();
+		static std::string GetEventName(FMOD_GUID guid);
+		static FMOD_GUID GetEventGuid(const std::string& name);
+
 	private:
 		static void Init();
 		static void Update();

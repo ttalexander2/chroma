@@ -1,6 +1,7 @@
 #include "chromapch.h"
 #include "ChromaFMOD.h"
 #include "Audio.h"
+#include <set>
 
 namespace Chroma
 {
@@ -9,7 +10,7 @@ namespace Chroma
 	{
 		m_StudioSystem = nullptr;
 		Audio::ErrorCheck(FMOD::Studio::System::create(&m_StudioSystem));
-		Audio::ErrorCheck(m_StudioSystem->initialize(32, FMOD_STUDIO_INIT_LIVEUPDATE, FMOD_INIT_NORMAL, NULL));
+		Audio::ErrorCheck(m_StudioSystem->initialize(32, FMOD_STUDIO_INIT_LIVEUPDATE, FMOD_STUDIO_INIT_NORMAL, NULL));
 
 		m_System = nullptr;
 		Audio::ErrorCheck(m_StudioSystem->getCoreSystem(&m_System));

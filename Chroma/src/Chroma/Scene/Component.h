@@ -1,10 +1,13 @@
 #pragma once
 
 
-#include "Chroma/Utilities/Json.h"
 #include "Chroma/Scene/ECS.h"
 #include "Chroma/Core/Log.h"
 #include <string>
+#include "Chroma/Utilities/Yaml.h"
+#include "yaml-cpp/node/convert.h"
+#include "yaml-cpp/node/node.h"
+#include "yaml-cpp/node/parse.h"
 
 namespace Polychrome
 {
@@ -19,17 +22,27 @@ namespace Chroma
 
 	struct Component
 	{
-		virtual void Serialize() {};
-		virtual void Deserialize() {};
+		void BeginSerialize(YAML::Emitter& out);
+		virtual void Serialize(YAML::Emitter& out) {};
+		void EndSerialize(YAML::Emitter& out);
+
+		virtual void Deserialize(YAML::Node& node) {};
 
 		bool operator == (const Component& other)
 		{
-			return this->GetComparisonID() == other.GetComparisonID();
+			return this->GetUniqueID() == other.GetUniqueID();
 		}
 
 		const virtual std::string Name() const = 0;
 
 		virtual void DrawImGui() {};
+
+		const virtual bool AllowMultiple() const { return true; };
+
+		const unsigned int GetUniqueID() const
+		{
+			return comparison_id;
+		}
 
 	private:
 
@@ -44,12 +57,6 @@ namespace Chroma
 			comparison_id = component_counter;
 			component_counter++;
 		}
-
-		const unsigned int GetComparisonID() const
-		{
-			return comparison_id;
-		}
-
 
 
 		static unsigned int component_counter;

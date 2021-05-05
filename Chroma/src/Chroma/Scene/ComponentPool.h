@@ -19,6 +19,7 @@ namespace Chroma
 		virtual bool HasEntity(EntityID id) = 0;
 		virtual std::vector<EntityID>* GetEntities() = 0;
 		virtual std::vector<Component*> GetAbstractComponents(EntityID id) = 0;
+		virtual Component* Add(EntityID id) = 0;
 
 	};
 

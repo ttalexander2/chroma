@@ -236,6 +236,70 @@ namespace Chroma
 
 	}
 
+	std::vector<std::string> Audio::GetEventPathList()
+	{
+
+		std::vector<std::string> all_events;
+
+		for (auto [name, bank] : s_FMOD->m_Banks)
+		{
+			int event_count;
+			Audio::ErrorCheck(bank->getEventCount(&event_count));
+			if (event_count <= 0)
+				continue;
+
+			auto events = std::vector<FMOD::Studio::EventDescription*>(static_cast<size_t>(event_count), nullptr);
+
+			Audio::ErrorCheck(bank->getEventList(events.data(), events.size(), nullptr));
+
+			for (FMOD::Studio::EventDescription* e : events)
+			{
+				if (!e->isValid())
+					continue;
+
+				FMOD_GUID guid;
+
+				Audio::ErrorCheck(e->getID(&guid));
+				std::string path = Audio::GetEventName(guid);
+
+				all_events.push_back(path);
+			}
+		}
+
+		return all_events;
+	}
+
+	std::string Audio::GetEventName(FMOD_GUID guid)
+	{
+		int size = 128;
+		std::vector<char> buffer;
+
+		buffer.reserve(size);
+
+		FMOD_RESULT result;
+		do
+		{
+			buffer.reserve(size);
+			result = s_FMOD->m_StudioSystem->lookupPath(&guid, buffer.data(), size , &size);
+
+		} while (result == FMOD_ERR_TRUNCATED);
+
+		Audio::ErrorCheck(result);
+
+		if (result == FMOD_OK)
+		{
+			return std::string(buffer.data());
+		}
+		return "";
+	}
+
+	FMOD_GUID Audio::GetEventGuid(const std::string& name)
+	{
+		FMOD_GUID guid;
+		Audio::ErrorCheck(s_FMOD->m_StudioSystem->lookupID(name.c_str(), &guid));
+		return guid;
+	}
+
 	void Audio::ErrorCheck(FMOD_RESULT result)
 	{
 		if (result != FMOD_OK)
@@ -325,6 +389,8 @@ namespace Chroma
 				case FMOD_ERR_TOOMANYSAMPLES:				CHROMA_CORE_ERROR("FMOD Error: FMOD_ERR_TOOMANYSAMPLES"); break;
 				default:									CHROMA_CORE_ERROR("FMOD Error: Unknown"); break;
 			}
+
+			 //__debugbreak();
 		}
 	}
 

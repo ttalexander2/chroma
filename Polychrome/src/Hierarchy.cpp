@@ -27,7 +27,6 @@ namespace Polychrome
 			
 			if (ImGui::Selectable(t->EntityName.c_str(), Hierarchy::SelectedEntity.GetID() == e))
 				Hierarchy::SelectedEntity = Chroma::EntityRef(e, *scene);
-			
 		}
 		
 

@@ -22,3 +22,6 @@
 [submodule "Chroma/third_party/json"]
 	path = Chroma/third_party/json
 	url = https://github.com/ttalexander2/json.git
+[submodule "Chroma/third_party/yaml-cpp"]
+	path = Chroma/third_party/yaml-cpp
+	url = https://github.com/ttalexander2/yaml-cpp.git

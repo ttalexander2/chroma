@@ -2,13 +2,15 @@
 
 #include "Scene.h"
 #include "EntityRef.h"
-#include "Chroma/Utilities/Json.h"
 #include <Chroma/Components/Transform.h>
 #include <Chroma/Components/Tag.h>
 #include <Chroma/Components/AudioSource.h>
 #include <Chroma/Components/SpriteRenderer.h>
 #include <Chroma/Components/BoxCollider2D.h>
 #include <Chroma/Components/CircleCollider2D.h>
+#include <yaml-cpp/node/node.h>
+#include <yaml-cpp/node/parse.h>
+#include <yaml-cpp/yaml.h>
 
 
 namespace Chroma
@@ -42,6 +44,14 @@ namespace Chroma
 		return { m_Entities.back(), *this };
 	}
 
+
+	EntityRef Scene::NewEntityFromID(EntityID id)
+	{
+		m_Entities.push_back(CreateEntityId(EntityIndex(id), 0));
+		EntityRef e = { m_Entities.back(), *this };
+		return { m_Entities.back(), *this };
+	}
+
 	void Scene::DestroyEntity(EntityRef entity)
 	{
 		EntityID id = entity.m_EntityID;
@@ -52,6 +62,79 @@ namespace Chroma
 		{
 			pool->RemoveAll(id);
 		}
+	}
+
+	std::string Scene::Serialize()
+	{
+		YAML::Emitter out;
+		out << YAML::BeginMap;
+		out << YAML::Key << "Scene" << YAML::Value << this->Name;
+		out << YAML::Key << "Entities" << YAML::Value << YAML::BeginSeq;
+
+		for (EntityRef e : this->View<Tag>())
+		{
+			out << YAML::BeginMap;
+			out << YAML::Key << "Entity" << YAML::Value << e.m_EntityID;
+			out << YAML::Key << "Components" << YAML::Value << YAML::BeginMap;
+			for (ComponentRef c : e.GetAllComponents())
+			{
+				c->BeginSerialize(out);
+				c->Serialize(out);
+				c->EndSerialize(out);
+			}
+			out << YAML::EndMap;
+			out << YAML::EndMap;
+		}
+
+		out << YAML::EndSeq;
+		out << YAML::EndMap;
+
+		std::string result = out.c_str();
+		return result;
+
+	}
+
+	bool Scene::Deserialize(Scene &out, const std::string& yaml)
+	{
+		auto data = YAML::Load(yaml);
+		if (!data["Scene"])
+			return false;
+
+		std::string sceneName = data["Scene"].as<std::string>();
+		CHROMA_CORE_TRACE("Deserializing Scene '{}'", sceneName);
+
+		out.Name = sceneName;
+
+		auto entities = data["Entities"];
+		if (entities)
+		{
+			for (auto entity : entities)
+			{
+				
+				EntityID id = entity["Entity"].as<EntityID>();
+				EntityRef newEntity = out.NewEntityFromID(id);
+
+				CHROMA_CORE_TRACE("Deserialized Entity with ID = {0}", id);
+				auto components = entity["Components"];
+				if (components)
+				{
+					for (auto component : components)
+					{
+						std::string key = component.first.as<std::string>();
+						CHROMA_CORE_ERROR("FUNCION CALL: {0}", key);
+						ComponentRef<Component> newComponent = out.m_ComponentFactory[key](out, newEntity);
+						newComponent->Deserialize(component.second);
+					}
+				}
+
+
+			}
+		}
+
+		return true;
+
+
+
 	}
 
 	std::vector<ComponentRef<Component>> Scene::GetAllComponents(EntityRef entity)

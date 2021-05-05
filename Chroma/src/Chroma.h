@@ -20,6 +20,8 @@
 #include "Chroma/Scene/EntityRef.h"
 #include "Chroma/Scene/Scene.h"
 
+#include "Chroma/Utilities/Yaml.h"
+
 
 #include "Chroma/Audio/Audio.h"
 

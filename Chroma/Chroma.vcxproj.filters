@@ -22,6 +22,9 @@
     <Filter Include="src\Chroma\ImGui">
       <UniqueIdentifier>{003CA9ED-EC34-C83F-1567-ADC401BFA74B}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Chroma\ImGui\ImGuiComponents">
+      <UniqueIdentifier>{D04BDD2E-BC9C-C870-E500-B732D1B05BDA}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Chroma\Math">
       <UniqueIdentifier>{EFA8168B-5B34-844F-6445-0744D04FE04F}</UniqueIdentifier>
     </Filter>
@@ -52,20 +55,29 @@
     <Filter Include="third_party">
       <UniqueIdentifier>{0FB18DF1-7B66-06E7-045B-00BE700FFDEA}</UniqueIdentifier>
     </Filter>
-    <Filter Include="third_party\json">
-      <UniqueIdentifier>{384A50F9-2443-6F4B-4D75-54D039CD4E57}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="third_party\json\single_include">
-      <UniqueIdentifier>{AC30277F-1814-36BF-2117-64FB8D79FC0F}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="third_party\json\single_include\nlohmann">
-      <UniqueIdentifier>{368E8E98-220B-82DB-4B88-82EF37641E6F}</UniqueIdentifier>
-    </Filter>
     <Filter Include="third_party\lua">
       <UniqueIdentifier>{40412974-ACCC-9638-B5DD-192D21E8F238}</UniqueIdentifier>
     </Filter>
     <Filter Include="third_party\stb_image">
       <UniqueIdentifier>{6940486C-D5AC-0367-9EA0-9BC40ACC25CF}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\yaml-cpp">
+      <UniqueIdentifier>{A1B8E9C9-8D47-7393-3666-878E22D48339}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\yaml-cpp\include">
+      <UniqueIdentifier>{14F1F150-00AC-E1FC-A963-5A4795FD2B8D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\yaml-cpp\include\yaml-cpp">
+      <UniqueIdentifier>{46CE4A72-B292-4962-7BF8-792CE77BE597}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\yaml-cpp\include\yaml-cpp\contrib">
+      <UniqueIdentifier>{46FC0F49-B26C-12C2-7B8B-8C4AE7BA4AC3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\yaml-cpp\include\yaml-cpp\node">
+      <UniqueIdentifier>{DB60159E-C7C8-DB6B-3034-F0811CBBF257}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\yaml-cpp\include\yaml-cpp\node\detail">
+      <UniqueIdentifier>{3D743433-A93A-914F-F295-1FB25E9BFFB3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -137,6 +149,9 @@
     </ClInclude>
     <ClInclude Include="src\Chroma\Events\MouseEvent.h">
       <Filter>src\Chroma\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Chroma\ImGui\ImGuiComponents\ComboFilter.h">
+      <Filter>src\Chroma\ImGui\ImGuiComponents</Filter>
     </ClInclude>
     <ClInclude Include="src\Chroma\ImGui\ImGuiLayer.h">
       <Filter>src\Chroma\ImGui</Filter>
@@ -303,14 +318,8 @@
     <ClInclude Include="src\Chroma\Utilities\ContainerHelpers.h">
       <Filter>src\Chroma\Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="src\Chroma\Utilities\Json.h">
-      <Filter>src\Chroma\Utilities</Filter>
-    </ClInclude>
     <ClInclude Include="src\chromapch.h">
       <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="third_party\json\single_include\nlohmann\json.hpp">
-      <Filter>third_party\json\single_include\nlohmann</Filter>
     </ClInclude>
     <ClInclude Include="third_party\lua\lapi.h">
       <Filter>third_party\lua</Filter>
@@ -399,6 +408,118 @@
     <ClInclude Include="third_party\stb_image\stb_image.h">
       <Filter>third_party\stb_image</Filter>
     </ClInclude>
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\anchor.h">
+      <Filter>third_party\yaml-cpp\include\yaml-cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\binary.h">
+      <Filter>third_party\yaml-cpp\include\yaml-cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\contrib\anchordict.h">
+      <Filter>third_party\yaml-cpp\include\yaml-cpp\contrib</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\contrib\graphbuilder.h">
+      <Filter>third_party\yaml-cpp\include\yaml-cpp\contrib</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\depthguard.h">
+      <Filter>third_party\yaml-cpp\include\yaml-cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\dll.h">
+      <Filter>third_party\yaml-cpp\include\yaml-cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\emitfromevents.h">
+      <Filter>third_party\yaml-cpp\include\yaml-cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\emitter.h">
+      <Filter>third_party\yaml-cpp\include\yaml-cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\emitterdef.h">
+      <Filter>third_party\yaml-cpp\include\yaml-cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\emittermanip.h">
+      <Filter>third_party\yaml-cpp\include\yaml-cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\emitterstyle.h">
+      <Filter>third_party\yaml-cpp\include\yaml-cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\eventhandler.h">
+      <Filter>third_party\yaml-cpp\include\yaml-cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\exceptions.h">
+      <Filter>third_party\yaml-cpp\include\yaml-cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\mark.h">
+      <Filter>third_party\yaml-cpp\include\yaml-cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\node\convert.h">
+      <Filter>third_party\yaml-cpp\include\yaml-cpp\node</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\node\detail\impl.h">
+      <Filter>third_party\yaml-cpp\include\yaml-cpp\node\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\node\detail\iterator.h">
+      <Filter>third_party\yaml-cpp\include\yaml-cpp\node\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\node\detail\iterator_fwd.h">
+      <Filter>third_party\yaml-cpp\include\yaml-cpp\node\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\node\detail\memory.h">
+      <Filter>third_party\yaml-cpp\include\yaml-cpp\node\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\node\detail\node.h">
+      <Filter>third_party\yaml-cpp\include\yaml-cpp\node\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\node\detail\node_data.h">
+      <Filter>third_party\yaml-cpp\include\yaml-cpp\node\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\node\detail\node_iterator.h">
+      <Filter>third_party\yaml-cpp\include\yaml-cpp\node\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\node\detail\node_ref.h">
+      <Filter>third_party\yaml-cpp\include\yaml-cpp\node\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\node\emit.h">
+      <Filter>third_party\yaml-cpp\include\yaml-cpp\node</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\node\impl.h">
+      <Filter>third_party\yaml-cpp\include\yaml-cpp\node</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\node\iterator.h">
+      <Filter>third_party\yaml-cpp\include\yaml-cpp\node</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\node\node.h">
+      <Filter>third_party\yaml-cpp\include\yaml-cpp\node</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\node\parse.h">
+      <Filter>third_party\yaml-cpp\include\yaml-cpp\node</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\node\ptr.h">
+      <Filter>third_party\yaml-cpp\include\yaml-cpp\node</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\node\type.h">
+      <Filter>third_party\yaml-cpp\include\yaml-cpp\node</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\noexcept.h">
+      <Filter>third_party\yaml-cpp\include\yaml-cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\null.h">
+      <Filter>third_party\yaml-cpp\include\yaml-cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\ostream_wrapper.h">
+      <Filter>third_party\yaml-cpp\include\yaml-cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\parser.h">
+      <Filter>third_party\yaml-cpp\include\yaml-cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\stlemitter.h">
+      <Filter>third_party\yaml-cpp\include\yaml-cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\traits.h">
+      <Filter>third_party\yaml-cpp\include\yaml-cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\yaml.h">
+      <Filter>third_party\yaml-cpp\include\yaml-cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Chroma\Utilities\Yaml.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Chroma\Audio\Audio.cpp">
@@ -500,5 +621,6 @@
     <ClCompile Include="third_party\stb_image\stb_image.cpp">
       <Filter>third_party\stb_image</Filter>
     </ClCompile>
+    <ClCompile Include="src\Chroma\Utilities\Yaml.cpp" />
   </ItemGroup>
 </Project>

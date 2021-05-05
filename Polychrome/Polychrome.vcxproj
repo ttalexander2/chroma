@@ -79,7 +79,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>CHROMA_PLATFORM_WINDOWS;CHROMA_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Chroma\third_party\spdlog\include;..\Chroma\src;..\Chroma\third_party\glm;..\Chroma\third_party\imgui;..\Chroma\third_party\entt;..\Chroma\third_party\fmod;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Chroma\third_party\spdlog\include;..\Chroma\src;..\Chroma\third_party\glm;..\Chroma\third_party\imgui;..\Chroma\third_party\entt;..\Chroma\third_party\fmod;..\Chroma\third_party\yaml-cpp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -103,7 +103,7 @@ IF EXIST assets\ (xcopy /Q /E /Y /I assets ..\bin\Debug-windows-x86_64\Polychrom
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>CHROMA_PLATFORM_WINDOWS;CHROMA_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Chroma\third_party\spdlog\include;..\Chroma\src;..\Chroma\third_party\glm;..\Chroma\third_party\imgui;..\Chroma\third_party\entt;..\Chroma\third_party\fmod;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Chroma\third_party\spdlog\include;..\Chroma\src;..\Chroma\third_party\glm;..\Chroma\third_party\imgui;..\Chroma\third_party\entt;..\Chroma\third_party\fmod;..\Chroma\third_party\yaml-cpp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -131,7 +131,7 @@ IF EXIST assets\ (xcopy /Q /E /Y /I assets ..\bin\Release-windows-x86_64\Polychr
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>CHROMA_PLATFORM_WINDOWS;CHROMA_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Chroma\third_party\spdlog\include;..\Chroma\src;..\Chroma\third_party\glm;..\Chroma\third_party\imgui;..\Chroma\third_party\entt;..\Chroma\third_party\fmod;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Chroma\third_party\spdlog\include;..\Chroma\src;..\Chroma\third_party\glm;..\Chroma\third_party\imgui;..\Chroma\third_party\entt;..\Chroma\third_party\fmod;..\Chroma\third_party\yaml-cpp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -156,12 +156,14 @@ IF EXIST assets\ (xcopy /Q /E /Y /I assets ..\bin\Dist-windows-x86_64\Polychrome
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\EditorApp.h" />
+    <ClInclude Include="src\FileDrop.h" />
     <ClInclude Include="src\Hierarchy.h" />
     <ClInclude Include="src\Inspector.h" />
     <ClInclude Include="src\Viewport.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\EditorApp.cpp" />
+    <ClCompile Include="src\FileDrop.cpp" />
     <ClCompile Include="src\Hierarchy.cpp" />
     <ClCompile Include="src\Inspector.cpp" />
     <ClCompile Include="src\Viewport.cpp" />

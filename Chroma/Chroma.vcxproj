@@ -78,7 +78,7 @@
       <WarningLevel>Level3</WarningLevel>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;GLM_FORCE_MESSAGES;GLM_FORCE_INTRINSICS;GLM_FORCE_INLINE;GLM_FORCE_ALIGNED_GENTYPES;CHROMA_PLATFORM_WINDOWS;CHROMA_BUILD_DLL;GLFW_INCLUDE_NONE;CHROMA_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;third_party\spdlog\include;third_party\GLFW\include;third_party\Glad\include;third_party\imgui;third_party\glm;third_party\stb_image;third_party\entt;third_party\fmod;third_party\lua;third_party\json\single_include\nlohmann;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;third_party\spdlog\include;third_party\GLFW\include;third_party\Glad\include;third_party\imgui;third_party\glm;third_party\stb_image;third_party\entt;third_party\fmod;third_party\lua;third_party\yaml-cpp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -104,7 +104,7 @@
       <PrecompiledHeaderFile>chromapch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;GLM_FORCE_MESSAGES;GLM_FORCE_INTRINSICS;GLM_FORCE_INLINE;GLM_FORCE_ALIGNED_GENTYPES;CHROMA_PLATFORM_WINDOWS;CHROMA_BUILD_DLL;GLFW_INCLUDE_NONE;CHROMA_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;third_party\spdlog\include;third_party\GLFW\include;third_party\Glad\include;third_party\imgui;third_party\glm;third_party\stb_image;third_party\entt;third_party\fmod;third_party\lua;third_party\json\single_include\nlohmann;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;third_party\spdlog\include;third_party\GLFW\include;third_party\Glad\include;third_party\imgui;third_party\glm;third_party\stb_image;third_party\entt;third_party\fmod;third_party\lua;third_party\yaml-cpp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -128,7 +128,7 @@
       <PrecompiledHeaderFile>chromapch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;GLM_FORCE_MESSAGES;GLM_FORCE_INTRINSICS;GLM_FORCE_INLINE;GLM_FORCE_ALIGNED_GENTYPES;CHROMA_PLATFORM_WINDOWS;CHROMA_BUILD_DLL;GLFW_INCLUDE_NONE;CHROMA_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;third_party\spdlog\include;third_party\GLFW\include;third_party\Glad\include;third_party\imgui;third_party\glm;third_party\stb_image;third_party\entt;third_party\fmod;third_party\lua;third_party\json\single_include\nlohmann;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;third_party\spdlog\include;third_party\GLFW\include;third_party\Glad\include;third_party\imgui;third_party\glm;third_party\stb_image;third_party\entt;third_party\fmod;third_party\lua;third_party\yaml-cpp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -170,6 +170,7 @@
     <ClInclude Include="src\Chroma\Events\Event.h" />
     <ClInclude Include="src\Chroma\Events\KeyEvent.h" />
     <ClInclude Include="src\Chroma\Events\MouseEvent.h" />
+    <ClInclude Include="src\Chroma\ImGui\ImGuiComponents\ComboFilter.h" />
     <ClInclude Include="src\Chroma\ImGui\ImGuiLayer.h" />
     <ClInclude Include="src\Chroma\Math\Common.h" />
     <ClInclude Include="src\Chroma\Math\Exponential.h" />
@@ -225,9 +226,7 @@
     <ClInclude Include="src\Chroma\Scene\System.h" />
     <ClInclude Include="src\Chroma\Systems\CollisionSystem.h" />
     <ClInclude Include="src\Chroma\Utilities\ContainerHelpers.h" />
-    <ClInclude Include="src\Chroma\Utilities\Json.h" />
     <ClInclude Include="src\chromapch.h" />
-    <ClInclude Include="third_party\json\single_include\nlohmann\json.hpp" />
     <ClInclude Include="third_party\lua\lapi.h" />
     <ClInclude Include="third_party\lua\lauxlib.h" />
     <ClInclude Include="third_party\lua\lcode.h" />
@@ -257,6 +256,44 @@
     <ClInclude Include="third_party\lua\lvm.h" />
     <ClInclude Include="third_party\lua\lzio.h" />
     <ClInclude Include="third_party\stb_image\stb_image.h" />
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\anchor.h" />
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\binary.h" />
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\contrib\anchordict.h" />
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\contrib\graphbuilder.h" />
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\depthguard.h" />
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\dll.h" />
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\emitfromevents.h" />
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\emitter.h" />
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\emitterdef.h" />
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\emittermanip.h" />
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\emitterstyle.h" />
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\eventhandler.h" />
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\exceptions.h" />
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\mark.h" />
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\node\convert.h" />
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\node\detail\impl.h" />
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\node\detail\iterator.h" />
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\node\detail\iterator_fwd.h" />
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\node\detail\memory.h" />
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\node\detail\node.h" />
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\node\detail\node_data.h" />
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\node\detail\node_iterator.h" />
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\node\detail\node_ref.h" />
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\node\emit.h" />
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\node\impl.h" />
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\node\iterator.h" />
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\node\node.h" />
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\node\parse.h" />
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\node\ptr.h" />
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\node\type.h" />
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\noexcept.h" />
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\null.h" />
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\ostream_wrapper.h" />
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\parser.h" />
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\stlemitter.h" />
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\traits.h" />
+    <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\yaml.h" />
+    <ClInclude Include="src\Chroma\Utilities\Yaml.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Chroma\Audio\Audio.cpp" />
@@ -294,6 +331,7 @@
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="third_party\stb_image\stb_image.cpp" />
+    <ClCompile Include="src\Chroma\Utilities\Yaml.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="third_party\GLFW\GLFW.vcxproj">
@@ -304,6 +342,9 @@
     </ProjectReference>
     <ProjectReference Include="third_party\imgui\ImGui.vcxproj">
       <Project>{C0FF640D-2C14-8DBE-F595-301E616989EF}</Project>
+    </ProjectReference>
+    <ProjectReference Include="third_party\yaml-cpp\yaml-cpp.vcxproj">
+      <Project>{88F1A057-74BE-FB62-9DD7-E90A890331F1}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

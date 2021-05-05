@@ -23,6 +23,10 @@ namespace Chroma
 	class Scene
 	{
 	public:
+		std::string Name = "Scene";
+
+
+	public:
 		Scene();
 		~Scene() = default;
 
@@ -30,31 +34,48 @@ namespace Chroma
 
 		void DestroyEntity(EntityRef id);
 
-		void Serialize();
-		Ref<Scene> Deserialize();
+		std::string Serialize();
+		static bool Deserialize(Scene& out, const std::string& yaml);
 
 		template <typename T>
 		void RegisterComponent()
 		{
 			CHROMA_ASSERT(std::is_convertible<T*, Component*>::value, "Must inherrit Component to register as component");
 
+			if (!std::is_convertible<T*, Component*>::value)
+			{
+				return;
+			}
+
 			unsigned int id = GetComponentTypeID<T>();
 
 			m_ComponentIDs[typeid(T).hash_code()] = id;
 
-			//std::function<ComponentRef<Component>(Scene*, EntityRef)> func = [=](Scene* scene, EntityRef entity) -> return scene->AddComponent<T>(entity);
+			auto func = [](Scene& scene, EntityRef entity) 
+			{
+				ComponentRef<T> comp = scene.AddComponent<T>(entity);
+				return ComponentRef<Component>(comp.m_Ptr, comp.GetEntityID(), comp.GetScene());
+			};
 
+			T test;
 
-			//m_ComponentFactory[id] = func;
+			CHROMA_CORE_ERROR("NAME: {0}", test.Name());
+
+			if (m_ComponentFactory.find(test.Name()) == m_ComponentFactory.end())
+			{
+				m_ComponentFactory[test.Name()] = func;
+			}
+			
+			m_ComponentNames[id] = test.Name();
+			m_ComponentNamesToID[test.Name()] = id;
+			m_ComponentsAllowMultiple[id] = test.AllowMultiple();
 
 			if (m_ComponentPools.size() <= id || m_ComponentPools[id] == nullptr)
 			{
 				m_ComponentPools.push_back(new ComponentPool<T>());
 			}
 
-			T comp = T();
-
-			m_ComponentNames[id] = comp.Name();
+			CHROMA_CORE_TRACE("COMPONENT_NAME: {0}", m_ComponentNames[id]);
 		}
 		
 		template<typename T>
@@ -138,6 +159,15 @@ namespace Chroma
 		bool HasComponent(EntityRef id)
 		{
 			return HasComponent<T>((EntityID)id);
+		}
+
+		bool HasComponent(EntityID id, unsigned int componentID)
+		{
+			if (m_ComponentPools.size() <= componentID || m_ComponentPools[componentID] == nullptr)
+				return false;
+
+			AbstractComponentPool* pool = m_ComponentPools[componentID];
+			return pool->HasEntity(id);
 		}
 
 		template<typename T>
@@ -263,8 +293,6 @@ namespace Chroma
 					}
 				}
 
-				CHROMA_CORE_ERROR("COMPONENT SIZE: {0}", (*m_Scene->m_ComponentPools[smallest]->GetEntities()).size());
-
 				for (EntityID e_id : *m_Scene->m_ComponentPools[smallest]->GetEntities())
 				{
 					bool valid = true;
@@ -277,7 +305,6 @@ namespace Chroma
 
 						if (!m_Scene->m_ComponentPools[id]->HasEntity(e_id))
 						{
-							CHROMA_CORE_ERROR("THIS SHOULDNT HAPPEN");
 							valid = false;
 							break;
 						}
@@ -316,11 +343,25 @@ namespace Chroma
 			return s_ComponentId;
 		}
 
-		std::unordered_map<unsigned int, std::function<ComponentRef<Component>(Scene*, EntityRef)>> GetComponentFactory()
+		std::unordered_map<std::string, std::function<ComponentRef<Component>(Scene&, EntityRef)>> GetComponentFactory()
 		{
 			return m_ComponentFactory;
 		}
 
+		std::unordered_map<unsigned int, std::string> GetComponentNames()
+		{
+			return m_ComponentNames;
+		}
+
+		std::unordered_map<std::string, unsigned int> GetComponentNamestoIDMap()
+		{
+			return m_ComponentNamesToID;
+		}
+
+		bool ComponentAllowsMultiple(unsigned int component_id)
+		{
+			return m_ComponentsAllowMultiple[component_id];
+		}
 
 #pragma region UpdateLoop
 
@@ -336,6 +377,8 @@ namespace Chroma
 
 
 	private:
+
+		EntityRef NewEntityFromID(EntityID id);
 
 		inline EntityID CreateEntityId(EntityIndex index, EntityVersion version)
 		{
@@ -367,8 +410,10 @@ namespace Chroma
 		std::vector<EntityID> m_FreeEntities;
 
 		std::unordered_map<size_t, unsigned int> m_ComponentIDs;
-		std::unordered_map<unsigned int, std::function<ComponentRef<Component>(Scene*, EntityRef)>> m_ComponentFactory;
+		std::unordered_map<std::string, std::function<ComponentRef<Component> (Scene&, EntityRef)>> m_ComponentFactory;
 		std::unordered_map<unsigned int, std::string> m_ComponentNames;
+		std::unordered_map<std::string, unsigned int> m_ComponentNamesToID;
+		std::unordered_map<unsigned int, bool> m_ComponentsAllowMultiple;
 
 		std::vector<AbstractComponentPool*> m_ComponentPools;
 

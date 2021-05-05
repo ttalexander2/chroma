@@ -5,11 +5,13 @@
     <ClCompile Include="src\Viewport.cpp" />
     <ClCompile Include="src\Hierarchy.cpp" />
     <ClCompile Include="src\Inspector.cpp" />
+    <ClCompile Include="src\FileDrop.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\EditorApp.h" />
     <ClInclude Include="src\Viewport.h" />
     <ClInclude Include="src\Hierarchy.h" />
     <ClInclude Include="src\Inspector.h" />
+    <ClInclude Include="src\FileDrop.h" />
   </ItemGroup>
 </Project>

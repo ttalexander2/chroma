@@ -20,6 +20,7 @@ IncludeDir["stb_image"] = "Chroma/third_party/stb_image"
 IncludeDir["entt"] = "Chroma/third_party/entt"
 IncludeDir["FMOD"] = "Chroma/third_party/fmod"
 IncludeDir["lua"] = "Chroma/third_party/lua"
+IncludeDir["yaml"] = "Chroma/third_party/yaml-cpp/include"
 
 group "Dependencies"
     include "Chroma/third_party/GLFW"
@@ -27,6 +28,7 @@ group "Dependencies"
     include "Chroma/third_party/imgui"
     include "Chroma/third_party/glm"
     include "Chroma/third_party/lua"
+    include "Chroma/third_party/yaml-cpp"
 group "" -- end of dependencies
 
 
@@ -51,7 +53,7 @@ project "Chroma"
         "%{prj.name}/third_party/stb_image/**.cpp",
         "%{prj.name}/third_party/entt/**.hpp",
         "%{prj.name}/third_party/lua/**.h",
-        "%{prj.name}/third_party/json/single_include/nlohmann/**.hpp"
+        "%{prj.name}/third_party/yaml-cpp/include/yaml-cpp/**.h"
     }
 
     defines
@@ -75,7 +77,7 @@ project "Chroma"
         "%{IncludeDir.entt}",
         "%{IncludeDir.FMOD}",
         "%{IncludeDir.lua}",
-        "%{prj.name}/third_party/json/single_include/nlohmann"
+        "%{IncludeDir.yaml}"
 
     }
 
@@ -85,6 +87,7 @@ project "Chroma"
         "Glad",
         "ImGui",
         "opengl32.lib",
+        "yaml-cpp"
     }
 
     filter "system:windows"
@@ -149,7 +152,8 @@ project "Sandbox"
     files
     {
         "%{prj.name}/src/**.h",
-        "%{prj.name}/src/**.cpp"
+        "%{prj.name}/src/**.cpp",
+        "%{prj.name}/third_party/yaml-cpp/include/yaml-cpp/**.h"
     }
 
     includedirs
@@ -159,7 +163,8 @@ project "Sandbox"
         "%{IncludeDir.glm}",
         "%{IncludeDir.ImGui}",
         "%{IncludeDir.entt}",
-        "%{IncludeDir.FMOD}"
+        "%{IncludeDir.FMOD}",
+        "%{IncludeDir.yaml}"
     }
 
     links
@@ -206,7 +211,8 @@ project "Polychrome"
     files
     {
         "%{prj.name}/src/**.h",
-        "%{prj.name}/src/**.cpp"
+        "%{prj.name}/src/**.cpp",
+        "%{prj.name}/third_party/yaml-cpp/include/yaml-cpp/**.h"
     }
 
     includedirs
@@ -216,7 +222,8 @@ project "Polychrome"
         "%{IncludeDir.glm}",
         "%{IncludeDir.ImGui}",
         "%{IncludeDir.entt}",
-        "%{IncludeDir.FMOD}"
+        "%{IncludeDir.FMOD}",
+        "%{IncludeDir.yaml}"
 
     }
 

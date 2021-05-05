@@ -16,11 +16,18 @@ namespace Chroma
 
 		inline EntityID GetID() const { return m_EntityID; }
 
+		std::string ToPrefab();
+
 
 		template <typename T>
 		bool HasComponent()
 		{
 			return m_Scene->HasComponent<T>(m_EntityID);
+		}
+
+		bool HasComponent(unsigned int component_id)
+		{
+			return m_Scene->HasComponent(m_EntityID, component_id);
 		}
 
 		template<typename T>
@@ -76,7 +83,8 @@ namespace Chroma
 
 
 	private:
-		EntityID m_EntityID{ ENTITY_NULL };
+
+		EntityID m_EntityID { ENTITY_NULL };
 		Ref<Scene> m_Scene;
 
 		friend class Scene;

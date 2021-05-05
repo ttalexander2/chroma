@@ -52,12 +52,28 @@ namespace Polychrome
 
 		if (ImGui::Button("Add Component"))
 		{
-			ImGui::OpenPopup("##INSPECTOR_ADD_COMPONENT");
+			ImGui::OpenPopup("##ENTITY_ADD_COMPONENT");
 		}
 
-		if (ImGui::BeginPopup("##INSPECTOR_ADD_COMPONENT"))
+		if (ImGui::BeginPopup("##ENTITY_ADD_COMPONENT"))
 		{
-			
+			auto scene = Chroma::Application::Get().m_ActiveScene;
+			auto names = scene->GetComponentNames();
+			auto ids = scene->GetComponentNamestoIDMap();
+
+			for (auto& [name, func] : scene->GetComponentFactory())
+			{
+				bool enabled = true;
+				if (selected.HasComponent(ids[name]) && !scene->ComponentAllowsMultiple(ids[name]))
+				{
+					enabled = false;
+				}
+
+				if (ImGui::MenuItem((name + "##ENTITY_ADD_COMPONENT").c_str(), "", false, enabled))
+				{						
+					func(*scene, selected);
+				}
+			}
 			ImGui::EndPopup();
 		}
 
