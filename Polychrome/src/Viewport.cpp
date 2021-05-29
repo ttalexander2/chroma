@@ -1,5 +1,6 @@
 #include "Viewport.h"
 #include <imgui.h>
+#include "Fonts/IconsForkAwesome.h"
 
 
 namespace Polychrome
@@ -12,7 +13,7 @@ namespace Polychrome
 
 	void Viewport::Draw(Chroma::Ref<Chroma::Framebuffer> frame_buffer)
 	{
-		ImGui::Begin("Viewport");
+		ImGui::Begin(ICON_FK_GAMEPAD " Viewport");
 
 		bool viewport_focused = ImGui::IsWindowFocused();
 		Chroma::Application::Get().GetImGuiLayer()->BlockEvents(!viewport_focused);
@@ -27,6 +28,7 @@ namespace Polychrome
 			height = viewportPanelSize.y;
 			width = viewportPanelSize.y * (16.0f / 9.0f);
 		}
+		// Case 1: Window is narrower than 16:9
 		else
 		{
 			height = viewportPanelSize.x * (9.0f / 16.0f);

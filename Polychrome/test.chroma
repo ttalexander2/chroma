@@ -1,13 +1,15 @@
-Scene: Poo
+Scene: Scene
 Entities:
   - Entity: 0
     Components:
       Tag:
-        EntityName: Entity_0
+        EntityName: Blue Rect
       Transform:
-        Position: [0, 0, 0]
+        Position: [-9, 0, 0]
         Rotation: [0, 0, 0]
-        Scale: [1, 1, 1]
+        Scale: [31, 12, 1]
+      Sprite Renderer:
+        Color: [0.0475500338, 0.682603538, 0.730232596, 1]
   - Entity: 1
     Components:
       Tag:
@@ -59,17 +61,10 @@ Entities:
   - Entity: 7
     Components:
       Tag:
-        EntityName: I really hope it fucking works god damnit
+        EntityName: Red Rect
       Transform:
-        Position: [0, 0, 0]
+        Position: [10, 0, 0]
         Rotation: [0, 0, 0]
-        Scale: [1, 1, 1]
-      Audio Source:
-        Event: event:/Music/Test
-        Volume: 0.6
-      Box Collider 2D:
-        Bounds: [1, 1]
-        Offset: [0, 0]
-      Circle Collider 2D:
-        Radius: 1
-        Offset: [0, 0]
+        Scale: [15, 27, 1]
+      Sprite Renderer:
+        Color: [0.748837233, 0.303017855, 0.303017855, 1]

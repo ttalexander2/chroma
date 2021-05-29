@@ -10,14 +10,13 @@ namespace Chroma
 	{
 		std::string Event;
 		FMOD_GUID GUID;
-		float Volume = 1.0f;
 		bool Mute = false;
 		bool PlayOnInit = false;
 
 		AudioSource() = default;
 		AudioSource(const AudioSource&) = default;
-		AudioSource(const std::string& evnt, float volume = 1.0f, bool loop = false, bool mute = false, bool play_on_init = false)
-			: Event(evnt), Volume(volume), Mute(mute), PlayOnInit(play_on_init), GUID()
+		AudioSource(const std::string& evnt, bool loop = false, bool mute = false, bool play_on_init = false)
+			: Event(evnt), Mute(mute), PlayOnInit(play_on_init), GUID()
 		{
 		}
 
@@ -33,7 +32,6 @@ namespace Chroma
 				ImGui::TableNextColumn();
 
 				ImGui::AlignTextToFramePadding(); ImGui::Text("Event");
-				ImGui::AlignTextToFramePadding(); ImGui::Text("Volume");
 				ImGui::AlignTextToFramePadding(); ImGui::Text("Mute");
 				ImGui::AlignTextToFramePadding(); ImGui::Text("Play on Init");
 
@@ -49,13 +47,17 @@ namespace Chroma
 
 				static ComboFilterState s = { 0 };
 				static char buf[512] = "type text here...";
-				if (ComboFilter("##AUDIO_SOURCE_COMPONENT_" + GetUniqueID(), buf, IM_ARRAYSIZE(buf), hints, hints.size(), s))
+				//if (ComboFilter("##AUDIO_SOURCE_COMPONENT_" + GetUniqueID(), buf, IM_ARRAYSIZE(buf), hints, hints.size(), s))
+				//{
+				//	Event = std::string(buf);
+				//	GUID = Audio::GetEventGuid(Event);
+				//}
+
+				if (ImGui::InputText("##AUDIO_SOURCE_COMPONENT_" + GetUniqueID(), buf, IM_ARRAYSIZE(buf)))
 				{
 					Event = std::string(buf);
 					GUID = Audio::GetEventGuid(Event);
 				}
-
-				ImGui::SliderFloat("##AUDIO_SOURCE_Volume", &Volume, 0.0f, 1.0f);
 
 
 				if (ImGui::Checkbox("##AUDIO_SOURCE_Mute", &Mute))
@@ -86,9 +88,6 @@ namespace Chroma
 		{
 			out << YAML::Key << "Event";
 			out << YAML::Value << Event;
-
-			out << YAML::Key << "Volume";
-			out << YAML::Value << Volume;
 		}
 
 		void Deserialize(YAML::Node& node) override
@@ -97,12 +96,6 @@ namespace Chroma
 			if (val)
 			{
 				Event = val.as<std::string>();
-			}
-
-			val = node["Volume"];
-			if (val)
-			{
-				Volume = val.as<float>();
 			}
 
 		}

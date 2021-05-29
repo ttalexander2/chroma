@@ -18,6 +18,7 @@ namespace Chroma
 {
 	//Forward Declaration
 	class EntityRef;
+	class System;
 
 
 	class Scene
@@ -36,6 +37,20 @@ namespace Chroma
 
 		std::string Serialize();
 		static bool Deserialize(Scene& out, const std::string& yaml);
+
+		template <typename T>
+		void RegisterSystem()
+		{
+			//CHROMA_ASSERT(std::is_convertible<T*, System*>::value, "Must inherrit Component to register as component");
+
+			//if (!std::is_convertible<T*, System*>::value)
+			//{
+			//	return;
+			//}
+			System* system = (System*)new T();
+			system->m_Scene = this;
+			m_Systems.push_back(system);
+		}
 
 		template <typename T>
 		void RegisterComponent()
@@ -59,8 +74,6 @@ namespace Chroma
 
 			T test;
 
-			CHROMA_CORE_ERROR("NAME: {0}", test.Name());
-
 			if (m_ComponentFactory.find(test.Name()) == m_ComponentFactory.end())
 			{
 				m_ComponentFactory[test.Name()] = func;
@@ -75,7 +88,7 @@ namespace Chroma
 				m_ComponentPools.push_back(new ComponentPool<T>());
 			}
 
-			CHROMA_CORE_TRACE("COMPONENT_NAME: {0}", m_ComponentNames[id]);
+			CHROMA_CORE_TRACE("Registered Component: {0}", m_ComponentNames[id]);
 		}
 		
 		template<typename T>
@@ -283,7 +296,9 @@ namespace Chroma
 
 				for (int id : componentIds)
 				{
-					if (id >= m_Scene->m_ComponentPools.size() || m_Scene->m_ComponentPools[id] == nullptr)
+					if (id >= m_Scene->m_ComponentPools.size() 
+						||
+						m_Scene->m_ComponentPools[id] == nullptr)
 						continue;
 
 					AbstractComponentPool* pool = m_Scene->m_ComponentPools[id];
@@ -373,6 +388,10 @@ namespace Chroma
 		void Update(Time delta);
 		void LateUpdate(Time delta);
 
+		void EarlyDraw(Time delta);
+		void Draw(Time delta);
+		void LateDraw(Time delta);
+
 #pragma endregion
 
 
@@ -415,7 +434,10 @@ namespace Chroma
 		std::unordered_map<std::string, unsigned int> m_ComponentNamesToID;
 		std::unordered_map<unsigned int, bool> m_ComponentsAllowMultiple;
 
+		std::vector<System*> m_Systems;
 		std::vector<AbstractComponentPool*> m_ComponentPools;
+
+
 
 		unsigned int m_ComponentTypeCounter = 0;
 

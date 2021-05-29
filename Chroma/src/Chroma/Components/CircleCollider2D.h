@@ -8,7 +8,7 @@ namespace Chroma
 	struct CircleCollider2D : Component
 	{
 		float Radius = 1.0f;
-		Math::vec2 Offset{ 0.0f, 0.0f };
+		Math::vec2 Offset { 0.0f, 0.0f };
 
 		const std::string Name() const override
 		{

@@ -16,6 +16,7 @@ namespace Chroma
 {
 	Frustum::Frustum(Math::mat4 viewProjMat)
 	{
+
 		viewProjMat = glm::transpose(viewProjMat);
 
 		m_Planes[Left]		= viewProjMat[3] + viewProjMat[0];
@@ -25,8 +26,8 @@ namespace Chroma
 		m_Planes[Near]		= viewProjMat[3] + viewProjMat[2];
 		m_Planes[Far]		= viewProjMat[3] - viewProjMat[2];
 
-		for (int i = 0; i < Count; i++)
-			m_Planes[i] = Math::normalize(m_Planes[i]);
+		//for (int i = 0; i < Count; i++)
+			//m_Planes[i] = Math::normalize(m_Planes[i]);
 
 		//Create combination of plane intersection points
 		glm::vec3 crosses[Combinations] = {

@@ -184,7 +184,7 @@ static bool ComboFilter(const char* id, char* buffer, int bufferlen, std::vector
         }
     };
     using namespace ImGui;
-    bool done = InputText(("##COMBO_FILTER" + std::string(id)).c_str(), buffer, bufferlen, ImGuiInputTextFlags_EnterReturnsTrue);
+    bool done = InputText((std::string(id)).c_str(), buffer, bufferlen, ImGuiInputTextFlags_EnterReturnsTrue);
     bool hot = s.activeIdx >= 0 && strcmp(buffer, hints[s.activeIdx].c_str());
     if (hot)
     {

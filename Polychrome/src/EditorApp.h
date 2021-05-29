@@ -17,10 +17,17 @@ namespace Polychrome
 		void Draw(Chroma::Time time) override;
 		void ImGuiDraw(Chroma::Time time) override;
 
+		void NewScene();
+		void OpenScene();
+		void SaveSceneAs();
+		void SaveScene();
+
 	private:
 		Chroma::OrthographicCameraController m_CameraController;
 
 		bool m_ViewportFocused = false;
+
+		std::string CurrentScenePath;
 
 		// TEMP
 		Chroma::Ref<Chroma::VertexArray> m_SquareVA;

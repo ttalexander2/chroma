@@ -8,9 +8,13 @@
 #include <Chroma/Components/SpriteRenderer.h>
 #include <Chroma/Components/BoxCollider2D.h>
 #include <Chroma/Components/CircleCollider2D.h>
+#include <Chroma/Systems/AudioSystem.h>
+#include <Chroma/Systems/SpriteRendererSystem.h>
 #include <yaml-cpp/node/node.h>
 #include <yaml-cpp/node/parse.h>
 #include <yaml-cpp/yaml.h>
+#include <Chroma/Scene/System.h>
+
 
 
 namespace Chroma
@@ -23,6 +27,9 @@ namespace Chroma
 		RegisterComponent<SpriteRenderer>();
 		RegisterComponent<BoxCollider2D>();
 		RegisterComponent<CircleCollider2D>();
+
+		RegisterSystem<AudioSystem>();
+		RegisterSystem<SpriteRendererSystem>();
 	}
 
 	EntityRef Scene::NewEntity()
@@ -121,7 +128,6 @@ namespace Chroma
 					for (auto component : components)
 					{
 						std::string key = component.first.as<std::string>();
-						CHROMA_CORE_ERROR("FUNCION CALL: {0}", key);
 						ComponentRef<Component> newComponent = out.m_ComponentFactory[key](out, newEntity);
 						newComponent->Deserialize(component.second);
 					}
@@ -172,33 +178,76 @@ namespace Chroma
 		return Scene::ConvertIDToEntity(e, *this);
 	}
 
-
-	void Serialize()
-	{
-	}
-
 	void Scene::EarlyInit()
 	{
+		for (System *s : m_Systems)
+		{
+			s->EarlyInit();
+		}
 	}
 
 	void Scene::Init()
 	{
+		for (System* s : m_Systems)
+		{
+			s->Init();
+		}
 	}
 
 	void Scene::LateInit()
 	{
+		for (System* s : m_Systems)
+		{
+			s->LateInit();
+		}
 	}
 
 	void Scene::EarlyUpdate(Time delta)
 	{
+		for (System* s : m_Systems)
+		{
+			s->EarlyUpdate(delta);
+		}
 	}
 
 	void Scene::Update(Time delta)
 	{
+		for (System* s : m_Systems)
+		{
+			s->Update(delta);
+		}
 	}
 
 	void Scene::LateUpdate(Time delta)
 	{
+		for (System* s : m_Systems)
+		{
+			s->LateUpdate(delta);
+		}
+	}
+
+	void Scene::EarlyDraw(Time delta)
+	{
+		for (System* s : m_Systems)
+		{
+			s->EarlyDraw(delta);
+		}
+	}
+
+	void Scene::Draw(Time delta)
+	{
+		for (System* s : m_Systems)
+		{
+			s->Draw(delta);
+		}
+	}
+
+	void Scene::LateDraw(Time delta)
+	{
+		for (System* s : m_Systems)
+		{
+			s->LateDraw(delta);
+		}
 	}
 
 }

@@ -3,6 +3,7 @@
 #include "Chroma/Scene/Component.h"
 #include "Chroma/Math/Mat4x4.h"
 #include "glm/gtc/matrix_transform.hpp"
+#include "Chroma/ImGui/ImGuiComponents/Vec3WithLabels.h"
 
 #include "imgui.h"
 
@@ -41,6 +42,8 @@ namespace Chroma
 		void DrawImGui() override
 		{
 
+			auto style = ImGui::GetStyle();
+
 			if (ImGui::BeginTable("##transform_component_table_inspector", 2, ImGuiTableFlags_None | ImGuiTableFlags_SizingFixedFit))
 			{
 				ImGui::TableNextColumn();
@@ -51,25 +54,13 @@ namespace Chroma
 
 				ImGui::TableNextColumn();
 
-				ImGui::PushItemWidth(0);
+				//ImGui::PushItemWidth(0);
 
-				float pos[3] = { Position.x, Position.y, Position.z };
-				if (ImGui::DragFloat3("##transform_position", pos))
-				{
-					Position = { pos[0], pos[1], pos[2] };
-				}
-				float rot[3] = { Rotation.x, Rotation.y, Rotation.z };
-				if (ImGui::DragFloat3("##transform_rotation", rot))
-				{
-					Rotation = { rot[0], rot[1], rot[2] };
-				}
-				float scl[3] = { Scale.x, Scale.y, Scale.z };
-				if (ImGui::DragFloat3("##transform_scale", scl))
-				{
-					Scale = { scl[0], scl[1], scl[2] };
-				}
+				Chroma::Vec3IntWithLabels(("##transform_position" + std::to_string(this->GetUniqueID())).c_str(), Position);
+				Chroma::Vec3FloatWithLabels(("##transform_rotation" + std::to_string(this->GetUniqueID())).c_str(), Rotation);
+				Chroma::Vec3IntWithLabels(("##transform_scale" + std::to_string(this->GetUniqueID())).c_str(), Scale);
 
-				ImGui::PopItemWidth();
+				//ImGui::PopItemWidth();
 				ImGui::EndTable();
 			}
 		}

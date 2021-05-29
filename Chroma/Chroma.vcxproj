@@ -147,6 +147,9 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Chroma\ImGui\ImGuiComponents\Vec3WithLabels.h" />
+    <ClInclude Include="src\Chroma\Systems\SpriteRendererSystem.h" />
+    <ClInclude Include="src\Chroma\Systems\AudioSystem.h" />
     <ClInclude Include="src\Chroma.h" />
     <ClInclude Include="src\Chroma\Audio\Audio.h" />
     <ClInclude Include="src\Chroma\Audio\ChromaFMOD.h" />
@@ -227,6 +230,8 @@
     <ClInclude Include="src\Chroma\Systems\CollisionSystem.h" />
     <ClInclude Include="src\Chroma\Utilities\ContainerHelpers.h" />
     <ClInclude Include="src\chromapch.h" />
+    <ClInclude Include="src\Chroma\Utilities\FileDialogs.h" />
+    <ClInclude Include="src\Chroma\Utilities\StringHelper.h" />
     <ClInclude Include="third_party\lua\lapi.h" />
     <ClInclude Include="third_party\lua\lauxlib.h" />
     <ClInclude Include="third_party\lua\lcode.h" />
@@ -296,6 +301,9 @@
     <ClInclude Include="src\Chroma\Utilities\Yaml.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Chroma\Systems\SpriteRendererSystem.cpp" />
+    <ClCompile Include="src\Chroma\Platform\Windows\WindowsFileDialogs.cpp" />
+    <ClCompile Include="src\Chroma\Systems\AudioSystem.cpp" />
     <ClCompile Include="src\Chroma\Audio\Audio.cpp" />
     <ClCompile Include="src\Chroma\Audio\ChromaFMOD.cpp" />
     <ClCompile Include="src\Chroma\Core\Application.cpp" />
@@ -330,6 +338,7 @@
     <ClCompile Include="src\chromapch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="src\Chroma\Systems\CollisionSystem.cpp" />
     <ClCompile Include="third_party\stb_image\stb_image.cpp" />
     <ClCompile Include="src\Chroma\Utilities\Yaml.cpp" />
   </ItemGroup>

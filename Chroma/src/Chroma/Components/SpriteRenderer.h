@@ -2,6 +2,7 @@
 
 #include "Chroma/Scene/Component.h"
 #include "Chroma/Math/Vec4.h";
+#include <imgui.h>
 
 namespace Chroma
 {

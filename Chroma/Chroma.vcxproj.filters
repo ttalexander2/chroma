@@ -520,6 +520,11 @@
       <Filter>third_party\yaml-cpp\include\yaml-cpp</Filter>
     </ClInclude>
     <ClInclude Include="src\Chroma\Utilities\Yaml.h" />
+    <ClInclude Include="src\Chroma\Systems\AudioSystem.h" />
+    <ClInclude Include="src\Chroma\Utilities\StringHelper.h" />
+    <ClInclude Include="src\Chroma\Utilities\FileDialogs.h" />
+    <ClInclude Include="src\Chroma\Systems\SpriteRendererSystem.h" />
+    <ClInclude Include="src\Chroma\ImGui\ImGuiComponents\Vec3WithLabels.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Chroma\Audio\Audio.cpp">
@@ -622,5 +627,9 @@
       <Filter>third_party\stb_image</Filter>
     </ClCompile>
     <ClCompile Include="src\Chroma\Utilities\Yaml.cpp" />
+    <ClCompile Include="src\Chroma\Systems\AudioSystem.cpp" />
+    <ClCompile Include="src\Chroma\Systems\CollisionSystem.cpp" />
+    <ClCompile Include="src\Chroma\Platform\Windows\WindowsFileDialogs.cpp" />
+    <ClCompile Include="src\Chroma\Systems\SpriteRendererSystem.cpp" />
   </ItemGroup>
 </Project>

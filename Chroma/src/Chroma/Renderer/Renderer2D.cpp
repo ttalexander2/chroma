@@ -181,9 +181,10 @@ namespace Chroma
 
 
 		//CHROMA_CORE_WARN("POS: ({0}, {1}, {2}), SIZE: ({3}, {4}, {5})", position.x, position.y, position.z, size.x, size.y, size.z);
+		//CHROMA_CORE_WARN("MIN: ({0}, {1}, {2}), MAX: ({3}, {4}, {5})", glm::min(position, p2).x, glm::min(position, p2).y, glm::min(position, p2).z, glm::max(position, p2).x, glm::max(position, p2).y, glm::max(position, p2).z);
 
-		if (!s_CullingFrustum.CubeIntersects(glm::min(position, p2), glm::max(position, p2)))
-			return;
+		//if (!s_CullingFrustum.CubeIntersects(glm::min(position, p2), glm::max(position, p2)))
+			//return;
 
 		if (s_Data.QuadIndexCount + 6 >= s_Data.MaxIndices)
 			FlushAndReset();
@@ -350,8 +351,8 @@ namespace Chroma
 			* glm::rotate(glm::mat4(1.0f), rotation, { 0.0f, 0.0f, 1.0f })
 			* glm::scale(glm::mat4(1.0f), size);
 
-		if (!s_CullingFrustum.CubeIntersects(glm::min(position, p2), glm::max(position, p2)))
-			return;
+		//if (!s_CullingFrustum.CubeIntersects(glm::min(position, p2), glm::max(position, p2)))
+			//return;
 
 		constexpr size_t quadVertexCount = 4;
 

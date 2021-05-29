@@ -15,6 +15,10 @@
 #include <Chroma/Components/AudioSource.h>
 #include <Chroma/Components/CircleCollider2D.h>
 #include <Chroma/Components/BoxCollider2D.h>
+#include "Fonts/IconsForkAwesome.h"
+#include "Fonts/NeueHassTextPro.cpp"
+#include <Chroma/Utilities/FileDialogs.h>
+#include <filesystem>
 
 namespace Polychrome
 {
@@ -46,10 +50,6 @@ namespace Polychrome
 
 		scene->AddComponent<Chroma::CircleCollider2D>(e2);
 		scene->AddComponent<Chroma::BoxCollider2D>(e2);
-		auto audio = scene->AddComponent<Chroma::AudioSource>(e2);
-
-		audio->Event = "event:/Music/Test";
-		audio->Volume = 0.8f;
 
 		std::string prefab = e2.ToPrefab();
 		std::ofstream fout("test.prefab");
@@ -77,11 +77,36 @@ namespace Polychrome
 		Chroma::Audio::LoadBank("assets/fmod/Desktop/Master.bank", FMOD_STUDIO_LOAD_BANK_NORMAL);
 		Chroma::Audio::LoadBank("assets/fmod/Desktop/Master.strings.bank", FMOD_STUDIO_LOAD_BANK_NORMAL);
 
+		m_ActiveScene->EarlyInit();
+		m_ActiveScene->Init();
+		m_ActiveScene->LateInit();
+
+
+		ImGui::CreateContext();
+		ImGuiIO& io = ImGui::GetIO();
+
+		io.FontDefault = io.Fonts->AddFontFromMemoryCompressedTTF(NeueHassTextPro_compressed_data, NeueHassTextPro_compressed_size, 14.0f);
+		
+
+		ImFontConfig config;
+		config.MergeMode = true;
+		static const ImWchar icon_ranges[] = { ICON_MIN_FK, ICON_MAX_FK, 0 };
+		ImFont* font = io.Fonts->AddFontFromFileTTF("assets/fonts/forkawesome-webfont.ttf", 15.0f, &config, icon_ranges);
+		io.FontDefault = font;
+
+
+		ImGui::GetStyle().FrameRounding = 1;
+
+
 	}
 
 	void EditorApp::Update(Chroma::Time time)
 	{
 		//CHROMA_ERROR("{0}", Application::Get().m_ActiveScene);
+
+		m_ActiveScene->EarlyUpdate(time);
+		m_ActiveScene->Update(time);
+		m_ActiveScene->LateUpdate(time);
 
 		CHROMA_PROFILE_FUNCTION();
 		// Update
@@ -89,6 +114,9 @@ namespace Polychrome
 			CHROMA_PROFILE_SCOPE("CameraController OnUpdate");
 			m_CameraController.OnUpdate(time);
 		}
+
+
+
 	}
 
 	void EditorApp::Draw(Chroma::Time time)
@@ -108,6 +136,13 @@ namespace Polychrome
 
 
 		Chroma::Renderer2D::BeginScene(m_CameraController.GetCamera());
+
+		m_ActiveScene->EarlyDraw(time);
+		m_ActiveScene->Draw(time);
+		m_ActiveScene->LateDraw(time);
+
+#if 0
+		
 		std::default_random_engine generator;
 		std::uniform_int_distribution<int> distribution(0, 256);
 
@@ -121,7 +156,7 @@ namespace Polychrome
 				{
 					numQuads++;
 
-					Chroma::Renderer2D::DrawQuad({ x, y }, { 0.8f, 0.8f }, m_SquareColor);
+					Chroma::Renderer2D::DrawQuad({ x, y }, { 1, 1 }, m_SquareColor);
 				}
 			}
 		}
@@ -131,6 +166,7 @@ namespace Polychrome
 		Chroma::Renderer2D::DrawQuad({ -0.4f, -0.3f }, { 0.2f, 0.3f }, m_SquareColor, rotation);
 
 		Chroma::Renderer2D::DrawQuad({ 0.0f, 0.0f }, { 1, 1 }, m_Texture);
+#endif
 
 		Chroma::Renderer2D::EndScene();
 
@@ -167,40 +203,31 @@ namespace Polychrome
 
 		style.WindowMinSize.x = minWinSizeX;
 
+		int prevFramePaddingY = ImGui::GetStyle().FramePadding.y;
+		ImGui::GetStyle().FramePadding.y = 6.0f;
+
 		ImGui::BeginMainMenuBar();
 
 		if (ImGui::BeginMenu("File##MAIN_MENU_BAR"))
 		{
 			ImGui::MenuItem("New##MAIN_MENU_BAR");
-			if (ImGui::MenuItem("Open...##MAIN_MENU_BAR", "Ctrl + O"))
-			{
-				std::ifstream stream("test.yaml");
-				std::stringstream strStream;
-				strStream << stream.rdbuf();
-				Chroma::Scene* out = new Chroma::Scene();
-				if (Chroma::Scene::Deserialize(*out, strStream.str()))
-				{
-					delete this->m_ActiveScene;
-					this->m_ActiveScene = out;
-				}
-				else
-				{
-					delete out;
-				}
-			}
-			if (ImGui::MenuItem("Save...##MAIN_MENU_BAR", "Ctrl + S"))
-			{
-				std::string yaml = this->m_ActiveScene->Serialize();
-				std::ofstream fout2("test.yaml");
-				fout2 << yaml;
-			}
-			ImGui::MenuItem("Save As...##MAIN_MENU_BAR");
+			if (ImGui::MenuItem("Open...##MAIN_MENU_BAR", "Ctrl+O"))
+				OpenScene();
+
+			if (ImGui::MenuItem("Save##MAIN_MENU_BAR", "Ctrl+S"))
+				SaveScene();
+
+			if (ImGui::MenuItem("Save As...##MAIN_MENU_BAR", "Ctrl+Shift+S"))
+				SaveSceneAs();
+			
 			ImGui::MenuItem("Close##MAIN_MENU_BAR", "Alt + F4");
 
 			ImGui::EndMenu();
 		}
 
 		ImGui::EndMainMenuBar();
+
+		ImGui::GetStyle().FramePadding.y = prevFramePaddingY;
 
 		//ImGui::PopStyleVar();
 
@@ -221,6 +248,58 @@ namespace Polychrome
 	{
 		m_CameraController.OnEvent(e);
 	}
+
+
+	void EditorApp::NewScene()
+	{
+
+	}
+
+	void EditorApp::OpenScene()
+	{
+		std::string filepath = Chroma::FileDialogs::OpenFile("Chroma Scene (*.chroma)\0*.chroma\0");
+		if (!filepath.empty())
+		{
+			std::ifstream stream(filepath);
+			std::stringstream strStream;
+			strStream << stream.rdbuf();
+			Chroma::Scene* out = new Chroma::Scene();
+			if (Chroma::Scene::Deserialize(*out, strStream.str()))
+			{
+				CurrentScenePath = filepath;
+				delete this->m_ActiveScene;
+				this->m_ActiveScene = out;
+				Hierarchy::SelectedEntity = Chroma::EntityRef(Chroma::ENTITY_NULL);
+			}
+			else
+			{
+				delete out;
+			}
+		}
+	}
+	void EditorApp::SaveSceneAs()
+	{
+		std::string filepath = Chroma::FileDialogs::SaveFile("Chroma Scene (*.chroma)\0*.chroma\0");
+		if (!filepath.empty())
+		{
+			std::string yaml = this->m_ActiveScene->Serialize();
+			std::ofstream fout2(filepath);
+			fout2 << yaml;
+			CurrentScenePath = filepath;
+		}
+	}
+
+	void EditorApp::SaveScene()
+	{
+		if (!CurrentScenePath.empty() && std::filesystem::exists(CurrentScenePath))
+		{
+			std::string yaml = this->m_ActiveScene->Serialize();
+			std::ofstream fout2(CurrentScenePath);
+			fout2 << yaml;
+		}
+	}
+
+
 
 }
 

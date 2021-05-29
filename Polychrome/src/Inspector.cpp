@@ -3,6 +3,7 @@
 #include "Hierarchy.h"
 #include <imgui.h>
 #include <string>
+#include "Fonts/IconsForkAwesome.h"
 
 namespace Polychrome
 {
@@ -13,16 +14,22 @@ namespace Polychrome
 		ImGui::Begin("Inspector", &Inspector::Open);
 		int unique = 0;
 		Chroma::EntityRef selected = Hierarchy::SelectedEntity;
+		if (Hierarchy::SelectedEntity.GetID() == Chroma::ENTITY_NULL)
+		{
+			ImGui::End();
+			return;
+		}
+			
 		for (Chroma::ComponentRef<Chroma::Component> c : selected.GetAllComponents())
 		{
 			if (c->IsTag())
 				continue;
 
 			bool open = ImGui::CollapsingHeader((c->Name() + "##" + std::to_string(unique)).c_str(), ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowItemOverlap);
-			ImGui::SameLine(ImGui::GetWindowWidth() - 60);
+			ImGui::SameLine(ImGui::GetWindowWidth() - 24);
 
 
-			if (ImGui::Button(("Options##MENU_BAR_INSPECTOR_BUTTON_" + std::to_string(unique)).c_str()))
+			if (ImGui::Button((ICON_FK_COG "##MENU_BAR_INSPECTOR_BUTTON_" + std::to_string(unique)).c_str()))
 			{
 				ImGui::OpenPopup(("##MENU_BAR_INSPECTOR_" + std::to_string(unique)).c_str());
 			}

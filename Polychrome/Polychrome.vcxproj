@@ -157,13 +157,16 @@ IF EXIST assets\ (xcopy /Q /E /Y /I assets ..\bin\Dist-windows-x86_64\Polychrome
   <ItemGroup>
     <ClInclude Include="src\EditorApp.h" />
     <ClInclude Include="src\FileDrop.h" />
+    <ClInclude Include="src\Fonts\Font.h" />
     <ClInclude Include="src\Hierarchy.h" />
     <ClInclude Include="src\Inspector.h" />
     <ClInclude Include="src\Viewport.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\..\Downloads\neueHassTextPro.cpp" />
     <ClCompile Include="src\EditorApp.cpp" />
     <ClCompile Include="src\FileDrop.cpp" />
+    <ClCompile Include="src\Fonts\NeueHassTextPro.cpp" />
     <ClCompile Include="src\Hierarchy.cpp" />
     <ClCompile Include="src\Inspector.cpp" />
     <ClCompile Include="src\Viewport.cpp" />
