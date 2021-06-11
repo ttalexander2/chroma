@@ -47,6 +47,7 @@ namespace Polychrome
 
 
 		Chroma::EntityRef e2 = scene->NewEntity();
+		Chroma::ComponentRef aaaa = e2.GetComponent<Chroma::BoxCollider2D>();
 
 		scene->AddComponent<Chroma::CircleCollider2D>(e2);
 		scene->AddComponent<Chroma::BoxCollider2D>(e2);

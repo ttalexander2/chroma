@@ -1,20 +1,31 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="src\EditorApp.cpp" />
-    <ClCompile Include="src\Viewport.cpp" />
-    <ClCompile Include="src\Hierarchy.cpp" />
-    <ClCompile Include="src\Inspector.cpp" />
-    <ClCompile Include="src\FileDrop.cpp" />
-    <ClCompile Include="..\..\..\..\Downloads\neueHassTextPro.cpp" />
-    <ClCompile Include="src\Fonts\NeueHassTextPro.cpp" />
+    <Filter Include="Fonts">
+      <UniqueIdentifier>{CF74300D-3B89-58BE-040B-FC1D70DE54EF}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\EditorApp.h" />
-    <ClInclude Include="src\Viewport.h" />
+    <ClInclude Include="src\FileDrop.h" />
+    <ClInclude Include="src\Fonts\Font.h">
+      <Filter>Fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Fonts\IconsForkAwesome.h">
+      <Filter>Fonts</Filter>
+    </ClInclude>
     <ClInclude Include="src\Hierarchy.h" />
     <ClInclude Include="src\Inspector.h" />
-    <ClInclude Include="src\FileDrop.h" />
-    <ClInclude Include="src\Fonts\Font.h" />
+    <ClInclude Include="src\Viewport.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\EditorApp.cpp" />
+    <ClCompile Include="src\FileDrop.cpp" />
+    <ClCompile Include="src\Fonts\NeueHassTextPro.cpp">
+      <Filter>Fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hierarchy.cpp" />
+    <ClCompile Include="src\Inspector.cpp" />
+    <ClCompile Include="src\Viewport.cpp" />
   </ItemGroup>
 </Project>

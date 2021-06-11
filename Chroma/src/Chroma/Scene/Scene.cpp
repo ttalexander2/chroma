@@ -14,6 +14,7 @@
 #include <yaml-cpp/node/parse.h>
 #include <yaml-cpp/yaml.h>
 #include <Chroma/Scene/System.h>
+#include "Chroma/Utilities/GUID.h"
 
 
 
@@ -27,48 +28,37 @@ namespace Chroma
 		RegisterComponent<SpriteRenderer>();
 		RegisterComponent<BoxCollider2D>();
 		RegisterComponent<CircleCollider2D>();
-
 		RegisterSystem<AudioSystem>();
 		RegisterSystem<SpriteRendererSystem>();
 	}
 
 	EntityRef Scene::NewEntity()
 	{
-		if (!m_FreeEntities.empty())
-		{
-			EntityIndex newIndex = m_FreeEntities.back();
-			m_FreeEntities.pop_back();
-			EntityID newID = CreateEntityId(newIndex, GetEntityVersion(m_Entities[newIndex]));
-			m_Entities[newIndex] = newID;
-			EntityRef entity = { newID, *this };
-			return { m_Entities[newIndex], *this };
-		}
-		m_Entities.push_back(CreateEntityId(EntityIndex(m_Entities.size()), 0));
-		EntityRef e = { m_Entities.back(), *this };
-		std::string name = "Entity_" + std::to_string(GetEntityIndex(e.m_EntityID));
+		EntityID id = NewEntityID();
+		m_Entities.insert(id);
+		EntityRef e = { id, *this };
+		std::string name = "Entity_" + std::to_string(id);
 		e.AddComponent<Tag>()->EntityName = name;
 		e.AddComponent<Transform>();
-		return { m_Entities.back(), *this };
+		return e;
 	}
 
 
 	EntityRef Scene::NewEntityFromID(EntityID id)
 	{
-		m_Entities.push_back(CreateEntityId(EntityIndex(id), 0));
-		EntityRef e = { m_Entities.back(), *this };
-		return { m_Entities.back(), *this };
+		m_Entities.insert(id);
+		EntityRef e = { id, *this };
+		return e;
 	}
 
 	void Scene::DestroyEntity(EntityRef entity)
 	{
 		EntityID id = entity.m_EntityID;
-		EntityID newID = CreateEntityId(EntityIndex(-1), GetEntityVersion(id) + 1);
-		m_Entities[GetEntityIndex(id)] = newID;
-		m_FreeEntities.push_back(GetEntityIndex(id));
 		for (AbstractComponentPool* pool : m_ComponentPools)
 		{
 			pool->RemoveAll(id);
 		}
+		m_Entities.erase(id);
 	}
 
 	std::string Scene::Serialize()
@@ -103,6 +93,7 @@ namespace Chroma
 
 	bool Scene::Deserialize(Scene &out, const std::string& yaml)
 	{
+		uint64_t maxId = 0;
 		auto data = YAML::Load(yaml);
 		if (!data["Scene"])
 			return false;
@@ -118,7 +109,9 @@ namespace Chroma
 			for (auto entity : entities)
 			{
 				
-				EntityID id = entity["Entity"].as<EntityID>();
+				EntityID id = entity["Entity"].as<uint32_t>();
+				if (id > maxId)
+					maxId = id;
 				EntityRef newEntity = out.NewEntityFromID(id);
 
 				CHROMA_CORE_TRACE("Deserialized Entity with ID = {0}", id);
@@ -132,10 +125,10 @@ namespace Chroma
 						newComponent->Deserialize(component.second);
 					}
 				}
-
-
 			}
 		}
+
+		out.m_EntityCounter = maxId + 1;
 
 		return true;
 

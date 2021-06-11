@@ -7,7 +7,7 @@ namespace Chroma
 {
 	struct Tag : Component
 	{
-		std::string EntityName = "ENTITY";
+		std::string EntityName = "New Entity";
 
 		Tag() = default;
 		Tag(const Tag&) = default;
@@ -23,20 +23,9 @@ namespace Chroma
 
 		const bool AllowMultiple() const override { return false; };
 
-		void Serialize(YAML::Emitter& out) override
-		{
-			out << YAML::Key << "EntityName";
-			out << YAML::Value << EntityName;
-		}
+		void Serialize(YAML::Emitter& out) override;
 
-		void Deserialize(YAML::Node& node) override
-		{
-			auto val = node["EntityName"];
-			if (val)
-			{
-				EntityName = val.as<std::string>();
-			}
-		}
+		void Deserialize(YAML::Node& node) override;
 
 	private:
 

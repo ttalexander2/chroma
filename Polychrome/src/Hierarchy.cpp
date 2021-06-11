@@ -98,6 +98,8 @@ namespace Polychrome
 					{
 						renaming = e;
 						valid = false;
+						if (buffer != nullptr)
+							delete[] buffer;
 						buffer = new char[512];
 						strcpy(buffer, t->EntityName.c_str());
 						ImGui::SetKeyboardFocusHere();
@@ -126,6 +128,8 @@ namespace Polychrome
 			if (Hierarchy::SelectedEntity.GetID() == id)
 				Hierarchy::SelectedEntity = Chroma::EntityRef(Chroma::ENTITY_NULL);
 		}
+
+		toRemove.clear();
 		
 
 		ImGui::End();

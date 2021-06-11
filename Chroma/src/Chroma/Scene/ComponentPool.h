@@ -32,7 +32,6 @@ namespace Chroma
 	public:
 		ComponentPool<typename T>()
 		{
-			m_PackedComponents.reserve(sizeof(T) * MIN_ENTITIES);
 		}
 
 		inline size_t Count() override
@@ -104,6 +103,8 @@ namespace Chroma
 				m_PackedComponents.erase(m_PackedComponents.begin() + toRemove[i]);
 			}
 
+			Repack();
+
 		}
 
 		void Remove(Component* component) override
@@ -126,6 +127,7 @@ namespace Chroma
 				return;
 
 			m_PackedEntityIds.erase(m_PackedEntityIds.begin() + toRemove);
+			Repack();
 
 		}
 
@@ -148,6 +150,7 @@ namespace Chroma
 				return;
 
 			m_PackedEntityIds.erase(m_PackedEntityIds.begin() + toRemove);
+			Repack();
 
 		}
 
@@ -168,7 +171,7 @@ namespace Chroma
 
 		bool HasEntity(EntityID id) override
 		{
-			return m_SparseComponents.count(id) == 1 && m_SparseComponents[id].size() > 0;
+			return m_SparseComponents[id].size() > 0 && m_SparseComponents.count(id) >= 1;
 		}
 
 		std::vector<EntityID>* GetEntities() override

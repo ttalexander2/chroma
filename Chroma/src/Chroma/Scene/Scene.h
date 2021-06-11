@@ -61,6 +61,7 @@ namespace Chroma
 			{
 				return;
 			}
+		
 
 			unsigned int id = GetComponentTypeID<T>();
 
@@ -124,7 +125,6 @@ namespace Chroma
 		template<typename T>
 		ComponentRef<T> GetComponent(EntityID id)
 		{
-			
 			int componentID = GetComponentTypeID<T>();
 
 			if (!HasComponent<T>(id))
@@ -201,7 +201,7 @@ namespace Chroma
 		{
 			int componentId = GetComponentTypeID<T>();
 
-			if (m_Entities[GetEntityIndex(id)] != id)
+			if (m_Entities.contains(id))
 				return;
 
 			if (m_ComponentPools.size() <= componentId || m_ComponentPools[componentId] == nullptr)
@@ -289,6 +289,7 @@ namespace Chroma
 			SceneView(Scene& scene) 
 				: m_Scene(&scene)
 			{
+				m_Entities = std::set<EntityRef>();
 				int componentIds[] = { scene.GetComponentTypeID<ComponentTypes>()... };
 				size_t smallestSize = -1;
 				int smallest = 0;
@@ -346,7 +347,7 @@ namespace Chroma
 
 		EntityRef GetEntity(EntityID e);
 
-		std::vector<EntityID> GetEntities()
+		std::unordered_set<EntityID> GetEntities()
 		{
 			return m_Entities;
 		}
@@ -398,35 +399,13 @@ namespace Chroma
 	private:
 
 		EntityRef NewEntityFromID(EntityID id);
-
-		inline EntityID CreateEntityId(EntityIndex index, EntityVersion version)
-		{
-			return ((EntityID)index) | ((EntityID)version << 32);
-		}
-
-		inline EntityIndex GetEntityIndex(EntityID id)
-		{
-			return (EntityIndex)id;
-		}
-
-		inline EntityVersion GetEntityVersion(EntityID id)
-		{
-			return id >> 32;
-		}
-
-		inline bool IsEntityValid(EntityID id)
-		{
-			return (id >> 32) != EntityIndex(-1);
-		}
-
-		#define INVALID_ENTITY CreateEntity(EntityIndex(-1), 0)
+		EntityID NewEntityID() { return m_EntityCounter++; }
 
 
 	private:
 
-		EntityIndex m_EntityCounter = 0;
-		std::vector<EntityID> m_Entities;
-		std::vector<EntityID> m_FreeEntities;
+		EntityID m_EntityCounter = 0;
+		std::unordered_set<EntityID> m_Entities;
 
 		std::unordered_map<size_t, unsigned int> m_ComponentIDs;
 		std::unordered_map<std::string, std::function<ComponentRef<Component> (Scene&, EntityRef)>> m_ComponentFactory;

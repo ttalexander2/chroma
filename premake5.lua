@@ -1,6 +1,6 @@
 workspace "Chroma"
     architecture "x64"
-    startproject "Sandbox"
+    startproject "Polychrome"
     configurations { 
         "Debug", 
         "Release",
@@ -74,7 +74,6 @@ project "Chroma"
         "%{IncludeDir.ImGui}",
         "%{IncludeDir.glm}",
         "%{IncludeDir.stb_image}",
-        "%{IncludeDir.entt}",
         "%{IncludeDir.FMOD}",
         "%{IncludeDir.lua}",
         "%{IncludeDir.yaml}"
@@ -139,8 +138,8 @@ project "Chroma"
 
 
 
-project "Sandbox"
-    location "Sandbox"
+project "Runtime"
+    location "Runtime"
     kind "ConsoleApp"
     language "C++"
     cppdialect "C++20"
@@ -151,8 +150,8 @@ project "Sandbox"
 
     files
     {
-        "%{prj.name}/src/**.h",
-        "%{prj.name}/src/**.cpp",
+        "%{prj.name}/**.h",
+        "%{prj.name}/**.cpp",
         "%{prj.name}/third_party/yaml-cpp/include/yaml-cpp/**.h"
     }
 
@@ -162,15 +161,27 @@ project "Sandbox"
         "Chroma/src",
         "%{IncludeDir.glm}",
         "%{IncludeDir.ImGui}",
-        "%{IncludeDir.entt}",
         "%{IncludeDir.FMOD}",
         "%{IncludeDir.yaml}"
+
     }
 
     links
     {
         "Chroma"
     }
+
+
+    postbuildcommands
+    {
+        "{ECHO} Copying ../Chroma/lib/Windows/x64/fmodstudioL.dll to %{cfg.targetdir}",
+        "{COPY} ../Chroma/lib/Windows/x64/fmodstudioL.dll %{cfg.targetdir}",
+        "{ECHO} Copying ../Chroma/lib/Windows/x64/fmodL.dll to %{cfg.targetdir}",
+        "{COPY} ../Chroma/lib/Windows/x64/fmodL.dll %{cfg.targetdir}",
+        "{ECHO} Copying assets to %{cfg.targetdir}/assets",
+        "{COPY} assets %{cfg.targetdir}/assets",
+    }
+
 
     filter "system:windows"
         systemversion "latest"
@@ -180,11 +191,10 @@ project "Sandbox"
             "CHROMA_PLATFORM_WINDOWS",
         }
 
-
     filter "configurations:Debug"
         defines "CHROMA_DEBUG"
         runtime "Debug"
-        symbols "on"
+        symbols "On"
         optimize "Debug"
 
     filter "configurations:Release"
@@ -210,8 +220,8 @@ project "Polychrome"
 
     files
     {
-        "%{prj.name}/src/**.h",
-        "%{prj.name}/src/**.cpp",
+        "%{prj.name}/**.h",
+        "%{prj.name}/**.cpp",
         "%{prj.name}/third_party/yaml-cpp/include/yaml-cpp/**.h"
     }
 

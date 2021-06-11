@@ -153,6 +153,9 @@
     <ClInclude Include="src\Chroma\ImGui\ImGuiComponents\ComboFilter.h">
       <Filter>src\Chroma\ImGui\ImGuiComponents</Filter>
     </ClInclude>
+    <ClInclude Include="src\Chroma\ImGui\ImGuiComponents\Vec3WithLabels.h">
+      <Filter>src\Chroma\ImGui\ImGuiComponents</Filter>
+    </ClInclude>
     <ClInclude Include="src\Chroma\ImGui\ImGuiLayer.h">
       <Filter>src\Chroma\ImGui</Filter>
     </ClInclude>
@@ -312,10 +315,25 @@
     <ClInclude Include="src\Chroma\Scene\System.h">
       <Filter>src\Chroma\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="src\Chroma\Systems\AudioSystem.h">
+      <Filter>src\Chroma\Systems</Filter>
+    </ClInclude>
     <ClInclude Include="src\Chroma\Systems\CollisionSystem.h">
       <Filter>src\Chroma\Systems</Filter>
     </ClInclude>
+    <ClInclude Include="src\Chroma\Systems\SpriteRendererSystem.h">
+      <Filter>src\Chroma\Systems</Filter>
+    </ClInclude>
     <ClInclude Include="src\Chroma\Utilities\ContainerHelpers.h">
+      <Filter>src\Chroma\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Chroma\Utilities\FileDialogs.h">
+      <Filter>src\Chroma\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Chroma\Utilities\StringHelper.h">
+      <Filter>src\Chroma\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Chroma\Utilities\Yaml.h">
       <Filter>src\Chroma\Utilities</Filter>
     </ClInclude>
     <ClInclude Include="src\chromapch.h">
@@ -519,12 +537,8 @@
     <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\yaml.h">
       <Filter>third_party\yaml-cpp\include\yaml-cpp</Filter>
     </ClInclude>
-    <ClInclude Include="src\Chroma\Utilities\Yaml.h" />
-    <ClInclude Include="src\Chroma\Systems\AudioSystem.h" />
-    <ClInclude Include="src\Chroma\Utilities\StringHelper.h" />
-    <ClInclude Include="src\Chroma\Utilities\FileDialogs.h" />
-    <ClInclude Include="src\Chroma\Systems\SpriteRendererSystem.h" />
-    <ClInclude Include="src\Chroma\ImGui\ImGuiComponents\Vec3WithLabels.h" />
+    <ClInclude Include="src\Chroma\Utilities\GUID.h" />
+    <ClInclude Include="src\Chroma\QuadTree.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Chroma\Audio\Audio.cpp">
@@ -568,6 +582,9 @@
     </ClCompile>
     <ClCompile Include="src\Chroma\Platform\OpenGL\OpenGLVertexArray.cpp">
       <Filter>src\Chroma\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Chroma\Platform\Windows\WindowsFileDialogs.cpp">
+      <Filter>src\Chroma\Platform\Windows</Filter>
     </ClCompile>
     <ClCompile Include="src\Chroma\Platform\Windows\WindowsInput.cpp">
       <Filter>src\Chroma\Platform\Windows</Filter>
@@ -620,16 +637,31 @@
     <ClCompile Include="src\Chroma\Scene\Scene.cpp">
       <Filter>src\Chroma\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="src\Chroma\Systems\AudioSystem.cpp">
+      <Filter>src\Chroma\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Chroma\Systems\CollisionSystem.cpp">
+      <Filter>src\Chroma\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Chroma\Systems\SpriteRendererSystem.cpp">
+      <Filter>src\Chroma\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Chroma\Utilities\Yaml.cpp">
+      <Filter>src\Chroma\Utilities</Filter>
+    </ClCompile>
     <ClCompile Include="src\chromapch.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="third_party\stb_image\stb_image.cpp">
       <Filter>third_party\stb_image</Filter>
     </ClCompile>
-    <ClCompile Include="src\Chroma\Utilities\Yaml.cpp" />
-    <ClCompile Include="src\Chroma\Systems\AudioSystem.cpp" />
-    <ClCompile Include="src\Chroma\Systems\CollisionSystem.cpp" />
-    <ClCompile Include="src\Chroma\Platform\Windows\WindowsFileDialogs.cpp" />
-    <ClCompile Include="src\Chroma\Systems\SpriteRendererSystem.cpp" />
+    <ClCompile Include="src\Chroma\Components\AudioSource.cpp" />
+    <ClCompile Include="src\Chroma\Components\BoxCollider2D.cpp" />
+    <ClCompile Include="src\Chroma\Components\CircleCollider2D.cpp" />
+    <ClCompile Include="src\Chroma\Components\SpriteRenderer.cpp" />
+    <ClCompile Include="src\Chroma\Components\Tag.cpp" />
+    <ClCompile Include="src\Chroma\Components\Transform.cpp" />
+    <ClCompile Include="src\Chroma\Utilities\GUID.cpp" />
+    <ClCompile Include="src\Chroma\QuadTree.cpp" />
   </ItemGroup>
 </Project>

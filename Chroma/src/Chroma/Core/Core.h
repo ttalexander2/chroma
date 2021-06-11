@@ -4,7 +4,7 @@
 #include <glm/glm.hpp>
 
 #ifdef CHROMA_PLATFORM_WINDOWS
-#if HZ_DYNAMIC_LINK
+#if CHROMA_DYNAMIC_LINK
 	#ifdef CHROMA_BUILD_DLL
 		#define CHROMA_API __declspec(dllexport)
 	#else

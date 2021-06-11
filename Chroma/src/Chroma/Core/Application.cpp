@@ -85,8 +85,14 @@ namespace Chroma
 			m_LastFrameTime = time;
 
 			this->EarlyUpdate(m_Time);
+			if (this->m_ActiveScene != nullptr)
+				this->m_ActiveScene->EarlyUpdate(m_Time);
 			this->Update(m_Time);
+			if (this->m_ActiveScene != nullptr)
+				this->m_ActiveScene->Update(m_Time);
 			this->LateUpdate(m_Time);
+			if (this->m_ActiveScene != nullptr)
+				this->m_ActiveScene->LateUpdate(m_Time);
 
 			this->PreDraw(m_Time);
 			this->Draw(m_Time);
