@@ -22,7 +22,7 @@ namespace Chroma
 	class Audio
 	{
 		friend class Application;
-		friend class ChromaFMOD;
+		friend struct ChromaFMOD;
 	public:
 
 		static void LoadBank(const std::string& bankName, FMOD_STUDIO_LOAD_BANK_FLAGS flags);

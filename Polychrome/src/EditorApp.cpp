@@ -16,9 +16,10 @@
 #include <Chroma/Components/CircleCollider2D.h>
 #include <Chroma/Components/BoxCollider2D.h>
 #include "Fonts/IconsForkAwesome.h"
-#include "Fonts/NeueHassTextPro.cpp"
 #include <Chroma/Utilities/FileDialogs.h>
 #include <filesystem>
+#include <Chroma/ImGui/ImGuiDebugMenu.h>
+#include "Fonts/Roboto.cpp"
 
 namespace Polychrome
 {
@@ -86,13 +87,13 @@ namespace Polychrome
 		ImGui::CreateContext();
 		ImGuiIO& io = ImGui::GetIO();
 
-		io.FontDefault = io.Fonts->AddFontFromMemoryCompressedTTF(NeueHassTextPro_compressed_data, NeueHassTextPro_compressed_size, 14.0f);
+		io.FontDefault = io.Fonts->AddFontFromMemoryCompressedTTF(Roboto_compressed_data, Roboto_compressed_size, 14.0f);
 		
 
 		ImFontConfig config;
 		config.MergeMode = true;
 		static const ImWchar icon_ranges[] = { ICON_MIN_FK, ICON_MAX_FK, 0 };
-		ImFont* font = io.Fonts->AddFontFromFileTTF("assets/fonts/forkawesome-webfont.ttf", 15.0f, &config, icon_ranges);
+		ImFont* font = io.Fonts->AddFontFromFileTTF("assets/fonts/forkawesome-webfont.ttf", 16.0f, &config, icon_ranges);
 		io.FontDefault = font;
 
 
@@ -239,7 +240,7 @@ namespace Polychrome
 		Viewport::Draw(m_Framebuffer);
 
 		
-
+		Chroma::ImGuiDebugMenu::Draw();
 		ImGui::End();
 
 

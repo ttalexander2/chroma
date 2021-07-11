@@ -44,12 +44,23 @@ namespace Chroma
 			return comparison_id;
 		}
 
+		std::string GetUniqueHash(std::string hash)
+		{
+			return hash + "##" + Name() + std::to_string(GetUniqueID());
+		}
+
+	protected:
+		void DrawComponentValue(std::string label);
+		bool DrawComponentValueCollapsible(std::string label);
+
 	private:
 
 		const virtual bool IsTag() const { return false; }
 		const virtual bool IsTransform() const { return false; }
 
 		unsigned int comparison_id = 0;
+
+		bool editor_inspector_open = true;
 
 
 		void SetComparisonID()
@@ -64,8 +75,9 @@ namespace Chroma
 		template <class T>
 		friend class ComponentPool;
 		friend class Polychrome::Inspector;
-		friend class Tag;
-		friend class Transform;
+		friend struct Tag;
+		friend struct Transform;
 	};
+				
 }
 

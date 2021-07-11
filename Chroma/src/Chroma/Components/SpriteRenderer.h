@@ -9,8 +9,9 @@ namespace Chroma
 	struct SpriteRenderer : Component
 	{
 		Math::vec4 Color{ 1.0f, 1.0f, 1.0f, 1.0f };
+		Math::vec3 Offset{ 0.0f, 0.0f, 0.0f };
+		std::string Layer = "Default";
 
-		unsigned int Layer = 0;
 
 		SpriteRenderer() = default;
 		SpriteRenderer(const SpriteRenderer&) = default;
@@ -29,5 +30,6 @@ namespace Chroma
 		void Serialize(YAML::Emitter& out) override;
 
 		void Deserialize(YAML::Node& node) override;
+
 	};
 }

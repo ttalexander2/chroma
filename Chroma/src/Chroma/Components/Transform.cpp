@@ -1,5 +1,7 @@
 #include "chromapch.h"
 #include "Transform.h"
+#include "imgui_internal.h"
+
 
 namespace Chroma
 {
@@ -15,28 +17,18 @@ namespace Chroma
 	void Transform::DrawImGui()
 	{
 
-		auto style = ImGui::GetStyle();
+		DrawComponentValue("Position");
+		Chroma::Vec3IntWithLabels(("##transform_position" + std::to_string(this->GetUniqueID())).c_str(), Position);
 
-		if (ImGui::BeginTable("##transform_component_table_inspector", 2, ImGuiTableFlags_None | ImGuiTableFlags_SizingFixedFit))
-		{
-			ImGui::TableNextColumn();
+		DrawComponentValue("Rotation");
+		Chroma::Vec3FloatWithLabels(("##transform_rotation" + std::to_string(this->GetUniqueID())).c_str(), Rotation);
 
-			ImGui::AlignTextToFramePadding(); ImGui::Text("Position");
-			ImGui::AlignTextToFramePadding(); ImGui::Text("Rotation");
-			ImGui::AlignTextToFramePadding(); ImGui::Text("Scale");
+		DrawComponentValue("Scale");
+		Chroma::Vec3IntWithLabels(("##transform_scale" + std::to_string(this->GetUniqueID())).c_str(), Scale);
 
-			ImGui::TableNextColumn();
 
-			//ImGui::PushItemWidth(0);
-
-			Chroma::Vec3IntWithLabels(("##transform_position" + std::to_string(this->GetUniqueID())).c_str(), Position);
-			Chroma::Vec3FloatWithLabels(("##transform_rotation" + std::to_string(this->GetUniqueID())).c_str(), Rotation);
-			Chroma::Vec3IntWithLabels(("##transform_scale" + std::to_string(this->GetUniqueID())).c_str(), Scale);
-
-			//ImGui::PopItemWidth();
-			ImGui::EndTable();
-		}
 	}
+
 	void Transform::Serialize(YAML::Emitter& out)
 	{
 		out << YAML::Key << "Position";

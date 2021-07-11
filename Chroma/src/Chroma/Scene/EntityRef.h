@@ -3,11 +3,12 @@
 #include "ECS.h"
 #include "Scene.h"
 #include "spdlog/fmt/ostr.h"
+#include "Inspectable.h"
 
 namespace Chroma
 {
 
-	class EntityRef
+	class EntityRef : public Inspectable
 	{
 	public:
 		EntityRef(EntityID id);
@@ -17,6 +18,8 @@ namespace Chroma
 		inline EntityID GetID() const { return m_EntityID; }
 
 		std::string ToPrefab();
+
+		const std::string ClassName() const override { return "EntityRef"; }
 
 
 		template <typename T>
@@ -84,10 +87,9 @@ namespace Chroma
 
 	private:
 
-		EntityID m_EntityID { ENTITY_NULL };
+		EntityID m_EntityID{ ENTITY_NULL };
 		Ref<Scene> m_Scene;
 
 		friend class Scene;
 	};
 }
-

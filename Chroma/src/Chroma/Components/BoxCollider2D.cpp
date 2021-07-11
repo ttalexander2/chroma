@@ -6,27 +6,20 @@ namespace Chroma
 {
 	void BoxCollider2D::DrawImGui()
 	{
-		if (ImGui::BeginTable("##box_collider_2d_component_table_inspector", 2, ImGuiTableFlags_SizingStretchProp | ImGuiTableFlags_NoPadInnerX | ImGuiTableFlags_NoPadOuterX))
+		DrawComponentValue("Bounds");
+		float pos[2] = { Bounds.x, Bounds.y };
+		if (ImGui::InputFloat2("##box_collider_2d_bounds", pos))
 		{
-			ImGui::TableNextColumn();
-
-			ImGui::AlignTextToFramePadding(); ImGui::Text("Bounds  ");
-			ImGui::AlignTextToFramePadding(); ImGui::Text("Offset");
-
-			ImGui::TableNextColumn();
-
-			float pos[2] = { Bounds.x, Bounds.y };
-			if (ImGui::InputFloat2("##box_collider_2d_bounds", pos))
-			{
-				Bounds = { pos[0], pos[1] };
-			}
-			float off[2] = { Offset.x, Offset.y };
-			if (ImGui::InputFloat2("##transform_rotation", off))
-			{
-				Offset = { off[0], off[1], };
-			}
-			ImGui::EndTable();
+			Bounds = { pos[0], pos[1] };
 		}
+
+		DrawComponentValue("Offset");
+		float off[2] = { Offset.x, Offset.y };
+		if (ImGui::InputFloat2("##box_collider_2d_offset", off))
+		{
+			Offset = { off[0], off[1], };
+		}
+
 	}
 	void BoxCollider2D::Serialize(YAML::Emitter& out)
 	{

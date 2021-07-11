@@ -10,6 +10,7 @@ Entities:
         Scale: [31, 12, 1]
       Sprite Renderer:
         Color: [0.0475500338, 0.682603538, 0.730232596, 1]
+        Offset: [0, 0]
   - Entity: 7
     Components:
       Tag:
@@ -20,3 +21,4 @@ Entities:
         Scale: [15, 27, 1]
       Sprite Renderer:
         Color: [0.748837233, 0.303017855, 0.303017855, 1]
+        Offset: [0, 0]

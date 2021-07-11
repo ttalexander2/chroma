@@ -61,13 +61,13 @@ namespace Chroma
 			{
 				return;
 			}
-		
+
 
 			unsigned int id = GetComponentTypeID<T>();
 
 			m_ComponentIDs[typeid(T).hash_code()] = id;
 
-			auto func = [](Scene& scene, EntityRef entity) 
+			auto func = [](Scene& scene, EntityRef entity)
 			{
 				ComponentRef<T> comp = scene.AddComponent<T>(entity);
 				return ComponentRef<Component>(comp.m_Ptr, comp.GetEntityID(), comp.GetScene());
@@ -79,7 +79,7 @@ namespace Chroma
 			{
 				m_ComponentFactory[test.Name()] = func;
 			}
-			
+
 			m_ComponentNames[id] = test.Name();
 			m_ComponentNamesToID[test.Name()] = id;
 			m_ComponentsAllowMultiple[id] = test.AllowMultiple();
@@ -91,7 +91,7 @@ namespace Chroma
 
 			CHROMA_CORE_TRACE("Registered Component: {0}", m_ComponentNames[id]);
 		}
-		
+
 		template<typename T>
 		ComponentRef<T> AddComponent(EntityID id)
 		{
@@ -111,7 +111,7 @@ namespace Chroma
 			}
 
 			//Placement new operator to add new T() to address given by get(id)
-			ComponentPool<T> *pool = (ComponentPool<T>*)m_ComponentPools[componentID];
+			ComponentPool<T>* pool = (ComponentPool<T>*)m_ComponentPools[componentID];
 
 			return ComponentRef<T>(pool->Add(id), id, this);
 		}
@@ -127,10 +127,10 @@ namespace Chroma
 		{
 			int componentID = GetComponentTypeID<T>();
 
-			if (!HasComponent<T>(id))
-				return ComponentRef<T>(nullptr, id,  nullptr);
+			if (!HasComponent(id, componentID))
+				return ComponentRef<T>(nullptr, id, nullptr);
 
-			ComponentPool<T> *pool = (ComponentPool<T>*)m_ComponentPools[componentID];
+			ComponentPool<T>* pool = (ComponentPool<T>*)m_ComponentPools[componentID];
 			return ComponentRef<T>(pool->GetFirst(id), id, this);
 		}
 
@@ -143,7 +143,7 @@ namespace Chroma
 		template<typename T>
 		std::vector<ComponentRef<T>> GetComponents(EntityID id)
 		{
-			
+
 			int componentID = GetComponentTypeID<T>();
 
 			if (!HasComponent<T>(id))
@@ -153,7 +153,7 @@ namespace Chroma
 
 
 			ComponentPool<T>* pool = (ComponentPool<T>*)m_ComponentPools[componentID];
-			std::vector<T*> raw =  pool->Get(id);
+			std::vector<T*> raw = pool->Get(id);
 			std::vector<ComponentRef<T>> refs;
 			for (T* item : raw)
 			{
@@ -191,7 +191,7 @@ namespace Chroma
 
 			if (m_ComponentPools.size() <= componentID || m_ComponentPools[componentID] == nullptr)
 				return false;
-			
+
 			AbstractComponentPool* pool = m_ComponentPools[componentID];
 			return pool->HasEntity(id);
 		}
@@ -286,18 +286,18 @@ namespace Chroma
 			}
 
 		private:
-			SceneView(Scene& scene) 
+			SceneView(Scene& scene)
 				: m_Scene(&scene)
 			{
 				m_Entities = std::set<EntityRef>();
-				int componentIds[] = { scene.GetComponentTypeID<ComponentTypes>()... };
+				unsigned int componentIds[] = { scene.GetComponentTypeID<ComponentTypes>()... };
 				size_t smallestSize = -1;
 				int smallest = 0;
 
 
 				for (int id : componentIds)
 				{
-					if (id >= m_Scene->m_ComponentPools.size() 
+					if (id >= m_Scene->m_ComponentPools.size()
 						||
 						m_Scene->m_ComponentPools[id] == nullptr)
 						continue;
@@ -408,7 +408,7 @@ namespace Chroma
 		std::unordered_set<EntityID> m_Entities;
 
 		std::unordered_map<size_t, unsigned int> m_ComponentIDs;
-		std::unordered_map<std::string, std::function<ComponentRef<Component> (Scene&, EntityRef)>> m_ComponentFactory;
+		std::unordered_map<std::string, std::function<ComponentRef<Component>(Scene&, EntityRef)>> m_ComponentFactory;
 		std::unordered_map<unsigned int, std::string> m_ComponentNames;
 		std::unordered_map<std::string, unsigned int> m_ComponentNamesToID;
 		std::unordered_map<unsigned int, bool> m_ComponentsAllowMultiple;
@@ -422,7 +422,7 @@ namespace Chroma
 
 		friend class EntityRef;
 
-		
+
 	};
 
 }

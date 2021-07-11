@@ -4,29 +4,83 @@
 #include <imgui.h>
 #include <string>
 #include "Fonts/IconsForkAwesome.h"
+#include <Chroma/ImGui/ImGuiDebugMenu.h>
+#include <Chroma/ImGui/ImGuiHelper.h>
+#include <Chroma/Scene/Inspectable.h>
 
 namespace Polychrome
 {
 	bool Inspector::Open = true;
+	Chroma::Inspectable* Inspector::Inspecting = nullptr;
+	Chroma::Inspectable* Inspector::Previous = nullptr;
 
 	void Inspector::Draw()
 	{
 		ImGui::Begin("Inspector", &Inspector::Open);
-		int unique = 0;
-		Chroma::EntityRef selected = Hierarchy::SelectedEntity;
+
+		if (Inspecting != nullptr)
+		{
+			std::string name = Inspecting->ClassName();
+			if (name == "EntityRef")
+			{
+				DrawEntity();
+			}
+		}
+
+		ImGui::End();
+	}
+
+	void Inspector::SetInspectable(Chroma::Inspectable& inspect)
+	{
+		Previous = Inspecting;
+		Inspecting = &inspect;
+	}
+
+	void Inspector::DrawEntity()
+	{
+		int unique = 69;
+		Chroma::EntityRef selected = *dynamic_cast<Chroma::EntityRef*>(Inspecting);
 		if (Hierarchy::SelectedEntity.GetID() == Chroma::ENTITY_NULL)
 		{
 			ImGui::End();
 			return;
 		}
-			
+
+		ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, { 4, 3 });
+
+		ImGui::BeginTable("##Inspector_table", 2, ImGuiTableFlags_None | ImGuiTableFlags_SizingStretchProp | ImGuiTableFlags_Resizable | ImGuiTableFlags_NoBordersInBodyUntilResize | ImGuiTableFlags_NoClip);
+		ImGui::TableNextColumn();
+
 		for (Chroma::ComponentRef<Chroma::Component> c : selected.GetAllComponents())
 		{
 			if (c->IsTag())
 				continue;
 
-			bool open = ImGui::CollapsingHeader((c->Name() + "##" + std::to_string(unique)).c_str(), ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowItemOverlap);
-			ImGui::SameLine(ImGui::GetWindowWidth() - 24);
+
+
+			ImGui::TableSetColumnIndex(0);
+
+
+			ImGui::PushStyleVar(ImGuiStyleVar_SelectableTextAlign, { 0.01, 0.01 });
+			ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 4, 8 });
+
+			ImGui::AlignTextToFramePadding();
+
+			auto icon = ICON_FK_CARET_RIGHT;
+			if (c->editor_inspector_open)
+				icon = ICON_FK_CARET_DOWN;
+
+			bool selected = true;
+			if (ImGui::Selectable((icon + std::string("  ") + c->Name() + "##" + std::to_string(unique)).c_str(), &selected, ImGuiSelectableFlags_SpanAllColumns | ImGuiSelectableFlags_AllowItemOverlap))
+			{
+				c->editor_inspector_open = !c->editor_inspector_open;
+			}
+
+			ImGui::PopStyleVar(2);
+
+			ImGui::AlignTextToFramePadding();
+
+			ImGui::SameLine(ImGui::GetWindowWidth() - 32);
 
 
 			if (ImGui::Button((ICON_FK_COG "##MENU_BAR_INSPECTOR_BUTTON_" + std::to_string(unique)).c_str()))
@@ -43,19 +97,34 @@ namespace Polychrome
 						c.Delete();
 					}
 				}
-				
+
 				ImGui::EndPopup();
 			}
 
-			if (open)
+
+
+
+			if (c->editor_inspector_open)
 			{
+				ImGui::TableNextRow();
+				ImGui::PushID(unique);
 				c->DrawImGui();
+				ImGui::PopID();
 			}
 
-
+			ImGui::TableNextRow();
 
 			unique++;
 		}
+
+		ImGui::EndTable();
+
+		ImGui::PopStyleVar();
+
+
+
+
+
 
 		if (ImGui::Button("Add Component"))
 		{
@@ -77,13 +146,11 @@ namespace Polychrome
 				}
 
 				if (ImGui::MenuItem((name + "##ENTITY_ADD_COMPONENT").c_str(), "", false, enabled))
-				{						
+				{
 					func(*scene, selected);
 				}
 			}
 			ImGui::EndPopup();
 		}
-
-		ImGui::End();
 	}
 }

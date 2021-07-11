@@ -21,7 +21,7 @@
   <ItemGroup>
     <ClCompile Include="src\EditorApp.cpp" />
     <ClCompile Include="src\FileDrop.cpp" />
-    <ClCompile Include="src\Fonts\NeueHassTextPro.cpp">
+    <ClCompile Include="src\Fonts\Roboto.cpp">
       <Filter>Fonts</Filter>
     </ClCompile>
     <ClCompile Include="src\Hierarchy.cpp" />

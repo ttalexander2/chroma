@@ -22,8 +22,8 @@
     <Filter Include="src\Chroma\ImGui">
       <UniqueIdentifier>{003CA9ED-EC34-C83F-1567-ADC401BFA74B}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Chroma\ImGui\ImGuiComponents">
-      <UniqueIdentifier>{D04BDD2E-BC9C-C870-E500-B732D1B05BDA}</UniqueIdentifier>
+    <Filter Include="src\Chroma\ImGui\Widgets">
+      <UniqueIdentifier>{666B7F36-5290-CEB6-7BDB-B346675FCDD4}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Chroma\Math">
       <UniqueIdentifier>{EFA8168B-5B34-844F-6445-0744D04FE04F}</UniqueIdentifier>
@@ -150,14 +150,32 @@
     <ClInclude Include="src\Chroma\Events\MouseEvent.h">
       <Filter>src\Chroma\Events</Filter>
     </ClInclude>
-    <ClInclude Include="src\Chroma\ImGui\ImGuiComponents\ComboFilter.h">
-      <Filter>src\Chroma\ImGui\ImGuiComponents</Filter>
+    <ClInclude Include="src\Chroma\ImGui\IconsForkAwesome.h">
+      <Filter>src\Chroma\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="src\Chroma\ImGui\ImGuiComponents\Vec3WithLabels.h">
-      <Filter>src\Chroma\ImGui\ImGuiComponents</Filter>
+    <ClInclude Include="src\Chroma\ImGui\ImGuiDebugMenu.h">
+      <Filter>src\Chroma\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Chroma\ImGui\ImGuiHelper.h">
+      <Filter>src\Chroma\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="src\Chroma\ImGui\ImGuiLayer.h">
       <Filter>src\Chroma\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Chroma\ImGui\Widgets\CollapsibleGroupPannel.h">
+      <Filter>src\Chroma\ImGui\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Chroma\ImGui\Widgets\ComboFilter.h">
+      <Filter>src\Chroma\ImGui\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Chroma\ImGui\Widgets\EditableList.h">
+      <Filter>src\Chroma\ImGui\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Chroma\ImGui\Widgets\GroupPannel.h">
+      <Filter>src\Chroma\ImGui\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Chroma\ImGui\Widgets\Vec3WithLabels.h">
+      <Filter>src\Chroma\ImGui\Widgets</Filter>
     </ClInclude>
     <ClInclude Include="src\Chroma\Math\Common.h">
       <Filter>src\Chroma\Math</Filter>
@@ -255,6 +273,9 @@
     <ClInclude Include="src\Chroma\Profiler\Instrumentor.h">
       <Filter>src\Chroma\Profiler</Filter>
     </ClInclude>
+    <ClInclude Include="src\Chroma\QuadTree.h">
+      <Filter>src\Chroma</Filter>
+    </ClInclude>
     <ClInclude Include="src\Chroma\Renderer\Buffer.h">
       <Filter>src\Chroma\Renderer</Filter>
     </ClInclude>
@@ -312,6 +333,9 @@
     <ClInclude Include="src\Chroma\Scene\Scene.h">
       <Filter>src\Chroma\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="src\Chroma\Scene\SceneNode.h">
+      <Filter>src\Chroma\Scene</Filter>
+    </ClInclude>
     <ClInclude Include="src\Chroma\Scene\System.h">
       <Filter>src\Chroma\Scene</Filter>
     </ClInclude>
@@ -328,6 +352,9 @@
       <Filter>src\Chroma\Utilities</Filter>
     </ClInclude>
     <ClInclude Include="src\Chroma\Utilities\FileDialogs.h">
+      <Filter>src\Chroma\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Chroma\Utilities\GUID.h">
       <Filter>src\Chroma\Utilities</Filter>
     </ClInclude>
     <ClInclude Include="src\Chroma\Utilities\StringHelper.h">
@@ -537,8 +564,7 @@
     <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\yaml.h">
       <Filter>third_party\yaml-cpp\include\yaml-cpp</Filter>
     </ClInclude>
-    <ClInclude Include="src\Chroma\Utilities\GUID.h" />
-    <ClInclude Include="src\Chroma\QuadTree.h" />
+    <ClInclude Include="src\Chroma\Scene\Inspectable.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Chroma\Audio\Audio.cpp">
@@ -546,6 +572,24 @@
     </ClCompile>
     <ClCompile Include="src\Chroma\Audio\ChromaFMOD.cpp">
       <Filter>src\Chroma\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Chroma\Components\AudioSource.cpp">
+      <Filter>src\Chroma\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Chroma\Components\BoxCollider2D.cpp">
+      <Filter>src\Chroma\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Chroma\Components\CircleCollider2D.cpp">
+      <Filter>src\Chroma\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Chroma\Components\SpriteRenderer.cpp">
+      <Filter>src\Chroma\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Chroma\Components\Tag.cpp">
+      <Filter>src\Chroma\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Chroma\Components\Transform.cpp">
+      <Filter>src\Chroma\Components</Filter>
     </ClCompile>
     <ClCompile Include="src\Chroma\Core\Application.cpp">
       <Filter>src\Chroma\Core</Filter>
@@ -559,8 +603,20 @@
     <ClCompile Include="src\Chroma\ImGui\ImGuiBuild.cpp">
       <Filter>src\Chroma\ImGui</Filter>
     </ClCompile>
+    <ClCompile Include="src\Chroma\ImGui\ImGuiDebugMenu.cpp">
+      <Filter>src\Chroma\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Chroma\ImGui\ImGuiHelper.cpp">
+      <Filter>src\Chroma\ImGui</Filter>
+    </ClCompile>
     <ClCompile Include="src\Chroma\ImGui\ImGuiLayer.cpp">
       <Filter>src\Chroma\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Chroma\ImGui\Widgets\CollapsibleGroupPannel.cpp">
+      <Filter>src\Chroma\ImGui\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Chroma\ImGui\Widgets\GroupPannel.cpp">
+      <Filter>src\Chroma\ImGui\Widgets</Filter>
     </ClCompile>
     <ClCompile Include="src\Chroma\Platform\OpenGL\OpenGLBuffer.cpp">
       <Filter>src\Chroma\Platform\OpenGL</Filter>
@@ -591,6 +647,9 @@
     </ClCompile>
     <ClCompile Include="src\Chroma\Platform\Windows\WindowsWindow.cpp">
       <Filter>src\Chroma\Platform\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Chroma\QuadTree.cpp">
+      <Filter>src\Chroma</Filter>
     </ClCompile>
     <ClCompile Include="src\Chroma\Renderer\Buffer.cpp">
       <Filter>src\Chroma\Renderer</Filter>
@@ -646,6 +705,9 @@
     <ClCompile Include="src\Chroma\Systems\SpriteRendererSystem.cpp">
       <Filter>src\Chroma\Systems</Filter>
     </ClCompile>
+    <ClCompile Include="src\Chroma\Utilities\GUID.cpp">
+      <Filter>src\Chroma\Utilities</Filter>
+    </ClCompile>
     <ClCompile Include="src\Chroma\Utilities\Yaml.cpp">
       <Filter>src\Chroma\Utilities</Filter>
     </ClCompile>
@@ -655,13 +717,5 @@
     <ClCompile Include="third_party\stb_image\stb_image.cpp">
       <Filter>third_party\stb_image</Filter>
     </ClCompile>
-    <ClCompile Include="src\Chroma\Components\AudioSource.cpp" />
-    <ClCompile Include="src\Chroma\Components\BoxCollider2D.cpp" />
-    <ClCompile Include="src\Chroma\Components\CircleCollider2D.cpp" />
-    <ClCompile Include="src\Chroma\Components\SpriteRenderer.cpp" />
-    <ClCompile Include="src\Chroma\Components\Tag.cpp" />
-    <ClCompile Include="src\Chroma\Components\Transform.cpp" />
-    <ClCompile Include="src\Chroma\Utilities\GUID.cpp" />
-    <ClCompile Include="src\Chroma\QuadTree.cpp" />
   </ItemGroup>
 </Project>

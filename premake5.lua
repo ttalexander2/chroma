@@ -72,6 +72,7 @@ project "Chroma"
         "%{IncludeDir.GLFW}",
         "%{IncludeDir.Glad}",
         "%{IncludeDir.ImGui}",
+        "%{IncludeDir.ImGui}/misc/cpp",
         "%{IncludeDir.glm}",
         "%{IncludeDir.stb_image}",
         "%{IncludeDir.FMOD}",
@@ -231,6 +232,7 @@ project "Polychrome"
         "Chroma/src",
         "%{IncludeDir.glm}",
         "%{IncludeDir.ImGui}",
+        "%{IncludeDir.ImGui}/misc/cpp",
         "%{IncludeDir.entt}",
         "%{IncludeDir.FMOD}",
         "%{IncludeDir.yaml}"
@@ -251,6 +253,11 @@ project "Polychrome"
         "{COPY} ../Chroma/lib/Windows/x64/fmodL.dll %{cfg.targetdir}",
         "{ECHO} Copying assets to %{cfg.targetdir}/assets",
         "{COPY} assets %{cfg.targetdir}/assets",
+    }
+
+    defines
+    {
+        CHROMA_EDITOR
     }
 
 

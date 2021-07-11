@@ -71,40 +71,12 @@ namespace Chroma
 
 	bool GUID::operator==(const GUID& other) const
 	{
-		bool result = true;
-		for (int i = 0; i < 8; i++)
-		{
-			if (Data4[i] != other.Data4[i])
-				result = false;
-		}
-		return result
-			&& Data1 == other.Data1
-			&& Data2 == other.Data2
-			&& Data3 == other.Data3;
+		return memcmp(this, &other, sizeof(other)) == 0;
 	}
 
 	bool GUID::operator<(GUID& other) const
 	{
-		if (Data1 != other.Data1)
-		{
-			return Data1 < other.Data1;
-		}
-		if (Data2 != other.Data2)
-		{
-			return Data2 < other.Data2;
-		}
-		if (Data3 != other.Data3)
-		{
-			return Data3 < other.Data3;
-		}
-		for (int i = 0; i < 8; i++)
-		{
-			if (Data4[i] != other.Data4[i])
-			{
-				return Data4[i] < other.Data4[i];
-			}
-		}
-		return false;
+		return memcmp(this, &other, sizeof(other)) < 0;
 	}
 
 }

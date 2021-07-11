@@ -25,7 +25,6 @@ namespace Chroma
 			ComponentRef<AudioSource> audio = e.GetComponent<AudioSource>();
 		}
 	}
-
 }
 
 

@@ -22,6 +22,8 @@ namespace Chroma
 		Application(const std::string& title = "Chroma Engine", unsigned int width = 1920, unsigned int height = 1080);
 		virtual ~Application();
 
+		virtual void BindScripts() {};
+
 		void Run();
 
 		void ProcessEvents(Event& e);

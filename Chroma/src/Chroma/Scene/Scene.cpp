@@ -91,7 +91,7 @@ namespace Chroma
 
 	}
 
-	bool Scene::Deserialize(Scene &out, const std::string& yaml)
+	bool Scene::Deserialize(Scene& out, const std::string& yaml)
 	{
 		uint64_t maxId = 0;
 		auto data = YAML::Load(yaml);
@@ -108,7 +108,7 @@ namespace Chroma
 		{
 			for (auto entity : entities)
 			{
-				
+
 				EntityID id = entity["Entity"].as<uint32_t>();
 				if (id > maxId)
 					maxId = id;
@@ -173,7 +173,7 @@ namespace Chroma
 
 	void Scene::EarlyInit()
 	{
-		for (System *s : m_Systems)
+		for (System* s : m_Systems)
 		{
 			s->EarlyInit();
 		}

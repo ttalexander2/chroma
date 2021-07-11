@@ -47,7 +47,7 @@ namespace Chroma
 			{
 				m_SparseComponents[id] = {};
 			}
-			m_SparseComponents[id].push_back(m_PackedComponents.size() - 1);
+			m_SparseComponents[id].push_back((int)m_PackedComponents.size() - 1);
 
 			m_PackedComponents.back().SetComparisonID();
 			return &m_PackedComponents[m_SparseComponents[id].back()];
@@ -82,25 +82,25 @@ namespace Chroma
 
 		void RemoveAll(EntityID id) override
 		{
-
 			if (m_SparseComponents.find(id) == m_SparseComponents.end())
 				return;
 
-			std::vector<uint32_t> toRemove;
-			for (int i = m_PackedEntityIds.size() - 1; i >= 0; i--)
-			{
-				if (m_PackedEntityIds[i] == id)
-				{
-					toRemove.push_back(i);
-				}
-			}
-
 			m_SparseComponents.erase(id);
 
-			for (int i = 0; i < toRemove.size(); i++)
+			int i = 0;
+			std::vector<EntityID>::iterator it = m_PackedEntityIds.begin();
+			while (it != m_PackedEntityIds.end())
 			{
-				m_PackedEntityIds.erase(m_PackedEntityIds.begin() + toRemove[i]);
-				m_PackedComponents.erase(m_PackedComponents.begin() + toRemove[i]);
+				if (*it == id)
+				{
+					it = m_PackedEntityIds.erase(it);
+					m_PackedComponents.erase(m_PackedComponents.begin() + i);
+				}
+				else
+				{
+					it++;
+					i++;
+				}
 			}
 
 			Repack();
@@ -111,13 +111,13 @@ namespace Chroma
 		{
 
 			int toRemove = -1;
-			for (int i = m_PackedComponents.size() - 1; i >= 0; i--)
+			for (size_t i = m_PackedComponents.size() - 1; i >= 0; i--)
 			{
 
 				if (m_PackedComponents[i] == *component)
 				{
 					m_PackedComponents.erase(m_PackedComponents.begin() + i);
-					toRemove = i;
+					toRemove = static_cast<int>(i);
 					break;
 				}
 

@@ -43,7 +43,7 @@ namespace Chroma
 			size_t i = str.find_last_of("::");
 			if (i >= str.size())
 				return str;
-			return str.substr(i+1);
+			return str.substr(i + 1);
 		}
 
 	private:
@@ -55,4 +55,3 @@ namespace Chroma
 
 
 }
-
