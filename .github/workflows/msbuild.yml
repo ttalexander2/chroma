@@ -16,7 +16,7 @@ jobs:
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v2
-    - run: third_party/premake-core/bin/release/premake5.exe vs2019
+    - run: WindowsGenerateProjects.bat
   build:
     runs-on: windows-latest
     needs: premake
