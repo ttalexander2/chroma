@@ -11,8 +11,9 @@ namespace Chroma
 	struct SpriteRenderer : Component
 	{
 
-		Math::vec4 Color{ 1.0f, 1.0f, 1.0f, 1.0f };
-		Math::vec3 Offset{ 0.0f, 0.0f, 0.0f };
+		Math::vec4 Color { 1.0f, 1.0f, 1.0f, 1.0f };
+		Math::vec3 Offset { 0.0f, 0.0f, 0.0f };
+		Math::vec3 Scale { 1.0f, 1.0f, 1.0f };
 		std::string Layer = "Default";
 		bool PlayOnStart = true;
 		bool Playing = true;

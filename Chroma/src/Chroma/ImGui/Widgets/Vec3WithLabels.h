@@ -5,15 +5,31 @@
 namespace Chroma
 {
 
-	static bool Vec3IntWithLabels(const char* hash, Math::vec3& val)
+	static bool Vec3IntWithLabels(const char* hash, Math::vec3& val, bool reset_to_zero = true)
 	{
 		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 0, 0 });
 
 		float inputWidth = (ImGui::GetContentRegionAvailWidth() - ImGui::CalcTextSize("X").x * 3.0f - (6.0f * 6)) / 3;
 
 		ImGui::PushStyleColor(ImGuiCol_Button, { 0.8f, 0.1f, 0.1f, 0.8f });
-		ImGui::Button(("X##vec3_x_label" + std::string(hash)).c_str());
+		if (ImGui::Button(("X##vec3_x_label" + std::string(hash)).c_str()))
+		{
+			if (reset_to_zero)
+			{
+				val.x = 0;
+			}
+			else
+			{
+				val.x = 1;
+			}
+		}
 		ImGui::PopStyleColor();
+		if (ImGui::IsItemHovered())
+		{
+			ImGui::BeginTooltip();
+			ImGui::Text("Click to reset value.");
+			ImGui::EndTooltip();
+		}
 		ImGui::SameLine();
 
 		ImGui::SetNextItemWidth(inputWidth);
@@ -27,9 +43,24 @@ namespace Chroma
 		ImGui::SameLine(0.0f, 6.0f);
 
 		ImGui::PushStyleColor(ImGuiCol_Button, { 0.1f, 0.8f, 0.1f, 0.8f });
-		ImGui::Button(("Y##vec3_y_label" + std::string(hash)).c_str());
+		if (ImGui::Button(("Y##vec3_y_label" + std::string(hash)).c_str()))
+		{
+			if (reset_to_zero)
+			{
+				val.y = 0;
+			}
+			else
+			{
+				val.y = 1;
+			}
+		}
 		ImGui::PopStyleColor();
-
+		if (ImGui::IsItemHovered())
+		{
+			ImGui::BeginTooltip();
+			ImGui::Text("Click to reset value.");
+			ImGui::EndTooltip();
+		}
 		ImGui::SameLine();
 
 		ImGui::SetNextItemWidth(inputWidth);
@@ -43,9 +74,24 @@ namespace Chroma
 		ImGui::SameLine(0.0f, 6.0f);
 
 		ImGui::PushStyleColor(ImGuiCol_Button, { 0.1f, 0.1f, 0.8f, 0.8f });
-		ImGui::Button(("Z##vec3_z_label" + std::string(hash)).c_str());
+		if (ImGui::Button(("Z##vec3_z_label" + std::string(hash)).c_str()))
+		{
+			if (reset_to_zero)
+			{
+				val.z = 0;
+			}
+			else
+			{
+				val.z = 1;
+			}
+		}
 		ImGui::PopStyleColor();
-
+		if (ImGui::IsItemHovered())
+		{
+			ImGui::BeginTooltip();
+			ImGui::Text("Click to reset value.");
+			ImGui::EndTooltip();
+		}
 		ImGui::SameLine();
 
 		ImGui::SetNextItemWidth(inputWidth);
@@ -62,7 +108,7 @@ namespace Chroma
 		ImGui::NewLine();
 	}
 
-	static bool Vec3FloatWithLabels(const char* hash, Math::vec3& val)
+	static bool Vec3FloatWithLabels(const char* hash, Math::vec3& val, bool reset_to_zero = true)
 	{
 		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 0, 0 });
 
@@ -70,10 +116,25 @@ namespace Chroma
 
 		ImGui::PushStyleColor(ImGuiCol_Button, { 0.8f, 0.1f, 0.1f, 0.8f });
 
-		ImGui::Button(("X##vec3_x_label" + std::string(hash)).c_str());
+		if (ImGui::Button(("X##vec3_x_label" + std::string(hash)).c_str()))
+		{
+			if (reset_to_zero)
+			{
+				val.x = 0;
+			}
+			else
+			{
+				val.x = 1;
+			}
+		}
 
 		ImGui::PopStyleColor();
-
+		if (ImGui::IsItemHovered())
+		{
+			ImGui::BeginTooltip();
+			ImGui::Text("Click to reset value.");
+			ImGui::EndTooltip();
+		}
 		ImGui::SameLine();
 
 		ImGui::SetNextItemWidth(inputWidth);
@@ -88,9 +149,24 @@ namespace Chroma
 		ImGui::SameLine(0.0f, 6.0f);
 
 		ImGui::PushStyleColor(ImGuiCol_Button, { 0.1f, 0.8f, 0.1f, 0.8f });
-		ImGui::Button(("Y##vec3_y_label" + std::string(hash)).c_str());
+		if (ImGui::Button(("Y##vec3_y_label" + std::string(hash)).c_str()))
+		{
+			if (reset_to_zero)
+			{
+				val.y = 0;
+			}
+			else
+			{
+				val.y = 1;
+			}
+		}
 		ImGui::PopStyleColor();
-
+		if (ImGui::IsItemHovered())
+		{
+			ImGui::BeginTooltip();
+			ImGui::Text("Click to reset value.");
+			ImGui::EndTooltip();
+		}
 		ImGui::SameLine();
 
 		ImGui::SetNextItemWidth(inputWidth);
@@ -104,9 +180,24 @@ namespace Chroma
 		ImGui::SameLine(0.0f, 6.0f);
 
 		ImGui::PushStyleColor(ImGuiCol_Button, { 0.1f, 0.1f, 0.8f, 0.8f });
-		ImGui::Button(("Z##vec3_z_label" + std::string(hash)).c_str());
+		if (ImGui::Button(("Z##vec3_z_label" + std::string(hash)).c_str()))
+		{
+			if (reset_to_zero)
+			{
+				val.x = 0;
+			}
+			else
+			{
+				val.x = 1;
+			}
+		}
 		ImGui::PopStyleColor();
-
+		if (ImGui::IsItemHovered())
+		{
+			ImGui::BeginTooltip();
+			ImGui::Text("Click to reset value.");
+			ImGui::EndTooltip();
+		}
 		ImGui::SameLine();
 
 		ImGui::SetNextItemWidth(inputWidth);

@@ -23,7 +23,7 @@ namespace Chroma
 			ComponentRef<Transform> transform = e.GetComponent<Transform>();
 			for (ComponentRef<SpriteRenderer> spriteRenderer : e.GetComponents<SpriteRenderer>())
 			{
-				Chroma::Renderer2D::DrawQuad(transform->Position, transform->Scale, spriteRenderer->Color, glm::radians(transform->Rotation.x));
+				Chroma::Renderer2D::DrawQuad(transform->Position + spriteRenderer->Offset, transform->Scale * spriteRenderer->Scale, spriteRenderer->Color, glm::radians(transform->Rotation.x));
 			}
 			
 

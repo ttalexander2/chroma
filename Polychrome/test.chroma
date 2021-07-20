@@ -8,13 +8,13 @@ Entities:
         Position: [0, 0, 0]
         Rotation: [0, 0, 0]
         Scale: [1, 1, 1]
-      Sprite:
+      Sprite Renderer:
         Color: [1, 1, 1, 1]
         Offset: [0, 0, 0]
+        Scale: [1, 1, 1]
         Layer: Default
         PlayOnStart: true
-        Loop: true
-        Direction: 0
+        Sprite: ""
   - Entity: 1
     Components:
       Tag:

@@ -20,9 +20,9 @@
 #include <filesystem>
 #include <Chroma/ImGui/ImGuiDebugMenu.h>
 #include "Fonts/Roboto.cpp"
-#include "../../Chroma/third_party/cute_headers/cute_aseprite.h"
 #include <Chroma/Images/Aseprite.h>
 #include <Chroma/Components/SpriteRenderer.h>
+#include "Style.h"
 
 
 namespace Polychrome
@@ -286,6 +286,13 @@ namespace Polychrome
 
 		
 		Chroma::ImGuiDebugMenu::Draw();
+		if (ImGui::Begin("Settings"))
+		{
+			static int selected_style;
+			ImGui::SelectStyleCombo("Style", &selected_style, ImGui::ImGuiStyle_Count, nullptr);
+		}
+		ImGui::End();
+
 		ImGui::End();
 
 

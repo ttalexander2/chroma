@@ -583,6 +583,7 @@
     <ClInclude Include="src\Chroma\Assets\AssetManager.h" />
     <ClInclude Include="src\Chroma\Assets\Asset.h" />
     <ClInclude Include="src\Chroma\Assets\Sprite.h" />
+    <ClInclude Include="src\Chroma\ImGui\Widgets\AlternateCheckBox.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Chroma\Audio\Audio.cpp">

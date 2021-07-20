@@ -21,6 +21,7 @@ namespace Chroma
 	class System;
 
 
+	//This entire class is a template-caused mess
 	class Scene
 	{
 	public:
@@ -41,12 +42,13 @@ namespace Chroma
 		template <typename T>
 		void RegisterSystem()
 		{
-			//CHROMA_ASSERT(std::is_convertible<T*, System*>::value, "Must inherrit Component to register as component");
+			bool result = std::is_base_of<System, T>();
+			CHROMA_ASSERT(result, std::string(typeid(T).name()) + " must inherrit System to register as a system.");
 
-			//if (!std::is_convertible<T*, System*>::value)
-			//{
-			//	return;
-			//}
+			if (!result)
+			{
+				return;
+			}
 			System* system = (System*)new T();
 			system->m_Scene = this;
 			m_Systems.push_back(system);
@@ -55,8 +57,8 @@ namespace Chroma
 		template <typename T>
 		void RegisterComponent()
 		{
-			bool check = std::is_convertible<T*, Component*>::value;
-			CHROMA_ASSERT(check, "Must inherrit Component to register as component");
+			bool check = std::is_base_of<Component, T>();
+			CHROMA_ASSERT(check, std::string(typeid(T).name()) +  "must inherrit Component to register as component.");
 
 			if (!check)
 			{
@@ -96,7 +98,14 @@ namespace Chroma
 		template<typename T>
 		ComponentRef<T> AddComponent(EntityID id)
 		{
-			CHROMA_ASSERT(m_ComponentIDs.find(typeid(T).hash_code()) != m_ComponentIDs.end(), "Component not registered: {}", typeid(T).name());
+			bool registered = m_ComponentIDs.find(typeid(T).hash_code()) != m_ComponentIDs.end();
+			CHROMA_ASSERT(registered, "Component not registered: {}", typeid(T).name());
+
+			if (!registered)
+			{
+				CHROMA_CORE_ERROR("[Add Component({})]: Component not registered -- {}", id, typeid(T).name());
+				return ComponentRef<T>(nullptr, id, this);
+			}
 
 			//this is a little sus
 			int componentID = GetComponentTypeID<T>();

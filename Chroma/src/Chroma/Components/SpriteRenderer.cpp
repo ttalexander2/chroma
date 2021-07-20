@@ -2,6 +2,7 @@
 #include "SpriteRenderer.h"
 #include "Chroma/ImGui/Widgets/Vec3WithLabels.h"
 #include "Chroma/ImGui/Widgets/EditableList.h"
+#include "Chroma/ImGui/Widgets/AlternateCheckBox.h"
 #include "imgui_internal.h"
 #include "Chroma/Core/Application.h"
 #include "Chroma/Assets/AssetManager.h"
@@ -11,7 +12,6 @@ namespace Chroma
 	
 	void SpriteRenderer::DrawImGui()
 	{
-
 		DrawComponentValue("Color");
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
 
@@ -23,11 +23,20 @@ namespace Chroma
 
 		
 		DrawComponentValue("Offset");
-		Chroma::Vec3IntWithLabels(("##transform_scale" + std::to_string(this->GetUniqueID())).c_str(), Offset);
+		Chroma::Vec3IntWithLabels("##offset", Offset);
 
-		DrawComponentValue("Layer");
+		DrawComponentValue("Scale");
+		Chroma::Vec3FloatWithLabels("##scale", Scale, false);
 
-		static bool editing = false;
+		DrawComponentValue("Play On Start");
+		ImGui::AlternateCheckBox(&PlayOnStart);
+
+		DrawComponentValue("Playing");
+		ImGui::AlternateCheckBox(&Playing);
+
+		//DrawComponentValue("Layer");
+
+		//static bool editing = false;
 
 		/*
 		if (!editing && ImGui::BeginCombo("##Layer", Layer.c_str()))
@@ -89,6 +98,9 @@ namespace Chroma
 		out << YAML::Key << "Offset";
 		out << YAML::Value << Offset;
 
+		out << YAML::Key << "Scale";
+		out << YAML::Value << Scale;
+
 		out << YAML::Key << "Layer";
 		out << YAML::Value << Layer;
 
@@ -111,6 +123,11 @@ namespace Chroma
 		if (val)
 		{
 			Offset = val.as<Math::vec3>();
+		}
+		val = node["Scale"];
+		if (val)
+		{
+			Scale = val.as<Math::vec3>();
 		}
 		val = node["Layer"];
 		if (val)

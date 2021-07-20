@@ -24,7 +24,7 @@ namespace Chroma
 		Chroma::Vec3FloatWithLabels(("##transform_rotation" + std::to_string(this->GetUniqueID())).c_str(), Rotation);
 
 		DrawComponentValue("Scale");
-		Chroma::Vec3IntWithLabels(("##transform_scale" + std::to_string(this->GetUniqueID())).c_str(), Scale);
+		Chroma::Vec3IntWithLabels(("##transform_scale" + std::to_string(this->GetUniqueID())).c_str(), Scale, false);
 
 
 	}

@@ -17,6 +17,7 @@
     <ClInclude Include="src\Hierarchy.h" />
     <ClInclude Include="src\Inspector.h" />
     <ClInclude Include="src\Viewport.h" />
+    <ClInclude Include="src\Style.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\EditorApp.cpp" />

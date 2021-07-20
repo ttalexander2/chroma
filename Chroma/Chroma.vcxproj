@@ -182,6 +182,7 @@
     <ClInclude Include="src\Chroma\ImGui\ImGuiDebugMenu.h" />
     <ClInclude Include="src\Chroma\ImGui\ImGuiHelper.h" />
     <ClInclude Include="src\Chroma\ImGui\ImGuiLayer.h" />
+    <ClInclude Include="src\Chroma\ImGui\Widgets\AlternateCheckBox.h" />
     <ClInclude Include="src\Chroma\ImGui\Widgets\CollapsibleGroupPannel.h" />
     <ClInclude Include="src\Chroma\ImGui\Widgets\ComboFilter.h" />
     <ClInclude Include="src\Chroma\ImGui\Widgets\EditableList.h" />
