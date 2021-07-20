@@ -18,7 +18,7 @@ jobs:
     - uses: actions/checkout@v2
     - name: Run Premake
       shell: cmd
-      run: .\WindowsGenerateProjects.bat
+      run: ${{env.GITHUB_WORKSPACE}}\WindowsGenerateProjects.bat
   build:
     runs-on: windows-latest
     needs: premake
