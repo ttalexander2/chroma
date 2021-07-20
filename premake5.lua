@@ -21,6 +21,7 @@ IncludeDir["entt"] = "Chroma/third_party/entt"
 IncludeDir["FMOD"] = "Chroma/third_party/fmod"
 IncludeDir["lua"] = "Chroma/third_party/lua"
 IncludeDir["yaml"] = "Chroma/third_party/yaml-cpp/include"
+IncludeDir["cute_headers"] = "Chroma/third_party/cute_headers"
 
 group "Dependencies"
     include "Chroma/third_party/GLFW"
@@ -53,7 +54,8 @@ project "Chroma"
         "%{prj.name}/third_party/stb_image/**.cpp",
         "%{prj.name}/third_party/entt/**.hpp",
         "%{prj.name}/third_party/lua/**.h",
-        "%{prj.name}/third_party/yaml-cpp/include/yaml-cpp/**.h"
+        "%{prj.name}/third_party/yaml-cpp/include/yaml-cpp/**.h",
+        "%{prj.name}/third_party/cute_headers/**.h"
     }
 
     defines
@@ -77,7 +79,8 @@ project "Chroma"
         "%{IncludeDir.stb_image}",
         "%{IncludeDir.FMOD}",
         "%{IncludeDir.lua}",
-        "%{IncludeDir.yaml}"
+        "%{IncludeDir.yaml}",
+        "%{IncludeDir.cute_headers}"
 
     }
 

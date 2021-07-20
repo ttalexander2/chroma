@@ -55,6 +55,9 @@
     <Filter Include="third_party">
       <UniqueIdentifier>{0FB18DF1-7B66-06E7-045B-00BE700FFDEA}</UniqueIdentifier>
     </Filter>
+    <Filter Include="third_party\cute_headers">
+      <UniqueIdentifier>{AA4CDD51-9671-2CD2-BFBC-1162AB402BF0}</UniqueIdentifier>
+    </Filter>
     <Filter Include="third_party\lua">
       <UniqueIdentifier>{40412974-ACCC-9638-B5DD-192D21E8F238}</UniqueIdentifier>
     </Filter>
@@ -330,6 +333,9 @@
     <ClInclude Include="src\Chroma\Scene\EntityRef.h">
       <Filter>src\Chroma\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="src\Chroma\Scene\Inspectable.h">
+      <Filter>src\Chroma\Scene</Filter>
+    </ClInclude>
     <ClInclude Include="src\Chroma\Scene\Scene.h">
       <Filter>src\Chroma\Scene</Filter>
     </ClInclude>
@@ -365,6 +371,9 @@
     </ClInclude>
     <ClInclude Include="src\chromapch.h">
       <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\cute_headers\cute_aseprite.h">
+      <Filter>third_party\cute_headers</Filter>
     </ClInclude>
     <ClInclude Include="third_party\lua\lapi.h">
       <Filter>third_party\lua</Filter>
@@ -564,7 +573,16 @@
     <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\yaml.h">
       <Filter>third_party\yaml-cpp\include\yaml-cpp</Filter>
     </ClInclude>
-    <ClInclude Include="src\Chroma\Scene\Inspectable.h" />
+    <ClInclude Include="src\Chroma\Images\Aseprite.h" />
+    <ClInclude Include="src\Chroma\Images\Color.h" />
+    <ClInclude Include="src\Chroma\Images\Image.h" />
+    <ClInclude Include="src\Chroma\Math\Rect.h" />
+    <ClInclude Include="src\Chroma\Math\RectI.h" />
+    <ClInclude Include="src\Chroma\Images\BlendFunctions.h" />
+    <ClInclude Include="src\Chroma\Animation.h" />
+    <ClInclude Include="src\Chroma\Assets\AssetManager.h" />
+    <ClInclude Include="src\Chroma\Assets\Asset.h" />
+    <ClInclude Include="src\Chroma\Assets\Sprite.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Chroma\Audio\Audio.cpp">
@@ -717,5 +735,9 @@
     <ClCompile Include="third_party\stb_image\stb_image.cpp">
       <Filter>third_party\stb_image</Filter>
     </ClCompile>
+    <ClCompile Include="src\Chroma\Images\Aseprite.cpp" />
+    <ClCompile Include="src\Chroma\Images\Color.cpp" />
+    <ClCompile Include="src\Chroma\Images\Image.cpp" />
+    <ClCompile Include="src\Chroma\Assets\AssetManager.cpp" />
   </ItemGroup>
 </Project>

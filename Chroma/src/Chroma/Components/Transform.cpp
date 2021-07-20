@@ -8,8 +8,8 @@ namespace Chroma
 	Math::mat4 Transform::GetTransform() const
 	{
 		glm::mat4 rotation = glm::rotate(glm::mat4(1.0f), Position.y, { 1, 0, 0 })
-			* glm::rotate(glm::mat4(1.0f), Rotation.y, { 0, 1, 0 })
-			* glm::rotate(glm::mat4(1.0f), Rotation.z, { 0, 0, 1 });
+			* glm::rotate(glm::mat4(1.0f), glm::radians(Rotation.y), { 0, 1, 0 })
+			* glm::rotate(glm::mat4(1.0f), glm::radians(Rotation.z), { 0, 0, 1 });
 
 		return Math::translate(glm::mat4(1.0f), Position)
 			* rotation * glm::scale(glm::mat4(1.0f), Scale);

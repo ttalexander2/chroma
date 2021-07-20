@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <glm/glm.hpp>
+#include <filesystem>
 
 #ifdef CHROMA_PLATFORM_WINDOWS
 #if CHROMA_DYNAMIC_LINK
@@ -26,6 +27,7 @@
 	#else
 		#error "Platform doesn't support debugbreak yet!"
 	#endif
+	#define CHROMA_ENABLE_ASSERTS
 #else
 	#define CHROMA_DEBUGBREAK()
 #endif
@@ -34,15 +36,9 @@
 #define CHROMA_STRINGIFY_MACRO(x) #x
 
 #ifdef CHROMA_ENABLE_ASSERTS
-	#define CHROMA_INTERNAL_ASSERT_IMPL(type, check, msg, ...) { if(!(check)) { CHROMA##type##ERROR(msg, __VA_ARGS__); CHROMA_DEBUGBREAK(); } }
-	#define CHROMA_INTERNAL_ASSERT_WITH_MSG(type, check, ...) CHROMA_INTERNAL_ASSERT_IMPL(type, check, "Assertion failed: {0}", __VA_ARGS__)
-	#define CHROMA_INTERNAL_ASSERT_NO_MSG(type, check) CHROMA_INTERNAL_ASSERT_IMPL(type, check, "Assertion '{0}' failed at {1}:{2}", CHROMA_STRINGIFY_MACRO(check), std::filesystem::path(__FILE__).filename().string(), __LINE__)
-
-	#define CHROMA_INTERNAL_ASSERT_GET_MACRO_NAME(arg1, arg2, macro, ...) macro
-	#define CHROMA_INTERNAL_ASSERT_GET_MACRO(...) CHROMA_EXPAND_MACRO( CHROMA_INTERNAL_ASSERT_GET_MACRO_NAME(__VA_ARGS__, CHROMA_INTERNAL_ASSERT_WITH_MSG, CHROMA_INTERNAL_ASSERT_NO_MSG) )
-
-	#define CHROMA_ASSERT(...) CHROMA_EXPAND_MACRO( CHROMA_INTERNAL_ASSERT_GET_MACRO(__VA_ARGS__)(_, __VA_ARGS__) )
-	#define CHROMA_CORE_ASSERT(...) CHROMA_EXPAND_MACRO( CHROMA_INTERNAL_ASSERT_GET_MACRO(__VA_ARGS__)(_CORE_, __VA_ARGS__) )
+	// Currently accepts at least the condition and one additional parameter (the message) being optional
+	#define CHROMA_ASSERT(check, ...) if(!(check)) { CHROMA_ERROR(__VA_ARGS__); CHROMA_DEBUGBREAK(); }
+	#define CHROMA_CORE_ASSERT(check, ...) if(!(check)) { CHROMA_CORE_ERROR(__VA_ARGS__); CHROMA_DEBUGBREAK(); }
 #else
 	#define CHROMA_ASSERT(...)
 	#define CHROMA_CORE_ASSERT(...)
@@ -73,3 +69,5 @@ namespace Chroma
 	}
 
 }
+
+#include "Log.h"

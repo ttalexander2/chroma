@@ -55,9 +55,10 @@ namespace Chroma
 		template <typename T>
 		void RegisterComponent()
 		{
-			CHROMA_ASSERT(std::is_convertible<T*, Component*>::value, "Must inherrit Component to register as component");
+			bool check = std::is_convertible<T*, Component*>::value;
+			CHROMA_ASSERT(check, "Must inherrit Component to register as component");
 
-			if (!std::is_convertible<T*, Component*>::value)
+			if (!check)
 			{
 				return;
 			}
@@ -67,7 +68,7 @@ namespace Chroma
 
 			m_ComponentIDs[typeid(T).hash_code()] = id;
 
-			auto func = [](Scene& scene, EntityRef entity)
+			auto func = [](Scene& scene, EntityID entity)
 			{
 				ComponentRef<T> comp = scene.AddComponent<T>(entity);
 				return ComponentRef<Component>(comp.m_Ptr, comp.GetEntityID(), comp.GetScene());
@@ -95,7 +96,7 @@ namespace Chroma
 		template<typename T>
 		ComponentRef<T> AddComponent(EntityID id)
 		{
-			CHROMA_ASSERT(m_ComponentIDs.find(typeid(T).hash_code()) != m_ComponentIDs.end(), "Component not registered: " + typeid(T).name);
+			CHROMA_ASSERT(m_ComponentIDs.find(typeid(T).hash_code()) != m_ComponentIDs.end(), "Component not registered: {}", typeid(T).name());
 
 			//this is a little sus
 			int componentID = GetComponentTypeID<T>();
@@ -359,7 +360,7 @@ namespace Chroma
 			return s_ComponentId;
 		}
 
-		std::unordered_map<std::string, std::function<ComponentRef<Component>(Scene&, EntityRef)>> GetComponentFactory()
+		std::unordered_map<std::string, std::function<ComponentRef<Component>(Scene&, EntityID)>> GetComponentFactory()
 		{
 			return m_ComponentFactory;
 		}
@@ -408,7 +409,7 @@ namespace Chroma
 		std::unordered_set<EntityID> m_Entities;
 
 		std::unordered_map<size_t, unsigned int> m_ComponentIDs;
-		std::unordered_map<std::string, std::function<ComponentRef<Component>(Scene&, EntityRef)>> m_ComponentFactory;
+		std::unordered_map<std::string, std::function<ComponentRef<Component>(Scene&, EntityID)>> m_ComponentFactory;
 		std::unordered_map<unsigned int, std::string> m_ComponentNames;
 		std::unordered_map<std::string, unsigned int> m_ComponentNamesToID;
 		std::unordered_map<unsigned int, bool> m_ComponentsAllowMultiple;

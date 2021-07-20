@@ -11,36 +11,26 @@
 namespace Polychrome
 {
 	bool Inspector::Open = true;
-	Chroma::Inspectable* Inspector::Inspecting = nullptr;
-	Chroma::Inspectable* Inspector::Previous = nullptr;
 
 	void Inspector::Draw()
 	{
 		ImGui::Begin("Inspector", &Inspector::Open);
 
-		if (Inspecting != nullptr)
+		if (Hierarchy::SelectedEntity != Chroma::ENTITY_NULL)
 		{
-			std::string name = Inspecting->ClassName();
-			if (name == "EntityRef")
-			{
-				DrawEntity();
-			}
+			DrawEntity();
 		}
 
 		ImGui::End();
 	}
 
-	void Inspector::SetInspectable(Chroma::Inspectable& inspect)
-	{
-		Previous = Inspecting;
-		Inspecting = &inspect;
-	}
-
 	void Inspector::DrawEntity()
 	{
 		int unique = 69;
-		Chroma::EntityRef selected = *dynamic_cast<Chroma::EntityRef*>(Inspecting);
-		if (Hierarchy::SelectedEntity.GetID() == Chroma::ENTITY_NULL)
+		Chroma::Scene* scene = Chroma::Application::Get().m_ActiveScene;
+
+
+		if (Hierarchy::SelectedEntity == Chroma::ENTITY_NULL)
 		{
 			ImGui::End();
 			return;
@@ -51,7 +41,7 @@ namespace Polychrome
 		ImGui::BeginTable("##Inspector_table", 2, ImGuiTableFlags_None | ImGuiTableFlags_SizingStretchProp | ImGuiTableFlags_Resizable | ImGuiTableFlags_NoBordersInBodyUntilResize | ImGuiTableFlags_NoClip);
 		ImGui::TableNextColumn();
 
-		for (Chroma::ComponentRef<Chroma::Component> c : selected.GetAllComponents())
+		for (Chroma::ComponentRef<Chroma::Component> c : scene->GetAllComponents(Hierarchy::SelectedEntity))
 		{
 			if (c->IsTag())
 				continue;
@@ -126,28 +116,27 @@ namespace Polychrome
 
 
 
-		if (ImGui::Button("Add Component"))
+		if (Hierarchy::SelectedEntity != Chroma::ENTITY_NULL && ImGui::Button("Add Component"))
 		{
 			ImGui::OpenPopup("##ENTITY_ADD_COMPONENT");
 		}
 
 		if (ImGui::BeginPopup("##ENTITY_ADD_COMPONENT"))
 		{
-			auto scene = Chroma::Application::Get().m_ActiveScene;
 			auto names = scene->GetComponentNames();
 			auto ids = scene->GetComponentNamestoIDMap();
 
 			for (auto& [name, func] : scene->GetComponentFactory())
 			{
 				bool enabled = true;
-				if (selected.HasComponent(ids[name]) && !scene->ComponentAllowsMultiple(ids[name]))
+				if (scene->HasComponent(Hierarchy::SelectedEntity, ids[name]) && !scene->ComponentAllowsMultiple(ids[name]))
 				{
 					enabled = false;
 				}
 
 				if (ImGui::MenuItem((name + "##ENTITY_ADD_COMPONENT").c_str(), "", false, enabled))
 				{
-					func(*scene, selected);
+					func(*scene, Hierarchy::SelectedEntity);
 				}
 			}
 			ImGui::EndPopup();

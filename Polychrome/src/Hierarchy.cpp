@@ -14,7 +14,7 @@
 namespace Polychrome
 {
 	bool Hierarchy::Open = true;
-	Chroma::EntityRef Hierarchy::SelectedEntity = Chroma::EntityRef(Chroma::ENTITY_NULL);
+	Chroma::EntityID Hierarchy::SelectedEntity = Chroma::ENTITY_NULL;
 	/*
 	void DrawTreeLevel(Chroma::Tree<Chroma::EntityID> tree, Chroma::Scene* scene, std::vector<Chroma::EntityID> &toRemove, Chroma::EntityID &renaming)
 	{
@@ -126,11 +126,13 @@ namespace Polychrome
 	*/
 	void Hierarchy::Draw()
 	{
+
 		ImGui::Begin("Scene", &Hierarchy::Open);
 
 		Chroma::Scene* scene = Chroma::Application::Get().m_ActiveScene;
 
 		auto view = scene->GetEntities();
+			
 
 		static Chroma::EntityID renaming = Chroma::ENTITY_NULL;
 
@@ -145,12 +147,14 @@ namespace Polychrome
 
 		
 
+		
+
 		for (Chroma::EntityID e : view)
 		{
 			Chroma::ComponentRef<Chroma::Tag> t = scene->GetComponent<Chroma::Tag>(e);
 
 			static bool valid = true;
-			static char* buffer = new char[512];
+			static std::string buffer;
 
 			if (renaming == e)
 			{
@@ -167,13 +171,11 @@ namespace Polychrome
 				if (!valid)
 					ImGui::SetKeyboardFocusHere();
 
-				bool input = ImGui::InputText(("##HIERARCHY_RENAMING_ITEM_" + std::to_string(e)).c_str(), buffer, 512, ImGuiInputTextFlags_EnterReturnsTrue);
+				bool input = ImGui::InputText(("##HIERARCHY_RENAMING_ITEM_" + std::to_string(e)).c_str(), &buffer, ImGuiInputTextFlags_EnterReturnsTrue);
 
 				//trim whitespace
-				std::string trim(buffer);
-				trim = std::TrimLeftWhitespace(trim);
-				trim = std::TrimRightWhitespace(trim);
-				strcpy(buffer, trim.c_str());
+				buffer = std::TrimLeftWhitespace(buffer);
+				buffer = std::TrimRightWhitespace(buffer);
 
 				//validate entity name
 				bool loopValid = true;
@@ -194,7 +196,6 @@ namespace Polychrome
 				{
 					t->EntityName = buffer;
 					renaming = Chroma::ENTITY_NULL;
-					delete[] buffer;
 				}
 
 				valid = loopValid;
@@ -202,11 +203,21 @@ namespace Polychrome
 			}
 			else
 			{
-				if (ImGui::Selectable(t->EntityName.c_str(), Hierarchy::SelectedEntity.GetID() == e))
+				ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_Leaf;
+				if (SelectedEntity == e)
+					flags |= ImGuiTreeNodeFlags_Selected;
+
+				bool opened = ImGui::TreeNodeEx(t->EntityName.c_str(), flags);
+
+				if (ImGui::IsItemClicked())
 				{
-					Hierarchy::SelectedEntity = Chroma::EntityRef(e, *scene);
-					Inspector::SetInspectable(Hierarchy::SelectedEntity);
+					Hierarchy::SelectedEntity = e;
+					Chroma::EntityRef r = Chroma::EntityRef(e, *scene);
 				}
+
+				if (opened)
+					ImGui::TreePop();
+
 				if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
 				{
 					ImGui::OpenPopup(("##HIERARCHY_CONTEXT_POPUP_" + std::to_string(e)).c_str());
@@ -218,10 +229,7 @@ namespace Polychrome
 					{
 						renaming = e;
 						valid = false;
-						if (buffer != nullptr)
-							delete[] buffer;
-						buffer = new char[512];
-						strcpy(buffer, t->EntityName.c_str());
+						buffer = t->EntityName;
 						ImGui::SetKeyboardFocusHere();
 					}
 
@@ -231,6 +239,7 @@ namespace Polychrome
 					if (ImGui::MenuItem("Delete##HIERARCHY_CONTEXT_MENU"))
 					{
 						scene->DestroyEntity(e);
+						Hierarchy::SelectedEntity = Chroma::ENTITY_NULL;
 					}
 
 					ImGui::EndPopup();

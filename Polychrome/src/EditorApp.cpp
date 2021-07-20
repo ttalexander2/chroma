@@ -20,9 +20,15 @@
 #include <filesystem>
 #include <Chroma/ImGui/ImGuiDebugMenu.h>
 #include "Fonts/Roboto.cpp"
+#include "../../Chroma/third_party/cute_headers/cute_aseprite.h"
+#include <Chroma/Images/Aseprite.h>
+#include <Chroma/Components/SpriteRenderer.h>
+
 
 namespace Polychrome
 {
+
+	std::vector<Chroma::Ref<Chroma::Texture2D>> testAseprite;
 
 	EditorApp::EditorApp()
 		: Application("Polychrome Editor", 1920U, 1080U), m_CameraController(1920.0f / 1080.0f)
@@ -45,6 +51,9 @@ namespace Polychrome
 
 
 		auto entity4 = scene->NewEntity();
+
+		entity.AddComponent<Chroma::SpriteRenderer>();
+		auto sprite = entity.GetComponent<Chroma::SpriteRenderer>();
 
 
 		Chroma::EntityRef e2 = scene->NewEntity();
@@ -99,6 +108,29 @@ namespace Polychrome
 
 		ImGui::GetStyle().FrameRounding = 1;
 
+		//ase_t* ase = cute_aseprite_load_from_file("assets/textures/test.ase", NULL);
+		//auto texture = Chroma::Texture2D::Create(ase->w, ase->h);
+		//texture->SetData(ase->frames->pixels, sizeof(ase->frames->pixels)/sizeof(ase->frames->pixels[0]));
+
+		Chroma::Aseprite test("assets/textures/test.ase");
+		CHROMA_INFO("IMAGE {0}; [{1}, {2}]", "assets/textures/test.ase", test.frames[0].image.Width, test.frames[0].image.Height);
+		test.frames[0].image.SavePNG("test2.png");
+
+		Chroma::Color* data = new Chroma::Color[test.width * test.height];
+
+		testAseprite.reserve(test.frames.size());
+
+		for (int i = 0; i < test.frames.size(); i++)
+		{
+
+			testAseprite.push_back(Chroma::Texture2D::Create(test.width, test.height));
+
+			test.frames[i].image.FlipVertically();
+			test.frames[i].image.GetData(data);
+			testAseprite[i]->SetData(data, sizeof(Chroma::Color) * test.width * test.height);
+		}
+
+		delete[] data;
 
 	}
 
@@ -121,6 +153,7 @@ namespace Polychrome
 
 	}
 
+
 	void EditorApp::Draw(Chroma::Time time)
 	{
 		CHROMA_PROFILE_SCOPE("Render OnUpdate");
@@ -142,6 +175,18 @@ namespace Polychrome
 		m_ActiveScene->EarlyDraw(time);
 		m_ActiveScene->Draw(time);
 		m_ActiveScene->LateDraw(time);
+
+		static float timeSince = 0;
+		static int frame = 0;
+		timeSince += time;
+		if (timeSince > 0.3)
+		{
+			timeSince = 0;
+			frame++;
+		}
+
+		int i = frame % testAseprite.size();
+		Chroma::Renderer2D::DrawQuad({ 0,0 }, { 64,64 }, testAseprite[i]);
 
 #if 0
 		
@@ -271,7 +316,7 @@ namespace Polychrome
 				CurrentScenePath = filepath;
 				delete this->m_ActiveScene;
 				this->m_ActiveScene = out;
-				Hierarchy::SelectedEntity = Chroma::EntityRef(Chroma::ENTITY_NULL);
+				Hierarchy::SelectedEntity = Chroma::ENTITY_NULL;
 			}
 			else
 			{

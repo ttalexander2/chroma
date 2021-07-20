@@ -11,7 +11,7 @@ namespace Polychrome
 
 	public:
 		static bool Open;
-		static Chroma::EntityRef SelectedEntity;
+		static Chroma::EntityID SelectedEntity;
 	};
 }
 

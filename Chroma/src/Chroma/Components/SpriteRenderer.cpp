@@ -4,6 +4,7 @@
 #include "Chroma/ImGui/Widgets/EditableList.h"
 #include "imgui_internal.h"
 #include "Chroma/Core/Application.h"
+#include "Chroma/Assets/AssetManager.h"
 
 namespace Chroma
 {
@@ -84,8 +85,20 @@ namespace Chroma
 	{
 		out << YAML::Key << "Color";
 		out << YAML::Value << Color;
+
 		out << YAML::Key << "Offset";
 		out << YAML::Value << Offset;
+
+		out << YAML::Key << "Layer";
+		out << YAML::Value << Layer;
+
+		out << YAML::Key << "PlayOnStart";
+		out << YAML::Value << PlayOnStart;
+
+		out << YAML::Key << "Sprite";
+		out << YAML::Value << Sprite;
+
+
 	}
 	void SpriteRenderer::Deserialize(YAML::Node& node)
 	{
@@ -99,7 +112,26 @@ namespace Chroma
 		{
 			Offset = val.as<Math::vec3>();
 		}
+		val = node["Layer"];
+		if (val)
+		{
+			Layer = val.as<std::string>();
+		}
+		val = node["PlayOnStart"];
+		if (val)
+		{
+			PlayOnStart = val.as<bool>();
+		}
+		val = node["Sprite"];
+		if (val)
+		{
+			Sprite = val.as<std::string>();
+		}
 
+	}
+	Ref<Chroma::Sprite> SpriteRenderer::GetSprite()
+	{
+		return _sprite;
 	}
 }
 

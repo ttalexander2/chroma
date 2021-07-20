@@ -3,6 +3,7 @@
 #include <random>
 #include <iomanip>
 #include <iostream>
+#include <regex>
 
 namespace Chroma
 {

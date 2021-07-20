@@ -42,7 +42,7 @@ namespace Chroma
 		if (!s_GLFWInitialized)
 		{
 			int success = glfwInit();
-			CHROMA_CORE_ASSERT(sucess, "Count not initialize GLFW.");
+			CHROMA_CORE_ASSERT(success, "Count not initialize GLFW.");
 			glfwSetErrorCallback(GLFWErrorCallback);
 			s_GLFWInitialized = true;
 		}

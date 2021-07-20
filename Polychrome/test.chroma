@@ -3,22 +3,77 @@ Entities:
   - Entity: 0
     Components:
       Tag:
-        EntityName: Blue Rect
+        EntityName: Entity_0
       Transform:
-        Position: [-9, 0, 0]
+        Position: [0, 0, 0]
         Rotation: [0, 0, 0]
-        Scale: [31, 12, 1]
-      Sprite Renderer:
-        Color: [0.0475500338, 0.682603538, 0.730232596, 1]
-        Offset: [0, 0]
+        Scale: [1, 1, 1]
+      Sprite:
+        Color: [1, 1, 1, 1]
+        Offset: [0, 0, 0]
+        Layer: Default
+        PlayOnStart: true
+        Loop: true
+        Direction: 0
+  - Entity: 1
+    Components:
+      Tag:
+        EntityName: Entity_1
+      Transform:
+        Position: [0, 0, 0]
+        Rotation: [0, 0, 0]
+        Scale: [1, 1, 1]
+  - Entity: 2
+    Components:
+      Tag:
+        EntityName: Entity_2
+      Transform:
+        Position: [0, 0, 0]
+        Rotation: [0, 0, 0]
+        Scale: [1, 1, 1]
+  - Entity: 3
+    Components:
+      Tag:
+        EntityName: Entity_3
+      Transform:
+        Position: [0, 0, 0]
+        Rotation: [0, 0, 0]
+        Scale: [1, 1, 1]
+  - Entity: 4
+    Components:
+      Tag:
+        EntityName: Entity_4
+      Transform:
+        Position: [0, 0, 0]
+        Rotation: [0, 0, 0]
+        Scale: [1, 1, 1]
+  - Entity: 5
+    Components:
+      Tag:
+        EntityName: Entity_5
+      Transform:
+        Position: [0, 0, 0]
+        Rotation: [0, 0, 0]
+        Scale: [1, 1, 1]
+  - Entity: 6
+    Components:
+      Tag:
+        EntityName: Entity_6
+      Transform:
+        Position: [0, 0, 0]
+        Rotation: [0, 0, 0]
+        Scale: [1, 1, 1]
   - Entity: 7
     Components:
       Tag:
-        EntityName: Red Rect
+        EntityName: Entity_7
       Transform:
-        Position: [10, 0, 0]
+        Position: [0, 0, 0]
         Rotation: [0, 0, 0]
-        Scale: [15, 27, 1]
-      Sprite Renderer:
-        Color: [0.748837233, 0.303017855, 0.303017855, 1]
+        Scale: [1, 1, 1]
+      Box Collider 2D:
+        Bounds: [1, 1]
+        Offset: [0, 0]
+      Circle Collider 2D:
+        Radius: 1
         Offset: [0, 0]

@@ -34,7 +34,7 @@ namespace Chroma
 			m_DataFormat = GL_RGB;
 		}
 
-		CHROMA_ASSERT(internalFormat & dataFormat, "Texture format not supported!");
+		CHROMA_ASSERT(m_InternalFormat & m_DataFormat, "Texture format not supported!");
 
 		glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID);
 		glTextureStorage2D(m_RendererID, 1, m_InternalFormat, m_Width, m_Height);
@@ -75,7 +75,7 @@ namespace Chroma
 	void OpenGLTexture2D::SetData(void* data, uint32_t size)
 	{
 		uint32_t bytesPerPixel = m_DataFormat == GL_RGBA ? 4 : 3;
-		CHROMA_CORE_ASSERT(size == m_Width * m_height * bytesPerPixel, "Data does not match texture size");
+		CHROMA_CORE_ASSERT(size == m_Width * m_Height * bytesPerPixel, "Data does not match texture size");
 		glTextureSubImage2D(m_RendererID, 0, 0, 0, m_Width, m_Height, m_DataFormat, GL_UNSIGNED_BYTE, data);
 	}
 
