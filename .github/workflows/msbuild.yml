@@ -12,16 +12,8 @@ env:
   BUILD_CONFIGURATION: Release
 
 jobs:
-  premake:
-    runs-on: windows-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Run Premake
-      run: .\third_party\premake-core\bin\release\premake5.exe vs2019
-      shell: powershell
   build:
     runs-on: windows-latest
-    needs: premake
     steps:
     - uses: actions/checkout@v2
 
