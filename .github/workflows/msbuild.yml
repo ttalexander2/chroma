@@ -17,8 +17,8 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Run Premake
-      shell: pwsh
-      run: ${{env.GITHUB_WORKSPACE}}\WindowsGenerateProjects.bat
+      run: .\third_party\premake-core\bin\release\premake5.exe vs2019
+      shell: powershell
   build:
     runs-on: windows-latest
     needs: premake
