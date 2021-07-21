@@ -229,6 +229,7 @@ namespace Polychrome
 		if (!first)
 		{
 			ImGui::ResetStyle(ImGui::ImGuiStylePreset::Cherry, ImGui::GetStyle());
+
 			first = true;
 		}
 			
@@ -249,6 +250,8 @@ namespace Polychrome
 		ImGuiIO& io = ImGui::GetIO();
 		ImGuiStyle& style = ImGui::GetStyle();
 		float minWinSizeX = style.WindowMinSize.x;
+		style.FramePadding.x = 4;
+		style.FramePadding.y = 3;
 
 		style.WindowMinSize.x = 100.0f;
 
@@ -261,7 +264,7 @@ namespace Polychrome
 		style.WindowMinSize.x = minWinSizeX;
 
 		int prevFramePaddingY = ImGui::GetStyle().FramePadding.y;
-		ImGui::GetStyle().FramePadding.y = 6.0f;
+		ImGui::GetStyle().FramePadding.y = 4.0f;
 
 		ImGui::BeginMainMenuBar();
 

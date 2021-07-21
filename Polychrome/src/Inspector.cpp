@@ -36,7 +36,7 @@ namespace Polychrome
 			return;
 		}
 
-		ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, { 4, 3 });
+		ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, { 2, 2 });
 
 		ImGui::BeginTable("##Inspector_table", 2, ImGuiTableFlags_None | ImGuiTableFlags_SizingStretchProp | ImGuiTableFlags_Resizable | ImGuiTableFlags_NoBordersInBodyUntilResize | ImGuiTableFlags_NoClip);
 		ImGui::TableNextColumn();
@@ -45,7 +45,6 @@ namespace Polychrome
 		{
 			if (c->IsTag())
 				continue;
-
 
 
 			ImGui::TableSetColumnIndex(0);
