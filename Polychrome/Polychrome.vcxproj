@@ -156,6 +156,7 @@ IF EXIST assets\ (xcopy /Q /E /Y /I assets ..\bin\Dist-windows-x86_64\Polychrome
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\EditorApp.h" />
+    <ClInclude Include="src\EditorConfig.h" />
     <ClInclude Include="src\FileDrop.h" />
     <ClInclude Include="src\Fonts\Font.h" />
     <ClInclude Include="src\Fonts\IconsForkAwesome.h" />

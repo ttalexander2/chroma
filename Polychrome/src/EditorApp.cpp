@@ -40,7 +40,7 @@ namespace Polychrome
 		
 		Chroma::Scene* scene = new Chroma::Scene();
 
-
+		
 		
 		Chroma::EntityRef entity = scene->NewEntity();
 		scene->NewEntity();
@@ -107,6 +107,8 @@ namespace Polychrome
 
 
 		ImGui::GetStyle().FrameRounding = 1;
+
+		Config.Style = (int)ImGui::ImGuiStylePreset::Cherry;
 
 		//ase_t* ase = cute_aseprite_load_from_file("assets/textures/test.ase", NULL);
 		//auto texture = Chroma::Texture2D::Create(ase->w, ase->h);
@@ -220,8 +222,16 @@ namespace Polychrome
 		m_Framebuffer->Unbind();
 	}
 
+	static bool first = false;
+
 	void EditorApp::ImGuiDraw(Chroma::Time time)
 	{
+		if (!first)
+		{
+			ImGui::ResetStyle(ImGui::ImGuiStylePreset::Cherry, ImGui::GetStyle());
+			first = true;
+		}
+			
 
 		ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
 		window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
@@ -240,7 +250,7 @@ namespace Polychrome
 		ImGuiStyle& style = ImGui::GetStyle();
 		float minWinSizeX = style.WindowMinSize.x;
 
-		style.WindowMinSize.x = 370.0f;
+		style.WindowMinSize.x = 100.0f;
 
 		if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
 		{
@@ -288,7 +298,7 @@ namespace Polychrome
 		Chroma::ImGuiDebugMenu::Draw();
 		if (ImGui::Begin("Settings"))
 		{
-			static int selected_style;
+			static int selected_style = Config.Style;
 			ImGui::SelectStyleCombo("Style", &selected_style, ImGui::ImGuiStyle_Count, nullptr);
 		}
 		ImGui::End();

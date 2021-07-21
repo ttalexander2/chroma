@@ -18,6 +18,7 @@
     <ClInclude Include="src\Inspector.h" />
     <ClInclude Include="src\Viewport.h" />
     <ClInclude Include="src\Style.h" />
+    <ClInclude Include="src\EditorConfig.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\EditorApp.cpp" />

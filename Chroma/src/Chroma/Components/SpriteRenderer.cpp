@@ -29,10 +29,10 @@ namespace Chroma
 		Chroma::Vec3FloatWithLabels("##scale", Scale, false);
 
 		DrawComponentValue("Play On Start");
-		ImGui::AlternateCheckBox(&PlayOnStart);
+		ImGui::Checkbox("##play_on_start", &PlayOnStart);
 
 		DrawComponentValue("Playing");
-		ImGui::AlternateCheckBox(&Playing);
+		ImGui::Checkbox("##playing", &Playing);
 
 		//DrawComponentValue("Layer");
 

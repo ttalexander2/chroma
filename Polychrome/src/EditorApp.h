@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Chroma.h>
+#include "EditorConfig.h"
 
 
 namespace Polychrome
@@ -21,6 +22,8 @@ namespace Polychrome
 		void OpenScene();
 		void SaveSceneAs();
 		void SaveScene();
+
+		EditorConfig Config;
 
 	private:
 		Chroma::OrthographicCameraController m_CameraController;
