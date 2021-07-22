@@ -50,6 +50,7 @@ namespace Chroma
 		ImGuiLayer* GetImGuiLayer() { return m_ImGuiLayer; }
 
 		Time GetTime() { return m_Time; }
+		
 
 	public:
 

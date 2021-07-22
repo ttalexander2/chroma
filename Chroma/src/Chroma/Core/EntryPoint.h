@@ -4,6 +4,8 @@
 
 #ifdef CHROMA_PLATFORM_WINDOWS
 
+
+
 extern Chroma::Application* Chroma::CreateApplication();
 
 int main(int argc, char** argv)

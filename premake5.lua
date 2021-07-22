@@ -22,6 +22,8 @@ IncludeDir["FMOD"] = "Chroma/third_party/fmod"
 IncludeDir["lua"] = "Chroma/third_party/lua"
 IncludeDir["yaml"] = "Chroma/third_party/yaml-cpp/include"
 IncludeDir["cute_headers"] = "Chroma/third_party/cute_headers"
+IncludeDir["concurrentqueue"] = "Chroma/third_party/concurrentqueue"
+IncludeDir["readerwriterqueue"] = "Chroma/third_party/readerwriterqueue"
 
 group "Dependencies"
     include "Chroma/third_party/GLFW"
@@ -55,7 +57,9 @@ project "Chroma"
         "%{prj.name}/third_party/entt/**.hpp",
         "%{prj.name}/third_party/lua/**.h",
         "%{prj.name}/third_party/yaml-cpp/include/yaml-cpp/**.h",
-        "%{prj.name}/third_party/cute_headers/**.h"
+        "%{prj.name}/third_party/cute_headers/**.h",
+        "%{prj.name}/third_party/concurrentqueue/**.h",
+        "%{prj.name}/third_party/readerwriterqueue/**.h"
     }
 
     defines
@@ -80,7 +84,9 @@ project "Chroma"
         "%{IncludeDir.FMOD}",
         "%{IncludeDir.lua}",
         "%{IncludeDir.yaml}",
-        "%{IncludeDir.cute_headers}"
+        "%{IncludeDir.cute_headers}",
+        "%{IncludeDir.concurrentqueue}",
+        "%{IncludeDir.readerwriterqueue}"
 
     }
 
@@ -238,7 +244,9 @@ project "Polychrome"
         "%{IncludeDir.ImGui}/misc/cpp",
         "%{IncludeDir.entt}",
         "%{IncludeDir.FMOD}",
-        "%{IncludeDir.yaml}"
+        "%{IncludeDir.yaml}",
+        "%{IncludeDir.concurrentqueue}",
+        "%{IncludeDir.readerwriterqueue}"
 
     }
 

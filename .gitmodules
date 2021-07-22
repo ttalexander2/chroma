@@ -25,3 +25,9 @@
 [submodule "Chroma/third_party/yaml-cpp"]
 	path = Chroma/third_party/yaml-cpp
 	url = https://github.com/ttalexander2/yaml-cpp.git
+[submodule "Chroma/third_party/readerwriterqueue"]
+	path = Chroma/third_party/readerwriterqueue
+	url = https://github.com/ttalexander2/readerwriterqueue.git
+[submodule "Chroma/third_party/concurrentqueue"]
+	path = Chroma/third_party/concurrentqueue
+	url = https://github.com/ttalexander2/concurrentqueue.git

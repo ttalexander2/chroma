@@ -171,7 +171,7 @@ namespace Chroma
 
 		bool HasEntity(EntityID id) override
 		{
-			return m_SparseComponents[id].size() > 0 && m_SparseComponents.count(id) >= 1;
+			return m_SparseComponents.find(id) != m_SparseComponents.end() && m_SparseComponents[id].size() > 0;
 		}
 
 		std::vector<EntityID>* GetEntities() override

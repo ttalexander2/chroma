@@ -10,7 +10,7 @@ namespace Polychrome
 	{
 	public:
 		EditorApp();
-		~EditorApp() = default;
+		~EditorApp();
 
 		void Init() override;
 		void OnEvent(Chroma::Event& e) override;

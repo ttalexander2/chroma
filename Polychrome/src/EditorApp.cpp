@@ -24,12 +24,18 @@
 #include <Chroma/Components/SpriteRenderer.h>
 #include "Style.h"
 #include <Chroma/Components/Transform.h>
+#include <Chroma/Utilities/FileWatcher.h>
+#include "readerwriterqueue.h"
 
 
 namespace Polychrome
 {
 
 	std::vector<Chroma::Ref<Chroma::Texture2D>> testAseprite;
+	moodycamel::ReaderWriterQueue<std::function<void()>> file_queue;
+
+	std::thread file_watcher_thread;
+	std::atomic_bool file_watcher_thread_running;
 
 	EditorApp::EditorApp()
 		: Application("Polychrome Editor", 1920U, 1080U), m_CameraController(1920.0f / 1080.0f)
@@ -49,7 +55,6 @@ namespace Polychrome
 		scene->NewEntity();
 		scene->NewEntity();
 		scene->NewEntity();
-
 		
 
 
@@ -76,6 +81,42 @@ namespace Polychrome
 		CHROMA_INFO("");
 
 		this->m_ActiveScene = scene;
+
+		
+		file_watcher_thread_running.store(true);
+
+		file_watcher_thread = std::thread([] {
+			FileWatcher fw{ ".\\assets", std::chrono::milliseconds(5000) };
+			fw.start(file_watcher_thread_running, [](std::string path_to_watch, FileStatus status) -> void {
+				// Process only regular files, all other file types are ignored
+				if (!std::filesystem::is_regular_file(std::filesystem::path(path_to_watch)) && status != FileStatus::erased)
+				{
+					return;
+				}
+
+				switch (status)
+				{
+				case FileStatus::created:
+					file_queue.enqueue([path_to_watch]() {
+						CHROMA_CORE_TRACE("File Created: {}", path_to_watch);
+						});
+					break;
+				case FileStatus::modified:
+					file_queue.enqueue([path_to_watch]() {
+						CHROMA_CORE_TRACE("File Modified: {}", path_to_watch);
+					});
+					break;
+				case FileStatus::erased:
+					file_queue.enqueue([path_to_watch]() {
+						CHROMA_CORE_TRACE("File Erased: {}", path_to_watch);
+					});
+					break;
+				default:
+					std::cout << "Error! Unknown file status.\n";
+				}
+			});
+		});
+		
 
 	}
 
@@ -139,6 +180,7 @@ namespace Polychrome
 
 	}
 
+
 	void EditorApp::Update(Chroma::Time time)
 	{
 
@@ -153,7 +195,10 @@ namespace Polychrome
 			m_CameraController.OnUpdate(time);
 		}
 
-
+		std::function<void()> func;
+		bool success = file_queue.try_dequeue(func);
+		if (success)
+			func();
 
 	}
 
@@ -395,6 +440,14 @@ namespace Polychrome
 			std::ofstream fout2(CurrentScenePath);
 			fout2 << yaml;
 		}
+	}
+
+
+
+	EditorApp::~EditorApp()
+	{
+		file_watcher_thread_running.store(false);
+		file_watcher_thread.join();
 	}
 
 

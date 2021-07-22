@@ -1,0 +1,1 @@
+{"otherData": {},"traceEvents":[{"cat":"function","dur":1698,"name":"void __cdecl Chroma::Renderer2D::Init(void)","ph":"X","pid":0,"tid":66277198,"ts":470760187759}]}

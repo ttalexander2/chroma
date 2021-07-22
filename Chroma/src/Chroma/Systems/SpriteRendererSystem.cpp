@@ -18,12 +18,12 @@ namespace Chroma
 
 	void SpriteRendererSystem::Draw(Time delta)
 	{
-		for (EntityID e : *m_Scene->ViewOne<SpriteRenderer>())
+		for (EntityRef e : m_Scene->View<SpriteRenderer>())
 		{
-			ComponentRef<Transform> transform = m_Scene->GetComponent<Transform>(e);
-			for (ComponentRef<SpriteRenderer> spriteRenderer : m_Scene->GetComponents<SpriteRenderer>(e))
+			ComponentRef<Transform> transform = m_Scene->GetComponent<Transform>(e.GetID());
+			for (ComponentRef<SpriteRenderer> spriteRenderer : m_Scene->GetComponents<SpriteRenderer>(e.GetID()))
 			{
-				Chroma::Renderer2D::DrawQuad(transform->Position, transform->Scale, spriteRenderer->Color, glm::radians(transform->Rotation.x));
+				Chroma::Renderer2D::DrawQuad(transform->Position + spriteRenderer->Offset, transform->Scale * spriteRenderer->Scale, spriteRenderer->Color, glm::radians(transform->Rotation.x));
 			}
 			
 

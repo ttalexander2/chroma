@@ -12,6 +12,7 @@
 #include "Component.h"
 
 #include "Chroma/Core/Log.h"
+#include "Chroma/Profiler/Instrumentor.h"
 
 
 namespace Chroma
@@ -301,12 +302,15 @@ namespace Chroma
 			SceneView(Scene& scene)
 				: m_Scene(&scene)
 			{
+				CHROMA_PROFILE_FUNCTION();
 				m_Entities = std::set<EntityRef>();
+
+				//Get list of component IDs
 				unsigned int componentIds[] = { scene.GetComponentTypeID<ComponentTypes>()... };
 				size_t smallestSize = -1;
 				int smallest = 0;
 
-
+				//Find which component pool has the least number of entities
 				for (int id : componentIds)
 				{
 					if (id >= m_Scene->m_ComponentPools.size()
@@ -321,6 +325,7 @@ namespace Chroma
 					}
 				}
 
+				//
 				for (EntityID e_id : *m_Scene->m_ComponentPools[smallest]->GetEntities())
 				{
 					bool valid = true;

@@ -7,6 +7,9 @@
     <Filter Include="src\Chroma">
       <UniqueIdentifier>{56DE2109-4296-6356-AB9D-3CB29774FE46}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Chroma\Assets">
+      <UniqueIdentifier>{78E8AB90-E4FE-A926-2D76-354899CB7AAE}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Chroma\Audio">
       <UniqueIdentifier>{D7541DED-C34D-3C3F-EC7F-21C4D8D71B4B}</UniqueIdentifier>
     </Filter>
@@ -24,6 +27,9 @@
     </Filter>
     <Filter Include="src\Chroma\ImGui\Widgets">
       <UniqueIdentifier>{666B7F36-5290-CEB6-7BDB-B346675FCDD4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Chroma\Images">
+      <UniqueIdentifier>{3BC2DEA2-A7D8-DC38-F04F-685A5CA5ADC0}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Chroma\Math">
       <UniqueIdentifier>{EFA8168B-5B34-844F-6445-0744D04FE04F}</UniqueIdentifier>
@@ -55,11 +61,233 @@
     <Filter Include="third_party">
       <UniqueIdentifier>{0FB18DF1-7B66-06E7-045B-00BE700FFDEA}</UniqueIdentifier>
     </Filter>
-    <Filter Include="third_party\cute_headers">
-      <UniqueIdentifier>{AA4CDD51-9671-2CD2-BFBC-1162AB402BF0}</UniqueIdentifier>
+    <Filter Include="third_party\concurrentqueue">
+      <UniqueIdentifier>{A68493C7-1292-C1AD-9B78-BD9807858D64}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\concurrentqueue\benchmarks">
+      <UniqueIdentifier>{73076480-5F59-3B70-4878-788034695459}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\concurrentqueue\benchmarks\dlib">
+      <UniqueIdentifier>{3DD6CCC2-A93B-6049-3214-02229E7855B8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\concurrentqueue\benchmarks\dlib\array">
+      <UniqueIdentifier>{8B03F4A6-F7C9-50C3-4025-DF25AC2ABF27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\concurrentqueue\benchmarks\dlib\binary_search_tree">
+      <UniqueIdentifier>{9549B17A-811F-3878-6AC9-52CB563E6B19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\concurrentqueue\benchmarks\dlib\bound_function_pointer">
+      <UniqueIdentifier>{A9730004-955F-9873-FED5-57C6EAE038A4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\concurrentqueue\benchmarks\dlib\byte_orderer">
+      <UniqueIdentifier>{32293CFD-1EFE-83B0-47AD-C3AC33E191C7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\concurrentqueue\benchmarks\dlib\interfaces">
+      <UniqueIdentifier>{90DE12B5-7C88-48C4-6559-50DF51A2E8B2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\concurrentqueue\benchmarks\dlib\logger">
+      <UniqueIdentifier>{8CF9E09E-788D-D646-E151-30FBCD041139}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\concurrentqueue\benchmarks\dlib\map">
+      <UniqueIdentifier>{2A4FB36D-968A-1331-9F7F-90C00B3A9861}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\concurrentqueue\benchmarks\dlib\member_function_pointer">
+      <UniqueIdentifier>{89AC1164-F515-A7C6-7E59-5571EAC1570B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\concurrentqueue\benchmarks\dlib\memory_manager">
+      <UniqueIdentifier>{9FAE2770-8B6E-B814-F48B-A01FE06ACB26}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\concurrentqueue\benchmarks\dlib\memory_manager_global">
+      <UniqueIdentifier>{6FECDBE2-DB0A-F0AF-24D8-F5C190352BB9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\concurrentqueue\benchmarks\dlib\memory_manager_stateless">
+      <UniqueIdentifier>{D6E41C07-C27B-5FBC-6B30-D6BC57A62597}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\concurrentqueue\benchmarks\dlib\misc_api">
+      <UniqueIdentifier>{B1F61B15-9D35-C690-46B8-A2C232D67BFB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\concurrentqueue\benchmarks\dlib\numerical_integration">
+      <UniqueIdentifier>{6FF3F2D2-DB11-07A0-24DF-0CB2903C42A9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\concurrentqueue\benchmarks\dlib\pipe">
+      <UniqueIdentifier>{FAFB1E24-E6A4-8653-0F3B-A2D2FB42A194}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\concurrentqueue\benchmarks\dlib\queue">
+      <UniqueIdentifier>{F1FB16A8-5DC2-73C4-A61D-02271223E228}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\concurrentqueue\benchmarks\dlib\set">
+      <UniqueIdentifier>{3869B36D-A4A4-1331-AD99-90C019549861}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\concurrentqueue\benchmarks\dlib\sliding_buffer">
+      <UniqueIdentifier>{AFF8F689-9BB8-872E-04D6-6F39F0B49A40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\concurrentqueue\benchmarks\dlib\sockets">
+      <UniqueIdentifier>{88A49195-F4B5-393C-7D07-CC7BE917C375}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\concurrentqueue\benchmarks\dlib\stack">
+      <UniqueIdentifier>{428D3AA8-AE53-97C4-F7AE-252763B40529}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\concurrentqueue\benchmarks\dlib\stl_checked">
+      <UniqueIdentifier>{A5E227FA-11CA-12F0-1AB8-146C861EB6B2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\concurrentqueue\benchmarks\dlib\string">
+      <UniqueIdentifier>{43A295AF-2F36-8B57-98FA-E40B84ADC549}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\concurrentqueue\benchmarks\dlib\threads">
+      <UniqueIdentifier>{17D743D3-83E8-EB79-0C3A-7EB9784A75B3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\concurrentqueue\benchmarks\dlib\timeout">
+      <UniqueIdentifier>{F3C23ED5-5FD4-E67B-E825-79BB543670B5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\concurrentqueue\benchmarks\dlib\timer">
+      <UniqueIdentifier>{EDD046A8-5997-A3C4-A2F2-31270EF81129}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\concurrentqueue\benchmarks\dlib\tokenizer">
+      <UniqueIdentifier>{6749790F-D365-6B00-9C3D-D86D0819D5C1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\concurrentqueue\benchmarks\dlib\unicode">
+      <UniqueIdentifier>{D34D992D-3F5F-41D4-C8B0-D31334C1CA0D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\concurrentqueue\benchmarks\dlib\vectorstream">
+      <UniqueIdentifier>{ABE521A2-97BA-6955-C069-A951AC9D776C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\concurrentqueue\benchmarks\tbb">
+      <UniqueIdentifier>{3A494C99-26B1-1267-8F1C-277D7BA32953}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\concurrentqueue\benchmarks\tbb\compat">
+      <UniqueIdentifier>{4D906009-B956-BD25-02B2-4B886EB72B8A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\concurrentqueue\benchmarks\tbb\internal">
+      <UniqueIdentifier>{C6ECEC2F-32FE-94D6-BB4F-271627601E10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\concurrentqueue\benchmarks\tbb\machine">
+      <UniqueIdentifier>{3E8AD715-2A1E-CDBD-93E2-26727F9507B0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\concurrentqueue\benchmarks\tbb\tools_api">
+      <UniqueIdentifier>{D301A0AA-BF40-4A26-68C3-265854E1FF90}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\concurrentqueue\benchmarks\tbb\tools_api\internal">
+      <UniqueIdentifier>{7F614071-EB29-0EF5-B4BA-160720423E30}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\concurrentqueue\benchmarks\tbb\tools_api\legacy">
+      <UniqueIdentifier>{9771F397-032F-9CCE-8CF9-8736F8B50E23}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\concurrentqueue\benchmarks\tbb\tools_api\prototype">
+      <UniqueIdentifier>{5895A21B-446B-2919-2D15-446C198A5CBA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\concurrentqueue\c_api">
+      <UniqueIdentifier>{119C4150-7D0A-97CF-C6F3-51CF32A18C6B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\concurrentqueue\internal">
+      <UniqueIdentifier>{B2C1FB81-9EA8-BD79-47F9-239733BF36E0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\concurrentqueue\tests">
+      <UniqueIdentifier>{08D47851-7442-CED0-BD2B-89D029D9C36C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\concurrentqueue\tests\CDSChecker">
+      <UniqueIdentifier>{C6BB08BC-B2CE-0815-5BB8-E50147AAA562}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\concurrentqueue\tests\common">
+      <UniqueIdentifier>{601CC7F1-4C99-BA34-7516-BB4861F256C8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\concurrentqueue\tests\relacy">
+      <UniqueIdentifier>{D7C70E14-C344-0257-ECC1-026BD89D9EEA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\concurrentqueue\tests\relacy\relacy">
+      <UniqueIdentifier>{C67C5003-32B8-B0C6-3BAD-2D56A76735F7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\concurrentqueue\tests\relacy\relacy\example">
+      <UniqueIdentifier>{A1F41F90-0DDC-0A86-16CA-0C028230AE48}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\concurrentqueue\tests\relacy\relacy\example\cli_ws_deque">
+      <UniqueIdentifier>{A4B2E8F6-9049-2BAC-39FE-A1AC2574F186}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\concurrentqueue\tests\relacy\relacy\example\condvar">
+      <UniqueIdentifier>{9D97DE4C-092B-40FB-1212-B0B17E24D7C2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\concurrentqueue\tests\relacy\relacy\example\eventcount">
+      <UniqueIdentifier>{5BA6ADC1-4792-4531-B008-05849C13E661}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\concurrentqueue\tests\relacy\relacy\example\examples">
+      <UniqueIdentifier>{6F074E58-5B08-E2D2-84D0-4E577030588D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\concurrentqueue\tests\relacy\relacy\example\java_ws_deque">
+      <UniqueIdentifier>{CE901470-3A05-AACD-034F-F7DC6F823501}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\concurrentqueue\tests\relacy\relacy\example\mpmc">
+      <UniqueIdentifier>{1D315721-099C-172D-B2B7-7C929E01DB0F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\concurrentqueue\tests\relacy\relacy\example\mutex_business_logic">
+      <UniqueIdentifier>{DB94BEA5-C757-EFC9-70A5-00465C47AD41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\concurrentqueue\tests\relacy\relacy\example\peterson">
+      <UniqueIdentifier>{802252F4-6C23-E66E-95EB-52F3814B5C29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\concurrentqueue\tests\relacy\relacy\example\proxy_collector">
+      <UniqueIdentifier>{58DBB6E2-C41A-7BFB-CDFA-411339B9DA3F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\concurrentqueue\tests\relacy\relacy\example\ref_counting">
+      <UniqueIdentifier>{337883AE-1F0F-C663-C8C3-3C64B4398C3E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\concurrentqueue\tests\relacy\relacy\example\smr">
+      <UniqueIdentifier>{A21A77D2-0ED8-1F09-97A2-0B71035F925D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\concurrentqueue\tests\relacy\relacy\example\spsc_queue">
+      <UniqueIdentifier>{0D0134AC-F9EC-CB1B-6263-8B6E4E6E6C4C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\concurrentqueue\tests\relacy\relacy\example\stack">
+      <UniqueIdentifier>{A6E6AB4C-12AF-79D0-DB3F-82E247C7A90B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\concurrentqueue\tests\relacy\relacy\example\tbb_eventcount">
+      <UniqueIdentifier>{F260CB94-DE62-0FA5-C7E5-059EB3860A4A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\concurrentqueue\tests\relacy\relacy\example\ws_deque">
+      <UniqueIdentifier>{CDB0B86E-B9B1-4CE9-E279-B96DCED9C2A3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\concurrentqueue\tests\relacy\relacy\example\ws_deque2">
+      <UniqueIdentifier>{9FCACE45-0BE9-E212-54B6-E824C0131E1C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\concurrentqueue\tests\relacy\relacy\relacy">
+      <UniqueIdentifier>{D56E95FA-C118-CB09-AAE9-D22496326BF8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\concurrentqueue\tests\relacy\relacy\test">
+      <UniqueIdentifier>{15416FA6-0180-1922-AA02-F6539620CF8C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\concurrentqueue\tests\relacy\relacy\test\jtest">
+      <UniqueIdentifier>{AEF004CD-9AB0-9571-03CE-7D7CEFACA883}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\concurrentqueue\tests\relacy\relacy\test\ntest">
+      <UniqueIdentifier>{B2524DCD-9E12-DE71-0730-C67CF30EF183}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\concurrentqueue\tests\unittests">
+      <UniqueIdentifier>{AA0A37A1-1670-CA27-9F48-6C000BADBF96}</UniqueIdentifier>
     </Filter>
     <Filter Include="third_party\lua">
       <UniqueIdentifier>{40412974-ACCC-9638-B5DD-192D21E8F238}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\readerwriterqueue">
+      <UniqueIdentifier>{B3AEF0FC-1FC7-D726-E873-67C0544B6CC0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\readerwriterqueue\benchmarks">
+      <UniqueIdentifier>{60AF4EEB-4C2C-422E-75A9-42426185DEC1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\readerwriterqueue\benchmarks\ext">
+      <UniqueIdentifier>{C0E2F247-ACF5-F2A0-55DF-CF8D41D18FEE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\readerwriterqueue\benchmarks\ext\1024cores">
+      <UniqueIdentifier>{F2EB811B-DE95-B72A-C766-BF45B3AF5719}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\readerwriterqueue\benchmarks\ext\folly">
+      <UniqueIdentifier>{95E3D80F-8177-CEB7-EA3B-286CD6EE08AA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\readerwriterqueue\tests">
+      <UniqueIdentifier>{D593424F-414D-ADF9-CAAC-C7D336656369}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\readerwriterqueue\tests\common">
+      <UniqueIdentifier>{8D73FBC1-79DB-C18F-E246-D6A5CECDD87B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\readerwriterqueue\tests\unittests">
+      <UniqueIdentifier>{B7AEB824-231F-BB9D-EC3D-3526586DF39E}</UniqueIdentifier>
     </Filter>
     <Filter Include="third_party\stb_image">
       <UniqueIdentifier>{6940486C-D5AC-0367-9EA0-9BC40ACC25CF}</UniqueIdentifier>
@@ -86,6 +314,18 @@
   <ItemGroup>
     <ClInclude Include="src\Chroma.h">
       <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Chroma\Animation.h">
+      <Filter>src\Chroma</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Chroma\Assets\Asset.h">
+      <Filter>src\Chroma\Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Chroma\Assets\AssetManager.h">
+      <Filter>src\Chroma\Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Chroma\Assets\Sprite.h">
+      <Filter>src\Chroma\Assets</Filter>
     </ClInclude>
     <ClInclude Include="src\Chroma\Audio\Audio.h">
       <Filter>src\Chroma\Audio</Filter>
@@ -165,6 +405,9 @@
     <ClInclude Include="src\Chroma\ImGui\ImGuiLayer.h">
       <Filter>src\Chroma\ImGui</Filter>
     </ClInclude>
+    <ClInclude Include="src\Chroma\ImGui\Widgets\AlternateCheckBox.h">
+      <Filter>src\Chroma\ImGui\Widgets</Filter>
+    </ClInclude>
     <ClInclude Include="src\Chroma\ImGui\Widgets\CollapsibleGroupPannel.h">
       <Filter>src\Chroma\ImGui\Widgets</Filter>
     </ClInclude>
@@ -179,6 +422,18 @@
     </ClInclude>
     <ClInclude Include="src\Chroma\ImGui\Widgets\VecWithLabels.h">
       <Filter>src\Chroma\ImGui\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Chroma\Images\Aseprite.h">
+      <Filter>src\Chroma\Images</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Chroma\Images\BlendFunctions.h">
+      <Filter>src\Chroma\Images</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Chroma\Images\Color.h">
+      <Filter>src\Chroma\Images</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Chroma\Images\Image.h">
+      <Filter>src\Chroma\Images</Filter>
     </ClInclude>
     <ClInclude Include="src\Chroma\Math\Common.h">
       <Filter>src\Chroma\Math</Filter>
@@ -232,6 +487,12 @@
       <Filter>src\Chroma\Math</Filter>
     </ClInclude>
     <ClInclude Include="src\Chroma\Math\Packing.h">
+      <Filter>src\Chroma\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Chroma\Math\Rect.h">
+      <Filter>src\Chroma\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Chroma\Math\RectI.h">
       <Filter>src\Chroma\Math</Filter>
     </ClInclude>
     <ClInclude Include="src\Chroma\Math\Trigonometric.h">
@@ -360,6 +621,9 @@
     <ClInclude Include="src\Chroma\Utilities\FileDialogs.h">
       <Filter>src\Chroma\Utilities</Filter>
     </ClInclude>
+    <ClInclude Include="src\Chroma\Utilities\FileWatcher.h">
+      <Filter>src\Chroma\Utilities</Filter>
+    </ClInclude>
     <ClInclude Include="src\Chroma\Utilities\GUID.h">
       <Filter>src\Chroma\Utilities</Filter>
     </ClInclude>
@@ -372,8 +636,1022 @@
     <ClInclude Include="src\chromapch.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="third_party\cute_headers\cute_aseprite.h">
-      <Filter>third_party\cute_headers</Filter>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\boostqueue.h">
+      <Filter>third_party\concurrentqueue\benchmarks</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\cpuid.h">
+      <Filter>third_party\concurrentqueue\benchmarks</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\algs.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\array.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\array\array_kernel.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\array</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\array\array_kernel_abstract.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\array</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\array\array_tools.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\array</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\array\array_tools_abstract.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\array</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\assert.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\binary_search_tree.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\binary_search_tree\binary_search_tree_kernel_1.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\binary_search_tree</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\binary_search_tree\binary_search_tree_kernel_2.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\binary_search_tree</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\binary_search_tree\binary_search_tree_kernel_abstract.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\binary_search_tree</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\binary_search_tree\binary_search_tree_kernel_c.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\binary_search_tree</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\bound_function_pointer.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\bound_function_pointer\bound_function_pointer_kernel_1.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\bound_function_pointer</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\bound_function_pointer\bound_function_pointer_kernel_abstract.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\bound_function_pointer</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\byte_orderer.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\byte_orderer\byte_orderer_kernel_1.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\byte_orderer</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\byte_orderer\byte_orderer_kernel_abstract.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\byte_orderer</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\config.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\console_progress_indicator.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\enable_if.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\error.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\float_details.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\hash.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\interfaces\cmd_line_parser_option.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\interfaces\enumerable.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\interfaces\map_pair.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\interfaces\remover.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\is_kind.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\logger.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\logger\extra_logger_headers.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\logger</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\logger\logger_config_file.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\logger</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\logger\logger_kernel_1.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\logger</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\logger\logger_kernel_abstract.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\logger</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\map.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\map\map_kernel_1.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\map</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\map\map_kernel_abstract.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\map</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\map\map_kernel_c.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\map</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\member_function_pointer.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\member_function_pointer\make_mfp.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\member_function_pointer</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\member_function_pointer\make_mfp_abstract.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\member_function_pointer</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\member_function_pointer\member_function_pointer_kernel_1.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\member_function_pointer</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\member_function_pointer\member_function_pointer_kernel_abstract.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\member_function_pointer</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\memory_manager.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\memory_manager\memory_manager_kernel_1.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\memory_manager</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\memory_manager\memory_manager_kernel_2.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\memory_manager</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\memory_manager\memory_manager_kernel_3.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\memory_manager</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\memory_manager\memory_manager_kernel_abstract.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\memory_manager</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\memory_manager_global.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\memory_manager_global\memory_manager_global_kernel_1.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\memory_manager_global</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\memory_manager_global\memory_manager_global_kernel_abstract.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\memory_manager_global</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\memory_manager_stateless.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\memory_manager_stateless\memory_manager_stateless_kernel_1.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\memory_manager_stateless</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\memory_manager_stateless\memory_manager_stateless_kernel_2.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\memory_manager_stateless</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\memory_manager_stateless\memory_manager_stateless_kernel_abstract.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\memory_manager_stateless</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\metaprogramming.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\misc_api.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\misc_api\misc_api_kernel_1.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\misc_api</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\misc_api\misc_api_kernel_2.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\misc_api</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\misc_api\misc_api_kernel_abstract.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\misc_api</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\misc_api\misc_api_shared.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\misc_api</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\misc_api\posix.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\misc_api</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\misc_api\windows.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\misc_api</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\noncopyable.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\numeric_constants.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\numerical_integration.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\numerical_integration\integrate_function_adapt_simpson.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\numerical_integration</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\numerical_integration\integrate_function_adapt_simpson_abstract.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\numerical_integration</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\pipe.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\pipe\pipe_kernel_1.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\pipe</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\pipe\pipe_kernel_abstract.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\pipe</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\platform.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\queue.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\queue\queue_kernel_1.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\queue</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\queue\queue_kernel_2.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\queue</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\queue\queue_kernel_abstract.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\queue</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\queue\queue_kernel_c.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\queue</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\queue\queue_sort_1.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\queue</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\queue\queue_sort_abstract.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\queue</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\ref.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\revision.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\serialize.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\set.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\set\set_compare_1.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\set</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\set\set_compare_abstract.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\set</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\set\set_kernel_1.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\set</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\set\set_kernel_abstract.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\set</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\set\set_kernel_c.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\set</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\sliding_buffer.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\sliding_buffer\circular_buffer.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\sliding_buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\sliding_buffer\circular_buffer_abstract.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\sliding_buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\sliding_buffer\sliding_buffer_kernel_1.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\sliding_buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\sliding_buffer\sliding_buffer_kernel_abstract.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\sliding_buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\sliding_buffer\sliding_buffer_kernel_c.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\sliding_buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\sockets.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\sockets\posix.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\sockets</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\sockets\sockets_extensions.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\sockets</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\sockets\sockets_extensions_abstract.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\sockets</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\sockets\sockets_kernel_1.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\sockets</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\sockets\sockets_kernel_2.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\sockets</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\sockets\sockets_kernel_abstract.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\sockets</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\sockets\windows.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\sockets</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\sort.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\sparse_vector.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\stack.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\stack\stack_kernel_1.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\stack</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\stack\stack_kernel_abstract.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\stack</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\stack\stack_kernel_c.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\stack</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\stack_trace.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\std_allocator.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\stl_checked.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\stl_checked\std_vector_c.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\stl_checked</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\stl_checked\std_vector_c_abstract.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\stl_checked</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\string.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\string\string.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\string</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\string\string_abstract.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\string</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\test_for_odr_violations.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\threads.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\threads\async.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\threads</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\threads\async_abstract.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\threads</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\threads\auto_mutex_extension.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\threads</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\threads\auto_mutex_extension_abstract.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\threads</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\threads\auto_unlock_extension.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\threads</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\threads\auto_unlock_extension_abstract.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\threads</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\threads\create_new_thread_extension.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\threads</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\threads\create_new_thread_extension_abstract.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\threads</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\threads\multithreaded_object_extension.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\threads</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\threads\multithreaded_object_extension_abstract.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\threads</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\threads\parallel_for_extension.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\threads</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\threads\parallel_for_extension_abstract.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\threads</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\threads\posix.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\threads</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\threads\read_write_mutex_extension.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\threads</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\threads\read_write_mutex_extension_abstract.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\threads</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\threads\rmutex_extension.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\threads</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\threads\rmutex_extension_abstract.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\threads</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\threads\rsignaler_extension.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\threads</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\threads\rsignaler_extension_abstract.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\threads</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\threads\thread_function_extension.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\threads</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\threads\thread_function_extension_abstract.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\threads</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\threads\thread_pool_extension.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\threads</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\threads\thread_pool_extension_abstract.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\threads</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\threads\thread_specific_data_extension.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\threads</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\threads\thread_specific_data_extension_abstract.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\threads</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\threads\threaded_object_extension.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\threads</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\threads\threaded_object_extension_abstract.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\threads</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\threads\threads_kernel.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\threads</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\threads\threads_kernel_1.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\threads</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\threads\threads_kernel_2.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\threads</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\threads\threads_kernel_abstract.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\threads</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\threads\threads_kernel_shared.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\threads</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\threads\windows.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\threads</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\time_this.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\timeout.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\timeout\timeout.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\timeout</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\timeout\timeout_abstract.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\timeout</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\timer.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\timer\timer.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\timer</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\timer\timer_abstract.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\timer</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\timer\timer_heavy.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\timer</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\timing.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\tokenizer.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\tokenizer\tokenizer_kernel_1.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\tokenizer</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\tokenizer\tokenizer_kernel_abstract.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\tokenizer</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\tokenizer\tokenizer_kernel_c.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\tokenizer</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\uintn.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\unicode.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\unicode\unicode.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\unicode</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\unicode\unicode_abstract.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\unicode</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\unordered_pair.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\vectorstream.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\vectorstream\unserialize.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\vectorstream</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\vectorstream\unserialize_abstract.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\vectorstream</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\vectorstream\vectorstream.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\vectorstream</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\vectorstream\vectorstream_abstract.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib\vectorstream</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\windows_magic.h">
+      <Filter>third_party\concurrentqueue\benchmarks\dlib</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlibqueue.h">
+      <Filter>third_party\concurrentqueue\benchmarks</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\lockbasedqueue.h">
+      <Filter>third_party\concurrentqueue\benchmarks</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\simplelockfree.h">
+      <Filter>third_party\concurrentqueue\benchmarks</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\stdqueue.h">
+      <Filter>third_party\concurrentqueue\benchmarks</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\aggregator.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\aligned_space.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\arena.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\atomic.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\blocked_range.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\blocked_range2d.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\blocked_range3d.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\cache_aligned_allocator.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\cilk-tbb-interop.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\combinable.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\compat\ppl.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb\compat</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\concurrent_hash_map.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\concurrent_lru_cache.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\concurrent_monitor.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\concurrent_priority_queue.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\concurrent_queue.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\concurrent_unordered_map.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\concurrent_unordered_set.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\concurrent_vector.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\critical_section.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\custom_scheduler.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\dynamic_link.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\enumerable_thread_specific.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\flow_graph.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\governor.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\internal\_aggregator_impl.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\internal\_concurrent_queue_impl.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\internal\_concurrent_unordered_impl.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\internal\_flow_graph_impl.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\internal\_flow_graph_indexer_impl.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\internal\_flow_graph_item_buffer_impl.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\internal\_flow_graph_join_impl.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\internal\_flow_graph_node_impl.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\internal\_flow_graph_tagged_buffer_impl.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\internal\_flow_graph_trace_impl.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\internal\_flow_graph_types_impl.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\internal\_mutex_padding.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\internal\_range_iterator.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\internal\_tbb_strings.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\internal\_tbb_windef.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\internal\_x86_eliding_mutex_impl.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\internal\_x86_rtm_rw_mutex_impl.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\intrusive_list.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\itt_notify.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\machine\gcc_armv7.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb\machine</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\machine\gcc_generic.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb\machine</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\machine\gcc_ia32_common.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb\machine</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\machine\gcc_itsx.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb\machine</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\machine\ibm_aix51.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb\machine</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\machine\icc_generic.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb\machine</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\machine\linux_common.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb\machine</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\machine\linux_ia32.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb\machine</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\machine\linux_ia64.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb\machine</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\machine\linux_intel64.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb\machine</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\machine\mac_ppc.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb\machine</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\machine\macos_common.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb\machine</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\machine\mic_common.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb\machine</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\machine\msvc_armv7.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb\machine</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\machine\msvc_ia32_common.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb\machine</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\machine\sunos_sparc.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb\machine</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\machine\windows_api.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb\machine</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\machine\windows_ia32.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb\machine</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\machine\windows_intel64.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb\machine</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\machine\xbox360_ppc.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb\machine</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\mailbox.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\market.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\memory_pool.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\mutex.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\null_mutex.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\null_rw_mutex.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\observer_proxy.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\parallel_do.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\parallel_for.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\parallel_for_each.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\parallel_invoke.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\parallel_reduce.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\parallel_scan.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\parallel_sort.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\parallel_while.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\partitioner.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\pipeline.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\queuing_mutex.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\queuing_rw_mutex.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\reader_writer_lock.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\recursive_mutex.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\runtime_loader.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\scalable_allocator.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\scheduler.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\scheduler_common.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\scheduler_utility.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\semaphore.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\spin_mutex.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\spin_rw_mutex.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\task.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\task_arena.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\task_group.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\task_scheduler_init.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\task_scheduler_observer.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\task_stream.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\tbb.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\tbb_allocator.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\tbb_assert_impl.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\tbb_config.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\tbb_exception.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\tbb_machine.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\tbb_main.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\tbb_misc.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\tbb_profiling.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\tbb_statistics.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\tbb_stddef.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\tbb_thread.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\tbb_version.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\tbbmalloc_proxy.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\tick_count.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\tls.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\tools_api\disable_warnings.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb\tools_api</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\tools_api\internal\ittnotify.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb\tools_api\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\tools_api\ittnotify.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb\tools_api</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\tools_api\ittnotify_config.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb\tools_api</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\tools_api\ittnotify_static.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb\tools_api</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\tools_api\ittnotify_types.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb\tools_api</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\tools_api\legacy\ittnotify.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb\tools_api\legacy</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\tools_api\prototype\ittnotify.h">
+      <Filter>third_party\concurrentqueue\benchmarks\tbb\tools_api\prototype</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbbqueue.h">
+      <Filter>third_party\concurrentqueue\benchmarks</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\benchmarks\wrappers.h">
+      <Filter>third_party\concurrentqueue\benchmarks</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\blockingconcurrentqueue.h">
+      <Filter>third_party\concurrentqueue</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\c_api\concurrentqueue.h">
+      <Filter>third_party\concurrentqueue\c_api</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\concurrentqueue.h">
+      <Filter>third_party\concurrentqueue</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\internal\concurrentqueue_internal_debug.h">
+      <Filter>third_party\concurrentqueue\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\lightweightsemaphore.h">
+      <Filter>third_party\concurrentqueue</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\tests\CDSChecker\corealgo.h">
+      <Filter>third_party\concurrentqueue\tests\CDSChecker</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\tests\common\simplethread.h">
+      <Filter>third_party\concurrentqueue\tests\common</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\tests\common\systemtime.h">
+      <Filter>third_party\concurrentqueue\tests\common</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\tests\corealgos.h">
+      <Filter>third_party\concurrentqueue\tests</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\tests\relacy\relacy\example\cli_ws_deque\stdafx.h">
+      <Filter>third_party\concurrentqueue\tests\relacy\relacy\example\cli_ws_deque</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\tests\relacy\relacy\example\condvar\stdafx.h">
+      <Filter>third_party\concurrentqueue\tests\relacy\relacy\example\condvar</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\tests\relacy\relacy\example\eventcount\stdafx.h">
+      <Filter>third_party\concurrentqueue\tests\relacy\relacy\example\eventcount</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\tests\relacy\relacy\example\examples\stdafx.h">
+      <Filter>third_party\concurrentqueue\tests\relacy\relacy\example\examples</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\tests\relacy\relacy\example\java_ws_deque\stdafx.h">
+      <Filter>third_party\concurrentqueue\tests\relacy\relacy\example\java_ws_deque</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\tests\relacy\relacy\example\mpmc\pcx.h">
+      <Filter>third_party\concurrentqueue\tests\relacy\relacy\example\mpmc</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\tests\relacy\relacy\example\mpmc\stdafx.h">
+      <Filter>third_party\concurrentqueue\tests\relacy\relacy\example\mpmc</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\tests\relacy\relacy\example\mutex_business_logic\stdafx.h">
+      <Filter>third_party\concurrentqueue\tests\relacy\relacy\example\mutex_business_logic</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\tests\relacy\relacy\example\peterson\stdafx.h">
+      <Filter>third_party\concurrentqueue\tests\relacy\relacy\example\peterson</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\tests\relacy\relacy\example\proxy_collector\stdafx.h">
+      <Filter>third_party\concurrentqueue\tests\relacy\relacy\example\proxy_collector</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\tests\relacy\relacy\example\ref_counting\stdafx.h">
+      <Filter>third_party\concurrentqueue\tests\relacy\relacy\example\ref_counting</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\tests\relacy\relacy\example\smr\stdafx.h">
+      <Filter>third_party\concurrentqueue\tests\relacy\relacy\example\smr</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\tests\relacy\relacy\example\spsc_queue\stdafx.h">
+      <Filter>third_party\concurrentqueue\tests\relacy\relacy\example\spsc_queue</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\tests\relacy\relacy\example\stack\stdafx.h">
+      <Filter>third_party\concurrentqueue\tests\relacy\relacy\example\stack</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\tests\relacy\relacy\example\tbb_eventcount\stdafx.h">
+      <Filter>third_party\concurrentqueue\tests\relacy\relacy\example\tbb_eventcount</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\tests\relacy\relacy\example\ws_deque\stdafx.h">
+      <Filter>third_party\concurrentqueue\tests\relacy\relacy\example\ws_deque</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\tests\relacy\relacy\example\ws_deque2\stdafx.h">
+      <Filter>third_party\concurrentqueue\tests\relacy\relacy\example\ws_deque2</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\tests\relacy\relacy\relacy\pthread.h">
+      <Filter>third_party\concurrentqueue\tests\relacy\relacy\relacy</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\tests\relacy\relacy\relacy\windows.h">
+      <Filter>third_party\concurrentqueue\tests\relacy\relacy\relacy</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\tests\relacy\relacy\test\jtest\stdafx.h">
+      <Filter>third_party\concurrentqueue\tests\relacy\relacy\test\jtest</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\tests\relacy\relacy\test\ntest\stdafx.h">
+      <Filter>third_party\concurrentqueue\tests\relacy\relacy\test\ntest</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\tests\relacy\relacy\test\stdafx.h">
+      <Filter>third_party\concurrentqueue\tests\relacy\relacy\test</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\tests\relacy\relacy_shims.h">
+      <Filter>third_party\concurrentqueue\tests\relacy</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\concurrentqueue\tests\unittests\minitest.h">
+      <Filter>third_party\concurrentqueue\tests\unittests</Filter>
     </ClInclude>
     <ClInclude Include="third_party\lua\lapi.h">
       <Filter>third_party\lua</Filter>
@@ -459,7 +1737,34 @@
     <ClInclude Include="third_party\lua\lzio.h">
       <Filter>third_party\lua</Filter>
     </ClInclude>
+    <ClInclude Include="third_party\readerwriterqueue\atomicops.h">
+      <Filter>third_party\readerwriterqueue</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\readerwriterqueue\benchmarks\ext\1024cores\spscqueue.h">
+      <Filter>third_party\readerwriterqueue\benchmarks\ext\1024cores</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\readerwriterqueue\benchmarks\ext\folly\ProducerConsumerQueue.h">
+      <Filter>third_party\readerwriterqueue\benchmarks\ext\folly</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\readerwriterqueue\benchmarks\systemtime.h">
+      <Filter>third_party\readerwriterqueue\benchmarks</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\readerwriterqueue\readerwritercircularbuffer.h">
+      <Filter>third_party\readerwriterqueue</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\readerwriterqueue\readerwriterqueue.h">
+      <Filter>third_party\readerwriterqueue</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\readerwriterqueue\tests\common\simplethread.h">
+      <Filter>third_party\readerwriterqueue\tests\common</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\readerwriterqueue\tests\unittests\minitest.h">
+      <Filter>third_party\readerwriterqueue\tests\unittests</Filter>
+    </ClInclude>
     <ClInclude Include="third_party\stb_image\stb_image.h">
+      <Filter>third_party\stb_image</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\stb_image\stb_image_write.h">
       <Filter>third_party\stb_image</Filter>
     </ClInclude>
     <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\anchor.h">
@@ -573,19 +1878,11 @@
     <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\yaml.h">
       <Filter>third_party\yaml-cpp\include\yaml-cpp</Filter>
     </ClInclude>
-    <ClInclude Include="src\Chroma\Images\Aseprite.h" />
-    <ClInclude Include="src\Chroma\Images\Color.h" />
-    <ClInclude Include="src\Chroma\Images\Image.h" />
-    <ClInclude Include="src\Chroma\Math\Rect.h" />
-    <ClInclude Include="src\Chroma\Math\RectI.h" />
-    <ClInclude Include="src\Chroma\Images\BlendFunctions.h" />
-    <ClInclude Include="src\Chroma\Animation.h" />
-    <ClInclude Include="src\Chroma\Assets\AssetManager.h" />
-    <ClInclude Include="src\Chroma\Assets\Asset.h" />
-    <ClInclude Include="src\Chroma\Assets\Sprite.h" />
-    <ClInclude Include="src\Chroma\ImGui\Widgets\AlternateCheckBox.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Chroma\Assets\AssetManager.cpp">
+      <Filter>src\Chroma\Assets</Filter>
+    </ClCompile>
     <ClCompile Include="src\Chroma\Audio\Audio.cpp">
       <Filter>src\Chroma\Audio</Filter>
     </ClCompile>
@@ -636,6 +1933,15 @@
     </ClCompile>
     <ClCompile Include="src\Chroma\ImGui\Widgets\GroupPannel.cpp">
       <Filter>src\Chroma\ImGui\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Chroma\Images\Aseprite.cpp">
+      <Filter>src\Chroma\Images</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Chroma\Images\Color.cpp">
+      <Filter>src\Chroma\Images</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Chroma\Images\Image.cpp">
+      <Filter>src\Chroma\Images</Filter>
     </ClCompile>
     <ClCompile Include="src\Chroma\Platform\OpenGL\OpenGLBuffer.cpp">
       <Filter>src\Chroma\Platform\OpenGL</Filter>
@@ -736,9 +2042,5 @@
     <ClCompile Include="third_party\stb_image\stb_image.cpp">
       <Filter>third_party\stb_image</Filter>
     </ClCompile>
-    <ClCompile Include="src\Chroma\Images\Aseprite.cpp" />
-    <ClCompile Include="src\Chroma\Images\Color.cpp" />
-    <ClCompile Include="src\Chroma\Images\Image.cpp" />
-    <ClCompile Include="src\Chroma\Assets\AssetManager.cpp" />
   </ItemGroup>
 </Project>

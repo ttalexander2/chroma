@@ -7,6 +7,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\EditorApp.h" />
+    <ClInclude Include="src\EditorConfig.h" />
     <ClInclude Include="src\FileDrop.h" />
     <ClInclude Include="src\Fonts\Font.h">
       <Filter>Fonts</Filter>
@@ -16,9 +17,8 @@
     </ClInclude>
     <ClInclude Include="src\Hierarchy.h" />
     <ClInclude Include="src\Inspector.h" />
-    <ClInclude Include="src\Viewport.h" />
     <ClInclude Include="src\Style.h" />
-    <ClInclude Include="src\EditorConfig.h" />
+    <ClInclude Include="src\Viewport.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\EditorApp.cpp" />
