@@ -32,6 +32,8 @@ namespace Polychrome
 {
 
 	std::vector<Chroma::Ref<Chroma::Texture2D>> testAseprite;
+
+
 	moodycamel::ReaderWriterQueue<std::function<void()>> file_queue;
 
 	std::thread file_watcher_thread;
@@ -328,6 +330,20 @@ namespace Polychrome
 				SaveSceneAs();
 			
 			ImGui::MenuItem("Close##MAIN_MENU_BAR", "Alt + F4");
+
+			ImGui::EndMenu();
+		}
+
+		if (ImGui::BeginMenu("Edit##MAIN_MENU_BAR"))
+		{
+			if (ImGui::MenuItem("Undo##MAIN_MENU_BAR", "Ctrl+Z"))
+			{
+				//UNDO
+			}
+			if (ImGui::MenuItem("Redo##MAIN_MENU_BAR", "Ctrl+Y"))
+			{
+				//REDO
+			}
 
 			ImGui::EndMenu();
 		}
