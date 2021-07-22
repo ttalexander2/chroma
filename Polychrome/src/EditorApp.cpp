@@ -34,10 +34,9 @@ namespace Polychrome
 	std::vector<Chroma::Ref<Chroma::Texture2D>> testAseprite;
 
 
-	moodycamel::ReaderWriterQueue<std::function<void()>> file_queue;
+	
 
-	std::thread file_watcher_thread;
-	std::atomic_bool file_watcher_thread_running;
+
 
 	EditorApp::EditorApp()
 		: Application("Polychrome Editor", 1920U, 1080U), m_CameraController(1920.0f / 1080.0f)
@@ -197,10 +196,7 @@ namespace Polychrome
 			m_CameraController.OnUpdate(time);
 		}
 
-		std::function<void()> func;
-		bool success = file_queue.try_dequeue(func);
-		if (success)
-			func();
+		
 
 	}
 
