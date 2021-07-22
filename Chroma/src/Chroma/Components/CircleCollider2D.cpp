@@ -1,6 +1,7 @@
 #include "chromapch.h"
 #include "CircleCollider2D.h"
 #include "imgui.h"
+#include "Chroma/ImGui/Widgets/VecWithLabels.h"
 
 namespace Chroma
 {
@@ -10,11 +11,8 @@ namespace Chroma
 		ImGui::InputFloat("##circle_collider_2d_bounds", &Radius);
 
 		DrawComponentValue("Offset");
-		float off[2] = { Offset.x, Offset.y };
-		if (ImGui::InputFloat2("##transform_rotation", off))
-		{
-			Offset = { off[0], off[1], };
-		}
+		ImGui::Vec2IntWithLabels("##transform_rotation", Offset);
+
 
 	}
 

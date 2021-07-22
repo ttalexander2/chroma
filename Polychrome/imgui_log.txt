@@ -1,0 +1,22 @@
+(?)
+[ Copy "Hello, world!" to clipboard ]
+### Window options ###
+### Widgets ###
+### Layout & Scrolling ###
+### Popups & Modal windows ###
+### Tables & Columns ###
+### Filtering ###
+### Inputs, Navigation & Focus ### > Entity_0
+> Entity_1
+> Entity_2
+> Entity_3
+> Entity_4
+> Entity_5
+> Entity_6
+> Entity_7 |   Transform [  ] | |
+| Position | [ X ] { 0 } [ Y ] { 0 } [ Z ] { 0 } |
+| Rotation | [ X ] { 0.000 } [ Y ] { 0.000 } [ Z ] { 0.000 } |
+| Scale | [ X ] { 1 } [ Y ] { 1 } [ Z ] { 1 } |
+|   Audio Source [  ] |
+|   Sprite Renderer [  ] | |
+[ Add Component ]

@@ -296,6 +296,8 @@ namespace Chroma
 			}
 
 		private:
+
+			//TODO: This *SUCKS*, we need to figure out how to find a better way to find entities with specific components.
 			SceneView(Scene& scene)
 				: m_Scene(&scene)
 			{
@@ -351,6 +353,13 @@ namespace Chroma
 		SceneView<ComponentTypes...> View()
 		{
 			return SceneView<ComponentTypes...>(*this);
+		}
+
+		template<typename T>
+		std::vector<EntityID>* ViewOne()
+		{
+			
+			return m_ComponentPools[GetComponentTypeID<T>()]->GetEntities();
 		}
 
 		static EntityRef ConvertIDToEntity(EntityID e, Scene& scene);

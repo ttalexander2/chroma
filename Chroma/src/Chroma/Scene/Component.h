@@ -61,6 +61,7 @@ namespace Chroma
 		unsigned int comparison_id = 0;
 
 		bool editor_inspector_open = true;
+		bool editor_visible = true;
 
 
 		void SetComparisonID()

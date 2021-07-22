@@ -1,6 +1,7 @@
 #include "chromapch.h"
 #include "Transform.h"
 #include "imgui_internal.h"
+#include "Chroma/ImGui/Widgets/VecWithLabels.h"
 
 
 namespace Chroma
@@ -18,13 +19,13 @@ namespace Chroma
 	{
 
 		DrawComponentValue("Position");
-		Chroma::Vec3IntWithLabels(("##transform_position" + std::to_string(this->GetUniqueID())).c_str(), Position);
+		ImGui::Vec3IntWithLabels(("##transform_position" + std::to_string(this->GetUniqueID())).c_str(), Position);
 
 		DrawComponentValue("Rotation");
-		Chroma::Vec3FloatWithLabels(("##transform_rotation" + std::to_string(this->GetUniqueID())).c_str(), Rotation);
+		ImGui::Vec3FloatWithLabels(("##transform_rotation" + std::to_string(this->GetUniqueID())).c_str(), Rotation);
 
 		DrawComponentValue("Scale");
-		Chroma::Vec3IntWithLabels(("##transform_scale" + std::to_string(this->GetUniqueID())).c_str(), Scale, false);
+		ImGui::Vec3IntWithLabels(("##transform_scale" + std::to_string(this->GetUniqueID())).c_str(), Scale, false);
 
 
 	}

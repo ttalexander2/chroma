@@ -1,6 +1,6 @@
 #include "chromapch.h"
 #include "SpriteRenderer.h"
-#include "Chroma/ImGui/Widgets/Vec3WithLabels.h"
+#include "Chroma/ImGui/Widgets/VecWithLabels.h"
 #include "Chroma/ImGui/Widgets/EditableList.h"
 #include "Chroma/ImGui/Widgets/AlternateCheckBox.h"
 #include "imgui_internal.h"
@@ -23,10 +23,10 @@ namespace Chroma
 
 		
 		DrawComponentValue("Offset");
-		Chroma::Vec3IntWithLabels("##offset", Offset);
+		ImGui::Vec3IntWithLabels("##offset", Offset);
 
 		DrawComponentValue("Scale");
-		Chroma::Vec3FloatWithLabels("##scale", Scale, false);
+		ImGui::Vec3FloatWithLabels("##scale", Scale, false);
 
 		DrawComponentValue("Play On Start");
 		ImGui::Checkbox("##play_on_start", &PlayOnStart);

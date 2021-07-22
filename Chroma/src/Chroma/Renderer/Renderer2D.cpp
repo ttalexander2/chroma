@@ -20,7 +20,7 @@ namespace Chroma
 
 	struct RenderData
 	{
-		const uint32_t MaxQuads = 256;
+		const uint32_t MaxQuads = 2000;
 		const uint32_t MaxVertices = MaxQuads * 9;
 		const uint32_t MaxIndices = MaxQuads * 6;
 		static const uint32_t MaxTextureSlots = 32; //TODO: Query graphics card driver for max #

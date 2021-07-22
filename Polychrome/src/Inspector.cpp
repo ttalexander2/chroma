@@ -14,14 +14,18 @@ namespace Polychrome
 
 	void Inspector::Draw()
 	{
-		ImGui::Begin("Inspector", &Inspector::Open);
-
-		if (Hierarchy::SelectedEntity != Chroma::ENTITY_NULL)
+		if (Open)
 		{
-			DrawEntity();
+			ImGui::Begin("Inspector", &Inspector::Open);
+
+			if (Hierarchy::SelectedEntity != Chroma::ENTITY_NULL)
+			{
+				DrawEntity();
+			}
+
+			ImGui::End();
 		}
 
-		ImGui::End();
 	}
 
 	void Inspector::DrawEntity()
@@ -60,7 +64,7 @@ namespace Polychrome
 				icon = ICON_FK_CARET_DOWN;
 
 			bool selected = true;
-			if (ImGui::Selectable((icon + std::string("  ") + c->Name() + "##" + std::to_string(unique)).c_str(), &selected, ImGuiSelectableFlags_SpanAllColumns | ImGuiSelectableFlags_AllowItemOverlap))
+			if (ImGui::Selectable((std::string(" ") + icon + std::string("  ") + c->Name() + "##" + std::to_string(unique)).c_str(), &selected, ImGuiSelectableFlags_SpanAllColumns | ImGuiSelectableFlags_AllowItemOverlap))
 			{
 				c->editor_inspector_open = !c->editor_inspector_open;
 			}
@@ -69,13 +73,31 @@ namespace Polychrome
 
 			ImGui::AlignTextToFramePadding();
 
-			ImGui::SameLine(ImGui::GetWindowWidth() - 32);
+			ImGui::SameLine(ImGui::GetWindowWidth() - 50);
+			
+			//auto color = ImGui::GetStyleColorVec4(ImGuiCol_Button);
+			//ImGui::PushStyleColor(ImGuiCol_Button, { color.x, color.y, color.z, 0.99f });
+
+			std::string iconVisible;
+			if (c->editor_visible)
+				iconVisible = ICON_FK_EYE;
+			else
+				iconVisible = ICON_FK_EYE_SLASH;
+
+			if (ImGui::Button((iconVisible + "##MENU_BAR_INSPECTOR_BUTTON_VISIBLE" + std::to_string(unique)).c_str()))
+			{
+				c->editor_visible = !c->editor_visible;
+			}
+
+			ImGui::SameLine(ImGui::GetWindowWidth() - 26);
 
 
 			if (ImGui::Button((ICON_FK_COG "##MENU_BAR_INSPECTOR_BUTTON_" + std::to_string(unique)).c_str()))
 			{
 				ImGui::OpenPopup(("##MENU_BAR_INSPECTOR_" + std::to_string(unique)).c_str());
 			}
+
+			//ImGui::PopStyleColor();
 
 			if (ImGui::BeginPopup(("##MENU_BAR_INSPECTOR_" + std::to_string(unique)).c_str()))
 			{

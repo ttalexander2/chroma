@@ -3,7 +3,6 @@
 #include "Chroma/Scene/Component.h"
 #include "Chroma/Math/Mat4x4.h"
 #include "glm/gtc/matrix_transform.hpp"
-#include "Chroma/ImGui/Widgets/Vec3WithLabels.h"
 
 #include "imgui.h"
 

@@ -1,24 +1,18 @@
 #include "chromapch.h"
 #include "BoxCollider2D.h"
 #include "imgui.h"
+#include "Chroma/ImGui/Widgets/VecWithLabels.h"
 
 namespace Chroma
 {
 	void BoxCollider2D::DrawImGui()
 	{
 		DrawComponentValue("Bounds");
-		float pos[2] = { Bounds.x, Bounds.y };
-		if (ImGui::InputFloat2("##box_collider_2d_bounds", pos))
-		{
-			Bounds = { pos[0], pos[1] };
-		}
+		ImGui::Vec2IntWithLabels("##box_collider_2d_bound", Bounds);
 
 		DrawComponentValue("Offset");
-		float off[2] = { Offset.x, Offset.y };
-		if (ImGui::InputFloat2("##box_collider_2d_offset", off))
-		{
-			Offset = { off[0], off[1], };
-		}
+		ImGui::Vec2IntWithLabels("##box_collider_2d_offset", Offset);
+
 
 	}
 	void BoxCollider2D::Serialize(YAML::Emitter& out)

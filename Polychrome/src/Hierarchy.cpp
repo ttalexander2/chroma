@@ -127,129 +127,134 @@ namespace Polychrome
 	void Hierarchy::Draw()
 	{
 
-		ImGui::Begin("Scene", &Hierarchy::Open);
-
-		Chroma::Scene* scene = Chroma::Application::Get().m_ActiveScene;
-
-		auto view = scene->GetEntities();
-			
-
-		static Chroma::EntityID renaming = Chroma::ENTITY_NULL;
-
-		std::vector<Chroma::EntityID> toRemove;
-		
-		/*
-		for (Chroma::Tree<Chroma::EntityID> tree : view.Children)
+		if (Hierarchy::Open)
 		{
-			DrawTreeLevel(tree, scene, toRemove, renaming);
-		}
-		*/
-
+			ImGui::Begin("Scene", &Hierarchy::Open);
 		
+			Chroma::Scene* scene = Chroma::Application::Get().m_ActiveScene;
 
-		
+			auto view = scene->GetEntities();
 
-		for (Chroma::EntityID e : view)
-		{
-			Chroma::ComponentRef<Chroma::Tag> t = scene->GetComponent<Chroma::Tag>(e);
 
-			static bool valid = true;
-			static std::string buffer;
+			static Chroma::EntityID renaming = Chroma::ENTITY_NULL;
 
-			if (renaming == e)
+			std::vector<Chroma::EntityID> toRemove;
+
+			/*
+			for (Chroma::Tree<Chroma::EntityID> tree : view.Children)
 			{
-				if (!valid)
+				DrawTreeLevel(tree, scene, toRemove, renaming);
+			}
+			*/
+
+
+
+
+
+			for (Chroma::EntityID e : view)
+			{
+				Chroma::ComponentRef<Chroma::Tag> t = scene->GetComponent<Chroma::Tag>(e);
+
+				static bool valid = true;
+				static std::string buffer;
+
+				if (renaming == e)
 				{
-					ImGui::PushStyleColor(ImGuiCol_Text, { 1.0f, 0.0f, 0.0f, 1.0f });
+					if (!valid)
+					{
+						ImGui::PushStyleColor(ImGuiCol_Text, { 1.0f, 0.0f, 0.0f, 1.0f });
+					}
+					else
+					{
+						ImGui::PushStyleColor(ImGuiCol_Text, { 1.0f, 1.0f, 1.0f, 1.0f });
+					}
+
+
+					if (!valid)
+						ImGui::SetKeyboardFocusHere();
+
+					bool input = ImGui::InputText(("##HIERARCHY_RENAMING_ITEM_" + std::to_string(e)).c_str(), &buffer, ImGuiInputTextFlags_EnterReturnsTrue);
+
+					//trim whitespace
+					buffer = std::TrimLeftWhitespace(buffer);
+					buffer = std::TrimRightWhitespace(buffer);
+
+					//validate entity name
+					bool loopValid = true;
+					for (Chroma::EntityID entityToValidate : scene->GetEntities())
+					{
+						Chroma::ComponentRef<Chroma::Tag> tagToValidate = scene->GetComponent<Chroma::Tag>(entityToValidate);
+						if (e != entityToValidate && tagToValidate->EntityName == std::string(buffer))
+						{
+							loopValid = false;
+							break;
+						}
+					}
+
+					ImGui::PopStyleColor();
+
+					//check for submission
+					if (valid && (input || !ImGui::IsItemActive()))
+					{
+						t->EntityName = buffer;
+						renaming = Chroma::ENTITY_NULL;
+					}
+
+					valid = loopValid;
+
 				}
 				else
 				{
-					ImGui::PushStyleColor(ImGuiCol_Text, { 1.0f, 1.0f, 1.0f, 1.0f });
-				}
+					ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_Leaf;
+					if (SelectedEntity == e)
+						flags |= ImGuiTreeNodeFlags_Selected;
 
+					bool opened = ImGui::TreeNodeEx(t->EntityName.c_str(), flags);
 
-				if (!valid)
-					ImGui::SetKeyboardFocusHere();
-
-				bool input = ImGui::InputText(("##HIERARCHY_RENAMING_ITEM_" + std::to_string(e)).c_str(), &buffer, ImGuiInputTextFlags_EnterReturnsTrue);
-
-				//trim whitespace
-				buffer = std::TrimLeftWhitespace(buffer);
-				buffer = std::TrimRightWhitespace(buffer);
-
-				//validate entity name
-				bool loopValid = true;
-				for (Chroma::EntityID entityToValidate : scene->GetEntities())
-				{
-					Chroma::ComponentRef<Chroma::Tag> tagToValidate = scene->GetComponent<Chroma::Tag>(entityToValidate);
-					if (e != entityToValidate && tagToValidate->EntityName == std::string(buffer))
+					if (ImGui::IsItemClicked())
 					{
-						loopValid = false;
-						break;
+						Hierarchy::SelectedEntity = e;
+						Chroma::EntityRef r = Chroma::EntityRef(e, *scene);
+					}
+
+					if (opened)
+						ImGui::TreePop();
+
+					if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
+					{
+						ImGui::OpenPopup(("##HIERARCHY_CONTEXT_POPUP_" + std::to_string(e)).c_str());
+					}
+
+					if (ImGui::BeginPopupContextItem(("##HIERARCHY_CONTEXT_POPUP_" + std::to_string(e)).c_str()))
+					{
+						if (ImGui::MenuItem("Rename##HIERARCHY_CONTEXT_MENU"))
+						{
+							renaming = e;
+							valid = false;
+							buffer = t->EntityName;
+							ImGui::SetKeyboardFocusHere();
+						}
+
+						ImGui::MenuItem("Duplicate##HIERARCHY_CONTEXT_MENU");
+						ImGui::MenuItem("Create Prefab##HIERARCHY_CONTEXT_MENU");
+						ImGui::Separator();
+						if (ImGui::MenuItem("Delete##HIERARCHY_CONTEXT_MENU"))
+						{
+							scene->DestroyEntity(e);
+							Hierarchy::SelectedEntity = Chroma::ENTITY_NULL;
+						}
+
+						ImGui::EndPopup();
 					}
 				}
-
-				ImGui::PopStyleColor();
-
-				//check for submission
-				if (valid && (input || !ImGui::IsItemActive()))
-				{
-					t->EntityName = buffer;
-					renaming = Chroma::ENTITY_NULL;
-				}
-
-				valid = loopValid;
 
 			}
-			else
-			{
-				ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_Leaf;
-				if (SelectedEntity == e)
-					flags |= ImGuiTreeNodeFlags_Selected;
 
-				bool opened = ImGui::TreeNodeEx(t->EntityName.c_str(), flags);
 
-				if (ImGui::IsItemClicked())
-				{
-					Hierarchy::SelectedEntity = e;
-					Chroma::EntityRef r = Chroma::EntityRef(e, *scene);
-				}
-
-				if (opened)
-					ImGui::TreePop();
-
-				if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
-				{
-					ImGui::OpenPopup(("##HIERARCHY_CONTEXT_POPUP_" + std::to_string(e)).c_str());
-				}
-
-				if (ImGui::BeginPopupContextItem(("##HIERARCHY_CONTEXT_POPUP_" + std::to_string(e)).c_str()))
-				{
-					if (ImGui::MenuItem("Rename##HIERARCHY_CONTEXT_MENU"))
-					{
-						renaming = e;
-						valid = false;
-						buffer = t->EntityName;
-						ImGui::SetKeyboardFocusHere();
-					}
-
-					ImGui::MenuItem("Duplicate##HIERARCHY_CONTEXT_MENU");
-					ImGui::MenuItem("Create Prefab##HIERARCHY_CONTEXT_MENU");
-					ImGui::Separator();
-					if (ImGui::MenuItem("Delete##HIERARCHY_CONTEXT_MENU"))
-					{
-						scene->DestroyEntity(e);
-						Hierarchy::SelectedEntity = Chroma::ENTITY_NULL;
-					}
-
-					ImGui::EndPopup();
-				}
-			}
-
+			ImGui::End();
 		}
-		
 
-		ImGui::End();
+		
 	}
 }
 

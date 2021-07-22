@@ -177,7 +177,7 @@
     <ClInclude Include="src\Chroma\ImGui\Widgets\GroupPannel.h">
       <Filter>src\Chroma\ImGui\Widgets</Filter>
     </ClInclude>
-    <ClInclude Include="src\Chroma\ImGui\Widgets\Vec3WithLabels.h">
+    <ClInclude Include="src\Chroma\ImGui\Widgets\VecWithLabels.h">
       <Filter>src\Chroma\ImGui\Widgets</Filter>
     </ClInclude>
     <ClInclude Include="src\Chroma\Math\Common.h">

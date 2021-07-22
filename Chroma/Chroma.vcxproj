@@ -187,7 +187,7 @@
     <ClInclude Include="src\Chroma\ImGui\Widgets\ComboFilter.h" />
     <ClInclude Include="src\Chroma\ImGui\Widgets\EditableList.h" />
     <ClInclude Include="src\Chroma\ImGui\Widgets\GroupPannel.h" />
-    <ClInclude Include="src\Chroma\ImGui\Widgets\Vec3WithLabels.h" />
+    <ClInclude Include="src\Chroma\ImGui\Widgets\VecWithLabels.h" />
     <ClInclude Include="src\Chroma\Math\Common.h" />
     <ClInclude Include="src\Chroma\Math\Exponential.h" />
     <ClInclude Include="src\Chroma\Math\Ext.h" />

@@ -23,6 +23,7 @@
 #include <Chroma/Images/Aseprite.h>
 #include <Chroma/Components/SpriteRenderer.h>
 #include "Style.h"
+#include <Chroma/Components/Transform.h>
 
 
 namespace Polychrome
@@ -48,6 +49,8 @@ namespace Polychrome
 		scene->NewEntity();
 		scene->NewEntity();
 		scene->NewEntity();
+
+		
 
 
 		auto entity4 = scene->NewEntity();
@@ -138,7 +141,6 @@ namespace Polychrome
 
 	void EditorApp::Update(Chroma::Time time)
 	{
-		//CHROMA_ERROR("{0}", Application::Get().m_ActiveScene);
 
 		m_ActiveScene->EarlyUpdate(time);
 		m_ActiveScene->Update(time);
@@ -205,7 +207,7 @@ namespace Polychrome
 				{
 					numQuads++;
 
-					Chroma::Renderer2D::DrawQuad({ x, y }, { 1, 1 }, m_SquareColor);
+					Chroma::Renderer2D::DrawQuad({ x, y }, { 0.9, 0.9 }, m_SquareColor);
 				}
 			}
 		}
@@ -285,6 +287,30 @@ namespace Polychrome
 			ImGui::EndMenu();
 		}
 
+		static bool SettingsWindowOpen = false;
+
+		if (ImGui::BeginMenu("Window##MAIN_MENU_BAR"))
+		{
+			if (ImGui::MenuItem("Hierarchy##MAIN_MENU_BAR", "", &Hierarchy::Open))
+			{
+				//Hierarchy::Open = !Hierarchy::Open;
+			}
+			if (ImGui::MenuItem("Inspector##MAIN_MENU_BAR", "", &Inspector::Open))
+			{
+				//Inspector::Open = !Inspector::Open;
+			}
+			if (ImGui::MenuItem("Viewport##MAIN_MENU_BAR", "", &Viewport::Open))
+			{
+				//Viewport::Open = !Viewport::Open;
+			}
+			if (ImGui::MenuItem("Settings##MAIN_MENU_BAR", "", &SettingsWindowOpen))
+			{
+				//SettingsWindowOpen = !SettingsWindowOpen;
+			}
+
+			ImGui::EndMenu();
+		}
+
 		ImGui::EndMainMenuBar();
 
 		ImGui::GetStyle().FramePadding.y = prevFramePaddingY;
@@ -298,13 +324,18 @@ namespace Polychrome
 		Viewport::Draw(m_Framebuffer);
 
 		
-		Chroma::ImGuiDebugMenu::Draw();
-		if (ImGui::Begin("Settings"))
+		//Chroma::ImGuiDebugMenu::Draw();
+
+		if (SettingsWindowOpen)
 		{
-			static int selected_style = Config.Style;
-			ImGui::SelectStyleCombo("Style", &selected_style, ImGui::ImGuiStyle_Count, nullptr);
+			if (ImGui::Begin("Settings", &SettingsWindowOpen))
+			{
+				static int selected_style = Config.Style;
+				ImGui::SelectStyleCombo("Style", &selected_style, ImGui::ImGuiStyle_Count, nullptr);
+			}
+			ImGui::End();
 		}
-		ImGui::End();
+
 
 		ImGui::End();
 
