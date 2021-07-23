@@ -127,7 +127,7 @@ namespace Chroma
 
 }
 
-#define CHROMA_PROFILE
+
 #ifdef CHROMA_PROFILE
     #define CHROMA_PROFILE_BEGIN_SESSION(name, filepath) ::Chroma::Instrumentor::Get().BeginSession(name, filepath)
     #define CHROMA_PROFILE_END_SESSION() ::Chroma::Instrumentor::Get().EndSession()
