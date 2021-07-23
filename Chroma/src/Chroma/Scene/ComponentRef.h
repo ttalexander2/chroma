@@ -3,27 +3,32 @@
 #include "ECS.h"
 #include "Scene.h"
 #include "spdlog/fmt/ostr.h"
+#include "Component.h"
 
 namespace Chroma
 {
 	//Forward Declarations
 	class EntityRef;
+	class Component;
 
-	template <class T>
+	template<typename T>
+	concept ComponentType = std::is_base_of<Component, T>::value;
+
+	template <class ComponentType>
 	class ComponentRef
 	{
 		friend class Scene;
 	public:
-		T* operator->() { return m_Ptr; }
+		ComponentType* operator->() { return m_Ptr; }
 		Scene* GetScene() { return m_Scene; }
 		EntityID GetEntityID() { return m_Entity; }
 
 		bool IsNull() { return m_Ptr == nullptr || m_Scene == nullptr; }
 
 		template<typename OStream>
-		friend OStream& operator<<(OStream& os, const ComponentRef<T>& t)
+		friend OStream& operator<<(OStream& os, const ComponentRef<ComponentType>& t)
 		{
-			return os << "Component: " << FindTypeName(typeid(T).name()) << " (Entity " << t.m_Entity << ")";
+			return os << "Component: " << FindTypeName(typeid(ComponentType).name()) << " (Entity " << t.m_Entity << ")";
 		}
 
 		void Delete()
@@ -33,7 +38,7 @@ namespace Chroma
 
 
 	private:
-		ComponentRef<typename T>(T* ptr, EntityID id, Scene* scene)
+		ComponentRef<typename ComponentType>(ComponentType* ptr, EntityID id, Scene* scene)
 			: m_Ptr(ptr), m_Entity(id), m_Scene(scene)
 		{
 		}
@@ -48,7 +53,7 @@ namespace Chroma
 
 	private:
 		EntityID m_Entity;
-		T* m_Ptr;
+		ComponentType* m_Ptr;
 		Scene* m_Scene;
 
 	};

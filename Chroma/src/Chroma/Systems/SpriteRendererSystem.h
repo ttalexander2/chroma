@@ -9,6 +9,7 @@ namespace Chroma
 	public:
 		void Init() override;
 		void Draw(Time delta) override;
+		void LateUpdate(Time delta) override;
 	};
 
 }

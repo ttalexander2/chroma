@@ -93,7 +93,7 @@ namespace Chroma
 				m_ComponentPools.push_back(new ComponentPool<T>());
 			}
 
-			CHROMA_CORE_TRACE("Registered Component: {0}", m_ComponentNames[id]);
+			//CHROMA_CORE_TRACE("Registered Component: {0}", m_ComponentNames[id]);
 		}
 
 		template<typename T>

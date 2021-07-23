@@ -63,7 +63,8 @@ namespace Chroma
 			std::vector<T*> results;
 			for (uint32_t i : m_SparseComponents[id])
 			{
-				results.push_back(&m_PackedComponents[i]);
+				if (m_PackedComponents.size() > i)
+					results.push_back(&m_PackedComponents[i]);
 			}
 
 			return results;

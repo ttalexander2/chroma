@@ -9,12 +9,12 @@ Entities:
         Rotation: [0, 0, 0]
         Scale: [1, 1, 1]
       Sprite Renderer:
-        Color: [1, 1, 1, 1]
+        Color: [0.362385333, 0.310853481, 0.310853481, 1]
         Offset: [0, 0, 0]
-        Scale: [1, 1, 1]
         Layer: Default
-        PlayOnStart: true
-        Sprite: ""
+        PlayOnStart: false
+        SpriteID: .\assets\textures\megagfilms.png
+        Loop: false
   - Entity: 1
     Components:
       Tag:
@@ -23,57 +23,10 @@ Entities:
         Position: [0, 0, 0]
         Rotation: [0, 0, 0]
         Scale: [1, 1, 1]
-  - Entity: 2
-    Components:
-      Tag:
-        EntityName: Entity_2
-      Transform:
-        Position: [0, 0, 0]
-        Rotation: [0, 0, 0]
-        Scale: [1, 1, 1]
-  - Entity: 3
-    Components:
-      Tag:
-        EntityName: Entity_3
-      Transform:
-        Position: [0, 0, 0]
-        Rotation: [0, 0, 0]
-        Scale: [1, 1, 1]
-  - Entity: 4
-    Components:
-      Tag:
-        EntityName: Entity_4
-      Transform:
-        Position: [0, 0, 0]
-        Rotation: [0, 0, 0]
-        Scale: [1, 1, 1]
-  - Entity: 5
-    Components:
-      Tag:
-        EntityName: Entity_5
-      Transform:
-        Position: [0, 0, 0]
-        Rotation: [0, 0, 0]
-        Scale: [1, 1, 1]
-  - Entity: 6
-    Components:
-      Tag:
-        EntityName: Entity_6
-      Transform:
-        Position: [0, 0, 0]
-        Rotation: [0, 0, 0]
-        Scale: [1, 1, 1]
-  - Entity: 7
-    Components:
-      Tag:
-        EntityName: Entity_7
-      Transform:
-        Position: [0, 0, 0]
-        Rotation: [0, 0, 0]
-        Scale: [1, 1, 1]
-      Box Collider 2D:
-        Bounds: [1, 1]
-        Offset: [0, 0]
-      Circle Collider 2D:
-        Radius: 1
-        Offset: [0, 0]
+      Sprite Renderer:
+        Color: [1, 1, 1, 1]
+        Offset: [0, 0, 0]
+        Layer: Default
+        PlayOnStart: true
+        SpriteID: .\assets\textures\test.ase
+        Loop: true

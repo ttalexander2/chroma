@@ -21,11 +21,13 @@
 #include <Chroma/ImGui/ImGuiDebugMenu.h>
 #include "Fonts/Roboto.cpp"
 #include <Chroma/Images/Aseprite.h>
-#include <Chroma/Components/SpriteRenderer.h>
 #include "Style.h"
 #include <Chroma/Components/Transform.h>
 #include <Chroma/Utilities/FileWatcher.h>
 #include "readerwriterqueue.h"
+//#include <Chroma/Assets/AssetManager.h>
+#include <Chroma/Components/SpriteRenderer.h>
+#include <Chroma/Assets/AssetManager.h>
 
 
 namespace Polychrome
@@ -34,9 +36,10 @@ namespace Polychrome
 	std::vector<Chroma::Ref<Chroma::Texture2D>> testAseprite;
 
 
-	
+	moodycamel::ReaderWriterQueue<std::function<void()>> file_queue;
 
-
+	std::thread file_watcher_thread;
+	std::atomic_bool file_watcher_thread_running;
 
 	EditorApp::EditorApp()
 		: Application("Polychrome Editor", 1920U, 1080U), m_CameraController(1920.0f / 1080.0f)
@@ -79,15 +82,30 @@ namespace Polychrome
 		//scene->GetAllComponents(entity);
 
 
-		CHROMA_INFO("");
+		//CHROMA_INFO("");
 
 		this->m_ActiveScene = scene;
+
+
+		for (auto& file : std::filesystem::recursive_directory_iterator(".\\assets"))
+		{
+			if (file.is_regular_file())
+			{
+				std::string extension = file.path().extension().string();
+				if (extension == ".ase" || extension == ".png" || extension == ".jpg")
+				{
+					CHROMA_CORE_INFO("{}", file.path().string());
+					Chroma::Ref<Chroma::Sprite> sprite = Chroma::AssetManager::CreateSprite(file.path().string());
+					sprite->Load();
+				}
+			}
+		}
 
 		
 		file_watcher_thread_running.store(true);
 
 		file_watcher_thread = std::thread([] {
-			FileWatcher fw{ ".\\assets", std::chrono::milliseconds(5000) };
+			FileWatcher fw{ ".\\assets", std::chrono::milliseconds(3000) };
 			fw.start(file_watcher_thread_running, [](std::string path_to_watch, FileStatus status) -> void {
 				// Process only regular files, all other file types are ignored
 				if (!std::filesystem::is_regular_file(std::filesystem::path(path_to_watch)) && status != FileStatus::erased)
@@ -100,20 +118,44 @@ namespace Polychrome
 				case FileStatus::created:
 					file_queue.enqueue([path_to_watch]() {
 						CHROMA_CORE_TRACE("File Created: {}", path_to_watch);
-						});
+						std::string extension = std::filesystem::path(path_to_watch).extension().string();
+						if (extension == ".ase" || extension == ".png" || extension == ".jpg")
+						{
+							Chroma::AssetManager::CreateSprite(path_to_watch)->Load();
+						}
+					});
 					break;
 				case FileStatus::modified:
 					file_queue.enqueue([path_to_watch]() {
 						CHROMA_CORE_TRACE("File Modified: {}", path_to_watch);
+						std::string extension = std::filesystem::path(path_to_watch).extension().string();
+						if (extension == ".ase" || extension == ".png" || extension == ".jpg")
+						{
+							if (Chroma::AssetManager::HasSprite(path_to_watch))
+							{
+								Chroma::AssetManager::GetSprite(path_to_watch)->Reload();
+							}
+							else
+							{
+								Chroma::AssetManager::CreateSprite(path_to_watch)->Load();
+							}
+							
+						}
 					});
 					break;
 				case FileStatus::erased:
 					file_queue.enqueue([path_to_watch]() {
 						CHROMA_CORE_TRACE("File Erased: {}", path_to_watch);
+						std::string extension = std::filesystem::path(path_to_watch).extension().string();
+						if (extension == ".ase" || extension == ".png" || extension == ".jpg")
+						{
+							
+						}
 					});
+					
 					break;
 				default:
-					std::cout << "Error! Unknown file status.\n";
+					CHROMA_CORE_TRACE("Error! Unknown file status.\n");
 				}
 			});
 		});
@@ -155,29 +197,7 @@ namespace Polychrome
 
 		Config.Style = (int)ImGui::ImGuiStylePreset::Cherry;
 
-		//ase_t* ase = cute_aseprite_load_from_file("assets/textures/test.ase", NULL);
-		//auto texture = Chroma::Texture2D::Create(ase->w, ase->h);
-		//texture->SetData(ase->frames->pixels, sizeof(ase->frames->pixels)/sizeof(ase->frames->pixels[0]));
-
-		Chroma::Aseprite test("assets/textures/test.ase");
-		CHROMA_INFO("IMAGE {0}; [{1}, {2}]", "assets/textures/test.ase", test.frames[0].image.Width, test.frames[0].image.Height);
-		test.frames[0].image.SavePNG("test2.png");
-
-		Chroma::Color* data = new Chroma::Color[test.width * test.height];
-
-		testAseprite.reserve(test.frames.size());
-
-		for (int i = 0; i < test.frames.size(); i++)
-		{
-
-			testAseprite.push_back(Chroma::Texture2D::Create(test.width, test.height));
-
-			test.frames[i].image.FlipVertically();
-			test.frames[i].image.GetData(data);
-			testAseprite[i]->SetData(data, sizeof(Chroma::Color) * test.width * test.height);
-		}
-
-		delete[] data;
+		
 
 	}
 
@@ -196,7 +216,10 @@ namespace Polychrome
 			m_CameraController.OnUpdate(time);
 		}
 
-		
+		std::function<void()> func;
+		bool success = file_queue.try_dequeue(func);
+		if (success)
+			func();
 
 	}
 
@@ -222,18 +245,6 @@ namespace Polychrome
 		m_ActiveScene->EarlyDraw(time);
 		m_ActiveScene->Draw(time);
 		m_ActiveScene->LateDraw(time);
-
-		static float timeSince = 0;
-		static int frame = 0;
-		timeSince += time;
-		if (timeSince > 0.3)
-		{
-			timeSince = 0;
-			frame++;
-		}
-
-		int i = frame % testAseprite.size();
-		Chroma::Renderer2D::DrawQuad({ 0,0 }, { 64,64 }, testAseprite[i]);
 
 #if 0
 		

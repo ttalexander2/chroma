@@ -128,7 +128,7 @@ namespace Chroma
 
 		frames.resize(frame_count);
 
-		CHROMA_CORE_TRACE("Frame Count: {0}", frame_count);
+		//CHROMA_CORE_TRACE("Frame Count: {0}", frame_count);
 
 		// frames
 		for (int i = 0; i < frame_count; i++)
@@ -169,7 +169,7 @@ namespace Chroma
 			// make frame image
 			frames[i].image = Image(width, height);
 
-			CHROMA_CORE_TRACE("Frame [{}]({} chunks).", i, chunks);
+			//CHROMA_CORE_TRACE("Frame [{}]({} chunks).", i, chunks);
 
 			// frame chunks
 			for (unsigned int j = 0; j < chunks; j++)
@@ -183,7 +183,7 @@ namespace Chroma
 
 				auto chunkType = static_cast<Chunks>(read<uint16_t>(stream, Endian::Little));
 
-				CHROMA_CORE_TRACE("Chunk [{}]: Start[{}], End[{}], Size[{}], Type[0x{:x}]", j, (std::streamoff)chunkStart, (std::streamoff)chunkEnd, chunkSize, chunkType);
+				//CHROMA_CORE_TRACE("Chunk [{}]: Start[{}], End[{}], Size[{}], Type[0x{:x}]", j, (std::streamoff)chunkStart, (std::streamoff)chunkEnd, chunkSize, chunkType);
 
 
 
@@ -382,9 +382,10 @@ namespace Chroma
 			tag.color = Color(read<int8_t>(stream), read<int8_t>(stream), read<int8_t>(stream, Endian::Little), 255);
 			stream.seekg(1, std::ios_base::cur);
 
-			char* buff = new char[read<uint16_t>(stream, Endian::Little)];
-			stream.read(buff, tag.name.length());
-			tag.name = std::string(buff);
+			uint16_t len = read<uint16_t>(stream, Endian::Little);
+			char* buff = new char[len];
+			stream.read(buff, len);
+			tag.name = std::string(buff, buff + len);
 			delete buff;
 
 			tags.push_back(tag);

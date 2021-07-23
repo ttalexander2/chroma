@@ -21,7 +21,7 @@ namespace Chroma
 		m_Width = width;
 		m_Height = height;
 
-		CHROMA_CORE_TRACE("{0}: Channels: {1}", path, channels);
+		//CHROMA_CORE_TRACE("{0}: Channels: {1}", path, channels);
 
 		if (channels == 4)
 		{
@@ -50,6 +50,7 @@ namespace Chroma
 	OpenGLTexture2D::OpenGLTexture2D(uint32_t width, uint32_t height)
 		:m_Width(width), m_Height(height)
 	{
+
 		m_InternalFormat = GL_RGBA8;
 		m_DataFormat = GL_RGBA;
 
