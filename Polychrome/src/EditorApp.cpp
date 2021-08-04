@@ -205,9 +205,9 @@ namespace Polychrome
 	void EditorApp::Update(Chroma::Time time)
 	{
 
-		m_ActiveScene->EarlyUpdate(time);
-		m_ActiveScene->Update(time);
-		m_ActiveScene->LateUpdate(time);
+		//m_ActiveScene->EarlyUpdate(time);
+		//m_ActiveScene->Update(time);
+		//m_ActiveScene->LateUpdate(time);
 
 		CHROMA_PROFILE_FUNCTION();
 		// Update
@@ -217,9 +217,15 @@ namespace Polychrome
 		}
 
 		std::function<void()> func;
-		bool success = file_queue.try_dequeue(func);
-		if (success)
-			func();
+		bool success;
+		while (success = file_queue.try_dequeue(func))
+		{
+			if (success)
+				func();
+			else
+				break;
+		}
+
 
 	}
 

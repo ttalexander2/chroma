@@ -61,6 +61,9 @@
     <Filter Include="third_party">
       <UniqueIdentifier>{0FB18DF1-7B66-06E7-045B-00BE700FFDEA}</UniqueIdentifier>
     </Filter>
+    <Filter Include="third_party\ImGuizmo">
+      <UniqueIdentifier>{4FC46CC1-3B53-F68A-E471-0A86D0DF0631}</UniqueIdentifier>
+    </Filter>
     <Filter Include="third_party\concurrentqueue">
       <UniqueIdentifier>{A68493C7-1292-C1AD-9B78-BD9807858D64}</UniqueIdentifier>
     </Filter>
@@ -635,6 +638,24 @@
     </ClInclude>
     <ClInclude Include="src\chromapch.h">
       <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\ImGuizmo\GraphEditor.h">
+      <Filter>third_party\ImGuizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\ImGuizmo\ImCurveEdit.h">
+      <Filter>third_party\ImGuizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\ImGuizmo\ImGradient.h">
+      <Filter>third_party\ImGuizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\ImGuizmo\ImGuizmo.h">
+      <Filter>third_party\ImGuizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\ImGuizmo\ImSequencer.h">
+      <Filter>third_party\ImGuizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\ImGuizmo\ImZoomSlider.h">
+      <Filter>third_party\ImGuizmo</Filter>
     </ClInclude>
     <ClInclude Include="third_party\concurrentqueue\benchmarks\boostqueue.h">
       <Filter>third_party\concurrentqueue\benchmarks</Filter>
@@ -1878,6 +1899,7 @@
     <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\yaml.h">
       <Filter>third_party\yaml-cpp\include\yaml-cpp</Filter>
     </ClInclude>
+    <ClInclude Include="src\Chroma\Math\Decompose.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Chroma\Assets\AssetManager.cpp">
@@ -2039,8 +2061,24 @@
     <ClCompile Include="src\chromapch.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="third_party\ImGuizmo\GraphEditor.cpp">
+      <Filter>third_party\ImGuizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\ImGuizmo\ImCurveEdit.cpp">
+      <Filter>third_party\ImGuizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\ImGuizmo\ImGradient.cpp">
+      <Filter>third_party\ImGuizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\ImGuizmo\ImGuizmo.cpp">
+      <Filter>third_party\ImGuizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="third_party\ImGuizmo\ImSequencer.cpp">
+      <Filter>third_party\ImGuizmo</Filter>
+    </ClCompile>
     <ClCompile Include="third_party\stb_image\stb_image.cpp">
       <Filter>third_party\stb_image</Filter>
     </ClCompile>
+    <ClCompile Include="src\Chroma\Math\Decompose.cpp" />
   </ItemGroup>
 </Project>

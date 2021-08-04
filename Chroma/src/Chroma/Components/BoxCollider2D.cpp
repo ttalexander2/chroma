@@ -12,8 +12,6 @@ namespace Chroma
 
 		DrawComponentValue("Offset");
 		ImGui::Vec2IntWithLabels("##box_collider_2d_offset", Offset);
-
-
 	}
 	void BoxCollider2D::Serialize(YAML::Emitter& out)
 	{

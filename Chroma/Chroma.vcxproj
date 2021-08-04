@@ -78,7 +78,7 @@
       <WarningLevel>Level3</WarningLevel>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;GLM_FORCE_MESSAGES;GLM_FORCE_INTRINSICS;GLM_FORCE_INLINE;GLM_FORCE_ALIGNED_GENTYPES;CHROMA_PLATFORM_WINDOWS;CHROMA_BUILD_DLL;GLFW_INCLUDE_NONE;CHROMA_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;third_party\spdlog\include;third_party\GLFW\include;third_party\Glad\include;third_party\imgui;third_party\imgui\misc\cpp;third_party\glm;third_party\stb_image;third_party\fmod;third_party\lua;third_party\yaml-cpp\include;third_party\cute_headers;third_party\concurrentqueue;third_party\readerwriterqueue;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;third_party\spdlog\include;third_party\GLFW\include;third_party\Glad\include;third_party\imgui;third_party\imgui\misc\cpp;third_party\glm;third_party\stb_image;third_party\fmod;third_party\lua;third_party\yaml-cpp\include;third_party\cute_headers;third_party\concurrentqueue;third_party\readerwriterqueue;third_party\ImGuizmo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -104,7 +104,7 @@
       <PrecompiledHeaderFile>chromapch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;GLM_FORCE_MESSAGES;GLM_FORCE_INTRINSICS;GLM_FORCE_INLINE;GLM_FORCE_ALIGNED_GENTYPES;CHROMA_PLATFORM_WINDOWS;CHROMA_BUILD_DLL;GLFW_INCLUDE_NONE;CHROMA_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;third_party\spdlog\include;third_party\GLFW\include;third_party\Glad\include;third_party\imgui;third_party\imgui\misc\cpp;third_party\glm;third_party\stb_image;third_party\fmod;third_party\lua;third_party\yaml-cpp\include;third_party\cute_headers;third_party\concurrentqueue;third_party\readerwriterqueue;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;third_party\spdlog\include;third_party\GLFW\include;third_party\Glad\include;third_party\imgui;third_party\imgui\misc\cpp;third_party\glm;third_party\stb_image;third_party\fmod;third_party\lua;third_party\yaml-cpp\include;third_party\cute_headers;third_party\concurrentqueue;third_party\readerwriterqueue;third_party\ImGuizmo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -128,7 +128,7 @@
       <PrecompiledHeaderFile>chromapch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;GLM_FORCE_MESSAGES;GLM_FORCE_INTRINSICS;GLM_FORCE_INLINE;GLM_FORCE_ALIGNED_GENTYPES;CHROMA_PLATFORM_WINDOWS;CHROMA_BUILD_DLL;GLFW_INCLUDE_NONE;CHROMA_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;third_party\spdlog\include;third_party\GLFW\include;third_party\Glad\include;third_party\imgui;third_party\imgui\misc\cpp;third_party\glm;third_party\stb_image;third_party\fmod;third_party\lua;third_party\yaml-cpp\include;third_party\cute_headers;third_party\concurrentqueue;third_party\readerwriterqueue;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;third_party\spdlog\include;third_party\GLFW\include;third_party\Glad\include;third_party\imgui;third_party\imgui\misc\cpp;third_party\glm;third_party\stb_image;third_party\fmod;third_party\lua;third_party\yaml-cpp\include;third_party\cute_headers;third_party\concurrentqueue;third_party\readerwriterqueue;third_party\ImGuizmo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -189,6 +189,7 @@
     <ClInclude Include="src\Chroma\Images\Color.h" />
     <ClInclude Include="src\Chroma\Images\Image.h" />
     <ClInclude Include="src\Chroma\Math\Common.h" />
+    <ClInclude Include="src\Chroma\Math\Decompose.h" />
     <ClInclude Include="src\Chroma\Math\Exponential.h" />
     <ClInclude Include="src\Chroma\Math\Ext.h" />
     <ClInclude Include="src\Chroma\Math\Fwd.h" />
@@ -255,6 +256,12 @@
     <ClInclude Include="src\Chroma\Utilities\StringHelper.h" />
     <ClInclude Include="src\Chroma\Utilities\Yaml.h" />
     <ClInclude Include="src\chromapch.h" />
+    <ClInclude Include="third_party\ImGuizmo\GraphEditor.h" />
+    <ClInclude Include="third_party\ImGuizmo\ImCurveEdit.h" />
+    <ClInclude Include="third_party\ImGuizmo\ImGradient.h" />
+    <ClInclude Include="third_party\ImGuizmo\ImGuizmo.h" />
+    <ClInclude Include="third_party\ImGuizmo\ImSequencer.h" />
+    <ClInclude Include="third_party\ImGuizmo\ImZoomSlider.h" />
     <ClInclude Include="third_party\concurrentqueue\benchmarks\boostqueue.h" />
     <ClInclude Include="third_party\concurrentqueue\benchmarks\cpuid.h" />
     <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\algs.h" />
@@ -692,6 +699,7 @@
     <ClCompile Include="src\Chroma\Images\Aseprite.cpp" />
     <ClCompile Include="src\Chroma\Images\Color.cpp" />
     <ClCompile Include="src\Chroma\Images\Image.cpp" />
+    <ClCompile Include="src\Chroma\Math\Decompose.cpp" />
     <ClCompile Include="src\Chroma\Platform\OpenGL\OpenGLBuffer.cpp" />
     <ClCompile Include="src\Chroma\Platform\OpenGL\OpenGLContext.cpp" />
     <ClCompile Include="src\Chroma\Platform\OpenGL\OpenGLFramebuffer.cpp" />
@@ -725,6 +733,21 @@
     <ClCompile Include="src\Chroma\Utilities\Yaml.cpp" />
     <ClCompile Include="src\chromapch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="third_party\ImGuizmo\GraphEditor.cpp">
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="third_party\ImGuizmo\ImCurveEdit.cpp">
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="third_party\ImGuizmo\ImGradient.cpp">
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="third_party\ImGuizmo\ImGuizmo.cpp">
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="third_party\ImGuizmo\ImSequencer.cpp">
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="third_party\stb_image\stb_image.cpp" />
   </ItemGroup>

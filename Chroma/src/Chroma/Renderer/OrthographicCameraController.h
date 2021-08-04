@@ -19,6 +19,8 @@ namespace Chroma
 		OrthographicCamera& GetCamera() { return m_Camera; }
 		const OrthographicCamera& GetCamera() const { return m_Camera; }
 
+		glm::vec3 GetPosition() const { return m_CameraPosition; }
+
 		void SetZoomLevel(float level) { m_ZoomLevel = level; }
 		float GetZoomLevel() const { return m_ZoomLevel; }
 	private:

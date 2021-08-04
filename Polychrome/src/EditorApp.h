@@ -25,6 +25,8 @@ namespace Polychrome
 
 		EditorConfig Config;
 
+		Chroma::OrthographicCameraController& GetCameraController() { return m_CameraController; }
+
 	private:
 		Chroma::OrthographicCameraController m_CameraController;
 

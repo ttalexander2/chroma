@@ -100,7 +100,7 @@ namespace Chroma
 					Ref<Sprite> s = AssetManager::GetSprite(spriteRenderer->SpriteID);
 					int w = s->Frames[spriteRenderer->CurrentFrame].Texture->GetWidth();
 					int h = s->Frames[spriteRenderer->CurrentFrame].Texture->GetHeight();
-					Chroma::Renderer2D::DrawQuad(transform->Position + spriteRenderer->Offset, transform->Scale * Math::vec3((float)w, (float)h, 1.0f), s->Frames[spriteRenderer->CurrentFrame].Texture, spriteRenderer->Color, glm::radians(transform->Rotation.x));
+					Chroma::Renderer2D::DrawQuad(transform->Position + spriteRenderer->Offset, transform->Scale * Math::vec3((float)w, (float)h, 1.0f), s->Frames[spriteRenderer->CurrentFrame].Texture, spriteRenderer->Color, transform->Rotation.z);
 				}
 				
 				

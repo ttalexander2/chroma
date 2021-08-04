@@ -121,7 +121,7 @@ namespace Chroma
 					for (auto component : components)
 					{
 						std::string key = component.first.as<std::string>();
-						ComponentRef<Component> newComponent = out.m_ComponentFactory[key](out, newEntity);
+						ComponentRef<Component> newComponent = out.m_ComponentFactory[key](out, newEntity.GetID());
 						newComponent->Deserialize(component.second);
 					}
 				}

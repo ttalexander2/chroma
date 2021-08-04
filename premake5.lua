@@ -24,6 +24,7 @@ IncludeDir["yaml"] = "Chroma/third_party/yaml-cpp/include"
 IncludeDir["cute_headers"] = "Chroma/third_party/cute_headers"
 IncludeDir["concurrentqueue"] = "Chroma/third_party/concurrentqueue"
 IncludeDir["readerwriterqueue"] = "Chroma/third_party/readerwriterqueue"
+IncludeDir["ImGuizmo"] = "Chroma/third_party/ImGuizmo"
 
 group "Dependencies"
     include "Chroma/third_party/GLFW"
@@ -59,7 +60,9 @@ project "Chroma"
         "%{prj.name}/third_party/yaml-cpp/include/yaml-cpp/**.h",
         "%{prj.name}/third_party/cute_headers/**.h",
         "%{prj.name}/third_party/concurrentqueue/**.h",
-        "%{prj.name}/third_party/readerwriterqueue/**.h"
+        "%{prj.name}/third_party/readerwriterqueue/**.h",
+        "%{prj.name}/third_party/ImGuizmo/*.cpp",
+        "%{prj.name}/third_party/ImGuizmo/*.h"
     }
 
     defines
@@ -86,7 +89,8 @@ project "Chroma"
         "%{IncludeDir.yaml}",
         "%{IncludeDir.cute_headers}",
         "%{IncludeDir.concurrentqueue}",
-        "%{IncludeDir.readerwriterqueue}"
+        "%{IncludeDir.readerwriterqueue}",
+        "%{IncludeDir.ImGuizmo}"
 
     }
 
@@ -98,6 +102,9 @@ project "Chroma"
         "opengl32.lib",
         "yaml-cpp"
     }
+
+    filter "files:Chroma/third_party/ImGuizmo/**.cpp"
+        flags { "NoPCH" }
 
     filter "system:windows"
         systemversion "latest"
@@ -246,8 +253,8 @@ project "Polychrome"
         "%{IncludeDir.FMOD}",
         "%{IncludeDir.yaml}",
         "%{IncludeDir.concurrentqueue}",
-        "%{IncludeDir.readerwriterqueue}"
-
+        "%{IncludeDir.readerwriterqueue}",
+        "%{IncludeDir.ImGuizmo}"
     }
 
     links
@@ -270,7 +277,6 @@ project "Polychrome"
     {
         CHROMA_EDITOR
     }
-
 
     filter "system:windows"
         systemversion "latest"

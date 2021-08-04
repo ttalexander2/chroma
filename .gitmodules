@@ -31,3 +31,6 @@
 [submodule "Chroma/third_party/concurrentqueue"]
 	path = Chroma/third_party/concurrentqueue
 	url = https://github.com/ttalexander2/concurrentqueue.git
+[submodule "Chroma/third_party/ImGuizmo"]
+	path = Chroma/third_party/ImGuizmo
+	url = https://github.com/ttalexander2/ImGuizmo.git

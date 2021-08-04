@@ -3,14 +3,14 @@
 #include "imgui_internal.h"
 #include "Chroma/ImGui/Widgets/VecWithLabels.h"
 
+#include <glm/gtx/quaternion.hpp>
+
 
 namespace Chroma
 {
 	Math::mat4 Transform::GetTransform() const
 	{
-		glm::mat4 rotation = glm::rotate(glm::mat4(1.0f), Position.y, { 1, 0, 0 })
-			* glm::rotate(glm::mat4(1.0f), glm::radians(Rotation.y), { 0, 1, 0 })
-			* glm::rotate(glm::mat4(1.0f), glm::radians(Rotation.z), { 0, 0, 1 });
+		glm::mat4 rotation = glm::toMat4(glm::quat(Rotation));
 
 		return Math::translate(glm::mat4(1.0f), Position)
 			* rotation * glm::scale(glm::mat4(1.0f), Scale);
@@ -22,7 +22,9 @@ namespace Chroma
 		ImGui::Vec3IntWithLabels(("##transform_position" + std::to_string(this->GetUniqueID())).c_str(), Position);
 
 		DrawComponentValue("Rotation");
-		ImGui::Vec3FloatWithLabels(("##transform_rotation" + std::to_string(this->GetUniqueID())).c_str(), Rotation);
+		glm::vec3 rot = glm::degrees(Rotation);
+		ImGui::Vec3FloatWithLabels(("##transform_rotation" + std::to_string(this->GetUniqueID())).c_str(), rot);
+		Rotation = glm::radians(rot);
 
 		DrawComponentValue("Scale");
 		ImGui::Vec3FloatWithLabels(("##transform_scale" + std::to_string(this->GetUniqueID())).c_str(), Scale, false);
