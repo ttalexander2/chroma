@@ -5,12 +5,19 @@
 
 namespace Chroma
 {
+	/// @brief Tag component. Provides names for entities.
 	struct Tag : Component
 	{
+		/// @brief Entity Name.
 		std::string EntityName = "New Entity";
 
+		/// @brief Constructs an empty Tag component.
 		Tag() = default;
+		/// @brief Constructs a Tag component from an existing Tag.
+		/// @param  Tag to copy.
 		Tag(const Tag&) = default;
+		/// @brief Constructs a new Tag.
+		/// @param name Entity name for tag.
 		Tag(const std::string& name)
 			: EntityName(name)
 		{

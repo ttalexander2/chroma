@@ -14,18 +14,19 @@
 #include "Chroma/Math/Math.h"
 #include "Chroma/Audio/ChromaFMOD.h"
 
-//Adapted from https://codyclaborn.me/tutorials/making-a-basic-fmod-audio-engine-in-c/
-
 
 namespace Chroma
 {
+	/// @brief Static class for managing and controlling FMOD audio within the engine.
+	///
+	/// Adapted from <a href="https://codyclaborn.me/tutorials/making-a-basic-fmod-audio-engine-in-c/">https://codyclaborn.me/tutorials/making-a-basic-fmod-audio-engine-in-c/</a>
 	class Audio
 	{
 		friend class Application;
 		friend struct ChromaFMOD;
 	public:
 
-		static void LoadBank(const std::string& bankName, FMOD_STUDIO_LOAD_BANK_FLAGS flags);
+		static void LoadBank(const std::string& bankName, FMOD_STUDIO_LOAD_BANK_FLAGS flags = FMOD_STUDIO_LOAD_BANK_NORMAL);
 		static void LoadEvent(const std::string& eventName);
 		static void Set3dListenerAndOrientation(const Math::vec3& position = { 0, 0, 0 }, float volume_dB = 0.0f);
 		static void PlayEvent(const std::string& eventName);

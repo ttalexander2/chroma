@@ -78,7 +78,7 @@ namespace Polychrome
 
 			
 
-				auto transform = EditorApp::Get().m_ActiveScene->GetComponent<Chroma::Transform>(Hierarchy::SelectedEntity);
+				auto transform = EditorApp::CurrentScene->GetComponent<Chroma::Transform>(Hierarchy::SelectedEntity);
 				glm::mat4 transformMat = transform->GetTransform();
 
 				const float snap = 1.0f;

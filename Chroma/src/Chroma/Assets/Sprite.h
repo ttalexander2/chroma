@@ -5,12 +5,17 @@
 
 namespace Chroma
 {
+
+	/// @brief Animated or Static Sprite.
+	///
+	/// Class for Game Sprite. This sprite can be static or animated.
 	struct Sprite: public Asset
 	{
 		Sprite() = default;
 		Sprite(const Sprite&) = default;
-		Sprite(const std::string& path) : Path(path) 
+		Sprite(const std::string& path)
 		{
+			Path = path;
 		}
 
 		~Sprite()
@@ -19,7 +24,7 @@ namespace Chroma
 		}
 
 
-
+		/// @brief Enum for looping direction
 		enum class LoopDirection
 		{
 			Forward = 0,
@@ -27,12 +32,14 @@ namespace Chroma
 			PingPong = 2
 		};
 
+		/// @brief Single animation frame.
 		struct Frame
 		{
 			unsigned int Durration = 100;
 			Ref<Texture2D> Texture;
 		};
 
+		/// @brief Sprite animation.
 		struct Animation
 		{
 			std::string Tag;
@@ -42,90 +49,19 @@ namespace Chroma
 			Chroma::Color LabelColor;
 		};
 
-		std::string Path;
+		/// @brief List of sprite animations.
 		std::vector<Animation> Animations;
+
+		/// @brief List of sprite frames.
 		std::vector<Frame> Frames;
 
+		bool Load() override;
+		bool Unload() override;
+		bool Reload() override;
+
+		/// @brief Returns true if the sprite is animated.
 		bool Animated() { return Animations.size() > 0; }
 
-		void Load() override
-		{
-			if (std::filesystem::path(Path).extension() == ".ase")
-			{
-				Aseprite a = Aseprite(Path);
 
-				Chroma::Color* data = new Chroma::Color[a.width * a.height];
-
-				for (auto& frame : a.frames)
-				{
-					Frame fr;
-					fr.Durration = frame.duration;
-					fr.Texture = Chroma::Texture2D::Create(a.width, a.height);
-					frame.image.FlipVertically();
-					frame.image.GetData(data);
-					fr.Texture->SetData(data, sizeof(Chroma::Color) * a.width * a.height);
-					Frames.push_back(fr);
-				}
-
-				/*
-				if (a.frames.size() > 1 && a.tags.size() == 0)
-				{
-					Chroma::Sprite::Animation anim;
-					anim.Direction = Sprite::LoopDirection::Forward;
-					anim.Tag = "Default";
-					anim.Start = 1;
-					anim.End = a.frames.size();
-					Animations.push_back(anim);
-				}
-				*/
-
-				for (auto& tag : a.tags)
-				{
-					Chroma::Sprite::Animation anim;
-					anim.Direction = (Sprite::LoopDirection)tag.loops;
-					anim.Tag = tag.name;
-					anim.Start = tag.from;
-					anim.End = tag.to;
-					anim.LabelColor = tag.color;
-					Animations.push_back(anim);
-				}
-			}
-			else if (std::filesystem::path(Path).extension() == ".png")
-			{
-				Frame fr;
-				fr.Texture = Chroma::Texture2D::Create(Path);
-				Frames.push_back(fr);
-			}
-			else if (std::filesystem::path(Path).extension() == ".jpg")
-			{
-				Frame fr;
-				fr.Texture = Chroma::Texture2D::Create(Path);
-				Frames.push_back(fr);
-			}
-
-
-		}
-
-		void Unload() 
-		{
-			for (Frame f : Frames)
-			{
-				f.Texture.reset();
-			}
-
-			Frames.clear();
-			Animations.clear();
-		};
-
-		void Reload()
-		{
-			for (Frame f : Frames)
-			{
-				f.Texture.reset();
-			}
-			Frames.clear();
-			Animations.clear();
-			Load();
-		}
 	};
 }

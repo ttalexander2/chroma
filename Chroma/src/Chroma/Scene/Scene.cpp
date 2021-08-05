@@ -219,7 +219,7 @@ namespace Chroma
 		}
 	}
 
-	void Scene::EarlyDraw(Time delta)
+	void Scene::PreDraw(Time delta)
 	{
 		for (System* s : m_Systems)
 		{
@@ -235,7 +235,7 @@ namespace Chroma
 		}
 	}
 
-	void Scene::LateDraw(Time delta)
+	void Scene::PostDraw(Time delta)
 	{
 		for (System* s : m_Systems)
 		{

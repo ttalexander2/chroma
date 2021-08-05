@@ -5,9 +5,12 @@
 
 namespace Chroma
 {
+	/// @brief 2D circle collider. Collision is calulated based on radius, offset, and transform position.
 	struct CircleCollider2D : Component
 	{
+		/// @brief Radius of the circle collider.
 		float Radius = 1.0f;
+		/// @brief 2D offset of the circle collider.
 		Math::vec2 Offset { 0.0f, 0.0f };
 
 		const std::string Name() const override

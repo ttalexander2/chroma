@@ -7,5 +7,7 @@ public:
 	Runtime();
 	void Update(Chroma::Time delta) override;
 
+	static Chroma::Scene* CurrentScene;
+
 };
 

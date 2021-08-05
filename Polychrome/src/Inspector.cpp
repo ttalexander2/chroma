@@ -7,6 +7,7 @@
 #include <Chroma/ImGui/ImGuiDebugMenu.h>
 #include <Chroma/ImGui/ImGuiHelper.h>
 #include <Chroma/Scene/Inspectable.h>
+#include "EditorApp.h"
 
 namespace Polychrome
 {
@@ -31,7 +32,7 @@ namespace Polychrome
 	void Inspector::DrawEntity()
 	{
 		int unique = 69;
-		Chroma::Scene* scene = Chroma::Application::Get().m_ActiveScene;
+		Chroma::Scene* scene = EditorApp::CurrentScene;
 
 
 		if (Hierarchy::SelectedEntity == Chroma::ENTITY_NULL)

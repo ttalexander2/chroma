@@ -679,6 +679,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Chroma\Assets\AssetManager.cpp" />
+    <ClCompile Include="src\Chroma\Assets\Sprite.cpp" />
     <ClCompile Include="src\Chroma\Audio\Audio.cpp" />
     <ClCompile Include="src\Chroma\Audio\ChromaFMOD.cpp" />
     <ClCompile Include="src\Chroma\Components\AudioSource.cpp" />
@@ -749,7 +750,6 @@
     <ClCompile Include="third_party\ImGuizmo\ImSequencer.cpp">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="third_party\stb_image\stb_image.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="third_party\GLFW\GLFW.vcxproj">

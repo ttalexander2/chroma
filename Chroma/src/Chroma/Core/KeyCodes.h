@@ -2,7 +2,7 @@
 
 //Adapted from glfw3.h
 
-/* Printable keys */
+/// PRINTABLE KEYS
 #define CHROMA_KEY_SPACE              32
 #define CHROMA_KEY_APOSTROPHE         39  /* ' */
 #define CHROMA_KEY_COMMA              44  /* , */

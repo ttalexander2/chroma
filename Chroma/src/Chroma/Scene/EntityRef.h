@@ -78,12 +78,13 @@ namespace Chroma
 			return (this->m_EntityID < b.m_EntityID);
 		}
 
+		
 		template<typename OStream>
 		friend OStream& operator<<(OStream& os, const EntityRef& e)
 		{
 			return os << "Entity " << e.m_EntityID << "";
 		}
-
+		
 
 	private:
 

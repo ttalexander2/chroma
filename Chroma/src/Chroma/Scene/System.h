@@ -7,6 +7,11 @@ namespace Chroma
 	class System
 	{
 	public:
+
+		virtual void PreLoad() {};
+		virtual void Load() {};
+		virtual void PostLoad() {};
+
 		virtual void EarlyInit() {};
 		virtual void Init() {};
 		virtual void LateInit() {};

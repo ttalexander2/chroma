@@ -2076,9 +2076,7 @@
     <ClCompile Include="third_party\ImGuizmo\ImSequencer.cpp">
       <Filter>third_party\ImGuizmo</Filter>
     </ClCompile>
-    <ClCompile Include="third_party\stb_image\stb_image.cpp">
-      <Filter>third_party\stb_image</Filter>
-    </ClCompile>
     <ClCompile Include="src\Chroma\Math\Decompose.cpp" />
+    <ClCompile Include="src\Chroma\Assets\Sprite.cpp" />
   </ItemGroup>
 </Project>

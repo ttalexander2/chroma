@@ -405,6 +405,8 @@ namespace Chroma
 
 #pragma region UpdateLoop
 
+		//TODO: Load & Unload Functions
+
 		void EarlyInit();
 		void Init();
 		void LateInit();
@@ -413,9 +415,9 @@ namespace Chroma
 		void Update(Time delta);
 		void LateUpdate(Time delta);
 
-		void EarlyDraw(Time delta);
+		void PreDraw(Time delta);
 		void Draw(Time delta);
-		void LateDraw(Time delta);
+		void PostDraw(Time delta);
 
 #pragma endregion
 

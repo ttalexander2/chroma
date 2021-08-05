@@ -8,9 +8,16 @@
 
 namespace Chroma
 {
+	/// @brief Logging class, using the spdlog interface.
+	///
+	/// The logging api provides multiple macros for logging at different levels.
+	/// Levels occur in the following order: Trace, Info, Warning, Error, and Fatal, from least to most significant.
+	/// 
+	/// spdlog can be configured in such a way to only provide warnings at a certain level.
 	class CHROMA_API Log
 	{
 	public:
+		/// @brief Initialize the logging system.
 		static void Init();
 		
 		inline static std::shared_ptr<spdlog::logger>& GetCoreLogger() { return s_CoreLogger;  }
@@ -23,18 +30,40 @@ namespace Chroma
 }
 
 
-//Engine Log Macros
+/// Engine Log Macros
+
+/// @brief CHROMA_CORE_TRACE
+/// Logs the provided string at trace level.
 #define CHROMA_CORE_TRACE(...)     ::Chroma::Log::GetCoreLogger()->trace(__VA_ARGS__)
+/// @brief CHROMA_CORE_INFO
+/// Logs the provided string at trace level.
 #define CHROMA_CORE_INFO(...)      ::Chroma::Log::GetCoreLogger()->info(__VA_ARGS__)
+/// @brief CHROMA_CORE_WARN
+/// Logs the provided string at info level.
 #define CHROMA_CORE_WARN(...)      ::Chroma::Log::GetCoreLogger()->warn(__VA_ARGS__)
+/// @brief CHROMA_CORE_ERROR
+/// Logs the provided string at warning level.
 #define CHROMA_CORE_ERROR(...)     ::Chroma::Log::GetCoreLogger()->error(__VA_ARGS__)
+/// @brief CHROMA_CORE_FATAL
+/// Logs the provided string at fatal level.
 #define CHROMA_CORE_FATAL(...)     ::Chroma::Log::GetCoreLogger()->fatal(__VA_ARGS__)
 
-//Client Log Macros
+/// Client Log Macros
+
+/// @brief CHROMA_TRACE
+/// Logs the provided string at trace level.
 #define CHROMA_TRACE(...)          ::Chroma::Log::GetClientLogger()->trace(__VA_ARGS__)
+/// @brief CHROMA_INFO
+/// Logs the provided string at info level.
 #define CHROMA_INFO(...)           ::Chroma::Log::GetClientLogger()->info(__VA_ARGS__)
+/// @brief CHROMA_WARN
+/// Logs the provided string at warn level.
 #define CHROMA_WARN(...)           ::Chroma::Log::GetClientLogger()->warn(__VA_ARGS__)
+/// @brief CHROMA_ERROR
+/// Logs the provided string at error level.
 #define CHROMA_ERROR(...)          ::Chroma::Log::GetClientLogger()->error(__VA_ARGS__)
+/// @brief CHROMA_FATAL
+/// Logs the provided string at fatal level.
 #define CHROMA_FATAL(...)          ::Chroma::Log::GetClientLogger()->fatal(__VA_ARGS__)
 
 

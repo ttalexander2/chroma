@@ -3,6 +3,7 @@
 
 namespace Chroma
 {
+
 	class Time
 	{
 	public:

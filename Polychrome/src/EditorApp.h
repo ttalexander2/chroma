@@ -2,6 +2,7 @@
 
 #include <Chroma.h>
 #include "EditorConfig.h"
+#include <Chroma/Renderer/Framebuffer.h>
 
 
 namespace Polychrome
@@ -23,9 +24,10 @@ namespace Polychrome
 		void SaveSceneAs();
 		void SaveScene();
 
-		EditorConfig Config;
-
 		Chroma::OrthographicCameraController& GetCameraController() { return m_CameraController; }
+
+		EditorConfig Config;
+		static Chroma::Scene* CurrentScene;
 
 	private:
 		Chroma::OrthographicCameraController m_CameraController;

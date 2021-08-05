@@ -5,6 +5,7 @@
 
 namespace Chroma
 {
+
 	void AudioSource::DrawImGui()
 	{
 		ImGui::TableSetColumnIndex(0);
@@ -53,6 +54,7 @@ namespace Chroma
 
 
 	}
+
 	void AudioSource::Serialize(YAML::Emitter& out)
 	{
 		out << YAML::Key << "Event";

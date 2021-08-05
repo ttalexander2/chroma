@@ -25,7 +25,6 @@
 #include <Chroma/Components/Transform.h>
 #include <Chroma/Utilities/FileWatcher.h>
 #include "readerwriterqueue.h"
-//#include <Chroma/Assets/AssetManager.h>
 #include <Chroma/Components/SpriteRenderer.h>
 #include <Chroma/Assets/AssetManager.h>
 
@@ -40,6 +39,8 @@ namespace Polychrome
 
 	std::thread file_watcher_thread;
 	std::atomic_bool file_watcher_thread_running;
+
+	Chroma::Scene* EditorApp::CurrentScene = nullptr;
 
 	EditorApp::EditorApp()
 		: Application("Polychrome Editor", 1920U, 1080U), m_CameraController(1920.0f / 1080.0f)
@@ -84,9 +85,10 @@ namespace Polychrome
 
 		//CHROMA_INFO("");
 
-		this->m_ActiveScene = scene;
+		EditorApp::CurrentScene = scene;
 
 
+		// This needs to be replaced
 		for (auto& file : std::filesystem::recursive_directory_iterator(".\\assets"))
 		{
 			if (file.is_regular_file())
@@ -95,8 +97,7 @@ namespace Polychrome
 				if (extension == ".ase" || extension == ".png" || extension == ".jpg")
 				{
 					CHROMA_CORE_INFO("{}", file.path().string());
-					Chroma::Ref<Chroma::Sprite> sprite = Chroma::AssetManager::CreateSprite(file.path().string());
-					sprite->Load();
+					Chroma::AssetManager::LoadSprite(file.path().string());
 				}
 			}
 		}
@@ -121,7 +122,7 @@ namespace Polychrome
 						std::string extension = std::filesystem::path(path_to_watch).extension().string();
 						if (extension == ".ase" || extension == ".png" || extension == ".jpg")
 						{
-							Chroma::AssetManager::CreateSprite(path_to_watch)->Load();
+							Chroma::AssetManager::LoadSprite(path_to_watch);
 						}
 					});
 					break;
@@ -137,7 +138,7 @@ namespace Polychrome
 							}
 							else
 							{
-								Chroma::AssetManager::CreateSprite(path_to_watch)->Load();
+								Chroma::AssetManager::LoadSprite(path_to_watch);
 							}
 							
 						}
@@ -175,9 +176,9 @@ namespace Polychrome
 		Chroma::Audio::LoadBank("assets/fmod/Desktop/Master.bank", FMOD_STUDIO_LOAD_BANK_NORMAL);
 		Chroma::Audio::LoadBank("assets/fmod/Desktop/Master.strings.bank", FMOD_STUDIO_LOAD_BANK_NORMAL);
 
-		m_ActiveScene->EarlyInit();
-		m_ActiveScene->Init();
-		m_ActiveScene->LateInit();
+		EditorApp::CurrentScene->EarlyInit();
+		EditorApp::CurrentScene->Init();
+		EditorApp::CurrentScene->LateInit();
 
 
 		ImGui::CreateContext();
@@ -205,9 +206,9 @@ namespace Polychrome
 	void EditorApp::Update(Chroma::Time time)
 	{
 
-		//m_ActiveScene->EarlyUpdate(time);
-		//m_ActiveScene->Update(time);
-		//m_ActiveScene->LateUpdate(time);
+		EditorApp::CurrentScene->EarlyUpdate(time);
+		EditorApp::CurrentScene->Update(time);
+		EditorApp::CurrentScene->LateUpdate(time);
 
 		CHROMA_PROFILE_FUNCTION();
 		// Update
@@ -248,9 +249,9 @@ namespace Polychrome
 
 		Chroma::Renderer2D::BeginScene(m_CameraController.GetCamera());
 
-		m_ActiveScene->EarlyDraw(time);
-		m_ActiveScene->Draw(time);
-		m_ActiveScene->LateDraw(time);
+		EditorApp::CurrentScene->PreDraw(time);
+		EditorApp::CurrentScene->Draw(time);
+		EditorApp::CurrentScene->PostDraw(time);
 
 #if 0
 		
@@ -439,8 +440,8 @@ namespace Polychrome
 			if (Chroma::Scene::Deserialize(*out, strStream.str()))
 			{
 				CurrentScenePath = filepath;
-				delete this->m_ActiveScene;
-				this->m_ActiveScene = out;
+				delete EditorApp::CurrentScene;
+				EditorApp::CurrentScene = out;
 				Hierarchy::SelectedEntity = Chroma::ENTITY_NULL;
 			}
 			else
@@ -454,7 +455,7 @@ namespace Polychrome
 		std::string filepath = Chroma::FileDialogs::SaveFile("Chroma Scene (*.chroma)\0*.chroma\0");
 		if (!filepath.empty())
 		{
-			std::string yaml = this->m_ActiveScene->Serialize();
+			std::string yaml = EditorApp::CurrentScene->Serialize();
 			std::ofstream fout2(filepath);
 			fout2 << yaml;
 			CurrentScenePath = filepath;
@@ -465,7 +466,7 @@ namespace Polychrome
 	{
 		if (!CurrentScenePath.empty() && std::filesystem::exists(CurrentScenePath))
 		{
-			std::string yaml = this->m_ActiveScene->Serialize();
+			std::string yaml = EditorApp::CurrentScene->Serialize();
 			std::ofstream fout2(CurrentScenePath);
 			fout2 << yaml;
 		}
@@ -475,6 +476,7 @@ namespace Polychrome
 
 	EditorApp::~EditorApp()
 	{
+		delete EditorApp::CurrentScene;
 		file_watcher_thread_running.store(false);
 		file_watcher_thread.join();
 	}

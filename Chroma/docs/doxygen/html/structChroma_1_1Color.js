@@ -1,0 +1,27 @@
+var structChroma_1_1Color =
+[
+    [ "Color", "structChroma_1_1Color.html#acc2a2d9d64228830786383b507315384", null ],
+    [ "Color", "structChroma_1_1Color.html#a4f37983cd73f4a33dbe2fe4acdea1970", null ],
+    [ "Color", "structChroma_1_1Color.html#a760928c48334106beb380db1a6d7985d", null ],
+    [ "Color", "structChroma_1_1Color.html#a16cf6808f1565dcbe37fbbeb0cc4a14d", null ],
+    [ "Color", "structChroma_1_1Color.html#ab89e6ecf8cbee2bfd3a79f62a2de4e69", null ],
+    [ "Color", "structChroma_1_1Color.html#af47aaac9d5fb81bf1786aadaf09f23e9", null ],
+    [ "Color", "structChroma_1_1Color.html#a8853355373b8c20178410f79cbf4420f", null ],
+    [ "Color", "structChroma_1_1Color.html#ab4504b10d981555fc4ebd4f645dba175", null ],
+    [ "Color", "structChroma_1_1Color.html#a16ea41b504aa7688c08b0e0359f7e445", null ],
+    [ "operator!=", "structChroma_1_1Color.html#a8a36286f158e4779ceb2ccf5644c7010", null ],
+    [ "operator*", "structChroma_1_1Color.html#a8605d2e0721da40c101ddfeab8932a6e", null ],
+    [ "operator=", "structChroma_1_1Color.html#ac4bbabd5e8bf317282e93c2bf54a9238", null ],
+    [ "operator==", "structChroma_1_1Color.html#a666de140c0e2e4bd4c052c8a5306ca2e", null ],
+    [ "PreMultiply", "structChroma_1_1Color.html#abbd2e0f66863cd1cd15a14dcc5b0a3d2", null ],
+    [ "ToHexRGB", "structChroma_1_1Color.html#ad7a04c3e91abc89133b6e928acb150ab", null ],
+    [ "ToHexRGBA", "structChroma_1_1Color.html#a4cf7b560d3442f344ab3cabe90c71529", null ],
+    [ "ToRGBA", "structChroma_1_1Color.html#aa22ab536d1b167d3ccb2660e6e84e688", null ],
+    [ "ToRGBA", "structChroma_1_1Color.html#ab352b9b20093ae58f9982d8cdea9e7f2", null ],
+    [ "ToVec3", "structChroma_1_1Color.html#a06bcc081c40132acb48fc3832e068e5b", null ],
+    [ "ToVec4", "structChroma_1_1Color.html#a3d637d449a17b5ec49ba6a0d412a7d0a", null ],
+    [ "a", "structChroma_1_1Color.html#aa745d1a770baf3f4931ecef8b705d39f", null ],
+    [ "b", "structChroma_1_1Color.html#a52a9524bbfb432f6b97ea22467f4cb8b", null ],
+    [ "g", "structChroma_1_1Color.html#a3bc0274b41381930a71328e445788cbb", null ],
+    [ "r", "structChroma_1_1Color.html#a11e4ac0e4e771616d2c6a6ae6c14514c", null ]
+];

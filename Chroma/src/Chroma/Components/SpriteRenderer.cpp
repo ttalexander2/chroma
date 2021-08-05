@@ -21,10 +21,10 @@ namespace Chroma
 		{
 			for (auto& [id, sprite] : *AssetManager::GetSprites())
 			{
-				bool selected = (SpriteID == sprite->Path);
-				if (ImGui::Selectable(sprite->Path.c_str(), &selected))
+				bool selected = (SpriteID == sprite->GetPath());
+				if (ImGui::Selectable(sprite->GetPath().c_str(), &selected))
 				{
-					SetSprite(sprite->Path);
+					SetSprite(sprite->GetPath());
 					SetCurrentFrame(0);
 				}
 					
@@ -257,6 +257,11 @@ namespace Chroma
 
 	}
 
+	/// @brief Set the sprite to render.
+	/// 
+	/// Sprite must already be loaded.
+	/// @see AssetManager to load sprite.
+	/// @param spriteID Name/Path of the sprite.
 	void SpriteRenderer::SetSprite(const std::string& spriteID)
 	{
 		if (AssetManager::HasSprite(spriteID))

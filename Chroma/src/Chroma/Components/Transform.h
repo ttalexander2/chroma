@@ -9,18 +9,30 @@
 
 namespace Chroma
 {
+	/// @brief Transform component, provides position, rotation and scale for entities.
 	struct Transform : public Component
 	{
+		/// @brief Position
 		Math::vec3 Position = { 0.0f, 0.0f, 0.0f };
+		/// @brief Rotation
 		Math::vec3 Rotation = { 0.0f, 0.0f, 0.0f };
+		/// @brief Scale
 		Math::vec3 Scale = { 1.0f, 1.0f, 1.0f };
 
+		/// @brief Constructs an empty Transform.
 		Transform() = default;
+		/// @brief Constructs a Transform component from an existing Transform.
+		/// @param  Transform to copy.
 		Transform(const Transform&) = default;
+		/// @brief Constructs a transorm from a 4x4 Matrix.
+		/// @param transform 
 		Transform(const Math::mat4& transform)
 		{
 		}
 
+
+		/// @brief Get the transform as a 4x4 matrix.
+		/// @return mat4 transform.
 		Math::mat4 GetTransform() const;
 
 		const std::string Name() const override

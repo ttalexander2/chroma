@@ -25,11 +25,13 @@ namespace Chroma
 
 		bool IsNull() { return m_Ptr == nullptr || m_Scene == nullptr; }
 
+		
 		template<typename OStream>
 		friend OStream& operator<<(OStream& os, const ComponentRef<ComponentType>& t)
 		{
 			return os << "Component: " << FindTypeName(typeid(ComponentType).name()) << " (Entity " << t.m_Entity << ")";
 		}
+		
 
 		void Delete()
 		{

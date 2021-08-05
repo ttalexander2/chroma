@@ -5,16 +5,25 @@
 #include "Chroma/Components/Transform.h"
 #include <Chroma/Renderer/Renderer2D.h>
 #include <Chroma/Assets/AssetManager.h>
+#include <Chroma/ImGui/ImGuiDebugMenu.h>
 
 namespace Chroma
 {
-	void SpriteRendererSystem::Init()
+
+	void SpriteRendererSystem::Load()
 	{
+		AssetManager::BeginSpriteLoad();
 		for (EntityRef e : m_Scene->View<SpriteRenderer>())
 		{
-			ComponentRef<SpriteRenderer> spriteRenderer = e.GetComponent<SpriteRenderer>();
-			//load sprite
+			auto renderer = e.GetComponent<SpriteRenderer>();
+			AssetManager::LoadSprite(renderer->SpriteID);
+				
 		}
+		AssetManager::EndSpriteLoad();
+	}
+
+	void SpriteRendererSystem::Init()
+	{
 	}
 
 	void SpriteRendererSystem::LateUpdate(Time delta)

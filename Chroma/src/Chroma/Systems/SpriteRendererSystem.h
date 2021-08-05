@@ -7,6 +7,7 @@ namespace Chroma
 	class SpriteRendererSystem : public System
 	{
 	public:
+		void Load() override;
 		void Init() override;
 		void Draw(Time delta) override;
 		void LateUpdate(Time delta) override;

@@ -5,9 +5,12 @@
 #ifdef CHROMA_PLATFORM_WINDOWS
 
 
-
+/// @brief Entry point for the application. This function should be overidden by the client.
+/// @return Returns a new instance of the application.
 extern Chroma::Application* Chroma::CreateApplication();
 
+
+/// @brief Application entry point.
 int main(int argc, char** argv)
 {
 	Chroma::Log::Init();

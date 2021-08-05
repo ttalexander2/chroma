@@ -34,3 +34,12 @@
 [submodule "Chroma/third_party/ImGuizmo"]
 	path = Chroma/third_party/ImGuizmo
 	url = https://github.com/ttalexander2/ImGuizmo.git
+[submodule "Chroma/third_party/doxygen-awesome-css"]
+	path = Chroma/third_party/doxygen-awesome-css
+	url = https://github.com/jothepro/doxygen-awesome-css.git
+[submodule "Chroma/docs/source/third_party/breathe"]
+	path = Chroma/docs/source/third_party/breathe
+	url = https://github.com/michaeljones/breathe.git
+[submodule "Chroma/docs/third_party/breathe"]
+	path = Chroma/docs/third_party/breathe
+	url = https://github.com/michaeljones/breathe.git

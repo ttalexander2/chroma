@@ -131,7 +131,7 @@ namespace Polychrome
 		{
 			ImGui::Begin("Scene", &Hierarchy::Open);
 		
-			Chroma::Scene* scene = Chroma::Application::Get().m_ActiveScene;
+			Chroma::Scene* scene = EditorApp::CurrentScene;
 
 			auto view = scene->GetEntities();
 

@@ -1,0 +1,28 @@
+var classChroma_1_1Image =
+[
+    [ "Image", "classChroma_1_1Image.html#a20474d432d5f6c98e5e2256753398245", null ],
+    [ "Image", "classChroma_1_1Image.html#aedbe395fce13db4739a4b652a3e9c1c6", null ],
+    [ "Image", "classChroma_1_1Image.html#a7d917104cffeb3c9a924947e884ce6fb", null ],
+    [ "Image", "classChroma_1_1Image.html#a6c67d35af0fa0b042ae19702552e4858", null ],
+    [ "Image", "classChroma_1_1Image.html#ad2a30a688fad4f871b6e8208e30feb26", null ],
+    [ "Image", "classChroma_1_1Image.html#ade9d1d009be243aeaa6c6c92cf119ba8", null ],
+    [ "~Image", "classChroma_1_1Image.html#a670d1bc99adb0b4b2b4bbc25dd371298", null ],
+    [ "Dispose", "classChroma_1_1Image.html#abfb7532bc8cc0ff29fa5b7d92781498d", null ],
+    [ "FlipVertically", "classChroma_1_1Image.html#a309e2c669812758267e26c02ae7cdbfd", null ],
+    [ "FromStream", "classChroma_1_1Image.html#a28064cd6fba8717d9a4d1cb0f3ea76df", null ],
+    [ "GetData", "classChroma_1_1Image.html#af159b3a651ad156e7d206f3f7eb97444", null ],
+    [ "GetData", "classChroma_1_1Image.html#a910c930851a655345c3488df3edcaa6b", null ],
+    [ "GetDataSize", "classChroma_1_1Image.html#a0490922b6f390d9dff05ffc70f371475", null ],
+    [ "GetSubImage", "classChroma_1_1Image.html#aa57ba9e525a93b0d978f6fadaf2ba259", null ],
+    [ "operator=", "classChroma_1_1Image.html#a6bd007c23a926dce2d5e0733f1f15d53", null ],
+    [ "operator=", "classChroma_1_1Image.html#ab192d37a1756f51babbf18c0425b4b3e", null ],
+    [ "Premultiply", "classChroma_1_1Image.html#a3795dd5a08cd140c17221441ecbc3418", null ],
+    [ "SaveJPG", "classChroma_1_1Image.html#ada64e726c3459ac5c981ec7825c42745", null ],
+    [ "SaveJPG", "classChroma_1_1Image.html#af7e6b59b0c77483a108cf4f9e484c15d", null ],
+    [ "SavePNG", "classChroma_1_1Image.html#a415e0c746f3896aefb3d9aafecc77650", null ],
+    [ "SavePNG", "classChroma_1_1Image.html#ae7c2316648105ba9d742b1870e3aae11", null ],
+    [ "SetData", "classChroma_1_1Image.html#a5da15e2a38c7764027269815ae0e0915", null ],
+    [ "Height", "classChroma_1_1Image.html#a58ac52d85f06fe6c9f9002880aeebe71", null ],
+    [ "Pixels", "classChroma_1_1Image.html#a7885433046eaddb1b4c20760e0588034", null ],
+    [ "Width", "classChroma_1_1Image.html#acbb3e66f6e10ea5e98c4a797caf8cfbb", null ]
+];

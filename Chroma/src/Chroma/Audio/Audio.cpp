@@ -5,24 +5,32 @@
 
 namespace Chroma
 {
-
+	/// @brief Pointer to FMOD instance.
 	static ChromaFMOD* s_FMOD;
 
+	/// @brief Initialize the FMOD instance.
 	void Audio::Init()
 	{
 		s_FMOD = new ChromaFMOD();
 	}
 
+	/// @brief Update the FMOD instance.
+	///
+	/// This should be called once per frame, as per FMOD specifications.
 	void Chroma::Audio::Update()
 	{
 		s_FMOD->Update();
 	}
 
+	/// @brief Shutdown the FMOD Instance.
 	void Audio::Shutdown()
 	{
 		delete s_FMOD;
 	}
 
+	/// @brief Load FMOD bank.
+	/// @param bankName Path of the FMOD bank to load.
+	/// @param flags Bank load flags. FMOD_STUDIO_LOAD_BANK_NORMAL by default.
 	void Audio::LoadBank(const std::string& bankName, FMOD_STUDIO_LOAD_BANK_FLAGS flags)
 	{
 		auto found = s_FMOD->m_Banks.find(bankName);
@@ -35,6 +43,8 @@ namespace Chroma
 			s_FMOD->m_Banks[bankName] = bank;
 	}
 
+	/// @brief Load an FMOD event.
+	/// @param eventName Name of the event to load.
 	void Audio::LoadEvent(const std::string& eventName)
 	{
 
@@ -55,12 +65,18 @@ namespace Chroma
 		}
 	}
 
-
+	/// @brief Set the orientation of the listener.
+	/// @param position Position of the listener.
+	/// @param volume_dB Volume
+	/// 
+	/// WARNING: Function not implemented.
 	void Audio::Set3dListenerAndOrientation(const Math::vec3& position, float volume_dB)
 	{
-
+		CHROMA_CORE_WARN("Function [Audio::Set3dListenerAndOrientation] is not implemented!");
 	}
 
+	/// @brief Play an audio event.
+	/// @param eventName Name of the event.
 	void Audio::PlayEvent(const std::string& eventName)
 	{
 		auto found = s_FMOD->m_Events.find(eventName);
@@ -74,7 +90,8 @@ namespace Chroma
 		Audio::ErrorCheck(found->second->start());
 	}
 
-
+	/// @brief Play an audio event, if the event is stopped.
+	/// @param eventName Name of the event.
 	void Audio::PlayEventIfStopped(const std::string& eventName)
 	{
 		if (!Audio::IsEventStopped(eventName))
@@ -90,6 +107,8 @@ namespace Chroma
 		Audio::ErrorCheck(found->second->start());
 	}
 
+	/// @brief Stop a channel from playing.
+	/// @param channelId ID of the channel.
 	void Audio::StopChannel(int channelId)
 	{
 		auto found = s_FMOD->m_Channels.find(channelId);
@@ -99,6 +118,9 @@ namespace Chroma
 		Audio::ErrorCheck(found->second->stop());
 	}
 
+	/// @brief Stop an event from playing.
+	/// @param eventName Name of the event.
+	/// @param immediate If true, the event will stop immediately, else it will allow fade out.
 	void Audio::StopEvent(const std::string& eventName, bool immediate)
 	{
 		auto found = s_FMOD->m_Events.find(eventName);
@@ -110,6 +132,10 @@ namespace Chroma
 		Audio::ErrorCheck(found->second->stop(mode));
 	}
 
+	/// @brief Get an event parameter.
+	/// @param eventName Name of the event.
+	/// @param parameter Name of the parameter.
+	/// @param value Out value of the event parameter.
 	void Audio::GetEventParameter(const std::string& eventName, const std::string& parameter, float* value)
 	{
 		auto found = s_FMOD->m_Events.find(eventName);
@@ -119,6 +145,10 @@ namespace Chroma
 		Audio::ErrorCheck(found->second->getParameterByName(parameter.c_str(), value));
 	}
 
+	/// @brief Get an event parameter.
+	/// @param eventName Name of the event.
+	/// @param parameter ID of the parameter.
+	/// @param value Out value of the event parameter.
 	void Audio::GetEventParameter(const std::string& eventName, FMOD_STUDIO_PARAMETER_ID parameter, float* value)
 	{
 		auto found = s_FMOD->m_Events.find(eventName);
@@ -128,6 +158,11 @@ namespace Chroma
 		Audio::ErrorCheck(found->second->getParameterByID(parameter, value));
 	}
 
+	/// @brief Set event parameter.
+	/// @param eventName Name of the event.
+	/// @param parameter Name of the parameter.
+	/// @param value Value to set the parameter.
+	/// @param ignoreSeekSpeed Whether to ignore seek speed. Default false.
 	void Audio::SetEventParameter(const std::string& eventName, const std::string& parameter, float value, bool ignoreSeekSpeed)
 	{
 		auto found = s_FMOD->m_Events.find(eventName);
@@ -137,6 +172,11 @@ namespace Chroma
 		Audio::ErrorCheck(found->second->setParameterByName(parameter.c_str(), value, ignoreSeekSpeed));
 	}
 
+	/// @brief Set event parameter.
+	/// @param eventName Name of the event.
+	/// @param parameter ID of the parameter.
+	/// @param value Value to set the parameter.
+	/// @param ignoreSeekSpeed Whether to ignore seek speed. Default false.
 	void Audio::SetEventParameter(const std::string& eventName, FMOD_STUDIO_PARAMETER_ID parameter, float value, bool ignoreSeekSpeed)
 	{
 		auto found = s_FMOD->m_Events.find(eventName);
@@ -146,6 +186,7 @@ namespace Chroma
 		Audio::ErrorCheck(found->second->setParameterByID(parameter, value, ignoreSeekSpeed));
 	}
 
+	/// @brief Stop all channels from playing.
 	void Audio::StopAllChannels()
 	{
 		for (auto& [id, channel] : s_FMOD->m_Channels)
@@ -154,6 +195,9 @@ namespace Chroma
 		}
 	}
 
+	/// @brief Set channel's 3D position. Requires spacialization.
+	/// @param channelId ID of the channel.
+	/// @param position 3D position of the channel.
 	void Audio::SetChannel3dPosition(int channelId, const Math::vec3& position)
 	{
 		auto found = s_FMOD->m_Channels.find(channelId);
@@ -164,6 +208,9 @@ namespace Chroma
 		Audio::ErrorCheck(found->second->set3DAttributes(&fmod_position, nullptr));
 	}
 
+	/// @brief Sets channel volume.
+	/// @param channelId ID of the channel.
+	/// @param volume_db Volume to set.
 	void Audio::SetChannelVolume(int channelId, float volume_db)
 	{
 		auto found = s_FMOD->m_Channels.find(channelId);
@@ -173,6 +220,9 @@ namespace Chroma
 		Audio::ErrorCheck(found->second->setVolume(dbToVolume(volume_db)));
 	}
 
+	/// @brief Checks whether a channel is playing.
+	/// @param channelId ID of the channel to check.
+	/// @return Returns true if playing.
 	bool Audio::IsPlaying(int channelId)
 	{
 		auto found = s_FMOD->m_Channels.find(channelId);
@@ -184,6 +234,9 @@ namespace Chroma
 		return isPlaying;
 	}
 
+	/// @brief Check if an event is playing.
+	/// @param eventName Name of the event.
+	/// @return Returns true if playing.
 	bool Audio::IsEventPlaying(const std::string& eventName)
 	{
 		auto found = s_FMOD->m_Events.find(eventName);
@@ -200,6 +253,9 @@ namespace Chroma
 		return false;
 	}
 
+	/// @brief Checks if an event is stopped.
+	/// @param eventName Name of the event to check.
+	/// @return Returns true if stopped.
 	bool Audio::IsEventStopped(const std::string& eventName)
 	{
 		auto found = s_FMOD->m_Events.find(eventName);
@@ -216,16 +272,25 @@ namespace Chroma
 		return true;
 	}
 
+	/// @brief Converts decibel to Volume.
+	/// @param db Decibels as float.
+	/// @return Volume as float.
 	float Audio::dbToVolume(float db)
 	{
 		return Math::pow(10.0f, 0.05f * db);
 	}
 
+	/// @brief Converts volume to decibels.
+	/// @param volume Volume as float.
+	/// @return Decibels as float.
 	float Audio::volumeTodb(float volume)
 	{
 		return 20.0f * (Math::log(volume) / Math::log(10));
 	}
 
+	/// @brief Converts Chroma vec3 to FMOD_VECTOR
+	/// @param vector Vector3 to convert.
+	/// @return FMOD style vector.
 	FMOD_VECTOR Audio::VectorToFmod(const Math::vec3& vector)
 	{
 		FMOD_VECTOR fVec;
@@ -236,6 +301,8 @@ namespace Chroma
 
 	}
 
+	/// @brief Function to compile and return a list of events.
+	/// @return List of event paths.
 	std::vector<std::string> Audio::GetEventPathList()
 	{
 
@@ -269,6 +336,9 @@ namespace Chroma
 		return all_events;
 	}
 
+	/// @brief Gets an event name from a GUID.
+	/// @param guid ID of the event.
+	/// @return Path/Name of the event.
 	std::string Audio::GetEventName(FMOD_GUID guid)
 	{
 		int size = 128;
@@ -293,6 +363,9 @@ namespace Chroma
 		return "";
 	}
 
+	/// @brief Gets an event GUID given the name.
+	/// @param name Name/Path of the event.
+	/// @return GUID of the event.
 	FMOD_GUID Audio::GetEventGuid(const std::string& name)
 	{
 		FMOD_GUID guid;
@@ -300,6 +373,8 @@ namespace Chroma
 		return guid;
 	}
 
+	/// @brief Function to check an FMOD_RESULT for errors and report it to the console.
+	/// @param result FMOD funciton result.
 	void Audio::ErrorCheck(FMOD_RESULT result)
 	{
 		if (result != FMOD_OK)
