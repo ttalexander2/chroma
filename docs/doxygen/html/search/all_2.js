@@ -13,5 +13,6 @@ var searchData=
   ['componentref_35',['ComponentRef',['../classChroma_1_1ComponentRef.html',1,'Chroma']]],
   ['convert_3c_20math_3a_3avec2_20_3e_36',['convert&lt; Math::vec2 &gt;',['../structYAML_1_1convert_3_01Math_1_1vec2_01_4.html',1,'YAML']]],
   ['convert_3c_20math_3a_3avec3_20_3e_37',['convert&lt; Math::vec3 &gt;',['../structYAML_1_1convert_3_01Math_1_1vec3_01_4.html',1,'YAML']]],
-  ['convert_3c_20math_3a_3avec4_20_3e_38',['convert&lt; Math::vec4 &gt;',['../structYAML_1_1convert_3_01Math_1_1vec4_01_4.html',1,'YAML']]]
+  ['convert_3c_20math_3a_3avec4_20_3e_38',['convert&lt; Math::vec4 &gt;',['../structYAML_1_1convert_3_01Math_1_1vec4_01_4.html',1,'YAML']]],
+  ['chroma_39',['Chroma',['../index.html',1,'']]]
 ];
