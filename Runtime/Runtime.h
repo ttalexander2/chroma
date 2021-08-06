@@ -9,5 +9,10 @@ public:
 
 	static Chroma::Scene* CurrentScene;
 
+	Application* CreateApplication()
+	{
+		return new Runtime();
+	}
+
 };
 
