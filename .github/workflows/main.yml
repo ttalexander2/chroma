@@ -17,8 +17,8 @@ jobs:
     - name: Doxygen Action
       uses: mattnotmitt/doxygen-action@v1.1.0
       with:
-          doxyfile-path: ./docs/Doxyfile
-          working-directory: ./docs
+          doxyfile-path: Doxyfile
+          working-directory: docs
     
     # Deploy the HTML documentation to GitHub Pages
     - name: GH Pages Deployment
