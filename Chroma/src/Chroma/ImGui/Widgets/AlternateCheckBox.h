@@ -5,6 +5,8 @@
 
 namespace ImGui
 {
+	/// @brief Function to display a checkbox with alternate icons.
+	/// @param active Whether the check box is active.
 	inline void AlternateCheckBox(bool* active)
 	{
 		ImGui::PushID(active);

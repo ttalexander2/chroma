@@ -11,6 +11,7 @@
 
 namespace ImGui
 {
+
     static ImVector<ImRect> s_GroupPanelLabelStack;
     static std::unordered_map<ImGuiID, ImVec2> minV;
     static std::unordered_map<ImGuiID, ImVec2> maxV;

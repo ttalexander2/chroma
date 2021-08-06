@@ -7,6 +7,12 @@
 namespace ImGui
 {
 
+
+	/// @brief Displays 3 component vectors with component labels (x,y,z) and reset buttons.
+	/// Vector float components will be clamped to integers.
+	/// @param hash Label to display.
+	/// @param val Value reference to display.
+	/// @param reset_to_zero Whether clicking the reset should set to zero. False will reset to one.
 	static bool Vec3IntWithLabels(const char* hash, Math::vec3& val, bool reset_to_zero = true)
 	{
 		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 0, 0 });
@@ -108,8 +114,13 @@ namespace ImGui
 
 		ImGui::SameLine(0.0f, 6.0f);
 		ImGui::NewLine();
+		return true;
 	}
 
+	/// @brief Displays 3 component vectors with component labels (x,y,z) and reset buttons.
+	/// @param hash Label to display.
+	/// @param val Value reference to display.
+	/// @param reset_to_zero Whether clicking the reset should set to zero. False will reset to one.
 	static bool Vec3FloatWithLabels(const char* hash, Math::vec3& val, bool reset_to_zero = true)
 	{
 		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 0, 0 });
@@ -216,6 +227,11 @@ namespace ImGui
 		ImGui::NewLine();
 	}
 
+	/// @brief Displays 2 component vectors with component labels (x,y) and reset buttons.
+	/// Vector float components will be clamped to integers.
+	/// @param hash Label to display.
+	/// @param val Value reference to display.
+	/// @param reset_to_zero Whether clicking the reset should set to zero. False will reset to one.
 	static bool Vec2IntWithLabels(const char* hash, Math::vec2& val, bool reset_to_zero = true)
 	{
 		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 0, 0 });
@@ -288,6 +304,10 @@ namespace ImGui
 		ImGui::NewLine();
 	}
 
+	/// @brief Displays 2 component vectors with component labels (x,y) and reset buttons.
+	/// @param hash Label to display.
+	/// @param val Value reference to display.
+	/// @param reset_to_zero Whether clicking the reset should set to zero. False will reset to one.
 	static bool Vec2FloatWithLabels(const char* hash, Math::vec2& val, bool reset_to_zero = true)
 	{
 		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 0, 0 });

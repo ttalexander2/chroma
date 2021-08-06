@@ -17,6 +17,12 @@ namespace ImGui
     static std::unordered_map<ImGuiID, int> hovered;
     static std::unordered_map<ImGuiID, int> clicked;
 
+	/// @brief Editable list imgui widget.
+	/// @param list List of strings to display/edit.
+	/// @param open Whether the list is open.
+	/// @return Whether the list is open
+    /// 
+    /// Widget contains list of strings, allows user to edit, reorder, add, and delete strings.
 	static bool EditableList(std::vector<std::string> &list, bool open)
 	{
 
