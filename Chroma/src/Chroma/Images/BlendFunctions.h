@@ -27,6 +27,11 @@ namespace Chroma
 	#define blend_difference(b, s)    (Math::abs((b) - (s)))
 	#define blend_exclusion(b, s, t)  ((t) = MUL_UN8((b), (s), (t)), ((b) + (s) - 2*(t)))
 
+
+	/// @brief Function to blend divide two uint32_t colors.
+	/// @param b backdrop color
+	/// @param s source color
+	/// @return resulting color
 	inline uint32_t blend_divide(uint32_t b, uint32_t s)
 	{
 		if (b == 0)
@@ -37,6 +42,10 @@ namespace Chroma
 			return DIV_UN8(b, s); // return b / s
 	}
 
+	/// @brief Function to blend color dodge two uint32_t colors.
+	/// @param b backdrop color
+	/// @param s source color
+	/// @return resulting color
 	inline uint32_t blend_color_dodge(uint32_t b, uint32_t s)
 	{
 		if (b == 0)
@@ -49,6 +58,10 @@ namespace Chroma
 			return DIV_UN8(b, s); // return b / (1-s)
 	}
 
+	/// @brief Function to blend color burn two uint32_t colors.
+	/// @param b backdrop color
+	/// @param s source color
+	/// @return resulting color
 	inline uint32_t blend_color_burn(uint32_t b, uint32_t s)
 	{
 		if (b == 255)
@@ -61,6 +74,10 @@ namespace Chroma
 			return 255 - DIV_UN8(b, s); // return 1 - ((1-b)/s)
 	}
 
+	/// @brief Function to blend soft light two uint32_t colors.
+	/// @param b backdrop color
+	/// @param s source color
+	/// @return resulting color
 	inline uint32_t blend_soft_light(uint32_t _b, uint32_t _s)
 	{
 		double b = _b / 255.0;
@@ -81,16 +98,32 @@ namespace Chroma
 	}
 
 	//HSV helper functions
+	
+	/// @brief Calculate luminescence of a color
+	/// @param r Red color channel.
+	/// @param g Green color channel.
+	/// @param b Blue color channel.
+	/// @return Resulting luminescence.
 	inline double lum(double r, double g, double b)
 	{
 		return 0.3 * r + 0.59 * g + 0.11 * b;
 	}
 
+	/// @brief Calculate saturation of a color
+	/// @param r Red color channel.
+	/// @param g Green color channel.
+	/// @param b Blue color channel.
+	/// @return Resulting saturation.
 	inline double sat(double r, double g, double b)
 	{
 		return std::max(r, std::max(g, b)) - std::min(r, std::min(g, b));
 	}
 
+
+	/// @brief Helper function for setting the luminescence of a color.
+	/// @param r Red color channel.
+	/// @param g Green color channel.
+	/// @param b Blue color channel.
 	inline void clip_color(double& r, double& g, double& b)
 	{
 		double l = lum(r, g, b);
@@ -112,6 +145,11 @@ namespace Chroma
 		}
 	}
 
+	/// @brief Sets the luminescence of a color.
+	/// @param r Red color channel.
+	/// @param g Green color channel.
+	/// @param b Blue color channel.
+	/// @param l luminescence to set.
 	inline void set_lum(double& r, double& g, double& b, double l)
 	{
 		double d = l - lum(r, g, b);
@@ -121,7 +159,13 @@ namespace Chroma
 		clip_color(r, g, b);
 	}
 
-	// TODO replace this with a better impl (and test this, not sure if it's correct)
+	/// @brief Sets the saturation of a color.
+	/// @param r Red color channel.
+	/// @param g Green color channel.
+	/// @param b Blue color channel.
+	/// @param l luminescence to set.
+	/// 
+	/// The Aseprite source code indicates that this could be done better.
 	inline void set_sat(double& r, double& g, double& b, double s)
 	{
 	#undef MIN
@@ -148,9 +192,18 @@ namespace Chroma
 		min = 0;
 	}
 
+
+	/// @brief Class of functions to blend two colors together.
+	/// 
+	/// These are the standard <a href="https://en.wikipedia.org/wiki/Blend_modes">blend modes</a> found supported by aseprite.
+	/// These blend modes are found in most graphics editing programs such as photoshop.
 	class BlendFunctions
 	{
 	public:
+		/// @brief Blend the two colors normally.
+		/// @param backdrop Backdrop color.
+		/// @param src Source color.
+		/// @param opacity Opacity of the source.
 		static inline void BlendNormal(Color* backdrop, Color* src, int opacity)
 		{
 			int t;
@@ -163,6 +216,10 @@ namespace Chroma
 			backdrop->a = (unsigned char)ra;
 		}
 
+		/// @brief Multiply the two colors.
+		/// @param backdrop Backdrop color.
+		/// @param src Source color.
+		/// @param opacity Opacity of the source.
 		static inline void BlendMultiply(Color* backdrop, Color* src, int opacity)
 		{
 			int t;
@@ -172,6 +229,10 @@ namespace Chroma
 			BlendNormal(backdrop, src, opacity);
 		}
 
+		/// @brief Multiply the two colors.
+		/// @param backdrop Backdrop color.
+		/// @param src Source color.
+		/// @param opacity Opacity of the source.
 		static inline void BlendScreen(Color* backdrop, Color* src, int opacity)
 		{
 			int t;
@@ -181,6 +242,10 @@ namespace Chroma
 			BlendNormal(backdrop, src, opacity);
 		}
 
+		/// @brief Blend the two colors with overlay.
+		/// @param backdrop Backdrop color.
+		/// @param src Source color.
+		/// @param opacity Opacity of the source.
 		static inline void BlendOverlay(Color* backdrop, Color* src, int opacity)
 		{
 			int t;
@@ -190,6 +255,10 @@ namespace Chroma
 			BlendNormal(backdrop, src, opacity);
 		}
 
+		/// @brief Blend the two colors with darken.
+		/// @param backdrop Backdrop color.
+		/// @param src Source color.
+		/// @param opacity Opacity of the source.
 		static inline void BlendDarken(Color* backdrop, Color* src, int opacity)
 		{
 			int t;
@@ -199,6 +268,10 @@ namespace Chroma
 			BlendNormal(backdrop, src, opacity);
 		}
 
+		/// @brief Blend the two colors with lighten.
+		/// @param backdrop Backdrop color.
+		/// @param src Source color.
+		/// @param opacity Opacity of the source.
 		static inline void BlendLighten(Color* backdrop, Color* src, int opacity)
 		{
 			int t;
@@ -208,6 +281,10 @@ namespace Chroma
 			BlendNormal(backdrop, src, opacity);
 		}
 
+		/// @brief Blend the two colors with color dodge.
+		/// @param backdrop Backdrop color.
+		/// @param src Source color.
+		/// @param opacity Opacity of the source.
 		static inline void BlendColorDodge(Color* backdrop, Color* src, int opacity)
 		{
 			src->r = blend_color_dodge(backdrop->r, src->r);
@@ -216,6 +293,10 @@ namespace Chroma
 			BlendNormal(backdrop, src, opacity);
 		}
 
+		/// @brief Blend the two colors with color burn.
+		/// @param backdrop Backdrop color.
+		/// @param src Source color.
+		/// @param opacity Opacity of the source.
 		static inline void BlendColorBurn(Color* backdrop, Color* src, int opacity)
 		{
 			int t;
@@ -225,6 +306,10 @@ namespace Chroma
 			BlendNormal(backdrop, src, opacity);
 		}
 
+		/// @brief Blend the two colors with hard light.
+		/// @param backdrop Backdrop color.
+		/// @param src Source color.
+		/// @param opacity Opacity of the source.
 		static inline void BlendHardLight(Color* backdrop, Color* src, int opacity)
 		{
 			int t;
@@ -234,6 +319,10 @@ namespace Chroma
 			BlendNormal(backdrop, src, opacity);
 		}
 
+		/// @brief Blend the two colors with soft light.
+		/// @param backdrop Backdrop color.
+		/// @param src Source color.
+		/// @param opacity Opacity of the source.
 		static inline void BlendSoftLight(Color* backdrop, Color* src, int opacity)
 		{
 			src->r = blend_soft_light(backdrop->r, src->r);
@@ -242,6 +331,10 @@ namespace Chroma
 			BlendNormal(backdrop, src, opacity);
 		}
 
+		/// @brief Blend the two colors with the difference.
+		/// @param backdrop Backdrop color.
+		/// @param src Source color.
+		/// @param opacity Opacity of the source.
 		static inline void BlendDifference(Color* backdrop, Color* src, int opacity)
 		{
 			src->r = blend_difference(backdrop->r, src->r);
@@ -250,6 +343,10 @@ namespace Chroma
 			BlendNormal(backdrop, src, opacity);
 		}
 
+		/// @brief Blend the two colors with exclustion.
+		/// @param backdrop Backdrop color.
+		/// @param src Source color.
+		/// @param opacity Opacity of the source.
 		static inline void BlendExclusion(Color* backdrop, Color* src, int opacity)
 		{
 			int t;
@@ -259,6 +356,10 @@ namespace Chroma
 			BlendNormal(backdrop, src, opacity);
 		}
 
+		/// @brief Blend the two colors with hue.
+		/// @param backdrop Backdrop color.
+		/// @param src Source color.
+		/// @param opacity Opacity of the source.
 		static inline void BlendHue(Color* backdrop, Color* src, int opacity)
 		{
 			double r = backdrop->r / 255.0;
@@ -280,6 +381,10 @@ namespace Chroma
 			BlendNormal(backdrop, src, opacity);
 		}
 
+		/// @brief Blend the two colors with saturation.
+		/// @param backdrop Backdrop color.
+		/// @param src Source color.
+		/// @param opacity Opacity of the source.
 		static inline void BlendSaturation(Color* backdrop, Color* src, int opacity)
 		{
 			double r = src->r / 255.0;
@@ -301,6 +406,10 @@ namespace Chroma
 			BlendNormal(backdrop, src, opacity);
 		}
 
+		/// @brief Blend the two colors with overlay.
+		/// @param backdrop Backdrop color.
+		/// @param src Source color.
+		/// @param opacity Opacity of the source.
 		static inline void BlendColor(Color* backdrop, Color* src, int opacity)
 		{
 			double r = backdrop->r / 255.0;
@@ -320,6 +429,10 @@ namespace Chroma
 			BlendNormal(backdrop, src, opacity);
 		}
 
+		/// @brief Blend the two colors with luminosity.
+		/// @param backdrop Backdrop color.
+		/// @param src Source color.
+		/// @param opacity Opacity of the source.
 		static inline void BlendLuminosity(Color* backdrop, Color* src, int opacity)
 		{
 			double r = src->r / 255.0;
@@ -339,6 +452,10 @@ namespace Chroma
 			BlendNormal(backdrop, src, opacity);
 		}
 
+		/// @brief Blend the two colors with addition.
+		/// @param backdrop Backdrop color.
+		/// @param src Source color.
+		/// @param opacity Opacity of the source.
 		static inline void BlendAddition(Color* backdrop, Color* src, int opacity)
 		{
 			src->r = Math::min(backdrop->r + src->r, 255);
@@ -347,6 +464,10 @@ namespace Chroma
 			BlendNormal(backdrop, src, opacity);
 		}
 
+		/// @brief Blend the two colors by subtracting.
+		/// @param backdrop Backdrop color.
+		/// @param src Source color.
+		/// @param opacity Opacity of the source.
 		static inline void BlendSubtract(Color* backdrop, Color* src, int opacity)
 		{
 			src->r = Math::max(backdrop->r - src->r, 255);
@@ -355,6 +476,10 @@ namespace Chroma
 			BlendNormal(backdrop, src, opacity);
 		}
 
+		/// @brief Blend the two colors by dividing.
+		/// @param backdrop Backdrop color.
+		/// @param src Source color.
+		/// @param opacity Opacity of the source.
 		static inline void BlendDivide(Color* backdrop, Color* src, int opacity)
 		{
 			src->r = blend_divide(backdrop->r, src->r);

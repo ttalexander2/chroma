@@ -441,6 +441,9 @@
     <ClInclude Include="src\Chroma\Math\Common.h">
       <Filter>src\Chroma\Math</Filter>
     </ClInclude>
+    <ClInclude Include="src\Chroma\Math\Decompose.h">
+      <Filter>src\Chroma\Math</Filter>
+    </ClInclude>
     <ClInclude Include="src\Chroma\Math\Exponential.h">
       <Filter>src\Chroma\Math</Filter>
     </ClInclude>
@@ -1899,10 +1902,12 @@
     <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\yaml.h">
       <Filter>third_party\yaml-cpp\include\yaml-cpp</Filter>
     </ClInclude>
-    <ClInclude Include="src\Chroma\Math\Decompose.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Chroma\Assets\AssetManager.cpp">
+      <Filter>src\Chroma\Assets</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Chroma\Assets\Sprite.cpp">
       <Filter>src\Chroma\Assets</Filter>
     </ClCompile>
     <ClCompile Include="src\Chroma\Audio\Audio.cpp">
@@ -1964,6 +1969,9 @@
     </ClCompile>
     <ClCompile Include="src\Chroma\Images\Image.cpp">
       <Filter>src\Chroma\Images</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Chroma\Math\Decompose.cpp">
+      <Filter>src\Chroma\Math</Filter>
     </ClCompile>
     <ClCompile Include="src\Chroma\Platform\OpenGL\OpenGLBuffer.cpp">
       <Filter>src\Chroma\Platform\OpenGL</Filter>
@@ -2076,7 +2084,5 @@
     <ClCompile Include="third_party\ImGuizmo\ImSequencer.cpp">
       <Filter>third_party\ImGuizmo</Filter>
     </ClCompile>
-    <ClCompile Include="src\Chroma\Math\Decompose.cpp" />
-    <ClCompile Include="src\Chroma\Assets\Sprite.cpp" />
   </ItemGroup>
 </Project>

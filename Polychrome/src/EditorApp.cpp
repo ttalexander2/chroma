@@ -226,8 +226,6 @@ namespace Polychrome
 			else
 				break;
 		}
-
-
 	}
 
 

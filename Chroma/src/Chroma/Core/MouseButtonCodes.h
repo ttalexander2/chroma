@@ -2,6 +2,7 @@
 
 //Adapted from glfw3.h
 
+/// MOUSE BUTTON CODES
 #define CHROMA_MOUSE_BUTTON_1         0
 #define CHROMA_MOUSE_BUTTON_2         1
 #define CHROMA_MOUSE_BUTTON_3         2
