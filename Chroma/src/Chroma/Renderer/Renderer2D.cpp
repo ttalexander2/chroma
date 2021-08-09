@@ -49,6 +49,51 @@ namespace Chroma
 
 	static Frustum s_CullingFrustum;
 
+
+	const static std::string TextureVertexShader = R"(
+		#version 330 core
+
+		layout(location = 0) in vec3 a_Position;
+	layout(location = 1) in vec4 a_Color;
+	layout(location = 2) in vec2 a_TextCoord;
+	layout(location = 3) in float a_TexIndex;
+
+	uniform mat4 u_ViewProjection;
+
+	out vec4 v_Color;
+	out vec2 v_TextCoord;
+	out float v_TexIndex;
+	out vec2 v_TristonCoord;
+
+	void main()
+	{
+		v_Color = a_Color;
+		v_TextCoord = a_TextCoord;
+		v_TexIndex = a_TexIndex;
+		gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
+	}
+
+	)";
+
+	const static std::string TextureFragmentShader = R"(
+		#version 330 core
+
+		layout(location = 0) out vec4 color;
+
+	in vec4 v_Color;
+	in vec2 v_TextCoord;
+	in float v_TexIndex;
+
+	uniform sampler2D u_Textures[32];
+
+	void main()
+	{
+
+		color = texture(u_Textures[int(v_TexIndex)], v_TextCoord) * v_Color;
+		//color = vec4(v_TextCoord, 0.0, 1.0);
+	}
+	)";
+
 	void Renderer2D::Init()
 	{
 		CHROMA_PROFILE_FUNCTION();
@@ -98,7 +143,7 @@ namespace Chroma
 		for (int32_t i = 0; i < s_Data.MaxTextureSlots; i++)
 			samplers[i] = i;
 
-		s_Data.TextureShader = Shader::Create("assets/shaders/Texture.glsl");
+		s_Data.TextureShader = Shader::Create("Texture_Shader", TextureVertexShader, TextureFragmentShader);
 		s_Data.TextureShader->Bind();
 		s_Data.TextureShader->SetUniformIntArray("u_Textures", samplers, s_Data.MaxTextureSlots);
 
