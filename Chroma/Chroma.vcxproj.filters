@@ -52,6 +52,9 @@
     <Filter Include="src\Chroma\Scene">
       <UniqueIdentifier>{F33359EE-DF2C-7840-085F-5DC5F4B6574C}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Chroma\Scripting">
+      <UniqueIdentifier>{D8B6FBFC-C445-85C6-6D64-99C159D2956C}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Chroma\Systems">
       <UniqueIdentifier>{5D2AC81D-490E-8973-B26E-83C69E7173F5}</UniqueIdentifier>
     </Filter>
@@ -291,6 +294,18 @@
     </Filter>
     <Filter Include="third_party\readerwriterqueue\tests\unittests">
       <UniqueIdentifier>{B7AEB824-231F-BB9D-EC3D-3526586DF39E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\sol2">
+      <UniqueIdentifier>{FE2755F9-EA20-744B-1353-59D0FFAA5357}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\sol2\include">
+      <UniqueIdentifier>{716D9101-5D92-E081-86DD-C5117261DF9F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\sol2\include\sol">
+      <UniqueIdentifier>{AE7B981E-9A36-88CA-43EE-00152F88D25A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\sol2\include\sol\compatibility">
+      <UniqueIdentifier>{D791EA1D-C3F9-B0EB-2C65-C50118ECC7D7}</UniqueIdentifier>
     </Filter>
     <Filter Include="third_party\stb_image">
       <UniqueIdentifier>{6940486C-D5AC-0367-9EA0-9BC40ACC25CF}</UniqueIdentifier>
@@ -611,6 +626,9 @@
     </ClInclude>
     <ClInclude Include="src\Chroma\Scene\System.h">
       <Filter>src\Chroma\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Chroma\Scripting\LuaScripting.h">
+      <Filter>src\Chroma\Scripting</Filter>
     </ClInclude>
     <ClInclude Include="src\Chroma\Systems\AudioSystem.h">
       <Filter>src\Chroma\Systems</Filter>
@@ -1785,6 +1803,330 @@
     <ClInclude Include="third_party\readerwriterqueue\tests\unittests\minitest.h">
       <Filter>third_party\readerwriterqueue\tests\unittests</Filter>
     </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\as_args.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\as_returns.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\assert.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\base_traits.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\bind_traits.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\bytecode.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\call.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\compatibility.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\compatibility\compat-5.3.c.h">
+      <Filter>third_party\sol2\include\sol\compatibility</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\compatibility\compat-5.3.h">
+      <Filter>third_party\sol2\include\sol\compatibility</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\compatibility\compat-5.4.h">
+      <Filter>third_party\sol2\include\sol\compatibility</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\compatibility\lua_version.hpp">
+      <Filter>third_party\sol2\include\sol\compatibility</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\config.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\coroutine.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\debug.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\demangle.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\deprecate.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\dump_handler.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\ebco.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\environment.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\error.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\error_handler.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\forward.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\forward_detail.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\function.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\function_result.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\function_types.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\function_types_core.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\function_types_overloaded.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\function_types_stateful.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\function_types_stateless.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\function_types_templated.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\in_place.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\inheritance.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\load_result.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\lua_table.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\lua_value.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\make_reference.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\metatable.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\object.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\object_base.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\optional.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\optional_implementation.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\overload.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\packaged_coroutine.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\pairs_iterator.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\pointer_like.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\policies.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\property.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\protect.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\protected_function.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\protected_function_result.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\protected_handler.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\proxy_base.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\raii.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\reference.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\resolve.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\sol.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\stack.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\stack_check.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\stack_check_get.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\stack_check_get_qualified.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\stack_check_get_unqualified.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\stack_check_qualified.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\stack_check_unqualified.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\stack_core.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\stack_field.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\stack_get.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\stack_get_qualified.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\stack_get_unqualified.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\stack_guard.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\stack_iterator.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\stack_pop.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\stack_probe.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\stack_proxy.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\stack_proxy_base.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\stack_push.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\stack_reference.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\state.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\state_handling.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\state_view.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\string_view.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\table.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\table_core.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\table_iterator.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\table_proxy.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\thread.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\tie.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\traits.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\trampoline.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\tuple.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\types.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\unicode.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\unique_usertype_traits.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\unsafe_function.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\unsafe_function_result.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\userdata.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\usertype.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\usertype_container.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\usertype_container_launch.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\usertype_core.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\usertype_proxy.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\usertype_storage.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\usertype_traits.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\variadic_args.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\variadic_results.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\version.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\sol2\include\sol\wrapper.hpp">
+      <Filter>third_party\sol2\include\sol</Filter>
+    </ClInclude>
     <ClInclude Include="third_party\stb_image\stb_image.h">
       <Filter>third_party\stb_image</Filter>
     </ClInclude>
@@ -2050,6 +2392,9 @@
     </ClCompile>
     <ClCompile Include="src\Chroma\Scene\Scene.cpp">
       <Filter>src\Chroma\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Chroma\Scripting\LuaScripting.cpp">
+      <Filter>src\Chroma\Scripting</Filter>
     </ClCompile>
     <ClCompile Include="src\Chroma\Systems\AudioSystem.cpp">
       <Filter>src\Chroma\Systems</Filter>

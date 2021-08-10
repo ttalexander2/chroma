@@ -43,3 +43,9 @@
 [submodule "Chroma/docs/third_party/breathe"]
 	path = Chroma/docs/third_party/breathe
 	url = https://github.com/michaeljones/breathe.git
+[submodule "Chroma/third_party/mono"]
+	path = Chroma/third_party/mono
+	url = https://github.com/ttalexander2/mono.git
+[submodule "Chroma/third_party/sol2"]
+	path = Chroma/third_party/sol2
+	url = https://github.com/ttalexander2/sol2.git

@@ -11,6 +11,7 @@
 #include "Chroma/Audio/Audio.h"
 #include <GLFW/glfw3.h>
 #include <imgui.h>
+#include <Chroma/Scripting/LuaScripting.h>
 
 namespace Chroma
 {
@@ -34,6 +35,8 @@ namespace Chroma
 		m_ImGuiLayer = new ImGuiLayer();
 
 		Audio::Init();
+
+		LuaScripting::Init();
 
 	}
 

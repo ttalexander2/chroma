@@ -10,6 +10,8 @@ workspace "Chroma"
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
+MONO_DIR = "Chroma/third_party/Mono"
+
 -- Include directories relative to root folder (solution directory)
 IncludeDir = {}
 IncludeDir["GLFW"] = "Chroma/third_party/GLFW/include"
@@ -25,6 +27,7 @@ IncludeDir["cute_headers"] = "Chroma/third_party/cute_headers"
 IncludeDir["concurrentqueue"] = "Chroma/third_party/concurrentqueue"
 IncludeDir["readerwriterqueue"] = "Chroma/third_party/readerwriterqueue"
 IncludeDir["ImGuizmo"] = "Chroma/third_party/ImGuizmo"
+IncludeDir["Sol2"] = "Chroma/third_party/sol2/include"
 
 group "Dependencies"
     include "Chroma/third_party/GLFW"
@@ -45,7 +48,6 @@ project "Chroma"
 
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
     objdir ("obj/" .. outputdir .. "/%{prj.name}")
-
     pchheader "chromapch.h"
     pchsource "%{prj.name}/src/chromapch.cpp"
 
@@ -62,7 +64,9 @@ project "Chroma"
         "%{prj.name}/third_party/concurrentqueue/**.h",
         "%{prj.name}/third_party/readerwriterqueue/**.h",
         "%{prj.name}/third_party/ImGuizmo/*.cpp",
-        "%{prj.name}/third_party/ImGuizmo/*.h"
+        "%{prj.name}/third_party/ImGuizmo/*.h",
+        "%{prj.name}/third_party/sol2/include/sol/**.hpp",
+        "%{prj.name}/third_party/sol2/include/sol/**.h"
     }
 
     defines
@@ -90,7 +94,8 @@ project "Chroma"
         "%{IncludeDir.cute_headers}",
         "%{IncludeDir.concurrentqueue}",
         "%{IncludeDir.readerwriterqueue}",
-        "%{IncludeDir.ImGuizmo}"
+        "%{IncludeDir.ImGuizmo}",
+        "%{IncludeDir.Sol2}"
 
     }
 
@@ -100,7 +105,8 @@ project "Chroma"
         "Glad",
         "ImGui",
         "opengl32.lib",
-        "yaml-cpp"
+        "yaml-cpp",
+        "lua"
     }
 
     filter "files:Chroma/third_party/ImGuizmo/**.cpp"
@@ -254,7 +260,8 @@ project "Polychrome"
         "%{IncludeDir.yaml}",
         "%{IncludeDir.concurrentqueue}",
         "%{IncludeDir.readerwriterqueue}",
-        "%{IncludeDir.ImGuizmo}"
+        "%{IncludeDir.ImGuizmo}",
+        "%{IncludeDir.Sol2}"
     }
 
     links

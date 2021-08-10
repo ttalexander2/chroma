@@ -78,7 +78,7 @@
       <WarningLevel>Level3</WarningLevel>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;GLM_FORCE_MESSAGES;GLM_FORCE_INTRINSICS;GLM_FORCE_INLINE;GLM_FORCE_ALIGNED_GENTYPES;CHROMA_PLATFORM_WINDOWS;CHROMA_BUILD_DLL;GLFW_INCLUDE_NONE;CHROMA_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;third_party\spdlog\include;third_party\GLFW\include;third_party\Glad\include;third_party\imgui;third_party\imgui\misc\cpp;third_party\glm;third_party\stb_image;third_party\fmod;third_party\lua;third_party\yaml-cpp\include;third_party\cute_headers;third_party\concurrentqueue;third_party\readerwriterqueue;third_party\ImGuizmo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;third_party\spdlog\include;third_party\GLFW\include;third_party\Glad\include;third_party\imgui;third_party\imgui\misc\cpp;third_party\glm;third_party\stb_image;third_party\fmod;third_party\lua;third_party\yaml-cpp\include;third_party\cute_headers;third_party\concurrentqueue;third_party\readerwriterqueue;third_party\ImGuizmo;third_party\sol2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -104,7 +104,7 @@
       <PrecompiledHeaderFile>chromapch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;GLM_FORCE_MESSAGES;GLM_FORCE_INTRINSICS;GLM_FORCE_INLINE;GLM_FORCE_ALIGNED_GENTYPES;CHROMA_PLATFORM_WINDOWS;CHROMA_BUILD_DLL;GLFW_INCLUDE_NONE;CHROMA_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;third_party\spdlog\include;third_party\GLFW\include;third_party\Glad\include;third_party\imgui;third_party\imgui\misc\cpp;third_party\glm;third_party\stb_image;third_party\fmod;third_party\lua;third_party\yaml-cpp\include;third_party\cute_headers;third_party\concurrentqueue;third_party\readerwriterqueue;third_party\ImGuizmo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;third_party\spdlog\include;third_party\GLFW\include;third_party\Glad\include;third_party\imgui;third_party\imgui\misc\cpp;third_party\glm;third_party\stb_image;third_party\fmod;third_party\lua;third_party\yaml-cpp\include;third_party\cute_headers;third_party\concurrentqueue;third_party\readerwriterqueue;third_party\ImGuizmo;third_party\sol2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -128,7 +128,7 @@
       <PrecompiledHeaderFile>chromapch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;GLM_FORCE_MESSAGES;GLM_FORCE_INTRINSICS;GLM_FORCE_INLINE;GLM_FORCE_ALIGNED_GENTYPES;CHROMA_PLATFORM_WINDOWS;CHROMA_BUILD_DLL;GLFW_INCLUDE_NONE;CHROMA_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;third_party\spdlog\include;third_party\GLFW\include;third_party\Glad\include;third_party\imgui;third_party\imgui\misc\cpp;third_party\glm;third_party\stb_image;third_party\fmod;third_party\lua;third_party\yaml-cpp\include;third_party\cute_headers;third_party\concurrentqueue;third_party\readerwriterqueue;third_party\ImGuizmo;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;third_party\spdlog\include;third_party\GLFW\include;third_party\Glad\include;third_party\imgui;third_party\imgui\misc\cpp;third_party\glm;third_party\stb_image;third_party\fmod;third_party\lua;third_party\yaml-cpp\include;third_party\cute_headers;third_party\concurrentqueue;third_party\readerwriterqueue;third_party\ImGuizmo;third_party\sol2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -246,6 +246,7 @@
     <ClInclude Include="src\Chroma\Scene\Scene.h" />
     <ClInclude Include="src\Chroma\Scene\SceneNode.h" />
     <ClInclude Include="src\Chroma\Scene\System.h" />
+    <ClInclude Include="src\Chroma\Scripting\LuaScripting.h" />
     <ClInclude Include="src\Chroma\Systems\AudioSystem.h" />
     <ClInclude Include="src\Chroma\Systems\CollisionSystem.h" />
     <ClInclude Include="src\Chroma\Systems\SpriteRendererSystem.h" />
@@ -637,6 +638,114 @@
     <ClInclude Include="third_party\readerwriterqueue\readerwriterqueue.h" />
     <ClInclude Include="third_party\readerwriterqueue\tests\common\simplethread.h" />
     <ClInclude Include="third_party\readerwriterqueue\tests\unittests\minitest.h" />
+    <ClInclude Include="third_party\sol2\include\sol\as_args.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\as_returns.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\assert.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\base_traits.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\bind_traits.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\bytecode.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\call.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\compatibility.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\compatibility\compat-5.3.c.h" />
+    <ClInclude Include="third_party\sol2\include\sol\compatibility\compat-5.3.h" />
+    <ClInclude Include="third_party\sol2\include\sol\compatibility\compat-5.4.h" />
+    <ClInclude Include="third_party\sol2\include\sol\compatibility\lua_version.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\config.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\coroutine.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\debug.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\demangle.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\deprecate.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\dump_handler.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\ebco.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\environment.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\error.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\error_handler.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\forward.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\forward_detail.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\function.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\function_result.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\function_types.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\function_types_core.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\function_types_overloaded.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\function_types_stateful.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\function_types_stateless.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\function_types_templated.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\in_place.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\inheritance.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\load_result.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\lua_table.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\lua_value.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\make_reference.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\metatable.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\object.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\object_base.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\optional.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\optional_implementation.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\overload.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\packaged_coroutine.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\pairs_iterator.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\pointer_like.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\policies.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\property.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\protect.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\protected_function.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\protected_function_result.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\protected_handler.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\proxy_base.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\raii.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\reference.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\resolve.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\sol.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\stack.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\stack_check.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\stack_check_get.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\stack_check_get_qualified.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\stack_check_get_unqualified.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\stack_check_qualified.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\stack_check_unqualified.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\stack_core.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\stack_field.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\stack_get.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\stack_get_qualified.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\stack_get_unqualified.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\stack_guard.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\stack_iterator.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\stack_pop.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\stack_probe.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\stack_proxy.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\stack_proxy_base.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\stack_push.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\stack_reference.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\state.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\state_handling.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\state_view.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\string_view.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\table.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\table_core.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\table_iterator.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\table_proxy.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\thread.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\tie.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\traits.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\trampoline.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\tuple.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\types.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\unicode.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\unique_usertype_traits.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\unsafe_function.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\unsafe_function_result.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\userdata.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\usertype.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\usertype_container.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\usertype_container_launch.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\usertype_core.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\usertype_proxy.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\usertype_storage.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\usertype_traits.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\variadic_args.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\variadic_results.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\version.hpp" />
+    <ClInclude Include="third_party\sol2\include\sol\wrapper.hpp" />
     <ClInclude Include="third_party\stb_image\stb_image.h" />
     <ClInclude Include="third_party\stb_image\stb_image_write.h" />
     <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\anchor.h" />
@@ -727,6 +836,7 @@
     <ClCompile Include="src\Chroma\Scene\Component.cpp" />
     <ClCompile Include="src\Chroma\Scene\EntityRef.cpp" />
     <ClCompile Include="src\Chroma\Scene\Scene.cpp" />
+    <ClCompile Include="src\Chroma\Scripting\LuaScripting.cpp" />
     <ClCompile Include="src\Chroma\Systems\AudioSystem.cpp" />
     <ClCompile Include="src\Chroma\Systems\CollisionSystem.cpp" />
     <ClCompile Include="src\Chroma\Systems\SpriteRendererSystem.cpp" />
@@ -763,6 +873,9 @@
     </ProjectReference>
     <ProjectReference Include="third_party\yaml-cpp\yaml-cpp.vcxproj">
       <Project>{88F1A057-74BE-FB62-9DD7-E90A890331F1}</Project>
+    </ProjectReference>
+    <ProjectReference Include="third_party\lua\lua.vcxproj">
+      <Project>{C78D880B-3397-887C-BC12-9F7C281B947C}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
