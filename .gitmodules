@@ -10,18 +10,12 @@
 [submodule "Chroma/third_party/glm"]
 	path = Chroma/third_party/glm
 	url = https://github.com/ttalexander2/glm
-[submodule "third_party/--force"]
-	path = third_party/--force
-	url = https://github.com/ttalexander2/premake-core.git
 [submodule "third_party/premake-core"]
 	path = third_party/premake-core
 	url = https://github.com/ttalexander2/premake-core.git
 [submodule "Chroma/third_party/lua"]
 	path = Chroma/third_party/lua
 	url = https://github.com/ttalexander2/lua.git
-[submodule "Chroma/third_party/json"]
-	path = Chroma/third_party/json
-	url = https://github.com/ttalexander2/json.git
 [submodule "Chroma/third_party/yaml-cpp"]
 	path = Chroma/third_party/yaml-cpp
 	url = https://github.com/ttalexander2/yaml-cpp.git
@@ -34,18 +28,6 @@
 [submodule "Chroma/third_party/ImGuizmo"]
 	path = Chroma/third_party/ImGuizmo
 	url = https://github.com/ttalexander2/ImGuizmo.git
-[submodule "Chroma/third_party/doxygen-awesome-css"]
-	path = Chroma/third_party/doxygen-awesome-css
-	url = https://github.com/jothepro/doxygen-awesome-css.git
-[submodule "Chroma/docs/source/third_party/breathe"]
-	path = Chroma/docs/source/third_party/breathe
-	url = https://github.com/michaeljones/breathe.git
-[submodule "Chroma/docs/third_party/breathe"]
-	path = Chroma/docs/third_party/breathe
-	url = https://github.com/michaeljones/breathe.git
-[submodule "Chroma/third_party/mono"]
-	path = Chroma/third_party/mono
-	url = https://github.com/ttalexander2/mono.git
 [submodule "Chroma/third_party/sol2"]
 	path = Chroma/third_party/sol2
 	url = https://github.com/ttalexander2/sol2.git
