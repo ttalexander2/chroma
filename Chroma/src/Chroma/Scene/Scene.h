@@ -427,6 +427,30 @@ namespace Chroma
 		EntityRef NewEntityFromID(EntityID id);
 		EntityID NewEntityID() { return m_EntityCounter++; }
 
+		std::vector<Component*> GetAllComponents_Raw(EntityID id);
+
+		template<typename T>
+		std::vector<T*> GetComponents_Raw(EntityID id)
+		{
+
+			int componentID = GetComponentTypeID<T>();
+
+			if (!HasComponent<T>(id))
+			{
+				return {};
+			}
+
+
+			ComponentPool<T>* pool = (ComponentPool<T>*)m_ComponentPools[componentID];
+			std::vector<T*> raw = pool->Get(id);
+			std::vector<T*> refs;
+			for (T* item : raw)
+			{
+				refs.push_back(item);
+			}
+			return refs;
+		}
+
 
 	private:
 

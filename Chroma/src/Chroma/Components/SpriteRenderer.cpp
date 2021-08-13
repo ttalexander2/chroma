@@ -363,6 +363,10 @@ namespace Chroma
 		
 	}
 
+	void SpriteRenderer::RestartAnimation()
+	{
+	}
+
 }
 
 

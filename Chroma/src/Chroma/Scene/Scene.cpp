@@ -15,6 +15,7 @@
 #include <yaml-cpp/yaml.h>
 #include <Chroma/Scene/System.h>
 #include "Chroma/Utilities/GUID.h"
+//#include <Chroma/Systems/ScriptingSystem.h>
 
 
 
@@ -28,6 +29,7 @@ namespace Chroma
 		RegisterComponent<SpriteRenderer>();
 		RegisterComponent<BoxCollider2D>();
 		RegisterComponent<CircleCollider2D>();
+		//RegisterSystem<ScriptingSystem>();
 		RegisterSystem<AudioSystem>();
 		RegisterSystem<SpriteRendererSystem>();
 	}
@@ -155,6 +157,26 @@ namespace Chroma
 			for (Component* c : pool->GetAbstractComponents(id))
 			{
 				result.push_back(ComponentRef<Component>(c, id, this));
+			}
+		}
+
+		return result;
+	}
+
+	std::vector<Component*> Scene::GetAllComponents_Raw(EntityID id)
+	{
+		if (this == nullptr)
+			return std::vector<Component*>();
+
+		std::vector<Component*> result;
+		for (AbstractComponentPool* pool : m_ComponentPools)
+		{
+			if (pool == nullptr)
+				continue;
+
+			for (Component* c : pool->GetAbstractComponents(id))
+			{
+				result.push_back(c);
 			}
 		}
 

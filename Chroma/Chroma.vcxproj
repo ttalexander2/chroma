@@ -78,7 +78,7 @@
       <WarningLevel>Level3</WarningLevel>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;GLM_FORCE_MESSAGES;GLM_FORCE_INTRINSICS;GLM_FORCE_INLINE;GLM_FORCE_ALIGNED_GENTYPES;CHROMA_PLATFORM_WINDOWS;CHROMA_BUILD_DLL;GLFW_INCLUDE_NONE;CHROMA_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;third_party\spdlog\include;third_party\GLFW\include;third_party\Glad\include;third_party\imgui;third_party\imgui\misc\cpp;third_party\glm;third_party\stb_image;third_party\fmod;third_party\lua;third_party\yaml-cpp\include;third_party\cute_headers;third_party\concurrentqueue;third_party\readerwriterqueue;third_party\ImGuizmo;third_party\sol2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;third_party\spdlog\include;third_party\GLFW\include;third_party\Glad\include;third_party\imgui;third_party\imgui\misc\cpp;third_party\glm;third_party\stb_image;third_party\fmod;third_party\lua;third_party\yaml-cpp\include;third_party\cute_headers;third_party\concurrentqueue;third_party\readerwriterqueue;third_party\ImGuizmo;third_party\sol2\include;third_party\fmt\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -86,6 +86,7 @@
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
@@ -104,13 +105,14 @@
       <PrecompiledHeaderFile>chromapch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;GLM_FORCE_MESSAGES;GLM_FORCE_INTRINSICS;GLM_FORCE_INLINE;GLM_FORCE_ALIGNED_GENTYPES;CHROMA_PLATFORM_WINDOWS;CHROMA_BUILD_DLL;GLFW_INCLUDE_NONE;CHROMA_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;third_party\spdlog\include;third_party\GLFW\include;third_party\Glad\include;third_party\imgui;third_party\imgui\misc\cpp;third_party\glm;third_party\stb_image;third_party\fmod;third_party\lua;third_party\yaml-cpp\include;third_party\cute_headers;third_party\concurrentqueue;third_party\readerwriterqueue;third_party\ImGuizmo;third_party\sol2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;third_party\spdlog\include;third_party\GLFW\include;third_party\Glad\include;third_party\imgui;third_party\imgui\misc\cpp;third_party\glm;third_party\stb_image;third_party\fmod;third_party\lua;third_party\yaml-cpp\include;third_party\cute_headers;third_party\concurrentqueue;third_party\readerwriterqueue;third_party\ImGuizmo;third_party\sol2\include;third_party\fmt\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
@@ -128,13 +130,14 @@
       <PrecompiledHeaderFile>chromapch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;GLM_FORCE_MESSAGES;GLM_FORCE_INTRINSICS;GLM_FORCE_INLINE;GLM_FORCE_ALIGNED_GENTYPES;CHROMA_PLATFORM_WINDOWS;CHROMA_BUILD_DLL;GLFW_INCLUDE_NONE;CHROMA_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;third_party\spdlog\include;third_party\GLFW\include;third_party\Glad\include;third_party\imgui;third_party\imgui\misc\cpp;third_party\glm;third_party\stb_image;third_party\fmod;third_party\lua;third_party\yaml-cpp\include;third_party\cute_headers;third_party\concurrentqueue;third_party\readerwriterqueue;third_party\ImGuizmo;third_party\sol2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;third_party\spdlog\include;third_party\GLFW\include;third_party\Glad\include;third_party\imgui;third_party\imgui\misc\cpp;third_party\glm;third_party\stb_image;third_party\fmod;third_party\lua;third_party\yaml-cpp\include;third_party\cute_headers;third_party\concurrentqueue;third_party\readerwriterqueue;third_party\ImGuizmo;third_party\sol2\include;third_party\fmt\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
@@ -158,6 +161,9 @@
     <ClInclude Include="src\Chroma\Components\AudioSource.h" />
     <ClInclude Include="src\Chroma\Components\BoxCollider2D.h" />
     <ClInclude Include="src\Chroma\Components\CircleCollider2D.h" />
+    <ClInclude Include="src\Chroma\Components\LuaScript.h" />
+    <ClInclude Include="src\Chroma\Components\NativeScript.h" />
+    <ClInclude Include="src\Chroma\Components\ScriptComponent.h" />
     <ClInclude Include="src\Chroma\Components\SpriteRenderer.h" />
     <ClInclude Include="src\Chroma\Components\Tag.h" />
     <ClInclude Include="src\Chroma\Components\Transform.h" />
@@ -246,9 +252,11 @@
     <ClInclude Include="src\Chroma\Scene\Scene.h" />
     <ClInclude Include="src\Chroma\Scene\SceneNode.h" />
     <ClInclude Include="src\Chroma\Scene\System.h" />
+    <ClInclude Include="src\Chroma\Scripting\Bindings.h" />
     <ClInclude Include="src\Chroma\Scripting\LuaScripting.h" />
     <ClInclude Include="src\Chroma\Systems\AudioSystem.h" />
     <ClInclude Include="src\Chroma\Systems\CollisionSystem.h" />
+    <ClInclude Include="src\Chroma\Systems\ScriptingSystem.h" />
     <ClInclude Include="src\Chroma\Systems\SpriteRendererSystem.h" />
     <ClInclude Include="src\Chroma\Utilities\ContainerHelpers.h" />
     <ClInclude Include="src\Chroma\Utilities\FileDialogs.h" />
@@ -602,6 +610,19 @@
     <ClInclude Include="third_party\concurrentqueue\tests\relacy\relacy\test\stdafx.h" />
     <ClInclude Include="third_party\concurrentqueue\tests\relacy\relacy_shims.h" />
     <ClInclude Include="third_party\concurrentqueue\tests\unittests\minitest.h" />
+    <ClInclude Include="third_party\fmt\include\fmt\args.h" />
+    <ClInclude Include="third_party\fmt\include\fmt\chrono.h" />
+    <ClInclude Include="third_party\fmt\include\fmt\color.h" />
+    <ClInclude Include="third_party\fmt\include\fmt\compile.h" />
+    <ClInclude Include="third_party\fmt\include\fmt\core.h" />
+    <ClInclude Include="third_party\fmt\include\fmt\format-inl.h" />
+    <ClInclude Include="third_party\fmt\include\fmt\format.h" />
+    <ClInclude Include="third_party\fmt\include\fmt\locale.h" />
+    <ClInclude Include="third_party\fmt\include\fmt\os.h" />
+    <ClInclude Include="third_party\fmt\include\fmt\ostream.h" />
+    <ClInclude Include="third_party\fmt\include\fmt\printf.h" />
+    <ClInclude Include="third_party\fmt\include\fmt\ranges.h" />
+    <ClInclude Include="third_party\fmt\include\fmt\xchar.h" />
     <ClInclude Include="third_party\lua\lapi.h" />
     <ClInclude Include="third_party\lua\lauxlib.h" />
     <ClInclude Include="third_party\lua\lcode.h" />
@@ -836,9 +857,11 @@
     <ClCompile Include="src\Chroma\Scene\Component.cpp" />
     <ClCompile Include="src\Chroma\Scene\EntityRef.cpp" />
     <ClCompile Include="src\Chroma\Scene\Scene.cpp" />
+    <ClCompile Include="src\Chroma\Scripting\Bindings.cpp" />
     <ClCompile Include="src\Chroma\Scripting\LuaScripting.cpp" />
     <ClCompile Include="src\Chroma\Systems\AudioSystem.cpp" />
     <ClCompile Include="src\Chroma\Systems\CollisionSystem.cpp" />
+    <ClCompile Include="src\Chroma\Systems\ScriptingSystem.cpp" />
     <ClCompile Include="src\Chroma\Systems\SpriteRendererSystem.cpp" />
     <ClCompile Include="src\Chroma\Utilities\GUID.cpp" />
     <ClCompile Include="src\Chroma\Utilities\Yaml.cpp" />

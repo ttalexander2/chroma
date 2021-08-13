@@ -28,6 +28,7 @@ IncludeDir["concurrentqueue"] = "Chroma/third_party/concurrentqueue"
 IncludeDir["readerwriterqueue"] = "Chroma/third_party/readerwriterqueue"
 IncludeDir["ImGuizmo"] = "Chroma/third_party/ImGuizmo"
 IncludeDir["Sol2"] = "Chroma/third_party/sol2/include"
+IncludeDir["fmt"] = "Chroma/third_party/fmt/include"
 
 group "Dependencies"
     include "Chroma/third_party/GLFW"
@@ -66,7 +67,9 @@ project "Chroma"
         "%{prj.name}/third_party/ImGuizmo/*.cpp",
         "%{prj.name}/third_party/ImGuizmo/*.h",
         "%{prj.name}/third_party/sol2/include/sol/**.hpp",
-        "%{prj.name}/third_party/sol2/include/sol/**.h"
+        "%{prj.name}/third_party/sol2/include/sol/**.h",
+        "%{prj.name}/third_party/fmt/include/**.h",
+        "%{prj.name}/third_party/fmt/src/**.cpp"
     }
 
     defines
@@ -95,7 +98,8 @@ project "Chroma"
         "%{IncludeDir.concurrentqueue}",
         "%{IncludeDir.readerwriterqueue}",
         "%{IncludeDir.ImGuizmo}",
-        "%{IncludeDir.Sol2}"
+        "%{IncludeDir.Sol2}",
+        "%{IncludeDir.fmt}"
 
     }
 
@@ -157,6 +161,9 @@ project "Chroma"
     
     filter { "files:**.inl" }
         optimize "Speed"
+
+    configuration "vs*"
+        buildoptions { "/bigobj" }    -- Lua bindings made me do this :(
 
 
 

@@ -10,6 +10,7 @@ namespace Chroma
 	//Forward Declarations
 	class EntityRef;
 	class Component;
+	class Bindings;
 
 	template<typename T>
 	concept ComponentType = std::is_base_of<Component, T>::value;
@@ -18,6 +19,8 @@ namespace Chroma
 	class ComponentRef
 	{
 		friend class Scene;
+		friend class Bindings;
+
 	public:
 		ComponentType* operator->() { return m_Ptr; }
 		Scene* GetScene() { return m_Scene; }
@@ -26,11 +29,11 @@ namespace Chroma
 		bool IsNull() { return m_Ptr == nullptr || m_Scene == nullptr; }
 
 		
-		template<typename OStream>
-		friend OStream& operator<<(OStream& os, const ComponentRef<ComponentType>& t)
-		{
-			return os << "Component: " << FindTypeName(typeid(ComponentType).name()) << " (Entity " << t.m_Entity << ")";
-		}
+		//template<typename OStream>
+		//friend OStream& operator<<(OStream& os, const ComponentRef<ComponentType>& t)
+		//{
+		//	return os << "Component: " << FindTypeName(typeid(ComponentType).name()) << " (Entity " << t.m_Entity << ")";
+		//}
 		
 
 		void Delete()

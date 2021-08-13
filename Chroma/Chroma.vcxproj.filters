@@ -268,6 +268,15 @@
     <Filter Include="third_party\concurrentqueue\tests\unittests">
       <UniqueIdentifier>{AA0A37A1-1670-CA27-9F48-6C000BADBF96}</UniqueIdentifier>
     </Filter>
+    <Filter Include="third_party\fmt">
+      <UniqueIdentifier>{C5262974-31B2-9638-3AC3-192DA6CDF238}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\fmt\include">
+      <UniqueIdentifier>{38433FA4-A47A-873B-AD84-EB5E193BAE34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\fmt\include\fmt">
+      <UniqueIdentifier>{6EA5396C-DAB2-6752-6399-633DCFA53309}</UniqueIdentifier>
+    </Filter>
     <Filter Include="third_party\lua">
       <UniqueIdentifier>{40412974-ACCC-9638-B5DD-192D21E8F238}</UniqueIdentifier>
     </Filter>
@@ -361,6 +370,15 @@
       <Filter>src\Chroma\Components</Filter>
     </ClInclude>
     <ClInclude Include="src\Chroma\Components\CircleCollider2D.h">
+      <Filter>src\Chroma\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Chroma\Components\LuaScript.h">
+      <Filter>src\Chroma\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Chroma\Components\NativeScript.h">
+      <Filter>src\Chroma\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Chroma\Components\ScriptComponent.h">
       <Filter>src\Chroma\Components</Filter>
     </ClInclude>
     <ClInclude Include="src\Chroma\Components\SpriteRenderer.h">
@@ -627,6 +645,9 @@
     <ClInclude Include="src\Chroma\Scene\System.h">
       <Filter>src\Chroma\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="src\Chroma\Scripting\Bindings.h">
+      <Filter>src\Chroma\Scripting</Filter>
+    </ClInclude>
     <ClInclude Include="src\Chroma\Scripting\LuaScripting.h">
       <Filter>src\Chroma\Scripting</Filter>
     </ClInclude>
@@ -634,6 +655,9 @@
       <Filter>src\Chroma\Systems</Filter>
     </ClInclude>
     <ClInclude Include="src\Chroma\Systems\CollisionSystem.h">
+      <Filter>src\Chroma\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Chroma\Systems\ScriptingSystem.h">
       <Filter>src\Chroma\Systems</Filter>
     </ClInclude>
     <ClInclude Include="src\Chroma\Systems\SpriteRendererSystem.h">
@@ -1695,6 +1719,45 @@
     <ClInclude Include="third_party\concurrentqueue\tests\unittests\minitest.h">
       <Filter>third_party\concurrentqueue\tests\unittests</Filter>
     </ClInclude>
+    <ClInclude Include="third_party\fmt\include\fmt\args.h">
+      <Filter>third_party\fmt\include\fmt</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\fmt\include\fmt\chrono.h">
+      <Filter>third_party\fmt\include\fmt</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\fmt\include\fmt\color.h">
+      <Filter>third_party\fmt\include\fmt</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\fmt\include\fmt\compile.h">
+      <Filter>third_party\fmt\include\fmt</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\fmt\include\fmt\core.h">
+      <Filter>third_party\fmt\include\fmt</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\fmt\include\fmt\format-inl.h">
+      <Filter>third_party\fmt\include\fmt</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\fmt\include\fmt\format.h">
+      <Filter>third_party\fmt\include\fmt</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\fmt\include\fmt\locale.h">
+      <Filter>third_party\fmt\include\fmt</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\fmt\include\fmt\os.h">
+      <Filter>third_party\fmt\include\fmt</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\fmt\include\fmt\ostream.h">
+      <Filter>third_party\fmt\include\fmt</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\fmt\include\fmt\printf.h">
+      <Filter>third_party\fmt\include\fmt</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\fmt\include\fmt\ranges.h">
+      <Filter>third_party\fmt\include\fmt</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\fmt\include\fmt\xchar.h">
+      <Filter>third_party\fmt\include\fmt</Filter>
+    </ClInclude>
     <ClInclude Include="third_party\lua\lapi.h">
       <Filter>third_party\lua</Filter>
     </ClInclude>
@@ -2393,6 +2456,9 @@
     <ClCompile Include="src\Chroma\Scene\Scene.cpp">
       <Filter>src\Chroma\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="src\Chroma\Scripting\Bindings.cpp">
+      <Filter>src\Chroma\Scripting</Filter>
+    </ClCompile>
     <ClCompile Include="src\Chroma\Scripting\LuaScripting.cpp">
       <Filter>src\Chroma\Scripting</Filter>
     </ClCompile>
@@ -2400,6 +2466,9 @@
       <Filter>src\Chroma\Systems</Filter>
     </ClCompile>
     <ClCompile Include="src\Chroma\Systems\CollisionSystem.cpp">
+      <Filter>src\Chroma\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Chroma\Systems\ScriptingSystem.cpp">
       <Filter>src\Chroma\Systems</Filter>
     </ClCompile>
     <ClCompile Include="src\Chroma\Systems\SpriteRendererSystem.cpp">

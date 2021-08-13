@@ -2,6 +2,8 @@
 #include "EntityRef.h"
 #include "Scene.h"
 
+#include "Chroma/Components/Tag.h"
+
 namespace Chroma
 {
 	EntityRef::EntityRef(EntityID id)
@@ -29,8 +31,27 @@ namespace Chroma
 		return std::string(out.c_str());
 	}
 
+	std::string EntityRef::GetName()
+	{
+		auto t = GetComponent<Tag>();
+		if (t.IsNull())
+			return std::string("Null");
+		return t->EntityName;
+	}
+
+	void EntityRef::SetName(const std::string& name)
+	{
+		auto t = GetComponent<Tag>();
+		if (!t.IsNull())
+			t->EntityName = name;
+	}
+
 	std::vector<ComponentRef<Component>> EntityRef::GetAllComponents()
 	{
 		return m_Scene->GetAllComponents(m_EntityID);
+	}
+	std::vector<Component*> EntityRef::GetAllComponents_Raw()
+	{
+		return m_Scene->GetAllComponents_Raw(m_EntityID);
 	}
 }

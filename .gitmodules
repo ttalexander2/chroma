@@ -31,3 +31,6 @@
 [submodule "Chroma/third_party/sol2"]
 	path = Chroma/third_party/sol2
 	url = https://github.com/ttalexander2/sol2.git
+[submodule "Chroma/third_party/fmt"]
+	path = Chroma/third_party/fmt
+	url = https://github.com/ttalexander2/fmt.git

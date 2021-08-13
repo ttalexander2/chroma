@@ -8,6 +8,8 @@
 namespace Chroma
 {
 
+	class Bindings;
+
 	class EntityRef : public Inspectable
 	{
 	public:
@@ -20,6 +22,10 @@ namespace Chroma
 		std::string ToPrefab();
 
 		const std::string ClassName() const override { return "EntityRef"; }
+
+		std::string GetName();
+
+		void SetName(const std::string& name);
 
 
 		template <typename T>
@@ -79,12 +85,25 @@ namespace Chroma
 		}
 
 		
-		template<typename OStream>
-		friend OStream& operator<<(OStream& os, const EntityRef& e)
+		//template<typename OStream>
+		//friend OStream& operator<<(OStream& os, const EntityRef& e)
+		//{
+		//	return os << "Entity " << e.m_EntityID << "";
+		//}
+
+
+		Ref<Scene> GetScene() { return m_Scene; }
+
+
+	private:
+
+		template<typename T>
+		std::vector<T*> GetComponents_Raw()
 		{
-			return os << "Entity " << e.m_EntityID << "";
+			return m_Scene->GetComponents_Raw<T>(m_EntityID);
 		}
-		
+
+		std::vector<Component*> GetAllComponents_Raw();
 
 	private:
 
@@ -92,5 +111,7 @@ namespace Chroma
 		Ref<Scene> m_Scene;
 
 		friend class Scene;
+		friend class Bindings;
+
 	};
 }
