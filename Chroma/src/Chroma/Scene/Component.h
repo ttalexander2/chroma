@@ -1,7 +1,6 @@
 #pragma once
 
 
-#include "Chroma/Scene/ECS.h"
 #include "Chroma/Core/Log.h"
 #include <string>
 #include "Chroma/Utilities/Yaml.h"
@@ -16,8 +15,6 @@ namespace Polychrome
 
 namespace Chroma
 {
-	template <class T>
-	class ComponentPool;
 
 	/// @brief Game object Component interface.
 	///
@@ -80,8 +77,8 @@ namespace Chroma
 			return comparison_id;
 		}
 
-		void BeginSerialize(YAML::Emitter& out);
-		void EndSerialize(YAML::Emitter& out);
+
+		void DoSerialize(YAML::Emitter& out);
 
 	protected:
 
@@ -89,8 +86,8 @@ namespace Chroma
 		bool DrawComponentValueCollapsible(std::string label);
 
 	private:
-
-
+		void BeginSerialize(YAML::Emitter& out);
+		void EndSerialize(YAML::Emitter& out);
 
 		/// @brief Checks whether the Component is a Tag.
 		const virtual bool IsTag() const { return false; }
@@ -116,8 +113,6 @@ namespace Chroma
 		/// @brief Counter for component IDs.
 		static unsigned int component_counter;
 
-		template <class T>
-		friend class ComponentPool;
 		friend class Polychrome::Inspector;
 		friend struct Tag;
 		friend struct Transform;

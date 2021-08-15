@@ -8,6 +8,7 @@
 #include <Chroma/ImGui/ImGuiHelper.h>
 #include <Chroma/Scene/Inspectable.h>
 #include "EditorApp.h"
+#include "Chroma/Scene/ECS.h"
 
 namespace Polychrome
 {
@@ -46,7 +47,7 @@ namespace Polychrome
 		ImGui::BeginTable("##Inspector_table", 2, ImGuiTableFlags_None | ImGuiTableFlags_SizingStretchProp | ImGuiTableFlags_Resizable | ImGuiTableFlags_NoBordersInBodyUntilResize | ImGuiTableFlags_NoClip);
 		ImGui::TableNextColumn();
 
-		for (Chroma::ComponentRef<Chroma::Component> c : scene->GetAllComponents(Hierarchy::SelectedEntity))
+		for (Chroma::Component* c : scene->GetAllComponents(Hierarchy::SelectedEntity))
 		{
 			if (c->IsTag())
 				continue;
@@ -106,7 +107,7 @@ namespace Polychrome
 				{
 					if (ImGui::MenuItem(("Delete##MENU_BAR_INSPECTOR_" + std::to_string(unique)).c_str()))
 					{
-						c.Delete();
+						scene->RemoveComponent(c->Name(), Hierarchy::SelectedEntity);
 					}
 				}
 
@@ -147,20 +148,17 @@ namespace Polychrome
 
 		if (ImGui::BeginPopup("##ENTITY_ADD_COMPONENT"))
 		{
-			auto names = scene->GetComponentNames();
-			auto ids = scene->GetComponentNamestoIDMap();
+			auto names = Chroma::ECS::GetComponentNames();
 
-			for (auto& [name, func] : scene->GetComponentFactory())
+			for (auto& name : names)
 			{
 				bool enabled = true;
-				if (scene->HasComponent(Hierarchy::SelectedEntity, ids[name]) && !scene->ComponentAllowsMultiple(ids[name]))
-				{
+				if (scene->HasComponent(name, Hierarchy::SelectedEntity))
 					enabled = false;
-				}
 
 				if (ImGui::MenuItem((name + "##ENTITY_ADD_COMPONENT").c_str(), "", false, enabled))
 				{
-					func(*scene, Hierarchy::SelectedEntity);
+					scene->AddComponent(name, Hierarchy::SelectedEntity);
 				}
 			}
 			ImGui::EndPopup();

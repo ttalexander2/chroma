@@ -17,7 +17,7 @@
 
 #include "Chroma/ImGui/ImGuiLayer.h"
 
-#include "Chroma/Scene/EntityRef.h"
+#include "Chroma/Scene/Entity.h"
 #include "Chroma/Scene/Scene.h"
 
 #include "Chroma/Utilities/Yaml.h"

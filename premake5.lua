@@ -29,6 +29,7 @@ IncludeDir["readerwriterqueue"] = "Chroma/third_party/readerwriterqueue"
 IncludeDir["ImGuizmo"] = "Chroma/third_party/ImGuizmo"
 IncludeDir["Sol2"] = "Chroma/third_party/sol2/include"
 IncludeDir["fmt"] = "Chroma/third_party/fmt/include"
+IncludeDir["entt"] = "Chroma/third_party/entt"
 
 group "Dependencies"
     include "Chroma/third_party/GLFW"
@@ -69,7 +70,8 @@ project "Chroma"
         "%{prj.name}/third_party/sol2/include/sol/**.hpp",
         "%{prj.name}/third_party/sol2/include/sol/**.h",
         "%{prj.name}/third_party/fmt/include/**.h",
-        "%{prj.name}/third_party/fmt/src/**.cpp"
+        "%{prj.name}/third_party/fmt/src/**.cpp",
+        "%{prj.name}/third_party/entt/**.hpp"
     }
 
     defines
@@ -99,7 +101,8 @@ project "Chroma"
         "%{IncludeDir.readerwriterqueue}",
         "%{IncludeDir.ImGuizmo}",
         "%{IncludeDir.Sol2}",
-        "%{IncludeDir.fmt}"
+        "%{IncludeDir.fmt}",
+        "%{IncludeDir.entt}"
 
     }
 

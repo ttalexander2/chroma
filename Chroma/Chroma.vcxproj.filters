@@ -268,6 +268,9 @@
     <Filter Include="third_party\concurrentqueue\tests\unittests">
       <UniqueIdentifier>{AA0A37A1-1670-CA27-9F48-6C000BADBF96}</UniqueIdentifier>
     </Filter>
+    <Filter Include="third_party\entt">
+      <UniqueIdentifier>{B9774DF9-A570-6C4B-CEA2-51D0BAFA4B57}</UniqueIdentifier>
+    </Filter>
     <Filter Include="third_party\fmt">
       <UniqueIdentifier>{C5262974-31B2-9638-3AC3-192DA6CDF238}</UniqueIdentifier>
     </Filter>
@@ -621,16 +624,10 @@
     <ClInclude Include="src\Chroma\Scene\Component.h">
       <Filter>src\Chroma\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="src\Chroma\Scene\ComponentPool.h">
-      <Filter>src\Chroma\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Chroma\Scene\ComponentRef.h">
-      <Filter>src\Chroma\Scene</Filter>
-    </ClInclude>
     <ClInclude Include="src\Chroma\Scene\ECS.h">
       <Filter>src\Chroma\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="src\Chroma\Scene\EntityRef.h">
+    <ClInclude Include="src\Chroma\Scene\Entity.h">
       <Filter>src\Chroma\Scene</Filter>
     </ClInclude>
     <ClInclude Include="src\Chroma\Scene\Inspectable.h">
@@ -1719,6 +1716,9 @@
     <ClInclude Include="third_party\concurrentqueue\tests\unittests\minitest.h">
       <Filter>third_party\concurrentqueue\tests\unittests</Filter>
     </ClInclude>
+    <ClInclude Include="third_party\entt\entt.hpp">
+      <Filter>third_party\entt</Filter>
+    </ClInclude>
     <ClInclude Include="third_party\fmt\include\fmt\args.h">
       <Filter>third_party\fmt\include\fmt</Filter>
     </ClInclude>
@@ -2450,7 +2450,10 @@
     <ClCompile Include="src\Chroma\Scene\Component.cpp">
       <Filter>src\Chroma\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="src\Chroma\Scene\EntityRef.cpp">
+    <ClCompile Include="src\Chroma\Scene\ECS.cpp">
+      <Filter>src\Chroma\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Chroma\Scene\Entity.cpp">
       <Filter>src\Chroma\Scene</Filter>
     </ClCompile>
     <ClCompile Include="src\Chroma\Scene\Scene.cpp">

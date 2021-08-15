@@ -42,7 +42,7 @@ namespace ImGui
 
 		ImGui::SetNextItemWidth(inputWidth);
 
-		int pos = val.x;
+		int pos = (int)val.x;
 		if (ImGui::DragInt(("##vec3_x" + std::string(hash)).c_str(), &pos))
 		{
 			val.x = pos;
@@ -261,7 +261,7 @@ namespace ImGui
 
 		ImGui::SetNextItemWidth(inputWidth);
 
-		int pos = val.x;
+		int pos = (int)val.x;
 		if (ImGui::DragInt(("##vec3_x" + std::string(hash)).c_str(), &pos))
 		{
 			val.x = pos;

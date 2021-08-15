@@ -78,8 +78,8 @@ namespace Polychrome
 
 			
 
-				auto transform = EditorApp::CurrentScene->GetComponent<Chroma::Transform>(Hierarchy::SelectedEntity);
-				glm::mat4 transformMat = transform->GetTransform();
+				auto &transform = EditorApp::CurrentScene->GetComponent<Chroma::Transform>(Hierarchy::SelectedEntity);
+				glm::mat4 transformMat = transform.GetTransform();
 
 				const float snap = 1.0f;
 				//ImGuizmo::DrawGrid(glm::value_ptr(camView), glm::value_ptr(camProj), identityMatrix, 32.f);
@@ -89,9 +89,9 @@ namespace Polychrome
 				if (ImGuizmo::IsUsing())
 				{
 
-					glm::vec3 translation = transform->Position;
-					glm::vec3 rotation = transform->Rotation;
-					glm::vec3 scale = transform->Scale;
+					glm::vec3 translation = transform.Position;
+					glm::vec3 rotation = transform.Rotation;
+					glm::vec3 scale = transform.Scale;
 
 					if (Chroma::DecomposeTransform(transformMat, translation, rotation, scale))
 					{
@@ -100,15 +100,15 @@ namespace Polychrome
 						//rotation.z = glm::degrees(rotation.z);
 
 
-						glm::vec3 deltaRotation = rotation - transform->Rotation;
+						glm::vec3 deltaRotation = rotation - transform.Rotation;
 
 						//CHROMA_CORE_WARN("Position: [{},{},{}]", translation.x, translation.y, translation.z);
 						//CHROMA_CORE_WARN("Rotation: [{},{},{}]", rotation.x, rotation.y, rotation.z);
 						//CHROMA_CORE_WARN("Scale: [{},{},{}]", scale.x, scale.y, scale.z);
 
-						transform->Position = translation;
-						transform->Rotation += deltaRotation;
-						transform->Scale = scale;
+						transform.Position = translation;
+						transform.Rotation += deltaRotation;
+						transform.Scale = scale;
 					}
 
 					

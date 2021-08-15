@@ -2,27 +2,29 @@
 #include "AudioSystem.h"
 
 #include "Chroma/Components/AudioSource.h"
-#include "Chroma/Scene/EntityRef.h"
+#include "Chroma/Scene/Entity.h"
 
 namespace Chroma
 {
 	void AudioSystem::LateInit()
 	{
-		for (EntityRef e : m_Scene->View<AudioSource>())
+		auto view = m_Scene->Registry.view<AudioSource>();
+		for (EntityID e : view)
 		{
-			ComponentRef<AudioSource> audio = e.GetComponent<AudioSource>();
-			Audio::LoadEvent(audio->Event);
-			if (audio->PlayOnInit)
-				Audio::PlayEvent(audio->Event);
+			AudioSource& audio = view.get<AudioSource>(e);
+			Audio::LoadEvent(audio.Event);
+			if (audio.PlayOnInit)
+				Audio::PlayEvent(audio.Event);
 		}
 	}
 
 	
 	void AudioSystem::LateUpdate(Time delta)
 	{
-		for (EntityRef e : m_Scene->View<AudioSource>())
+		auto view = m_Scene->Registry.view<AudioSource>();
+		for (EntityID e : view)
 		{
-			ComponentRef<AudioSource> audio = e.GetComponent<AudioSource>();
+			AudioSource& audio = view.get<AudioSource>(e);
 		}
 	}
 }

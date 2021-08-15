@@ -3,6 +3,7 @@
 #include "imgui.h"
 #include "Chroma/ImGui/IconsForkAwesome.h"
 #include <Chroma/ImGui/ImGuiHelper.h>
+#include "Chroma/Scene/ECS.h"
 
 namespace Chroma
 {
@@ -26,6 +27,13 @@ namespace Chroma
 	void Component::EndSerialize(YAML::Emitter& out)
 	{
 		out << YAML::EndMap;
+	}
+
+	void Component::DoSerialize(YAML::Emitter& out)
+	{
+		BeginSerialize(out);
+		Serialize(out);
+		EndSerialize(out);
 	}
 
 	/// @brief Draws a component lable for the Editor component widgets.

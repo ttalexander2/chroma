@@ -6,8 +6,7 @@
 #include <sol/sol.hpp>
 #include <fmt/format.h>
 
-#include "Chroma/Scene/EntityRef.h"
-#include "Chroma/Scene/ComponentRef.h"
+#include "Chroma/Scene/Entity.h"
 #include <Chroma/Components/Tag.h>
 #include <Chroma/Components/Transform.h>
 #include <Chroma/Components/AudioSource.h>
@@ -28,53 +27,44 @@ namespace Chroma
 
 	void Bindings::BindEntity(sol::state* lua)
 	{
-		lua->new_usertype<EntityRef>("Entity",
+		lua->new_usertype<Entity>("Entity",
 
 			"Entity", sol::no_constructor,
 
 			//Properties
-			"ID", sol::readonly_property(&EntityRef::GetID),
-			"Scene", sol::readonly_property(&EntityRef::GetScene),
-			"Name", sol::property(&EntityRef::GetName, &EntityRef::SetName),
+			"ID", sol::readonly_property(&Entity::GetID),
+			"Scene", sol::readonly_property(&Entity::GetScene),
+			"Name", sol::property(&Entity::GetName, &Entity::SetName),
 
 			//Methods
-			"Valid", [](EntityRef& e) {return e.GetScene().get() != nullptr && e.GetID() != ENTITY_NULL; },
+			"Valid", [](Entity& e) {return &e.GetScene() != nullptr && e.GetID() != ENTITY_NULL; },
 
-			"HasTag", &EntityRef::HasComponent<Tag>,
-			"HasTransform", & EntityRef::HasComponent<Transform>,
-			"HasAudioSource", & EntityRef::HasComponent<AudioSource>,
-			"HasBoxCollider2D", &EntityRef::HasComponent<BoxCollider2D>,
-			"HasCircleCollider2D", &EntityRef::HasComponent<CircleCollider2D>,
-			"HasSpriteRenderer", &EntityRef::HasComponent<SpriteRenderer>,
+			"HasTag", &Entity::HasComponent<Tag>,
+			"HasTransform", & Entity::HasComponent<Transform>,
+			"HasAudioSource", & Entity::HasComponent<AudioSource>,
+			"HasBoxCollider2D", &Entity::HasComponent<BoxCollider2D>,
+			"HasCircleCollider2D", &Entity::HasComponent<CircleCollider2D>,
+			"HasSpriteRenderer", &Entity::HasComponent<SpriteRenderer>,
 
-			"AddTag", [](EntityRef& e) { return e.AddComponent<Tag>().m_Ptr; },
-			"AddTransform", [](EntityRef& e) { return e.AddComponent<Transform>().m_Ptr; },
-			"AddAudioSource", [](EntityRef& e) { return e.AddComponent<AudioSource>().m_Ptr; },
-			"AddBoxCollider2D", [](EntityRef& e) { return e.AddComponent<BoxCollider2D>().m_Ptr; },
-			"AddCircleCollider2D", [](EntityRef& e) { return e.AddComponent<CircleCollider2D>().m_Ptr; },
-			"AddSpriteRenderer", [](EntityRef& e) { return e.AddComponent<SpriteRenderer>().m_Ptr; },
+			"AddTag", [](Entity& e) { return e.AddComponent<Tag>(); },
+			"AddTransform", [](Entity& e) { return e.AddComponent<Transform>(); },
+			"AddAudioSource", [](Entity& e) { return e.AddComponent<AudioSource>(); },
+			"AddBoxCollider2D", [](Entity& e) { return e.AddComponent<BoxCollider2D>(); },
+			"AddCircleCollider2D", [](Entity& e) { return e.AddComponent<CircleCollider2D>(); },
+			"AddSpriteRenderer", [](Entity& e) { return e.AddComponent<SpriteRenderer>(); },
 
-			"GetTag", [](EntityRef& e) { return e.GetComponent<Tag>().m_Ptr; },
-			"GetTransform", [](EntityRef& e) { return e.GetComponent<Transform>().m_Ptr; },
-			"GetAudioSource", [](EntityRef& e) { return e.GetComponent<AudioSource>().m_Ptr; },
-			"GetBoxCollider2D", [](EntityRef& e) { return e.GetComponent<BoxCollider2D>().m_Ptr; },
-			"GetCircleCollider2D", [](EntityRef& e) { return e.GetComponent<CircleCollider2D>().m_Ptr; },
-			"GetSpriteRenderer", [](EntityRef& e) { return e.GetComponent<SpriteRenderer>().m_Ptr; },
-
-			"GetTags", &EntityRef::GetComponents_Raw<Tag>,
-			"GetTransforms", &EntityRef::GetComponents_Raw<Transform>,
-			"GetAudioSources", &EntityRef::GetComponents_Raw<AudioSource>,
-			"GetBoxCollider2Ds", &EntityRef::GetComponents_Raw<BoxCollider2D>,
-			"GetCircleCollider2Ds", &EntityRef::GetComponents_Raw<CircleCollider2D>,
-			"GetSpriteRenderers", &EntityRef::GetComponents_Raw<SpriteRenderer>,
-
-			"GetAllComponents", &EntityRef::GetAllComponents,
+			"GetTag", [](Entity& e) { return e.GetComponent<Tag>(); },
+			"GetTransform", [](Entity& e) { return e.GetComponent<Transform>(); },
+			"GetAudioSource", [](Entity& e) { return e.GetComponent<AudioSource>(); },
+			"GetBoxCollider2D", [](Entity& e) { return e.GetComponent<BoxCollider2D>(); },
+			"GetCircleCollider2D", [](Entity& e) { return e.GetComponent<CircleCollider2D>(); },
+			"GetSpriteRenderer", [](Entity& e) { return e.GetComponent<SpriteRenderer>(); },
 
 
 			//Metamethods
-			sol::meta_function::to_string, [](EntityRef& e) { return fmt::format("{} (Entity {})", e.GetName(), e.GetID()); },
-			sol::meta_function::equal_to, &EntityRef::operator==,
-			sol::meta_function::less_than, &EntityRef::operator<
+			sol::meta_function::to_string, [](Entity& e) { return fmt::format("{} (Entity {})", e.GetName(), e.GetID()); },
+			sol::meta_function::equal_to, &Entity::operator==,
+			sol::meta_function::less_than, &Entity::operator<
 
 		);
 	}
@@ -156,19 +146,7 @@ namespace Chroma
 
 	void Bindings::BindScene(sol::state* lua)
 	{
-		lua->new_usertype<Scene>("Scene",
-			"Scene", sol::no_constructor,
-			
-			//Properties
-			"Name", &Scene::Name,
-
-			//Methods
-			"NewEntity", &Scene::NewEntity,
-			"DestroyEntity", &Scene::DestroyEntity,
-			"GetEntity", &Scene::GetEntity,
-			"GetAllEntityIDs", &Scene::GetEntities
-
-		);
+		
 	}
 
 	void Bindings::BindMath(sol::state* lua)

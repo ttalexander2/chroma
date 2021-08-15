@@ -8,11 +8,10 @@ namespace Chroma
 	///
 	/// Interface for game assets. Each asset controlls its name, id, and path.
 	/// Any implementing class is required to provide load/unload/reload functionality.
-	class Asset
+	struct Asset
 	{
 		friend class AssetManager;
 
-	public:
 		const std::string Name;
 		const std::string GetPath() const { return Path; }
 		virtual bool Load() = 0;

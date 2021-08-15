@@ -54,7 +54,7 @@ namespace Polychrome
 
 		
 		
-		Chroma::EntityRef entity = scene->NewEntity();
+		Chroma::Entity entity = scene->NewEntity();
 		scene->NewEntity();
 		scene->NewEntity();
 		scene->NewEntity();
@@ -64,16 +64,15 @@ namespace Polychrome
 
 
 		auto entity4 = scene->NewEntity();
-
 		entity.AddComponent<Chroma::SpriteRenderer>();
-		auto sprite = entity.GetComponent<Chroma::SpriteRenderer>();
+		auto &sprite = entity.GetComponent<Chroma::SpriteRenderer>();
 
 
-		Chroma::EntityRef e2 = scene->NewEntity();
-		Chroma::ComponentRef aaaa = e2.GetComponent<Chroma::BoxCollider2D>();
+		Chroma::Entity e2 = scene->NewEntity();
+		Chroma::BoxCollider2D& aaaa = e2.GetComponent<Chroma::BoxCollider2D>();
 
-		scene->AddComponent<Chroma::CircleCollider2D>(e2);
-		scene->AddComponent<Chroma::BoxCollider2D>(e2);
+		//scene->AddComponent<Chroma::CircleCollider2D>(e2);
+		//scene->AddComponent<Chroma::BoxCollider2D>(e2);
 
 		std::string prefab = e2.ToPrefab();
 		std::ofstream fout("test.prefab");
@@ -324,7 +323,7 @@ namespace Polychrome
 
 		style.WindowMinSize.x = minWinSizeX;
 
-		int prevFramePaddingY = ImGui::GetStyle().FramePadding.y;
+		int prevFramePaddingY = (int)ImGui::GetStyle().FramePadding.y;
 		ImGui::GetStyle().FramePadding.y = 4.0f;
 
 		ImGui::BeginMainMenuBar();
@@ -435,7 +434,7 @@ namespace Polychrome
 			std::stringstream strStream;
 			strStream << stream.rdbuf();
 			Chroma::Scene* out = new Chroma::Scene();
-			if (Chroma::Scene::Deserialize(*out, strStream.str()))
+			if (Chroma::Scene::Deserialize(out, strStream.str()))
 			{
 				CurrentScenePath = filepath;
 				delete EditorApp::CurrentScene;
