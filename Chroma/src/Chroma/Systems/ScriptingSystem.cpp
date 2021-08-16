@@ -4,6 +4,12 @@
 #include <Chroma/Scripting/LuaScripting.h>
 #include <Chroma/Components/LuaScript.h>
 #include <Chroma/Scene/Entity.h>
+#include <lua.h>
+#include <lauxlib.h>
+
+#include <lobject.h>
+#include <lstate.h>
+#include <lundump.h>
 
 namespace Chroma
 {
@@ -12,6 +18,18 @@ namespace Chroma
 
 	}
 
+	static int writer(lua_State* L, const void* p, size_t size, void* u)
+	{
+		UNUSED(L);
+		return (fwrite(p, size, 1, (FILE*)u) != 1) && (size != 0);
+	}
+
+	//TODO: This probably should be handled by the asset manager, not the system.
+	// Or at the very least should go through the asset manager.
+	// This could get very slow if many entities have the same script.
+	// After the scene is loaded, the asset systen should load all of the scripts
+	// into memory, then on request, the lua environment can get the data
+	// to load/execute the script in the Lua state.
 	void ScriptingSystem::Load()
 	{
 		auto view = m_Scene->Registry.view<LuaScript>();
@@ -24,9 +42,22 @@ namespace Chroma
 			script.env["entity"] = Entity(entity, m_Scene);
 			try
 			{
-				auto result = LuaScripting::Lua.safe_script_file(script.Path, script.env, sol::load_mode::text);
+				// This is really sus, but i couldn't get it to work with sol
+				if (luaL_loadfile(LuaScripting::Lua.lua_state(), script.Path.c_str()) == LUA_OK)
+				{
+					FILE* D = fopen(std::filesystem::path(script.Path).replace_extension(".luac").string().c_str(), "wb+");
+					lua_lock(LuaScripting::Lua.lua_state());
+					lua_dump(LuaScripting::Lua.lua_state(), writer, D, 0);
+					lua_unlock(LuaScripting::Lua.lua_state());
+					fclose(D);
+				}
+
+				auto result = LuaScripting::Lua.safe_script_file(std::filesystem::path(script.Path).replace_extension(".luac").string(), script.env, sol::load_mode::binary);
 				if (result.valid())
+				{
 					script.success = true;
+				}
+					
 			}
 			catch (const sol::error& e)
 			{

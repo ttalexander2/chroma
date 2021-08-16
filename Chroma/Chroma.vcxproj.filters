@@ -345,9 +345,6 @@
     <ClInclude Include="src\Chroma.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\Chroma\Animation.h">
-      <Filter>src\Chroma</Filter>
-    </ClInclude>
     <ClInclude Include="src\Chroma\Assets\Asset.h">
       <Filter>src\Chroma\Assets</Filter>
     </ClInclude>
@@ -362,9 +359,6 @@
     </ClInclude>
     <ClInclude Include="src\Chroma\Audio\ChromaFMOD.h">
       <Filter>src\Chroma\Audio</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Chroma\Camera.h">
-      <Filter>src\Chroma</Filter>
     </ClInclude>
     <ClInclude Include="src\Chroma\Components\AudioSource.h">
       <Filter>src\Chroma\Components</Filter>
@@ -578,9 +572,6 @@
     </ClInclude>
     <ClInclude Include="src\Chroma\Profiler\Instrumentor.h">
       <Filter>src\Chroma\Profiler</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Chroma\QuadTree.h">
-      <Filter>src\Chroma</Filter>
     </ClInclude>
     <ClInclude Include="src\Chroma\Renderer\Buffer.h">
       <Filter>src\Chroma\Renderer</Filter>
@@ -2410,9 +2401,6 @@
     </ClCompile>
     <ClCompile Include="src\Chroma\Platform\Windows\WindowsWindow.cpp">
       <Filter>src\Chroma\Platform\Windows</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Chroma\QuadTree.cpp">
-      <Filter>src\Chroma</Filter>
     </ClCompile>
     <ClCompile Include="src\Chroma\Renderer\Buffer.cpp">
       <Filter>src\Chroma\Renderer</Filter>

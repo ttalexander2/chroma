@@ -2,6 +2,8 @@
 --Any primitives here will be serialized
 Speed = 0.01
 
+Point = Vec3(1,2,5)
+
 --Local values will not be exposed to the editor
 local transform
 local some_val = 43

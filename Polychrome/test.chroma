@@ -1,0 +1,40 @@
+Scene: Scene
+Entities:
+  - Entity: 2
+    Components:
+      Tag:
+        EntityName: New Entity
+      Transform:
+        Position: [0, 0, 0]
+        Rotation: [0, 0, 0]
+        Scale: [1, 1, 1]
+      Box Collider 2D:
+        Bounds: [1, 1]
+        Offset: [0, 0]
+  - Entity: 1
+    Components:
+      Tag:
+        EntityName: New Entity
+      Transform:
+        Position: [0, 0, 0]
+        Rotation: [0, 0, 0]
+        Scale: [1, 1, 1]
+  - Entity: 0
+    Components:
+      Tag:
+        EntityName: New Entity
+      Transform:
+        Position: [-31.4063263, 0, 0]
+        Rotation: [0, 0, 0]
+        Scale: [1, 1, 1]
+      Sprite Renderer:
+        Color: [1, 1, 1, 1]
+        Offset: [0, 0, 0]
+        Layer: Default
+        PlayOnStart: true
+        SpriteID: .\assets\textures\test.ase
+        Loop: true
+      LuaScript:
+        Path: assets/scripts/Test.lua
+        Point: [1, 2, 5]
+        Speed: 0.00999999978
