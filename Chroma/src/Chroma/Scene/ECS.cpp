@@ -18,22 +18,22 @@ namespace Chroma
     {
         return Components;
     }
-    Component* ECS::GetComponent(std::string name, EntityID entity, entt::registry* registry)
+    Component* ECS::GetComponent(const std::string& name, EntityID entity, entt::registry* registry)
     {
         return ComponentFactory_Get[Hash(name)](entity, registry);
     }
 
-    Component* ECS::AddComponent(std::string name, EntityID entity, entt::registry* registry)
+    Component* ECS::AddComponent(const std::string& name, EntityID entity, entt::registry* registry)
     {
         return ComponentFactory_Add[Hash(name)](entity, registry);
     }
 
-    size_t ECS::RemoveComponent(std::string name, EntityID entity, entt::registry* registry)
+    size_t ECS::RemoveComponent(const std::string& name, EntityID entity, entt::registry* registry)
     {
         return ComponentFactory_Remove[Hash(name)](entity, registry);
     }
 
-    bool ECS::HasComponent(std::string name, EntityID entity, entt::registry* registry)
+    bool ECS::HasComponent(const std::string& name, EntityID entity, entt::registry* registry)
     {
         return ComponentFactory_Has[Hash(name)](entity, registry);
     }

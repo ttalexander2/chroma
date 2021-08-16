@@ -15,6 +15,7 @@
 #include <yaml-cpp/yaml.h>
 #include <Chroma/Scene/System.h>
 #include "Chroma/Utilities/GUID.h"
+#include <Chroma/Systems/ScriptingSystem.h>
 //#include <Chroma/Systems/ScriptingSystem.h>
 
 
@@ -23,13 +24,7 @@ namespace Chroma
 {
 	Scene::Scene()
 	{
-		ECS::RegisterComponent<Tag>();
-		ECS::RegisterComponent<Transform>();
-		ECS::RegisterComponent<AudioSource>();
-		ECS::RegisterComponent<SpriteRenderer>();
-		ECS::RegisterComponent<BoxCollider2D>();
-		ECS::RegisterComponent<CircleCollider2D>();
-		//RegisterSystem<ScriptingSystem>();
+		RegisterSystem<ScriptingSystem>();
 		RegisterSystem<AudioSystem>();
 		RegisterSystem<SpriteRendererSystem>();
 	}
@@ -136,6 +131,30 @@ namespace Chroma
 		}
 
 		return retval;
+	}
+
+	void Scene::PreLoad()
+	{
+		for (System* s : Systems)
+		{
+			s->PreLoad();
+		}
+	}
+
+	void Scene::Load()
+	{
+		for (System* s : Systems)
+		{
+			s->Load();
+		}
+	}
+
+	void Scene::PostLoad()
+	{
+		for (System* s : Systems)
+		{
+			s->PostLoad();
+		}
 	}
 
 	void Scene::EarlyInit()

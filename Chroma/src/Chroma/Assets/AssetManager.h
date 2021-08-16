@@ -32,9 +32,9 @@ namespace Chroma
 		static bool LoadSprite(const std::string& path);
 
 		static size_t HashPath(const std::string& path);
+		static std::string GetPath(const std::string& asset);
 
 		static std::unordered_map<size_t, Ref<Sprite>>* GetSprites();
-
 		static std::unordered_map<size_t, Ref<Sprite>> Sprites;
 	};
 }

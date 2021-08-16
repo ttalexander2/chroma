@@ -33,7 +33,7 @@ namespace Chroma
 			return m_Scene->HasComponent<T>(m_EntityID);
 		}
 
-		bool HasComponent(std::string component)
+		bool HasComponent(const std::string& component)
 		{
 			return m_Scene->HasComponent(component, m_EntityID);
 		}
@@ -44,7 +44,7 @@ namespace Chroma
 			return m_Scene->AddComponent<T>(m_EntityID);
 		}
 
-		Component* AddComponent(std::string component)
+		Component* AddComponent(const std::string& component)
 		{
 			return m_Scene->AddComponent(component, m_EntityID);
 		}
@@ -55,7 +55,7 @@ namespace Chroma
 			return m_Scene->GetComponent<T>(m_EntityID);
 		}
 
-		Component* GetComponent(std::string component)
+		Component* GetComponent(const std::string& component)
 		{
 			return m_Scene->GetComponent(component, m_EntityID);
 		}
@@ -66,7 +66,7 @@ namespace Chroma
 			return m_Scene->RemoveComponent<T>(m_EntityID);
 		}
 
-		size_t RemoveComponent(std::string component)
+		size_t RemoveComponent(const std::string& component)
 		{
 			return m_Scene->RemoveComponent(component, m_EntityID);
 		}

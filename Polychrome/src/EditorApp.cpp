@@ -27,6 +27,7 @@
 #include "readerwriterqueue.h"
 #include <Chroma/Components/SpriteRenderer.h>
 #include <Chroma/Assets/AssetManager.h>
+#include <Chroma/Components/LuaScript.h>
 
 
 namespace Polychrome
@@ -55,17 +56,16 @@ namespace Polychrome
 		
 		
 		Chroma::Entity entity = scene->NewEntity();
-		scene->NewEntity();
-		scene->NewEntity();
-		scene->NewEntity();
-		scene->NewEntity();
-		scene->NewEntity();
-		
 
 
 		auto entity4 = scene->NewEntity();
 		entity.AddComponent<Chroma::SpriteRenderer>();
 		auto &sprite = entity.GetComponent<Chroma::SpriteRenderer>();
+		entity.AddComponent<Chroma::LuaScript>();
+
+		((Chroma::Transform*)entity.GetComponent("Transform"))->Position.x = 2;
+
+
 
 
 		Chroma::Entity e2 = scene->NewEntity();
@@ -159,6 +159,11 @@ namespace Polychrome
 				}
 			});
 		});
+
+
+		scene->PreLoad();
+		scene->Load();
+		scene->PostLoad();
 		
 
 	}

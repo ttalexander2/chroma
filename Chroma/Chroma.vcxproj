@@ -814,6 +814,7 @@
     <ClCompile Include="src\Chroma\Components\AudioSource.cpp" />
     <ClCompile Include="src\Chroma\Components\BoxCollider2D.cpp" />
     <ClCompile Include="src\Chroma\Components\CircleCollider2D.cpp" />
+    <ClCompile Include="src\Chroma\Components\LuaScript.cpp" />
     <ClCompile Include="src\Chroma\Components\SpriteRenderer.cpp" />
     <ClCompile Include="src\Chroma\Components\Tag.cpp" />
     <ClCompile Include="src\Chroma\Components\Transform.cpp" />

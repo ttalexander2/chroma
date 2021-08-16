@@ -7,6 +7,7 @@ namespace Chroma
 	class ScriptComponent : public Component
 	{
 	public:
-
+		std::string Path;
+		std::string ScriptName;
 	};
 }

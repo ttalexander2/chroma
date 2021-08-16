@@ -63,7 +63,7 @@ namespace Chroma
 			return Registry.emplace<T>(id);
 		}
 
-		Component* AddComponent(std::string component, EntityID entity)
+		Component* AddComponent(const std::string& component, EntityID entity)
 		{
 			return ECS::AddComponent(component, entity, &Registry);
 		}
@@ -74,7 +74,7 @@ namespace Chroma
 			return Registry.get_or_emplace<T>(id);
 		}
 
-		Component* GetComponent(std::string component, EntityID entity)
+		Component* GetComponent(const std::string& component, EntityID entity)
 		{
 			return ECS::GetComponent(component, entity, &Registry);
 		}
@@ -100,7 +100,7 @@ namespace Chroma
 			return Registry.try_get<T>(id) != nullptr;
 		}
 
-		bool HasComponent(std::string component, EntityID entity)
+		bool HasComponent(const std::string& component, EntityID entity)
 		{
 			return ECS::HasComponent(component, entity, &Registry);
 		}
@@ -125,7 +125,7 @@ namespace Chroma
 			return Registry.remove<T>(entity);
 		}
 
-		size_t RemoveComponent(std::string component, EntityID entity)
+		size_t RemoveComponent(const std::string& component, EntityID entity)
 		{
 			return ECS::RemoveComponent(component, entity, &Registry);
 		}
@@ -138,6 +138,10 @@ namespace Chroma
 #pragma region UpdateLoop
 
 		//TODO: Load & Unload Functions
+
+		void PreLoad();
+		void Load();
+		void PostLoad();
 
 		void EarlyInit();
 		void Init();

@@ -42,8 +42,8 @@ namespace ImGui
 
 		ImGui::SetNextItemWidth(inputWidth);
 
-		int pos = (int)val.x;
-		if (ImGui::DragInt(("##vec3_x" + std::string(hash)).c_str(), &pos))
+		float pos = val.x;
+		if (ImGui::DragFloat(("##vec3_x" + std::string(hash)).c_str(), &pos, 1.f))
 		{
 			val.x = pos;
 		}
@@ -74,7 +74,7 @@ namespace ImGui
 		ImGui::SetNextItemWidth(inputWidth);
 
 		pos = val.y;
-		if (ImGui::DragInt(("##vec3_y" + std::string(hash)).c_str(), &pos))
+		if (ImGui::DragFloat(("##vec3_y" + std::string(hash)).c_str(), &pos, 1.f))
 		{
 			val.y = pos;
 		}
@@ -105,7 +105,7 @@ namespace ImGui
 		ImGui::SetNextItemWidth(inputWidth);
 
 		pos = val.z;
-		if (ImGui::DragInt(("##vec3_z" + std::string(hash)).c_str(), &pos))
+		if (ImGui::DragFloat(("##vec3_z" + std::string(hash)).c_str(), &pos, 1.0f))
 		{
 			val.z = pos;
 		}

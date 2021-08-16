@@ -2330,6 +2330,9 @@
     <ClCompile Include="src\Chroma\Components\CircleCollider2D.cpp">
       <Filter>src\Chroma\Components</Filter>
     </ClCompile>
+    <ClCompile Include="src\Chroma\Components\LuaScript.cpp">
+      <Filter>src\Chroma\Components</Filter>
+    </ClCompile>
     <ClCompile Include="src\Chroma\Components\SpriteRenderer.cpp">
       <Filter>src\Chroma\Components</Filter>
     </ClCompile>

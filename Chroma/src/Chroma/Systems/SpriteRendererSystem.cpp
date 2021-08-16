@@ -12,6 +12,7 @@ namespace Chroma
 
 	void SpriteRendererSystem::Load()
 	{
+		/*
 		auto view = m_Scene->Registry.view<SpriteRenderer>();
 
 		AssetManager::BeginSpriteLoad();
@@ -22,6 +23,7 @@ namespace Chroma
 				
 		}
 		AssetManager::EndSpriteLoad();
+		*/
 	}
 
 	void SpriteRendererSystem::Init()

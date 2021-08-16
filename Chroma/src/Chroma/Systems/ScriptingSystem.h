@@ -2,13 +2,14 @@
 
 #include "Chroma/Scene/System.h"
 
+
 namespace Chroma
 {
 	class ScriptingSystem : public System
 	{
 	public:
 
-		ScriptingSystem();
+		ScriptingSystem() {}
 
 		void PreLoad() override;
 		void Load() override;
@@ -21,6 +22,7 @@ namespace Chroma
 		void EarlyUpdate(Time time) override;
 		void Update(Time time) override;
 		void LateUpdate(Time time) override;
+
 
 	};
 }

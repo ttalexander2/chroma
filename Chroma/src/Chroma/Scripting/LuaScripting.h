@@ -14,6 +14,8 @@ namespace Chroma
 	{
 	public:
 
+		static sol::state Lua;
+
 		static void Init();
 
 		static void Shutdown()
@@ -22,8 +24,6 @@ namespace Chroma
 			delete Lua;
 		}
 
-	private:
-		static sol::state Lua;
 
 	};
 }

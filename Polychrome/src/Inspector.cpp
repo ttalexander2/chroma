@@ -9,6 +9,7 @@
 #include <Chroma/Scene/Inspectable.h>
 #include "EditorApp.h"
 #include "Chroma/Scene/ECS.h"
+#include <Chroma/Components/LuaScript.h>
 
 namespace Polychrome
 {
@@ -66,7 +67,22 @@ namespace Polychrome
 				icon = ICON_FK_CARET_DOWN;
 
 			bool selected = true;
-			if (ImGui::Selectable((std::string(" ") + icon + std::string("  ") + c->Name() + "##" + std::to_string(unique)).c_str(), &selected, ImGuiSelectableFlags_SpanAllColumns | ImGuiSelectableFlags_AllowItemOverlap))
+			std::string comp_name(c->Name());
+			if (comp_name == "LuaScript")
+			{
+				try
+				{
+					Chroma::LuaScript* a = reinterpret_cast<Chroma::LuaScript*>(c);
+					comp_name = std::string(a->ScriptName);
+				}
+				catch (const std::exception& e) 
+				{
+					CHROMA_CORE_WARN("{}", e.what());
+				}
+
+			}
+
+			if (ImGui::Selectable((std::string(" ") + icon + std::string("  ") + comp_name.c_str() + "##" + std::to_string(unique)).c_str(), &selected, ImGuiSelectableFlags_SpanAllColumns | ImGuiSelectableFlags_AllowItemOverlap))
 			{
 				c->editor_inspector_open = !c->editor_inspector_open;
 			}

@@ -39,22 +39,21 @@ namespace Chroma
 			//Methods
 			"Valid", [](Entity& e) {return &e.GetScene() != nullptr && e.GetID() != ENTITY_NULL; },
 
-			"HasTag", &Entity::HasComponent<Tag>,
-			"HasTransform", & Entity::HasComponent<Transform>,
+			"HasComponent", [](Entity& e, const std::string& component) {return e.HasComponent(component); },
 			"HasAudioSource", & Entity::HasComponent<AudioSource>,
 			"HasBoxCollider2D", &Entity::HasComponent<BoxCollider2D>,
 			"HasCircleCollider2D", &Entity::HasComponent<CircleCollider2D>,
 			"HasSpriteRenderer", &Entity::HasComponent<SpriteRenderer>,
-
-			"AddTag", [](Entity& e) { return e.AddComponent<Tag>(); },
-			"AddTransform", [](Entity& e) { return e.AddComponent<Transform>(); },
+			
+			"AddComponent", [](Entity& e, const std::string& component) {return e.AddComponent(component); },
 			"AddAudioSource", [](Entity& e) { return e.AddComponent<AudioSource>(); },
 			"AddBoxCollider2D", [](Entity& e) { return e.AddComponent<BoxCollider2D>(); },
 			"AddCircleCollider2D", [](Entity& e) { return e.AddComponent<CircleCollider2D>(); },
 			"AddSpriteRenderer", [](Entity& e) { return e.AddComponent<SpriteRenderer>(); },
 
-			"GetTag", [](Entity& e) { return e.GetComponent<Tag>(); },
-			"GetTransform", [](Entity& e) { return e.GetComponent<Transform>(); },
+			"GetComponent", [](Entity& e, const std::string& component) { return e.GetComponent(component); },
+			"GetTag", [](Entity& e) { return std::ref(e.GetComponent<Tag>()); },
+			"GetTransform", [](Entity& e) { return std::ref(e.GetComponent<Transform>()); },
 			"GetAudioSource", [](Entity& e) { return e.GetComponent<AudioSource>(); },
 			"GetBoxCollider2D", [](Entity& e) { return e.GetComponent<BoxCollider2D>(); },
 			"GetCircleCollider2D", [](Entity& e) { return e.GetComponent<CircleCollider2D>(); },
@@ -146,7 +145,7 @@ namespace Chroma
 
 	void Bindings::BindScene(sol::state* lua)
 	{
-		
+
 	}
 
 	void Bindings::BindMath(sol::state* lua)

@@ -195,7 +195,9 @@ project "Runtime"
         "%{IncludeDir.glm}",
         "%{IncludeDir.ImGui}",
         "%{IncludeDir.FMOD}",
-        "%{IncludeDir.yaml}"
+        "%{IncludeDir.yaml}",
+        "%{IncludeDir.Sol2}",
+        "%{IncludeDir.lua}"
 
     }
 
@@ -255,7 +257,9 @@ project "Polychrome"
     {
         "%{prj.name}/**.h",
         "%{prj.name}/**.cpp",
-        "%{prj.name}/third_party/yaml-cpp/include/yaml-cpp/**.h"
+        "%{prj.name}/third_party/yaml-cpp/include/yaml-cpp/**.h",
+        "%{prj.name}/third_party/sol2/include/sol/**.hpp",
+        "%{prj.name}/third_party/sol2/include/sol/**.h"
     }
 
     includedirs
@@ -271,7 +275,8 @@ project "Polychrome"
         "%{IncludeDir.concurrentqueue}",
         "%{IncludeDir.readerwriterqueue}",
         "%{IncludeDir.ImGuizmo}",
-        "%{IncludeDir.Sol2}"
+        "%{IncludeDir.Sol2}",
+        "%{IncludeDir.lua}"
     }
 
     links

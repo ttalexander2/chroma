@@ -24,6 +24,11 @@ namespace Chroma
         return std::hash<std::string>()(path);
     }
 
+    std::string AssetManager::GetPath(const std::string& asset)
+    {
+        return AssetDirectory + "\\" + asset;
+    }
+
     /// @brief Begin loading of sprites.
     /// 
     /// This function begins the loading phase for sprites. Any sprites already loaded

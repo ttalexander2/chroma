@@ -50,10 +50,10 @@ namespace Chroma
 
 		}
 
-		static Component* GetComponent(std::string name, EntityID entity, entt::registry* registry);
-		static Component* AddComponent(std::string name, EntityID entity, entt::registry* registry);
-		static size_t RemoveComponent(std::string name, EntityID entity, entt::registry* registry);
-		static bool HasComponent(std::string name, EntityID entity, entt::registry* registry);
+		static Component* GetComponent(const std::string& name, EntityID entity, entt::registry* registry);
+		static Component* AddComponent(const std::string& name, EntityID entity, entt::registry* registry);
+		static size_t RemoveComponent(const std::string& name, EntityID entity, entt::registry* registry);
+		static bool HasComponent(const std::string& name, EntityID entity, entt::registry* registry);
 
 		static std::unordered_set<std::string> GetComponentNames();
 
@@ -74,7 +74,4 @@ namespace Chroma
 		
 		static std::hash<std::string> Hash;
 	};
-
-
-//#define REGISTER_COMPONENT() Chroma::ECS::RegisterComponent<decltype(this)>()
 }

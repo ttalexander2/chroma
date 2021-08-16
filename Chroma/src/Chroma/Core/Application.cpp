@@ -12,6 +12,13 @@
 #include <GLFW/glfw3.h>
 #include <imgui.h>
 #include <Chroma/Scripting/LuaScripting.h>
+#include "Chroma/Scene/ECS.h"
+#include "Chroma/Components/Tag.h"
+#include "Chroma/Components/Transform.h"
+#include "Chroma/Components/SpriteRenderer.h"
+#include "Chroma/Components/AudioSource.h"
+#include "Chroma/Components/BoxCollider2D.h"
+#include "Chroma/Components/CircleCollider2D.h"
 
 namespace Chroma
 {
@@ -37,6 +44,13 @@ namespace Chroma
 		Audio::Init();
 
 		LuaScripting::Init();
+
+		ECS::RegisterComponent<Tag>();
+		ECS::RegisterComponent<Transform>();
+		ECS::RegisterComponent<AudioSource>();
+		ECS::RegisterComponent<SpriteRenderer>();
+		ECS::RegisterComponent<BoxCollider2D>();
+		ECS::RegisterComponent<CircleCollider2D>();
 
 	}
 
