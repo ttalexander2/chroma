@@ -28,6 +28,7 @@
 #include <Chroma/Components/SpriteRenderer.h>
 #include <Chroma/Assets/AssetManager.h>
 #include <Chroma/Components/LuaScript.h>
+#include "TextEdit.h"
 
 
 namespace Polychrome
@@ -190,6 +191,7 @@ namespace Polychrome
 
 		io.FontDefault = io.Fonts->AddFontFromMemoryCompressedTTF(Roboto_compressed_data, Roboto_compressed_size, 14.0f);
 		
+		
 
 		ImFontConfig config;
 		config.MergeMode = true;
@@ -202,7 +204,7 @@ namespace Polychrome
 
 		Config.Style = (int)ImGui::ImGuiStylePreset::Cherry;
 
-		
+		TextEdit::Init();
 
 	}
 
@@ -399,6 +401,7 @@ namespace Polychrome
 		Hierarchy::Draw();
 		Inspector::Draw();
 		Viewport::Draw(m_Framebuffer);
+		TextEdit::Draw();
 
 		
 		//Chroma::ImGuiDebugMenu::Draw();

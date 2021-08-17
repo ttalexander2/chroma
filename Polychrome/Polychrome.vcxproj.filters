@@ -4,6 +4,9 @@
     <Filter Include="Fonts">
       <UniqueIdentifier>{CF74300D-3B89-58BE-040B-FC1D70DE54EF}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Widgets">
+      <UniqueIdentifier>{7CB70329-E896-82C4-F1AE-0D9B5D0DE925}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Assets.h" />
@@ -19,7 +22,11 @@
     <ClInclude Include="src\Hierarchy.h" />
     <ClInclude Include="src\Inspector.h" />
     <ClInclude Include="src\Style.h" />
+    <ClInclude Include="src\TextEdit.h" />
     <ClInclude Include="src\Viewport.h" />
+    <ClInclude Include="src\Widgets\TextEditor.h">
+      <Filter>Widgets</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\EditorApp.cpp" />
@@ -27,8 +34,15 @@
     <ClCompile Include="src\Fonts\Roboto.cpp">
       <Filter>Fonts</Filter>
     </ClCompile>
+    <ClCompile Include="src\Fonts\RobotoMono.cpp">
+      <Filter>Fonts</Filter>
+    </ClCompile>
     <ClCompile Include="src\Hierarchy.cpp" />
     <ClCompile Include="src\Inspector.cpp" />
+    <ClCompile Include="src\TextEdit.cpp" />
     <ClCompile Include="src\Viewport.cpp" />
+    <ClCompile Include="src\Widgets\TextEditor.cpp">
+      <Filter>Widgets</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

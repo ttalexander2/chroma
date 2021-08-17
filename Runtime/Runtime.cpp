@@ -11,7 +11,7 @@ Chroma::Scene* Runtime::CurrentScene = nullptr;
 Runtime::Runtime() :
 	Chroma::Application("Chroma Runtime Loader", 1920U, 1080U)
 {
-	CurrentScene = nullptr;
+	CurrentScene = new Chroma::Scene();
 }
 
 void Runtime::Update(Chroma::Time delta)
@@ -26,7 +26,7 @@ void Runtime::Update(Chroma::Time delta)
 			std::stringstream strStream;
 			strStream << stream.rdbuf();
 			Chroma::Scene* out = new Chroma::Scene();
-			if (Chroma::Scene::Deserialize(*out, strStream.str()))
+			if (Chroma::Scene::Deserialize(out, strStream.str()))
 			{
 				CurrentScene = out;
 				CurrentScene->EarlyInit();
@@ -54,6 +54,8 @@ void Runtime::Update(Chroma::Time delta)
 		CurrentScene->PreDraw(delta);
 		CurrentScene->Draw(delta);
 		CurrentScene->PostDraw(delta);
+
+		Chroma::Renderer2D::DrawQuad({ 0,0,0 }, { 2,2,2 }, { 1,1,1,1 });
 
 		Chroma::Renderer2D::EndScene();
 	}

@@ -164,15 +164,20 @@ IF EXIST assets\ (xcopy /Q /E /Y /I assets ..\bin\Dist-windows-x86_64\Polychrome
     <ClInclude Include="src\Hierarchy.h" />
     <ClInclude Include="src\Inspector.h" />
     <ClInclude Include="src\Style.h" />
+    <ClInclude Include="src\TextEdit.h" />
     <ClInclude Include="src\Viewport.h" />
+    <ClInclude Include="src\Widgets\TextEditor.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\EditorApp.cpp" />
     <ClCompile Include="src\FileDrop.cpp" />
     <ClCompile Include="src\Fonts\Roboto.cpp" />
+    <ClCompile Include="src\Fonts\RobotoMono.cpp" />
     <ClCompile Include="src\Hierarchy.cpp" />
     <ClCompile Include="src\Inspector.cpp" />
+    <ClCompile Include="src\TextEdit.cpp" />
     <ClCompile Include="src\Viewport.cpp" />
+    <ClCompile Include="src\Widgets\TextEditor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Chroma\Chroma.vcxproj">

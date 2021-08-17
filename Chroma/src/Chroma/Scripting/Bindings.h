@@ -24,6 +24,8 @@ namespace Chroma
 		static void BindEntity(sol::state* lua);
 		static void BindComponents(sol::state* lua);
 		static void BindScene(sol::state* lua);
+
+		static void BindTime(sol::state* lua);
 	};
 
 }

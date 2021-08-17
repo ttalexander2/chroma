@@ -23,6 +23,7 @@ namespace Chroma
 		BindMath(lua);
 		BindEntity(lua);
 		BindComponents(lua);
+		BindTime(lua);
 	}
 
 	void Bindings::BindEntity(sol::state* lua)
@@ -146,6 +147,15 @@ namespace Chroma
 	void Bindings::BindScene(sol::state* lua)
 	{
 
+	}
+
+	void Bindings::BindTime(sol::state* lua)
+	{
+		lua->new_usertype<Chroma::Time>("Time",
+			"Time", sol::no_constructor,
+
+			"Delta", sol::readonly_property(&Time::GetSeconds)
+		);
 	}
 
 	void Bindings::BindMath(sol::state* lua)

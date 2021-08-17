@@ -17,13 +17,15 @@ namespace Polychrome
 
 	void Inspector::Draw()
 	{
+
 		if (Open)
 		{
-			ImGui::Begin("Inspector", &Inspector::Open);
-
-			if (Hierarchy::SelectedEntity != Chroma::ENTITY_NULL)
+			if (ImGui::Begin("Inspector", &Inspector::Open))
 			{
-				DrawEntity();
+				if (Hierarchy::SelectedEntity != Chroma::ENTITY_NULL)
+				{
+					DrawEntity();
+				}
 			}
 
 			ImGui::End();

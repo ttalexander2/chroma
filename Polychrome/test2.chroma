@@ -1,0 +1,21 @@
+Scene: Scene
+Entities:
+  - Entity: 0
+    Components:
+      Tag:
+        EntityName: Moving Sprite
+      Transform:
+        Position: [-53.3384209, 0, 0]
+        Rotation: [0, 0, 0]
+        Scale: [1, 1, 1]
+      Sprite Renderer:
+        Color: [1, 1, 1, 1]
+        Offset: [0, 0, 0]
+        Layer: Default
+        PlayOnStart: true
+        SpriteID: .\assets\textures\test.ase
+        Loop: true
+      LuaScript:
+        Path: assets/scripts/Test.lua
+        Speed: 0.00999999978
+        Point: [1, 2, 5]

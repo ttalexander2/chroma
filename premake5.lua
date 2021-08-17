@@ -197,7 +197,8 @@ project "Runtime"
         "%{IncludeDir.FMOD}",
         "%{IncludeDir.yaml}",
         "%{IncludeDir.Sol2}",
-        "%{IncludeDir.lua}"
+        "%{IncludeDir.lua}",
+        "%{IncludeDir.entt}"
 
     }
 

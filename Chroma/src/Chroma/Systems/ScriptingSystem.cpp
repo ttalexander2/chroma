@@ -113,6 +113,7 @@ namespace Chroma
 		{
 			auto& script = view.get<LuaScript>(entity);
 			auto func = script.env["EarlyUpdate"];
+			script.env["time"] = time;
 			if (func.valid())
 				func();
 		}
@@ -125,6 +126,7 @@ namespace Chroma
 		{
 			auto& script = view.get<LuaScript>(entity);
 			auto func = script.env["Update"];
+			script.env["time"] = time;
 			if (func.valid())
 				func();
 		}
@@ -137,6 +139,7 @@ namespace Chroma
 		{
 			auto& script = view.get<LuaScript>(entity);
 			auto func = script.env["LateUpdate"];
+			script.env["time"] = time;
 			if (func.valid())
 				func();
 		}

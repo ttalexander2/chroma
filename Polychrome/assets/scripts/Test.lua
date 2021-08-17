@@ -1,8 +1,8 @@
 --Global values will be exposed to the editor
 --Any primitives here will be serialized
-Speed = 0.01
+Speed = 10.0
 
-Point = Vec3(1,2,5)
+Point = Vec2(1,2)
 
 --Local values will not be exposed to the editor
 local transform
@@ -31,7 +31,7 @@ end
 
 --This function executes once every frame, after EarlyUpdate()
 function Update()
-	transform.Position.X = transform.Position.X + Speed
+	transform.Position.X = transform.Position.X + Speed*time.Delta
 end
 
 --This function executes once every frame, after Update()
@@ -43,5 +43,5 @@ end
 --This function is used to indicate to the engine any local variables to be serialized
 --The user should provide the name of the values as strings
 function Serialize()
-	return {some_val}
+	return {"some_val"}
 end

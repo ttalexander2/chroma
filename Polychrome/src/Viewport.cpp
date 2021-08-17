@@ -54,6 +54,8 @@ namespace Polychrome
 			height = glm::round(height);
 			width = glm::round(width);
 
+			CHROMA_CORE_TRACE("WIDTH: {}, HEIGHT: {}", width, height);
+
 			if ((s_ViewportSize.x != width || s_ViewportSize.y != height) && width > 0 && height > 0)
 			{
 				frame_buffer->Resize((uint32_t)width, (uint32_t)height);
@@ -71,7 +73,7 @@ namespace Polychrome
 			{
 				ImGuizmo::SetOrthographic(true);
 				ImGuizmo::SetDrawlist();
-				ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, (float)ImGui::GetWindowWidth(), (float)ImGui::GetWindowHeight());
+				ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, s_ViewportSize.x, s_ViewportSize.y);
 				auto& cam = dynamic_cast<EditorApp&>(EditorApp::Get()).GetCameraController();
 				const Math::mat4& camView = cam.GetCamera().GetViewMatrix();
 				const Math::mat4& camProj = cam.GetCamera().GetProjectionMatrix();

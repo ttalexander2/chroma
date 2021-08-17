@@ -3,6 +3,8 @@
 #include "imgui.h"
 #include "imgui_stdlib.h"
 
+#include "Chroma/ImGui/Widgets/VecWithLabels.h"
+
 
 namespace Chroma
 {
@@ -16,7 +18,7 @@ namespace Chroma
 				if (!value.is<sol::function>())
 				{
 					std::string name = key.as<std::string>();
-					if (name == "entity")
+					if (name == "entity" || name == "time")
 						return;
 
 					if (value.is<bool>())
@@ -75,7 +77,7 @@ namespace Chroma
 			if (!value.is<sol::function>())
 			{
 				std::string name = key.as<std::string>();
-				if (name == "entity")
+				if (name == "entity" || name == "time")
 					return;
 
 
@@ -148,7 +150,7 @@ namespace Chroma
 				if (!value.is<sol::function>())
 				{
 					std::string name = key.as<std::string>();
-					if (name == "entity")
+					if (name == "entity" || name == "time")
 						return;
 					std::string hash = fmt::format("##{}", name);
 
@@ -181,6 +183,18 @@ namespace Chroma
 					{
 						std::string val = value.as<std::string>();
 						ImGui::InputText(hash.c_str(), &val);
+						env[name] = val;
+					}
+					else if (value.is<Math::vec2>())
+					{
+						Math::vec2 val = value.as<Math::vec2>();
+						ImGui::Vec2FloatWithLabels(hash.c_str(), val, true);
+						env[name] = val;
+					}
+					else if (value.is<Math::vec3>())
+					{
+						Math::vec3 val = value.as<Math::vec3>();
+						ImGui::Vec3FloatWithLabels(hash.c_str(), val, true);
 						env[name] = val;
 					}
 				}
