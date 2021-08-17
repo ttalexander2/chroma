@@ -3,6 +3,7 @@
 #include <Chroma.h>
 #include "EditorConfig.h"
 #include <Chroma/Renderer/Framebuffer.h>
+#include <Chroma/Systems/SpriteRendererSystem.h>
 
 
 namespace Polychrome
@@ -28,6 +29,9 @@ namespace Polychrome
 
 		EditorConfig Config;
 		static Chroma::Scene* CurrentScene;
+		static bool SceneRunning;
+		static bool ScenePaused;
+		static bool PreviewSprites;
 
 	private:
 		Chroma::OrthographicCameraController m_CameraController;
@@ -53,6 +57,8 @@ namespace Polychrome
 		Chroma::Ref<Chroma::Texture2D> m_Texture;
 
 		Chroma::Ref<Chroma::Framebuffer> m_Framebuffer;
+
+		Chroma::SpriteRendererSystem sprite_system;
 	};
 }
 

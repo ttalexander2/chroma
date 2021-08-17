@@ -4,6 +4,9 @@
 #include "imgui_stdlib.h"
 
 #include "Chroma/ImGui/Widgets/VecWithLabels.h"
+#include "Chroma/Scene/Scene.h"
+#include "Chroma/Scripting/LuaScripting.h"
+
 
 
 namespace Chroma
@@ -65,13 +68,16 @@ namespace Chroma
 		}
 	}
 
-	void LuaScript::Deserialize(YAML::Node& node)
+	void LuaScript::Deserialize(YAML::Node& node, uint32_t id, Scene* out)
 	{
 		auto val = node["Path"];
 		if (val)
 		{
 			Path = val.as<std::string>();
 		}
+
+		CHROMA_CORE_INFO("EntityID: {}, Scene: {}", id, out != nullptr);
+		LuaScripting::LoadScript(this, out, (EntityID)id);
 
 		env.for_each([&](const sol::object& key, const sol::object& value) {
 			if (!value.is<sol::function>())

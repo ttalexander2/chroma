@@ -29,6 +29,7 @@
 #include <Chroma/Assets/AssetManager.h>
 #include <Chroma/Components/LuaScript.h>
 #include "TextEdit.h"
+#include <Chroma/Systems/SpriteRendererSystem.h>
 
 
 namespace Polychrome
@@ -43,6 +44,10 @@ namespace Polychrome
 	std::atomic_bool file_watcher_thread_running;
 
 	Chroma::Scene* EditorApp::CurrentScene = nullptr;
+
+	bool EditorApp::SceneRunning = false;
+	bool EditorApp::ScenePaused = false;
+	bool EditorApp::PreviewSprites = true;
 
 	EditorApp::EditorApp()
 		: Application("Polychrome Editor", 1920U, 1080U), m_CameraController(1920.0f / 1080.0f)
@@ -181,10 +186,6 @@ namespace Polychrome
 		Chroma::Audio::LoadBank("assets/fmod/Desktop/Master.bank", FMOD_STUDIO_LOAD_BANK_NORMAL);
 		Chroma::Audio::LoadBank("assets/fmod/Desktop/Master.strings.bank", FMOD_STUDIO_LOAD_BANK_NORMAL);
 
-		EditorApp::CurrentScene->EarlyInit();
-		EditorApp::CurrentScene->Init();
-		EditorApp::CurrentScene->LateInit();
-
 
 		ImGui::CreateContext();
 		ImGuiIO& io = ImGui::GetIO();
@@ -206,15 +207,28 @@ namespace Polychrome
 
 		TextEdit::Init();
 
+		
+
 	}
 
 
 	void EditorApp::Update(Chroma::Time time)
 	{
 
-		EditorApp::CurrentScene->EarlyUpdate(time);
-		EditorApp::CurrentScene->Update(time);
-		EditorApp::CurrentScene->LateUpdate(time);
+		if (EditorApp::SceneRunning && !EditorApp::ScenePaused)
+		{
+			EditorApp::CurrentScene->EarlyUpdate(time);
+			EditorApp::CurrentScene->Update(time);
+			EditorApp::CurrentScene->LateUpdate(time);
+		}
+		else if (!EditorApp::SceneRunning && !EditorApp::ScenePaused)
+		{
+			sprite_system.m_Scene = EditorApp::CurrentScene;
+			sprite_system.LateUpdate(time);
+		}
+
+
+
 
 		CHROMA_PROFILE_FUNCTION();
 		// Update

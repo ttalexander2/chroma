@@ -18,6 +18,7 @@ namespace Chroma
     {
         return Components;
     }
+
     Component* ECS::GetComponent(const std::string& name, EntityID entity, entt::registry* registry)
     {
         return ComponentFactory_Get[Hash(name)](entity, registry);
@@ -37,6 +38,7 @@ namespace Chroma
     {
         return ComponentFactory_Has[Hash(name)](entity, registry);
     }
+
 }
 
 

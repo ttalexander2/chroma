@@ -106,7 +106,10 @@ namespace Chroma
 					for (auto component : components)
 					{
 						std::string key = component.first.as<std::string>();
-						ECS::AddComponent(key, newEntity, &out->Registry)->Deserialize(component.second);
+						if (key == "LuaScript")
+							ECS::AddComponent(key, newEntity, &out->Registry)->Deserialize(component.second, (uint32_t)id, out);
+						else
+							ECS::AddComponent(key, newEntity, &out->Registry)->Deserialize(component.second);
 					}
 				}
 			}

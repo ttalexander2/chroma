@@ -2,6 +2,7 @@
 #include <Chroma.h>
 #include "Hierarchy.h"
 #include <imgui.h>
+#include <imgui_internal.h>
 #include <string>
 #include "Fonts/IconsForkAwesome.h"
 #include <Chroma/ImGui/ImGuiDebugMenu.h>
@@ -18,13 +19,52 @@ namespace Polychrome
 	void Inspector::Draw()
 	{
 
+		if (Chroma::Component::context_function == nullptr)
+		{
+			std::function<void(const::std::string&, unsigned int)> func = [&](const std::string& component, unsigned int id) {
+				ImGui::PushID(fmt::format("##id{}.{}", component, id).c_str());
+				ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_Text));
+
+				if (ImGui::BeginPopupContextItem("##Component_popup_context", ImGuiPopupFlags_MouseButtonLeft))
+				{
+					ImGui::Text("This a popu!");
+					ImGui::EndPopup();
+				}
+
+				ImGui::PopStyleColor();
+				ImGui::PopID();
+			};
+			Chroma::Component::context_function = func;
+		}
+
+		if (EditorApp::ScenePaused)
+			Chroma::Component::show_context = true;
+		else
+			Chroma::Component::show_context = false;
+
 		if (Open)
 		{
 			if (ImGui::Begin("Inspector", &Inspector::Open))
 			{
 				if (Hierarchy::SelectedEntity != Chroma::ENTITY_NULL)
 				{
+					if (EditorApp::SceneRunning && !EditorApp::ScenePaused)
+					{
+						ImGui::PushItemFlag(ImGuiItemFlags_Disabled, EditorApp::SceneRunning && !EditorApp::ScenePaused);
+					}
+					if (EditorApp::ScenePaused || EditorApp::SceneRunning)
+					{
+						ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled));
+					}
 					DrawEntity();
+					if (EditorApp::SceneRunning && !EditorApp::ScenePaused)
+					{
+						ImGui::PopItemFlag();
+					}
+					if (EditorApp::ScenePaused || EditorApp::SceneRunning)
+					{
+						ImGui::PopStyleColor();
+					}
 				}
 			}
 

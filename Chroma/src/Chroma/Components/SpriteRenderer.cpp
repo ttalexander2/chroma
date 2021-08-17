@@ -365,6 +365,11 @@ namespace Chroma
 
 	void SpriteRenderer::RestartAnimation()
 	{
+		if (AssetManager::HasSprite(SpriteID))
+		{
+			Ref<Sprite> s = AssetManager::GetSprite(SpriteID);
+			CurrentFrame = s->Animations[Animation].Start;
+		}
 	}
 
 }

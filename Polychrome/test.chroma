@@ -24,7 +24,7 @@ Entities:
       Tag:
         EntityName: New Entity
       Transform:
-        Position: [-31.4063263, 0, 0]
+        Position: [0, 0, 0]
         Rotation: [0, 0, 0]
         Scale: [1, 1, 1]
       Sprite Renderer:
@@ -36,5 +36,5 @@ Entities:
         Loop: true
       LuaScript:
         Path: assets/scripts/Test.lua
-        Point: [1, 2, 5]
-        Speed: 0.00999999978
+        Point: [1, 2]
+        Speed: 5

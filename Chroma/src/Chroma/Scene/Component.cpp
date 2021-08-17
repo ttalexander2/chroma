@@ -9,6 +9,9 @@ namespace Chroma
 {
 	unsigned int Component::component_counter = 1;
 
+	bool Component::show_context = false;
+	std::function<void(const std::string&, unsigned int)> Component::context_function;
+
 
 	/// @brief Function to begin the serialization process for the component.
 	/// 
@@ -52,6 +55,12 @@ namespace Chroma
 		ImGui::TableSetColumnIndex(0);
 		ImGui::AlignTextToFramePadding();
 		ImGui::Text(label.c_str());
+
+		if (show_context)
+		{
+			context_function(label, comparison_id);
+		}
+
 		ImGui::TableSetColumnIndex(1);
 	}
 
@@ -90,6 +99,12 @@ namespace Chroma
 		{
 			collapsibleOpen[id] = !collapsibleOpen[id];
 		}
+
+		if (show_context)
+		{
+			context_function(label, comparison_id);
+		}
+
 		ImGui::TableSetColumnIndex(1);
 		ImGui::NewLine();
 		ImGui::PopStyleVar();

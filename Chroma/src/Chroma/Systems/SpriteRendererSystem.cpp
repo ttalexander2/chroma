@@ -28,6 +28,14 @@ namespace Chroma
 
 	void SpriteRendererSystem::Init()
 	{
+		auto view = m_Scene->Registry.view<SpriteRenderer>();
+		for (EntityID e : view)
+		{
+			auto& spriteRenderer = view.get<SpriteRenderer>(e);
+			if (!spriteRenderer.PlayOnStart)
+				spriteRenderer.Playing = false;
+			spriteRenderer.RestartAnimation();
+		}
 	}
 
 	void SpriteRendererSystem::LateUpdate(Time delta)

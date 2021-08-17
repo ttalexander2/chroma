@@ -132,6 +132,7 @@ namespace Chroma
 
 		std::vector<Component*> GetAllComponents(EntityID entity);
 
+
 		//template<ComponentType... Types>
 		//auto View() { return Registry.view<Types>(); }
 

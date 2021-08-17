@@ -2,8 +2,11 @@
 #include "Chroma/Core/Time.h"
 #include "Scene.h"
 
+
 namespace Chroma
 {
+
+
 	class System
 	{
 	public:

@@ -1,6 +1,6 @@
 --Global values will be exposed to the editor
 --Any primitives here will be serialized
-Speed = 10.0
+Speed = 5.0
 
 Point = Vec2(1,2)
 
@@ -26,7 +26,7 @@ end
 
 --This function executes once every frame, at the begining of the frame
 function EarlyUpdate()
-	
+
 end
 
 --This function executes once every frame, after EarlyUpdate()

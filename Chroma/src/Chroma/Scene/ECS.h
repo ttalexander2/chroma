@@ -4,12 +4,14 @@
 #include "Chroma/Utilities/GUID.h"
 #include <entt.hpp>
 #include "Component.h"
-//#include "Chroma/Components/Transform.h"
+#include "Chroma/Components/Transform.h"
 
 
 
 namespace Chroma
 {
+
+
 	using EntityID = entt::entity;
 	const EntityID ENTITY_NULL = entt::null;
 
@@ -50,6 +52,7 @@ namespace Chroma
 
 		}
 
+
 		static Component* GetComponent(const std::string& name, EntityID entity, entt::registry* registry);
 		static Component* AddComponent(const std::string& name, EntityID entity, entt::registry* registry);
 		static size_t RemoveComponent(const std::string& name, EntityID entity, entt::registry* registry);
@@ -64,14 +67,17 @@ namespace Chroma
 			return Components.find(name) != Components.end();
 		}
 
+
 	private:
-		static std::unordered_map<size_t, std::function<Component*(EntityID, entt::registry*)> > ComponentFactory_Get;
-		static std::unordered_map<size_t, std::function<Component*(EntityID, entt::registry*)> > ComponentFactory_Add;
+		static std::unordered_map<size_t, std::function<Component*(EntityID, entt::registry*)>> ComponentFactory_Get;
+		static std::unordered_map<size_t, std::function<Component*(EntityID, entt::registry*)>> ComponentFactory_Add;
 		static std::unordered_map<size_t, std::function<size_t(EntityID, entt::registry*)>> ComponentFactory_Remove;
 		static std::unordered_map<size_t, std::function<bool(EntityID, entt::registry*)>> ComponentFactory_Has;
 
 		static std::unordered_set<std::string> Components;
 		
 		static std::hash<std::string> Hash;
+
+		
 	};
 }

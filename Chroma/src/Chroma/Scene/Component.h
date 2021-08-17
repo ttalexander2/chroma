@@ -16,6 +16,8 @@ namespace Polychrome
 namespace Chroma
 {
 
+	class Scene;
+
 	/// @brief Game object Component interface.
 	///
 	/// In order to implement a new component, Name() MUST be implemented.
@@ -46,6 +48,20 @@ namespace Chroma
 		/// ```
 		/// @param out YAML emitter to read from.
 		virtual void Deserialize(YAML::Node& node) {};
+
+		/// @brief Function to deserialize the scene from YAML
+		/// 
+		/// Serialization occurs in a Key/Value map for data members.
+		/// Example:
+		/// ```{.cpp}
+		/// auto val = node["Data"];
+		/// if (val)
+		/// {
+		/// 	Data = val.as<float>();
+		/// }
+		/// ```
+		/// @param out YAML emitter to read from.
+		virtual void Deserialize(YAML::Node& node, uint32_t id, Scene* scene) {};
 
 		/// @brief Component comparison operator.
 		/// @param other Other Component to compare.
@@ -112,6 +128,9 @@ namespace Chroma
 
 		/// @brief Counter for component IDs.
 		static unsigned int component_counter;
+
+		static bool show_context;
+		static std::function<void(const std::string&, unsigned int)> context_function;
 
 		friend class Polychrome::Inspector;
 		friend struct Tag;
