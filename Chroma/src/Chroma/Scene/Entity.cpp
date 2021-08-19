@@ -38,6 +38,11 @@ namespace Chroma
 		return t.EntityName;
 	}
 
+	Entity Entity::CreateChild()
+	{
+		return m_Scene->NewChild(m_EntityID);
+	}
+
 	void Entity::SetName(const std::string& name)
 	{
 		if (HasComponent<Tag>())

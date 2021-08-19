@@ -220,6 +220,9 @@ namespace Chroma
 		out << YAML::Key << "Loop";
 		out << YAML::Value << Loop;
 
+		out << YAML::Key << "Animation";
+		out << YAML::Value << Animation;
+
 
 	}
 	void SpriteRenderer::Deserialize(YAML::Node& node)
@@ -254,6 +257,11 @@ namespace Chroma
 		{
 			Loop = val.as<bool>();
 		}
+		val = node["Animation"];
+		if (val)
+		{
+			Animation = val.as<unsigned int>();
+		}
 
 	}
 
@@ -265,7 +273,12 @@ namespace Chroma
 	void SpriteRenderer::SetSprite(const std::string& spriteID)
 	{
 		if (AssetManager::HasSprite(spriteID))
+		{
 			SpriteID = spriteID;
+			Animation = 0;
+			CurrentFrame = 0;
+		}
+			
 		else
 			CHROMA_CORE_WARN("Attempted to set sprite. Sprite [{}] could not be found or is not loaded.", spriteID);
 	}

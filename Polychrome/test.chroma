@@ -1,30 +1,64 @@
 Scene: Scene
 Entities:
-  - Entity: 2
+  - Entity: 5
     Components:
       Tag:
-        EntityName: New Entity
+        EntityName: Entity_5
       Transform:
         Position: [0, 0, 0]
         Rotation: [0, 0, 0]
         Scale: [1, 1, 1]
+      Relationship:
+        {}
       Box Collider 2D:
         Bounds: [1, 1]
         Offset: [0, 0]
-  - Entity: 1
+  - Entity: 4
     Components:
       Tag:
-        EntityName: New Entity
+        EntityName: Entity_4
       Transform:
         Position: [0, 0, 0]
         Rotation: [0, 0, 0]
         Scale: [1, 1, 1]
+      Relationship:
+        Parent: 0
+  - Entity: 3
+    Components:
+      Tag:
+        EntityName: Entity_3
+      Transform:
+        Position: [0, 0, 0]
+        Rotation: [0, 0, 0]
+        Scale: [1, 1, 1]
+      Relationship:
+        Parent: 0
+  - Entity: 2
+    Components:
+      Tag:
+        EntityName: Entity_2
+      Transform:
+        Position: [0, 0, 0]
+        Rotation: [0, 0, 0]
+        Scale: [1, 1, 1]
+      Relationship:
+        Parent: 0
+  - Entity: 1
+    Components:
+      Tag:
+        EntityName: Entity_1
+      Transform:
+        Position: [0, 0, 0]
+        Rotation: [0, 0, 0]
+        Scale: [1, 1, 1]
+      Relationship:
+        {}
   - Entity: 0
     Components:
       Tag:
-        EntityName: New Entity
+        EntityName: Entity_0
       Transform:
-        Position: [0, 0, 0]
+        Position: [2, 0, 0]
         Rotation: [0, 0, 0]
         Scale: [1, 1, 1]
       Sprite Renderer:
@@ -32,9 +66,12 @@ Entities:
         Offset: [0, 0, 0]
         Layer: Default
         PlayOnStart: true
-        SpriteID: .\assets\textures\test.ase
+        SpriteID: ""
         Loop: true
+      Relationship:
+        Children: [2, 3, 4]
       LuaScript:
         Path: assets/scripts/Test.lua
-        Point: [1, 2]
         Speed: 5
+        Point: [1, 2]
+RootEntities: [0, 1, 5]

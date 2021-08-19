@@ -627,9 +627,6 @@
     <ClInclude Include="src\Chroma\Scene\Scene.h">
       <Filter>src\Chroma\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="src\Chroma\Scene\SceneNode.h">
-      <Filter>src\Chroma\Scene</Filter>
-    </ClInclude>
     <ClInclude Include="src\Chroma\Scene\System.h">
       <Filter>src\Chroma\Scene</Filter>
     </ClInclude>
@@ -2298,6 +2295,7 @@
     <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\yaml.h">
       <Filter>third_party\yaml-cpp\include\yaml-cpp</Filter>
     </ClInclude>
+    <ClInclude Include="src\Chroma\Components\Relationship.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Chroma\Assets\AssetManager.cpp">
@@ -2492,5 +2490,6 @@
     <ClCompile Include="third_party\ImGuizmo\ImSequencer.cpp">
       <Filter>third_party\ImGuizmo</Filter>
     </ClCompile>
+    <ClCompile Include="src\Chroma\Components\Relationship.cpp" />
   </ItemGroup>
 </Project>

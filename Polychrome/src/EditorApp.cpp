@@ -68,8 +68,12 @@ namespace Polychrome
 		entity.AddComponent<Chroma::SpriteRenderer>();
 		auto &sprite = entity.GetComponent<Chroma::SpriteRenderer>();
 		entity.AddComponent<Chroma::LuaScript>();
+		entity.CreateChild();
+		entity.CreateChild();
+		entity.CreateChild();
 
 		((Chroma::Transform*)entity.GetComponent("Transform"))->Position.x = 2;
+
 
 
 
@@ -166,10 +170,22 @@ namespace Polychrome
 			});
 		});
 
+		/*
+		for (int i = 0; i < 500; i++)
+		{
+			auto aaaa = EditorApp::CurrentScene->NewEntity();
+			aaaa.AddComponent<Chroma::LuaScript>();
+			aaaa.AddComponent<Chroma::SpriteRenderer>().SetSprite(".\\assets\\textures\\test.ase");
+		}
+		*/
+
+
 
 		scene->PreLoad();
 		scene->Load();
 		scene->PostLoad();
+
+
 		
 
 	}

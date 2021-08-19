@@ -40,7 +40,7 @@ namespace Chroma
 
 	void SpriteRendererSystem::LateUpdate(Time delta)
 	{
-		auto view = m_Scene->Registry.view<SpriteRenderer, Transform>();
+		auto view = m_Scene->Registry.view<SpriteRenderer>();
 		for (EntityID e : view)
 		{
 			auto& spriteRenderer = view.get<SpriteRenderer>(e);
@@ -109,18 +109,38 @@ namespace Chroma
 
 	void SpriteRendererSystem::Draw(Time delta)
 	{
-		auto view = m_Scene->Registry.view<SpriteRenderer, Transform>();
+		auto view = m_Scene->Registry.view<SpriteRenderer, Transform, Relationship>();
 		for (EntityID e : view)
 		{
 			Transform& transform = view.get<Transform>(e);
 			SpriteRenderer& spriteRenderer = view.get<SpriteRenderer>(e);
-
+			Relationship& relationship = view.get<Relationship>(e);
 			if (AssetManager::HasSprite(spriteRenderer.SpriteID))
 			{
 				Ref<Sprite> s = AssetManager::GetSprite(spriteRenderer.SpriteID);
 				int w = s->Frames[spriteRenderer.CurrentFrame].Texture->GetWidth();
 				int h = s->Frames[spriteRenderer.CurrentFrame].Texture->GetHeight();
-				Chroma::Renderer2D::DrawQuad(transform.Position + spriteRenderer.Offset, transform.Scale * Math::vec3((float)w, (float)h, 1.0f), s->Frames[spriteRenderer.CurrentFrame].Texture, spriteRenderer.Color, transform.Rotation.z);
+				if (!relationship.IsChild())
+				{
+					Chroma::Renderer2D::DrawQuad(transform.Position + spriteRenderer.Offset, transform.Scale * Math::vec3((float)w, (float)h, 1.0f), s->Frames[spriteRenderer.CurrentFrame].Texture, spriteRenderer.Color, transform.Rotation.z);
+				}
+				else
+				{
+					Math::vec3 pos = transform.Position;
+					Math::vec3 scale = transform.Scale;
+					Math::vec3 rotation = transform.Rotation;
+					EntityID parent = relationship.Parent;
+					while (parent != ENTITY_NULL)
+					{
+						Transform& parentTransform = m_Scene->GetComponent<Transform>(parent);
+						pos += parentTransform.Position;
+						scale *= parentTransform.Scale;
+						rotation += parentTransform.Rotation;
+						parent = m_Scene->GetComponent<Relationship>(parent).Parent;
+					}
+					Chroma::Renderer2D::DrawQuad(pos + spriteRenderer.Offset, scale * Math::vec3((float)w, (float)h, 1.0f), s->Frames[spriteRenderer.CurrentFrame].Texture, spriteRenderer.Color, rotation.z);
+				}
+
 			}
 		}
 	}

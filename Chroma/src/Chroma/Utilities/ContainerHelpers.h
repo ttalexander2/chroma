@@ -30,18 +30,19 @@ namespace Chroma
 	template <typename T>
 	T* PopValue(std::vector<T>& container, T& val)
 	{
-
+		if (container.empty())
+			return nullptr;
 		bool swapping = false;
 		size_t i = 0;
 		while (i < container.size())
 		{
 			if (container[i] == val)
 				swapping = true;
-			if (swapping)
+			if (swapping && i < container.size() - 1)
 				std::swap(container[i], container[i + 1]);
 			i++;
 		}
-		T* retval;
+		T* retval = nullptr;
 		if (swapping)
 		{
 			retval = &container.back();

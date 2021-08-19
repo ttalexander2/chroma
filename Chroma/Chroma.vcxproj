@@ -161,6 +161,7 @@
     <ClInclude Include="src\Chroma\Components\CircleCollider2D.h" />
     <ClInclude Include="src\Chroma\Components\LuaScript.h" />
     <ClInclude Include="src\Chroma\Components\NativeScript.h" />
+    <ClInclude Include="src\Chroma\Components\Relationship.h" />
     <ClInclude Include="src\Chroma\Components\ScriptComponent.h" />
     <ClInclude Include="src\Chroma\Components\SpriteRenderer.h" />
     <ClInclude Include="src\Chroma\Components\Tag.h" />
@@ -245,7 +246,6 @@
     <ClInclude Include="src\Chroma\Scene\Entity.h" />
     <ClInclude Include="src\Chroma\Scene\Inspectable.h" />
     <ClInclude Include="src\Chroma\Scene\Scene.h" />
-    <ClInclude Include="src\Chroma\Scene\SceneNode.h" />
     <ClInclude Include="src\Chroma\Scene\System.h" />
     <ClInclude Include="src\Chroma\Scripting\Bindings.h" />
     <ClInclude Include="src\Chroma\Scripting\LuaScripting.h" />
@@ -812,6 +812,7 @@
     <ClCompile Include="src\Chroma\Components\BoxCollider2D.cpp" />
     <ClCompile Include="src\Chroma\Components\CircleCollider2D.cpp" />
     <ClCompile Include="src\Chroma\Components\LuaScript.cpp" />
+    <ClCompile Include="src\Chroma\Components\Relationship.cpp" />
     <ClCompile Include="src\Chroma\Components\SpriteRenderer.cpp" />
     <ClCompile Include="src\Chroma\Components\Tag.cpp" />
     <ClCompile Include="src\Chroma\Components\Transform.cpp" />

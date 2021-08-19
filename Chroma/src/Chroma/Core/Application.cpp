@@ -19,6 +19,7 @@
 #include "Chroma/Components/AudioSource.h"
 #include "Chroma/Components/BoxCollider2D.h"
 #include "Chroma/Components/CircleCollider2D.h"
+#include <Chroma/Components/Relationship.h>
 
 namespace Chroma
 {
@@ -51,6 +52,7 @@ namespace Chroma
 		ECS::RegisterComponent<SpriteRenderer>();
 		ECS::RegisterComponent<BoxCollider2D>();
 		ECS::RegisterComponent<CircleCollider2D>();
+		ECS::RegisterComponent<Relationship>();
 
 	}
 

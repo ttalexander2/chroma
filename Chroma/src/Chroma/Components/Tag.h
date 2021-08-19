@@ -11,6 +11,9 @@ namespace Chroma
 		/// @brief Entity Name.
 		std::string EntityName = "New Entity";
 
+		/// @brief Editor Order
+		unsigned int Ordering = 0;
+
 		/// @brief Constructs an empty Tag component.
 		Tag() = default;
 		/// @brief Constructs a Tag component from an existing Tag.
@@ -23,23 +26,14 @@ namespace Chroma
 		{
 		}
 
-		const std::string Name() const override
-		{
-			return "Tag";
-		}
+		const std::string Name() const override { return "Tag"; }
+		const bool EditorVisible() const override { return false; }
 
 		const bool AllowMultiple() const override { return false; };
 
 		void Serialize(YAML::Emitter& out) override;
 
 		void Deserialize(YAML::Node& node) override;
-
-	private:
-
-		const bool IsTag() const override
-		{
-			return true;
-		}
 
 	};
 }

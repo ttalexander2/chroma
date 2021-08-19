@@ -25,6 +25,8 @@ namespace Chroma
 
 		std::string GetName();
 
+		Entity CreateChild();
+
 		void SetName(const std::string& name);
 
 		template <ComponentType T>

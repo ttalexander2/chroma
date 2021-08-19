@@ -92,7 +92,7 @@ namespace Polychrome
 
 		for (Chroma::Component* c : scene->GetAllComponents(Hierarchy::SelectedEntity))
 		{
-			if (c->IsTag())
+			if (!c->EditorVisible())
 				continue;
 
 

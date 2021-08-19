@@ -126,6 +126,7 @@ namespace Polychrome
 					if (Chroma::Scene::Deserialize(out, clone))
 					{
 						delete EditorApp::CurrentScene;
+						clone.clear();
 						EditorApp::CurrentScene = out;
 						if (!EditorApp::CurrentScene->Registry.valid(Hierarchy::SelectedEntity))
 							Hierarchy::SelectedEntity = Chroma::ENTITY_NULL;
@@ -154,6 +155,7 @@ namespace Polychrome
 					if (Chroma::Scene::Deserialize(out, clone))
 					{
 						delete EditorApp::CurrentScene;
+						clone.clear();
 						EditorApp::CurrentScene = out;
 						if (!EditorApp::CurrentScene->Registry.valid(Hierarchy::SelectedEntity))
 							Hierarchy::SelectedEntity = Chroma::ENTITY_NULL;

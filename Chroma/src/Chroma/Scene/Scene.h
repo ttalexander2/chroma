@@ -12,6 +12,11 @@
 #include "Chroma/Core/Log.h"
 #include "Chroma/Profiler/Instrumentor.h"
 
+namespace Polychrome
+{
+	class Hierarchy;
+}
+
 namespace Chroma
 {
 	//Forward Declaration
@@ -30,6 +35,7 @@ namespace Chroma
 		~Scene() = default;
 
 		Entity NewEntity();
+		Entity NewChild(Entity id);
 
 		void DestroyEntity(Entity id);
 
@@ -161,9 +167,11 @@ namespace Chroma
 
 	private:
 		std::vector<System*> Systems;
+		std::vector<EntityID> EntityOrder;
 
 
 		friend class Entity;
+		friend class Polychrome::Hierarchy;
 
 
 	};

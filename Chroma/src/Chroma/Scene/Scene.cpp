@@ -16,6 +16,7 @@
 #include <Chroma/Scene/System.h>
 #include "Chroma/Utilities/GUID.h"
 #include <Chroma/Systems/ScriptingSystem.h>
+#include <Chroma/Components/Relationship.h>
 //#include <Chroma/Systems/ScriptingSystem.h>
 
 
@@ -33,10 +34,29 @@ namespace Chroma
 	{
 		auto entity = Registry.create();
 		Entity e = { entity, this };
-		Registry.emplace<Tag>(entity).EntityName = "New Entity";
+		Registry.emplace<Tag>(entity).EntityName = fmt::format("Entity_{}", entity);
 		Registry.emplace<Transform>(entity);
+		Registry.emplace<Relationship>(entity);
+
+		EntityOrder.push_back(entity);
 
 		return e;
+	}
+
+	Entity Scene::NewChild(Entity parent)
+	{
+		auto entity = Registry.create();
+		Entity e = { entity, this };
+		Registry.emplace<Tag>(entity).EntityName = fmt::format("Entity_{}", entity);
+		Registry.emplace<Transform>(entity);
+		Registry.emplace<Relationship>(entity);
+
+		auto& child_r = e.GetComponent<Relationship>();
+		auto& parent_r = GetComponent<Relationship>((EntityID)parent);
+		parent_r.Children.push_back(e.GetID());
+		child_r.Parent = (EntityID)parent;
+		return e;
+		
 	}
 
 	void Scene::DestroyEntity(Entity entity)
@@ -62,7 +82,10 @@ namespace Chroma
 			for (auto& name : ECS::GetComponentNames())
 			{
 				if (ECS::HasComponent(name, entity, &Registry))
+				{
 					ECS::GetComponent(name, entity, &Registry)->DoSerialize(out);
+				}
+					
 			}
 			
 			out << YAML::EndMap;
@@ -70,9 +93,20 @@ namespace Chroma
 		}
 
 		out << YAML::EndSeq;
+
+		out << YAML::Key << "RootEntities" << YAML::Value << YAML::Flow << YAML::BeginSeq;
+
+		for (auto& e : EntityOrder)
+		{
+			out << (uint32_t)e;
+		}
+
+		out << YAML::EndSeq;
+
 		out << YAML::EndMap;
 
 		std::string result = out.c_str();
+
 		return result;
 
 	}
@@ -112,6 +146,15 @@ namespace Chroma
 							ECS::AddComponent(key, newEntity, &out->Registry)->Deserialize(component.second);
 					}
 				}
+			}
+		}
+
+		auto order = data["RootEntities"];
+		if (order)
+		{
+			for (auto id : order)
+			{
+				out->EntityOrder.push_back((EntityID)id.as<uint32_t>());
 			}
 		}
 

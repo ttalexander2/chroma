@@ -22,8 +22,12 @@ namespace Chroma
 	///
 	/// In order to implement a new component, Name() MUST be implemented.
 	/// In order for the component to interface with the editor, DrawImGui() can be overidden.
+	/// By default, a component will show in the editor, to prevent an entry, override EditorVisible().
 	struct Component
 	{
+
+		Component() = default;
+		Component(const Component&) = default;
 		/// @brief Function to serialize the scene to YAML.
 		/// 
 		/// Serialization occurs in a Key/Value map for data members.
@@ -96,6 +100,8 @@ namespace Chroma
 
 		void DoSerialize(YAML::Emitter& out);
 
+		const virtual bool EditorVisible() const { return true; }
+
 	protected:
 
 		void DrawComponentValue(std::string label);
@@ -105,8 +111,6 @@ namespace Chroma
 		void BeginSerialize(YAML::Emitter& out);
 		void EndSerialize(YAML::Emitter& out);
 
-		/// @brief Checks whether the Component is a Tag.
-		const virtual bool IsTag() const { return false; }
 		/// @brief Checks whether the Component is a Transform.
 		const virtual bool IsTransform() const { return false; }
 
@@ -135,6 +139,7 @@ namespace Chroma
 		friend class Polychrome::Inspector;
 		friend struct Tag;
 		friend struct Transform;
+		friend struct Relationship;
 	};
 				
 }

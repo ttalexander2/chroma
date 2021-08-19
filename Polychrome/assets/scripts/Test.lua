@@ -31,7 +31,8 @@ end
 
 --This function executes once every frame, after EarlyUpdate()
 function Update()
-	transform.Position.X = transform.Position.X + Speed*time.Delta
+	transform.Position.X = transform.Position.X + math.random(-25, 25)*time.Delta
+	transform.Position.Y = transform.Position.Y + math.random(-25, 25)*time.Delta
 end
 
 --This function executes once every frame, after Update()
