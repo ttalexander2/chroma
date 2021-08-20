@@ -375,6 +375,9 @@
     <ClInclude Include="src\Chroma\Components\NativeScript.h">
       <Filter>src\Chroma\Components</Filter>
     </ClInclude>
+    <ClInclude Include="src\Chroma\Components\Relationship.h">
+      <Filter>src\Chroma\Components</Filter>
+    </ClInclude>
     <ClInclude Include="src\Chroma\Components\ScriptComponent.h">
       <Filter>src\Chroma\Components</Filter>
     </ClInclude>
@@ -2295,7 +2298,6 @@
     <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\yaml.h">
       <Filter>third_party\yaml-cpp\include\yaml-cpp</Filter>
     </ClInclude>
-    <ClInclude Include="src\Chroma\Components\Relationship.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Chroma\Assets\AssetManager.cpp">
@@ -2320,6 +2322,9 @@
       <Filter>src\Chroma\Components</Filter>
     </ClCompile>
     <ClCompile Include="src\Chroma\Components\LuaScript.cpp">
+      <Filter>src\Chroma\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Chroma\Components\Relationship.cpp">
       <Filter>src\Chroma\Components</Filter>
     </ClCompile>
     <ClCompile Include="src\Chroma\Components\SpriteRenderer.cpp">
@@ -2490,6 +2495,5 @@
     <ClCompile Include="third_party\ImGuizmo\ImSequencer.cpp">
       <Filter>third_party\ImGuizmo</Filter>
     </ClCompile>
-    <ClCompile Include="src\Chroma\Components\Relationship.cpp" />
   </ItemGroup>
 </Project>

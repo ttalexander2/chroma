@@ -9,6 +9,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\AssetBrowser.h" />
     <ClInclude Include="src\Assets.h" />
     <ClInclude Include="src\EditorApp.h" />
     <ClInclude Include="src\EditorConfig.h" />
@@ -27,8 +28,10 @@
     <ClInclude Include="src\Widgets\TextEditor.h">
       <Filter>Widgets</Filter>
     </ClInclude>
+    <ClInclude Include="src\FuzzyFileSearch.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\AssetBrowser.cpp" />
     <ClCompile Include="src\EditorApp.cpp" />
     <ClCompile Include="src\FileDrop.cpp" />
     <ClCompile Include="src\Fonts\Roboto.cpp">
@@ -44,5 +47,6 @@
     <ClCompile Include="src\Widgets\TextEditor.cpp">
       <Filter>Widgets</Filter>
     </ClCompile>
+    <ClCompile Include="src\FuzzyFileSearch.cpp" />
   </ItemGroup>
 </Project>

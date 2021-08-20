@@ -30,6 +30,7 @@
 #include <Chroma/Components/LuaScript.h>
 #include "TextEdit.h"
 #include <Chroma/Systems/SpriteRendererSystem.h>
+#include "AssetBrowser.h"
 
 
 namespace Polychrome
@@ -48,6 +49,8 @@ namespace Polychrome
 	bool EditorApp::SceneRunning = false;
 	bool EditorApp::ScenePaused = false;
 	bool EditorApp::PreviewSprites = true;
+
+	ImFont* EditorApp::LargeIcons = nullptr;
 
 	EditorApp::EditorApp()
 		: Application("Polychrome Editor", 1920U, 1080U), m_CameraController(1920.0f / 1080.0f)
@@ -170,6 +173,7 @@ namespace Polychrome
 			});
 		});
 
+		
 		/*
 		for (int i = 0; i < 500; i++)
 		{
@@ -215,6 +219,7 @@ namespace Polychrome
 		static const ImWchar icon_ranges[] = { ICON_MIN_FK, ICON_MAX_FK, 0 };
 		ImFont* font = io.Fonts->AddFontFromFileTTF("assets/fonts/forkawesome-webfont.ttf", 16.0f, &config, icon_ranges);
 		io.FontDefault = font;
+		LargeIcons = io.Fonts->AddFontFromFileTTF("assets/fonts/forkawesome-webfont.ttf", 128.0f, nullptr, icon_ranges);
 
 
 		ImGui::GetStyle().FrameRounding = 1;
@@ -412,6 +417,10 @@ namespace Polychrome
 			{
 				//Viewport::Open = !Viewport::Open;
 			}
+			if (ImGui::MenuItem("Text Editor##MAIN_MENU_BAR", "", &TextEdit::Open))
+			{
+				//Viewport::Open = !Viewport::Open;
+			}
 			if (ImGui::MenuItem("Settings##MAIN_MENU_BAR", "", &SettingsWindowOpen))
 			{
 				//SettingsWindowOpen = !SettingsWindowOpen;
@@ -426,12 +435,13 @@ namespace Polychrome
 
 		//ImGui::PopStyleVar();
 
-		ImGui::ShowDemoWindow();
+		//ImGui::ShowDemoWindow();
 
 		Hierarchy::Draw();
 		Inspector::Draw();
 		Viewport::Draw(m_Framebuffer);
 		TextEdit::Draw();
+		AssetBrowser::Draw();
 
 		
 		//Chroma::ImGuiDebugMenu::Draw();

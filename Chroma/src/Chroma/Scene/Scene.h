@@ -37,10 +37,16 @@ namespace Chroma
 		Entity NewEntity();
 		Entity NewChild(Entity id);
 
-		void DestroyEntity(Entity id);
+		void DestroyEntity(EntityID id, bool destroy_children = false);
 
 		std::string Serialize();
 		static bool Deserialize(Scene* out, const std::string& yaml);
+
+		bool IsDescendant(EntityID child, EntityID parent);
+		bool IsRoot(EntityID entity);
+		EntityID GetRootEntity(EntityID child);
+		std::vector<EntityID> FindAllDescendants(EntityID entity);
+
 
 		template <typename T>
 		void RegisterSystem()

@@ -33,6 +33,8 @@ namespace Polychrome
 		static bool ScenePaused;
 		static bool PreviewSprites;
 
+		static ImFont* LargeIcons;
+
 	private:
 		Chroma::OrthographicCameraController m_CameraController;
 

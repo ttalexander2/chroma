@@ -210,6 +210,8 @@ namespace Polychrome
 
 			for (auto& name : names)
 			{
+				if (name == "Transform" || name == "Tag" || name == "Relationship")
+					continue;
 				bool enabled = true;
 				if (scene->HasComponent(name, Hierarchy::SelectedEntity))
 					enabled = false;

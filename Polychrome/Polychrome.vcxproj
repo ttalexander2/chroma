@@ -155,6 +155,8 @@ IF EXIST assets\ (xcopy /Q /E /Y /I assets ..\bin\Dist-windows-x86_64\Polychrome
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\FuzzyFileSearch.h" />
+    <ClInclude Include="src\AssetBrowser.h" />
     <ClInclude Include="src\Assets.h" />
     <ClInclude Include="src\EditorApp.h" />
     <ClInclude Include="src\EditorConfig.h" />
@@ -169,6 +171,8 @@ IF EXIST assets\ (xcopy /Q /E /Y /I assets ..\bin\Dist-windows-x86_64\Polychrome
     <ClInclude Include="src\Widgets\TextEditor.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\FuzzyFileSearch.cpp" />
+    <ClCompile Include="src\AssetBrowser.cpp" />
     <ClCompile Include="src\EditorApp.cpp" />
     <ClCompile Include="src\FileDrop.cpp" />
     <ClCompile Include="src\Fonts\Roboto.cpp" />

@@ -29,8 +29,16 @@ Entities:
         EntityName: Entity_3
       Transform:
         Position: [0, 0, 0]
-        Rotation: [0, 0, 0]
-        Scale: [1, 1, 1]
+        Rotation: [0, 0, 0.890118122]
+        Scale: [5.00774336, 13.4399986, 13.4399986]
+      Sprite Renderer:
+        Color: [1, 1, 1, 1]
+        Offset: [286, 0, 0]
+        Layer: Default
+        PlayOnStart: true
+        SpriteID: .\assets\textures\test.ase
+        Loop: true
+        Animation: 0
       Relationship:
         Parent: 0
   - Entity: 2
@@ -58,20 +66,21 @@ Entities:
       Tag:
         EntityName: Entity_0
       Transform:
-        Position: [2, 0, 0]
-        Rotation: [0, 0, 0]
-        Scale: [1, 1, 1]
+        Position: [56.1717224, -30.2229252, 0]
+        Rotation: [0, 0, -0.871439815]
+        Scale: [1.37279999, 0.480000019, 0.479999989]
       Sprite Renderer:
         Color: [1, 1, 1, 1]
         Offset: [0, 0, 0]
         Layer: Default
         PlayOnStart: true
-        SpriteID: ""
+        SpriteID: .\assets\textures\megagfilms.png
         Loop: true
+        Animation: 0
       Relationship:
         Children: [2, 3, 4]
       LuaScript:
         Path: assets/scripts/Test.lua
-        Speed: 5
         Point: [1, 2]
+        Speed: 5
 RootEntities: [0, 1, 5]

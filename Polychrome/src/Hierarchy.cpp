@@ -274,6 +274,8 @@ namespace Polychrome
 				ImGui::EndDragDropSource();
 			}
 
+			bool open_modal = false;
+
 			if (ImGui::BeginPopupContextItem(("##HIERARCHY_CONTEXT_POPUP_" + std::to_string((uint32_t)e)).c_str()))
 			{
 				if (ImGui::MenuItem("Rename##HIERARCHY_CONTEXT_MENU"))
@@ -283,15 +285,85 @@ namespace Polychrome
 					buffer = t.EntityName;
 					ImGui::SetKeyboardFocusHere();
 				}
+				ImGui::Separator();
+				if (ImGui::MenuItem("New Entity##HIERARCHY_CONTEXT_MENU"))
+					scene->NewEntity();
+				if (ImGui::MenuItem("New Child##HIERARCHY_CONTEXT_MENU"))
+					scene->NewChild(e);
+				if (ImGui::BeginMenu("New Entity...##HIERARCHY_CONTEXT_MENU"))
+				{
+					for (auto& component : Chroma::ECS::GetComponentNames())
+					{
+						if (component == "Transform" || component == "Relationship" || component == "Tag")
+							continue;
+
+						if (ImGui::MenuItem(component.c_str()))
+						{
+							Chroma::Entity ent = scene->NewEntity();
+							ent.AddComponent(component);
+						}
+					}
+					ImGui::EndMenu();
+				}
+					
+				if (ImGui::BeginMenu("New Child...##HIERARCHY_CONTEXT_MENU"))
+				{
+					for (auto& component : Chroma::ECS::GetComponentNames())
+					{
+						if (component == "Transform" || component == "Relationship" || component == "Tag")
+							continue;
+
+						if (ImGui::MenuItem(component.c_str()))
+						{
+							Chroma::Entity ent = scene->NewChild(e);
+							ent.AddComponent(component);
+						}
+					}
+					ImGui::EndMenu();
+					
+				}
+					
+				ImGui::Separator();
 
 				ImGui::MenuItem("Duplicate##HIERARCHY_CONTEXT_MENU");
 				ImGui::MenuItem("Create Prefab##HIERARCHY_CONTEXT_MENU");
 				ImGui::Separator();
 				if (ImGui::MenuItem("Delete##HIERARCHY_CONTEXT_MENU"))
 				{
+					open_modal = true;
+				}
+
+				ImGui::EndPopup();
+			}
+
+			if (open_modal)
+				ImGui::OpenPopup("Delete Entitiy?");
+
+			if (ImGui::BeginPopupModal("Delete Entitiy?", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize))
+			{
+				ImGui::Text("Are you sure you want to delete this entity? It cannot be undone.");
+
+
+
+				if (ImGui::Button("Delete"))
+				{
 					scene->DestroyEntity(e);
 					Hierarchy::SelectedEntity = Chroma::ENTITY_NULL;
 				}
+				if (relationship.HasChildren())
+				{
+					ImGui::SameLine();
+					if (ImGui::Button("Delete (include children)"))
+					{
+						scene->DestroyEntity(e, true);
+						Hierarchy::SelectedEntity = Chroma::ENTITY_NULL;
+					}
+				}
+
+					
+				ImGui::SameLine();
+				if (ImGui::Button("Cancel"))
+					ImGui::CloseCurrentPopup();
 
 				ImGui::EndPopup();
 			}

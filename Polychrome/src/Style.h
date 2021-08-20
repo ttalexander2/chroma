@@ -968,7 +968,7 @@ namespace ImGui
             style.Colors[ImGuiCol_Header] = CHERRY_MED(0.76f);
             style.Colors[ImGuiCol_HeaderHovered] = CHERRY_MED(0.86f);
             style.Colors[ImGuiCol_HeaderActive] = CHERRY_HI(1.00f);
-            style.Colors[ImGuiCol_Separator] = ImVec4(0.14f, 0.16f, 0.19f, 1.00f);
+            style.Colors[ImGuiCol_Separator] = ImVec4(0.858f, 0.929f, 0.89f, 0.278f);
             style.Colors[ImGuiCol_SeparatorHovered] = CHERRY_MED(0.78f);
             style.Colors[ImGuiCol_SeparatorActive] = CHERRY_MED(1.00f);
             style.Colors[ImGuiCol_ResizeGrip] = ImVec4(0.47f, 0.77f, 0.83f, 0.04f);

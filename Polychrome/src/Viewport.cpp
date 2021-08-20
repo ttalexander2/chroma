@@ -31,7 +31,7 @@ namespace Polychrome
 	{
 		if (Open)
 		{
-			ImGui::Begin(ICON_FK_GAMEPAD " Viewport", &Open, ImGuiWindowFlags_NoScrollbar);
+			ImGui::Begin(ICON_FK_GAMEPAD " Viewport", &Open, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
 			bool viewport_focused = ImGui::IsWindowFocused();
 			Chroma::Application::Get().GetImGuiLayer()->BlockEvents(!viewport_focused && !ImGui::IsWindowHovered());
@@ -69,142 +69,149 @@ namespace Polychrome
 
 			static ImGuizmo::OPERATION operation = ImGuizmo::OPERATION::TRANSLATE;
 
-			if (ImGui::BeginTable("##viewport_button_table", 2, ImGuiTableFlags_BordersInnerV | ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_Reorderable))
+
+			ImGui::PushStyleColor(ImGuiCol_Button, ImGui::GetStyleColorVec4(ImGuiCol_ChildBg));
+
+			ImGui::Dummy({ 5, 0 });
+			ImGui::SameLine();
+
+			static std::string clone;
+
+			// PLAY BUTTON
+			if (EditorApp::SceneRunning && !EditorApp::ScenePaused)
+				ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled)); //GRAY
+			else
+				ImGui::PushStyleColor(ImGuiCol_Text, { 0.1f, 0.8f, 0.2f, 1.0f }); // GREEN
+			ImGui::PushItemFlag(ImGuiItemFlags_Disabled, EditorApp::SceneRunning && !EditorApp::ScenePaused);
+			if (ImGui::Button(ICON_FK_PLAY))
 			{
-				ImGui::TableNextRow();
-				ImGui::TableSetColumnIndex(0);
-
-				ImGui::PushStyleColor(ImGuiCol_Button, ImGui::GetStyleColorVec4(ImGuiCol_ChildBg));
-
-				ImGui::Dummy({ 5, 0 });
-				ImGui::SameLine();
-
-				static std::string clone;
-
-				// PLAY BUTTON
-				if (EditorApp::SceneRunning && !EditorApp::ScenePaused)
-					ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled)); //GRAY
-				else
-					ImGui::PushStyleColor(ImGuiCol_Text, { 0.1f, 0.8f, 0.2f, 1.0f }); // GREEN
-				ImGui::PushItemFlag(ImGuiItemFlags_Disabled, EditorApp::SceneRunning && !EditorApp::ScenePaused);
-				if (ImGui::Button(ICON_FK_PLAY))
+				if (!EditorApp::ScenePaused)
 				{
-					if (!EditorApp::ScenePaused)
-					{
-						clone = EditorApp::CurrentScene->Serialize();
-						EditorApp::CurrentScene->EarlyInit();
-						EditorApp::CurrentScene->Init();
-						EditorApp::CurrentScene->LateInit();
-					}
-					EditorApp::SceneRunning = true;
-					EditorApp::ScenePaused = false;
-				}
-				ImGui::PopItemFlag();
-				ImGui::PopStyleColor();
-
-				ImGui::SameLine();
-
-				if (!EditorApp::SceneRunning || EditorApp::ScenePaused)
-					ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled)); //GRAY
-				else
-					ImGui::PushStyleColor(ImGuiCol_Text, { 0.25f, 0.5f, 0.95f, 1.0f }); // BLUE
-				ImGui::PushItemFlag(ImGuiItemFlags_Disabled, !EditorApp::SceneRunning || EditorApp::ScenePaused);
-				if (ImGui::Button(ICON_FK_PAUSE))  EditorApp::ScenePaused = true;
-				ImGui::PopItemFlag();
-				ImGui::PopStyleColor();
-
-				ImGui::SameLine();
-
-				if (!EditorApp::SceneRunning)
-					ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled)); //GRAY
-				else
-					ImGui::PushStyleColor(ImGuiCol_Text, { 0.95f, 0.25f, 0.25f, 1.0f }); // RED
-				ImGui::PushItemFlag(ImGuiItemFlags_Disabled, !EditorApp::SceneRunning);
-				if (ImGui::Button(ICON_FK_STOP)) 
-				{
-					Chroma::Scene* out = new Chroma::Scene();
-					if (Chroma::Scene::Deserialize(out, clone))
-					{
-						delete EditorApp::CurrentScene;
-						clone.clear();
-						EditorApp::CurrentScene = out;
-						if (!EditorApp::CurrentScene->Registry.valid(Hierarchy::SelectedEntity))
-							Hierarchy::SelectedEntity = Chroma::ENTITY_NULL;
-					}
-					else
-					{
-						delete out;
-					}
-					EditorApp::SceneRunning = false;
-					EditorApp::ScenePaused = false;
-					
-				}
-				ImGui::PopItemFlag();
-				ImGui::PopStyleColor();
-
-				ImGui::SameLine();
-
-				if (!EditorApp::SceneRunning)
-					ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled)); //GRAY
-				else
-					ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_Text)); // RED
-				ImGui::PushItemFlag(ImGuiItemFlags_Disabled, !EditorApp::SceneRunning);
-				if (ImGui::Button(ICON_FK_UNDO))
-				{
-					Chroma::Scene* out = new Chroma::Scene();
-					if (Chroma::Scene::Deserialize(out, clone))
-					{
-						delete EditorApp::CurrentScene;
-						clone.clear();
-						EditorApp::CurrentScene = out;
-						if (!EditorApp::CurrentScene->Registry.valid(Hierarchy::SelectedEntity))
-							Hierarchy::SelectedEntity = Chroma::ENTITY_NULL;
-					}
-					else
-					{
-						delete out;
-					}
-					EditorApp::ScenePaused = false;
-					EditorApp::SceneRunning = true;
+					clone = EditorApp::CurrentScene->Serialize();
 					EditorApp::CurrentScene->EarlyInit();
 					EditorApp::CurrentScene->Init();
 					EditorApp::CurrentScene->LateInit();
 				}
-				ImGui::PopItemFlag();
-				ImGui::PopStyleColor();
-
-				ImGui::TableSetColumnIndex(1);
-
-				//TRANSLATE BUTTON
-				if (operation == ImGuizmo::OPERATION::TRANSLATE)
-					ImGui::PushStyleColor(ImGuiCol_Button, ImGui::GetStyleColorVec4(ImGuiCol_ButtonActive));
-				if (ImGui::Button(ICON_FK_ARROWS) && operation != ImGuizmo::OPERATION::TRANSLATE) operation = ImGuizmo::OPERATION::TRANSLATE;
-				else if (operation == ImGuizmo::OPERATION::TRANSLATE)
-					ImGui::PopStyleColor();
-
-				ImGui::SameLine();
-
-				//SCALE BUTTON
-				if (operation == ImGuizmo::OPERATION::SCALE)
-					ImGui::PushStyleColor(ImGuiCol_Button, ImGui::GetStyleColorVec4(ImGuiCol_ButtonActive));
-				if (ImGui::Button(ICON_FK_ARROWS_ALT) && operation != ImGuizmo::OPERATION::SCALE) operation = ImGuizmo::OPERATION::SCALE;
-				else if (operation == ImGuizmo::OPERATION::SCALE)
-					ImGui::PopStyleColor();
-
-				ImGui::SameLine();
-
-				//ROTATE BUTTON
-				if (operation == ImGuizmo::OPERATION::ROTATE)
-					ImGui::PushStyleColor(ImGuiCol_Button, ImGui::GetStyleColorVec4(ImGuiCol_ButtonActive));
-				if (ImGui::Button(ICON_FK_REPEAT) && operation != ImGuizmo::OPERATION::ROTATE) operation = ImGuizmo::OPERATION::ROTATE;
-				else if (operation == ImGuizmo::OPERATION::ROTATE)
-					ImGui::PopStyleColor();
-
-
-				ImGui::PopStyleColor();
-				ImGui::EndTable();
+				EditorApp::SceneRunning = true;
+				EditorApp::ScenePaused = false;
 			}
-			
+			ImGui::PopItemFlag();
+			ImGui::PopStyleColor();
+
+			ImGui::SameLine();
+
+			if (!EditorApp::SceneRunning || EditorApp::ScenePaused)
+				ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled)); //GRAY
+			else
+				ImGui::PushStyleColor(ImGuiCol_Text, { 0.25f, 0.5f, 0.95f, 1.0f }); // BLUE
+			ImGui::PushItemFlag(ImGuiItemFlags_Disabled, !EditorApp::SceneRunning || EditorApp::ScenePaused);
+			if (ImGui::Button(ICON_FK_PAUSE))  EditorApp::ScenePaused = true;
+			ImGui::PopItemFlag();
+			ImGui::PopStyleColor();
+
+			ImGui::SameLine();
+
+			if (!EditorApp::SceneRunning)
+				ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled)); //GRAY
+			else
+				ImGui::PushStyleColor(ImGuiCol_Text, { 0.95f, 0.25f, 0.25f, 1.0f }); // RED
+			ImGui::PushItemFlag(ImGuiItemFlags_Disabled, !EditorApp::SceneRunning);
+			if (ImGui::Button(ICON_FK_STOP)) 
+			{
+				Chroma::Scene* out = new Chroma::Scene();
+				if (Chroma::Scene::Deserialize(out, clone))
+				{
+					delete EditorApp::CurrentScene;
+					clone.clear();
+					EditorApp::CurrentScene = out;
+					if (!EditorApp::CurrentScene->Registry.valid(Hierarchy::SelectedEntity))
+						Hierarchy::SelectedEntity = Chroma::ENTITY_NULL;
+				}
+				else
+				{
+					delete out;
+				}
+				EditorApp::SceneRunning = false;
+				EditorApp::ScenePaused = false;
+					
+			}
+			ImGui::PopItemFlag();
+			ImGui::PopStyleColor();
+
+			ImGui::SameLine();
+
+			if (!EditorApp::SceneRunning)
+				ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled)); //GRAY
+			else
+				ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_Text)); // RED
+			ImGui::PushItemFlag(ImGuiItemFlags_Disabled, !EditorApp::SceneRunning);
+			if (ImGui::Button(ICON_FK_UNDO))
+			{
+				Chroma::Scene* out = new Chroma::Scene();
+				if (Chroma::Scene::Deserialize(out, clone))
+				{
+					delete EditorApp::CurrentScene;
+					clone.clear();
+					EditorApp::CurrentScene = out;
+					if (!EditorApp::CurrentScene->Registry.valid(Hierarchy::SelectedEntity))
+						Hierarchy::SelectedEntity = Chroma::ENTITY_NULL;
+				}
+				else
+				{
+					delete out;
+				}
+				EditorApp::ScenePaused = false;
+				EditorApp::SceneRunning = true;
+				EditorApp::CurrentScene->EarlyInit();
+				EditorApp::CurrentScene->Init();
+				EditorApp::CurrentScene->LateInit();
+			}
+			ImGui::PopItemFlag();
+			ImGui::PopStyleColor();
+
+
+			ImGui::SameLine();
+			ImGui::SeparatorEx(ImGuiSeparatorFlags_Vertical);
+			ImGui::SameLine();
+
+			if (operation == ImGuizmo::OPERATION::BOUNDS)
+				ImGui::PushStyleColor(ImGuiCol_Button, ImGui::GetStyleColorVec4(ImGuiCol_ButtonActive));
+			if (ImGui::Button(ICON_FK_MOUSE_POINTER) && operation != ImGuizmo::OPERATION::BOUNDS)
+				operation = ImGuizmo::OPERATION::BOUNDS;
+			else if (operation == ImGuizmo::OPERATION::BOUNDS)
+				ImGui::PopStyleColor();
+
+			ImGui::SameLine();
+
+
+			//TRANSLATE BUTTON
+			if (operation == ImGuizmo::OPERATION::TRANSLATE)
+				ImGui::PushStyleColor(ImGuiCol_Button, ImGui::GetStyleColorVec4(ImGuiCol_ButtonActive));
+			if (ImGui::Button(ICON_FK_ARROWS) && operation != ImGuizmo::OPERATION::TRANSLATE) operation = ImGuizmo::OPERATION::TRANSLATE;
+			else if (operation == ImGuizmo::OPERATION::TRANSLATE)
+				ImGui::PopStyleColor();
+
+			ImGui::SameLine();
+
+			//SCALE BUTTON
+			if (operation == ImGuizmo::OPERATION::SCALE)
+				ImGui::PushStyleColor(ImGuiCol_Button, ImGui::GetStyleColorVec4(ImGuiCol_ButtonActive));
+			if (ImGui::Button(ICON_FK_ARROWS_ALT) && operation != ImGuizmo::OPERATION::SCALE) operation = ImGuizmo::OPERATION::SCALE;
+			else if (operation == ImGuizmo::OPERATION::SCALE)
+				ImGui::PopStyleColor();
+
+			ImGui::SameLine();
+
+			//ROTATE BUTTON
+			if (operation == ImGuizmo::OPERATION::ROTATE)
+				ImGui::PushStyleColor(ImGuiCol_Button, ImGui::GetStyleColorVec4(ImGuiCol_ButtonActive));
+			if (ImGui::Button(ICON_FK_REPEAT) && operation != ImGuizmo::OPERATION::ROTATE) operation = ImGuizmo::OPERATION::ROTATE;
+			else if (operation == ImGuizmo::OPERATION::ROTATE)
+				ImGui::PopStyleColor();
+
+
+			ImGui::PopStyleColor();
+
 
 			ImGui::BeginChild("##viewport_frame_buffer", ImVec2{ s_ViewportSize.x, s_ViewportSize.y });
 

@@ -17,6 +17,7 @@
 #include "Chroma/Utilities/GUID.h"
 #include <Chroma/Systems/ScriptingSystem.h>
 #include <Chroma/Components/Relationship.h>
+#include <Chroma/Utilities/ContainerHelpers.h>
 //#include <Chroma/Systems/ScriptingSystem.h>
 
 
@@ -59,9 +60,51 @@ namespace Chroma
 		
 	}
 
-	void Scene::DestroyEntity(Entity entity)
+	void Scene::DestroyEntity(EntityID entity, bool destroy_children)
 	{
-		Registry.destroy(entity.GetID());
+		auto& rel = Registry.get<Relationship>(entity);
+		if (destroy_children)
+		{
+			for (EntityID child : FindAllDescendants(entity))
+			{
+				Registry.destroy(child);
+			}
+		}
+		else
+		{
+			for (EntityID child : rel.Children)
+			{
+				auto& crel = Registry.get<Relationship>(child);
+				crel.Parent = rel.Parent;
+				if (rel.Parent == ENTITY_NULL)
+					EntityOrder.push_back(child);
+				else
+					Registry.get<Relationship>(rel.Parent).Children.push_back(child);
+			}
+		}
+
+		if (rel.Parent == ENTITY_NULL)
+		{
+			PopValue(EntityOrder, entity);
+		}
+		else
+		{
+			PopValue(Registry.get<Relationship>(rel.Parent).Children, entity);
+		}
+		Registry.destroy(entity);
+	}
+
+	std::vector<EntityID> Scene::FindAllDescendants(EntityID entity)
+	{
+		auto& rel = Registry.get<Relationship>(entity);
+		std::vector<EntityID> desc;
+		for (auto child : rel.Children)
+		{
+			desc.push_back(child);
+			auto results = FindAllDescendants(child);
+			desc.insert(desc.end(), results.begin(), results.end());
+		}
+		return desc;
 	}
 
 	std::string Scene::Serialize()
@@ -162,6 +205,55 @@ namespace Chroma
 
 
 
+	}
+
+	bool Scene::IsDescendant(EntityID child, EntityID parent)
+	{
+
+		if (parent == Chroma::ENTITY_NULL || child == Chroma::ENTITY_NULL)
+			return false;
+
+		auto& p_rel = GetComponent<Chroma::Relationship>(parent);
+		auto& c_rel = GetComponent<Chroma::Relationship>(child);
+
+		auto& cp = child;
+
+		while (cp != Chroma::ENTITY_NULL)
+		{
+			auto rpp = GetComponent<Chroma::Relationship>(cp).Parent;
+			if (rpp == parent)
+				return true;
+			cp = rpp;
+		}
+		return false;
+
+	}
+
+	bool Scene::IsRoot(EntityID entity)
+	{
+		if (entity == ENTITY_NULL)
+			return false;
+		auto& r = GetComponent<Chroma::Relationship>(entity);
+		return r.Parent == ENTITY_NULL;
+	}
+
+	EntityID Scene::GetRootEntity(EntityID child)
+	{
+		if (child == ENTITY_NULL)
+			return ENTITY_NULL;
+
+		auto& c_rel = GetComponent<Chroma::Relationship>(child);
+
+		auto& cp = child;
+
+		while (cp != Chroma::ENTITY_NULL)
+		{
+			auto rpp = GetComponent<Chroma::Relationship>(cp).Parent;
+			if (rpp == ENTITY_NULL)
+				return cp;
+			cp = rpp;
+		}
+		return ENTITY_NULL;
 	}
 
 
