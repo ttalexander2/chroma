@@ -1,9 +1,15 @@
 #pragma once
 
+#define CHROMA_DEBUG_LOG
+
+
 #include <Chroma.h>
 #include "EditorConfig.h"
 #include <Chroma/Renderer/Framebuffer.h>
 #include <Chroma/Systems/SpriteRendererSystem.h>
+
+
+#define CHROMA_EDITOR
 
 
 namespace Polychrome

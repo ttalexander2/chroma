@@ -26,6 +26,7 @@ namespace Chroma
 		static void BindScene(sol::state* lua);
 
 		static void BindTime(sol::state* lua);
+		static void BindInput(sol::state* lua);
 	};
 
 }

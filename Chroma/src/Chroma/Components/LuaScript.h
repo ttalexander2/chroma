@@ -3,34 +3,65 @@
 #include "ScriptComponent.h"
 #include "Chroma/Assets/Asset.h"
 #include <sol/load_result.hpp>
-#include <sol/environment.hpp>
+#include <sol/state_view.hpp>	
+#include <sol/thread.hpp>
+#include <sol/coroutine.hpp>
 
 namespace Chroma
 {
 	class ScriptingSystem;
 	class LuaScripting;
+	class Entity;
 
 	class LuaScript : public ScriptComponent
 	{
 	public:
 
 		/// @brief Constructs an empty LuaScript
-		LuaScript() = default;
+		LuaScript();
+		~LuaScript();
 		/// @brief Constructs a new LuaScript from an existing LuaScript.
 		/// @param  AudioSource to copy.
 		LuaScript(const LuaScript&) = default;
 
+
+
 		const std::string Name() const override { return "LuaScript"; }
 
 		void Serialize(YAML::Emitter& out) override;
-		void Deserialize(YAML::Node& node, uint32_t id, Scene* out) override;
+		void Deserialize(YAML::Node& node, EntityID id, Scene* out) override;
 		void DrawImGui() override;
+
+		void RegisterEntity(EntityID id, Scene* scene);
+		void RegisterEntity(Entity entity);
+
+		void StartCoroutine(const std::string& func, int update_step);
+		void RestartCoroutine(const std::string& func);
+		void StopCoroutine(const std::string& func);
+
+		void ReloadState();
+		void ReloadCoroutines();
+
+		sol::environment Environment;
+		sol::thread Thread;
+		bool Success = false;
 		
 	private:
-		sol::environment env;
-		bool success = false;
+
 
 		friend class ScriptingSystem;
 		friend class LuaScripting;
+
+		struct Coroutine
+		{
+			~Coroutine() { Handle.abandon(); }
+			std::string Name;
+			sol::coroutine Handle;
+			sol::thread Thread;
+			double Time = 0;
+			int Step;
+		};
+
+		std::map<std::string, Coroutine> Coroutines;
 	};
 }

@@ -5,7 +5,7 @@
 
 namespace Polychrome
 {
-	class TextEdit
+	class CodeEditor
 	{
 	public:
 

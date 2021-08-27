@@ -19,6 +19,7 @@
 #include <Chroma/Utilities/FileDialogs.h>
 #include <filesystem>
 #include <Chroma/ImGui/ImGuiDebugMenu.h>
+#include "Fonts/Pinch.cpp"
 #include "Fonts/Roboto.cpp"
 #include <Chroma/Images/Aseprite.h>
 #include "Style.h"
@@ -28,10 +29,14 @@
 #include <Chroma/Components/SpriteRenderer.h>
 #include <Chroma/Assets/AssetManager.h>
 #include <Chroma/Components/LuaScript.h>
-#include "TextEdit.h"
+#include "CodeEditor.h"
 #include <Chroma/Systems/SpriteRendererSystem.h>
 #include "AssetBrowser.h"
+#include <Chroma/Scripting/LuaScripting.h>
+#include "LogWindow.h"	
 
+#define CHROMA_DEBUG_LOG
+#include <Chroma/Core/Log.h>
 
 namespace Polychrome
 {
@@ -59,6 +64,8 @@ namespace Polychrome
 #ifdef CHROMA_PLATFORM_WINDOWS
 		glfwSetDropCallback((GLFWwindow*)this->Get().GetWindow().GetNativeWindow(), FileDrop::HandleFileDrop);
 #endif
+
+		LogWindow::Init();
 		
 		Chroma::Scene* scene = new Chroma::Scene();
 
@@ -106,13 +113,16 @@ namespace Polychrome
 			if (file.is_regular_file())
 			{
 				std::string extension = file.path().extension().string();
-				if (extension == ".ase" || extension == ".png" || extension == ".jpg")
+				if (extension == ".ase" || extension == ".aseprite" || extension == ".png" || extension == ".jpg")
 				{
 					CHROMA_CORE_INFO("{}", file.path().string());
 					Chroma::AssetManager::LoadSprite(file.path().string());
 				}
 			}
 		}
+
+		Chroma::Input::SetGamepadConnectionCallback([](Chroma::Input::Joystick j) {CHROMA_CORE_INFO("Controller connected!:  {}", Chroma::Input::GetGamepadName(j)); });
+		Chroma::Input::SetGamepadDisconnectionCallback([](Chroma::Input::Joystick j) {CHROMA_CORE_INFO("Controller disconnected!:  {}", Chroma::Input::GetGamepadName(j)); });
 
 		
 		file_watcher_thread_running.store(true);
@@ -132,9 +142,22 @@ namespace Polychrome
 					file_queue.enqueue([path_to_watch]() {
 						CHROMA_CORE_TRACE("File Created: {}", path_to_watch);
 						std::string extension = std::filesystem::path(path_to_watch).extension().string();
-						if (extension == ".ase" || extension == ".png" || extension == ".jpg")
+						if (extension == ".ase" || extension == ".aseprite" || extension == ".png" || extension == ".jpg")
 						{
 							Chroma::AssetManager::LoadSprite(path_to_watch);
+						}
+						else if (extension == ".lua")
+						{
+							Chroma::LuaScripting::ReloadScriptFromFile(std::filesystem::path(path_to_watch), false);
+							for (auto entity : EditorApp::CurrentScene->Registry.view<Chroma::LuaScript>())
+							{
+								auto& script = EditorApp::CurrentScene->GetComponent<Chroma::LuaScript>(entity);
+								if (std::filesystem::equivalent(script.Path, path_to_watch))
+								{
+									auto result = Chroma::LuaScripting::ExecuteScript(script.Path, script.Thread, script.Environment);
+									script.Success = result.has_value() && result.value().valid();
+								}
+							}
 						}
 					});
 					break;
@@ -142,7 +165,7 @@ namespace Polychrome
 					file_queue.enqueue([path_to_watch]() {
 						CHROMA_CORE_TRACE("File Modified: {}", path_to_watch);
 						std::string extension = std::filesystem::path(path_to_watch).extension().string();
-						if (extension == ".ase" || extension == ".png" || extension == ".jpg")
+						if (extension == ".ase" || extension == ".aseprite" || extension == ".png" || extension == ".jpg")
 						{
 							if (Chroma::AssetManager::HasSprite(path_to_watch))
 							{
@@ -154,6 +177,21 @@ namespace Polychrome
 							}
 							
 						}
+						else if (extension == ".lua")
+						{
+							Chroma::LuaScripting::ReloadScriptFromFile(std::filesystem::path(path_to_watch), false);
+							for (auto entity : EditorApp::CurrentScene->Registry.view<Chroma::LuaScript>())
+							{
+								auto& script = EditorApp::CurrentScene->GetComponent<Chroma::LuaScript>(entity);
+								if (std::filesystem::equivalent(script.Path, path_to_watch))
+								{
+									script.ReloadState();
+									auto result = Chroma::LuaScripting::ExecuteScript(script.Path, script.Thread, script.Environment);
+									script.Success = result.has_value() && result.value().valid();
+									script.ReloadCoroutines();
+								}	
+							}
+						}
 					});
 					break;
 				case FileStatus::erased:
@@ -163,6 +201,10 @@ namespace Polychrome
 						if (extension == ".ase" || extension == ".png" || extension == ".jpg")
 						{
 							
+						}
+						else if (extension == ".lua")
+						{
+
 						}
 					});
 					
@@ -210,24 +252,26 @@ namespace Polychrome
 		ImGui::CreateContext();
 		ImGuiIO& io = ImGui::GetIO();
 
-		io.FontDefault = io.Fonts->AddFontFromMemoryCompressedTTF(Roboto_compressed_data, Roboto_compressed_size, 14.0f);
+		io.FontDefault = io.Fonts->AddFontFromMemoryCompressedTTF(Roboto_compressed_data, Roboto_compressed_size, 14.f);
 		
 		
 
 		ImFontConfig config;
 		config.MergeMode = true;
 		static const ImWchar icon_ranges[] = { ICON_MIN_FK, ICON_MAX_FK, 0 };
-		ImFont* font = io.Fonts->AddFontFromFileTTF("assets/fonts/forkawesome-webfont.ttf", 16.0f, &config, icon_ranges);
+		ImFont* font = io.Fonts->AddFontFromFileTTF("assets/fonts/forkawesome-webfont.ttf", 14.f, &config, icon_ranges);
 		io.FontDefault = font;
 		LargeIcons = io.Fonts->AddFontFromFileTTF("assets/fonts/forkawesome-webfont.ttf", 128.0f, nullptr, icon_ranges);
 
 
 		ImGui::GetStyle().FrameRounding = 1;
 
-		Config.Style = (int)ImGui::ImGuiStylePreset::Cherry;
+		Config.Style = (int)ImGui::ImGuiStylePreset::ChromaDark;
 
-		TextEdit::Init();
+		CodeEditor::Init();
 
+		Chroma::Input::SetGamepadConnectionCallback([](auto joystick) { CHROMA_CORE_WARN("Joystick Connected!"); });
+		Chroma::Input::SetGamepadDisconnectionCallback([](auto joystick) { CHROMA_CORE_WARN("Joystick Disconnected!"); });
 		
 
 	}
@@ -330,7 +374,7 @@ namespace Polychrome
 	{
 		if (!first)
 		{
-			ImGui::ResetStyle(ImGui::ImGuiStylePreset::Cherry, ImGui::GetStyle());
+			ImGui::ResetStyle(ImGui::ImGuiStylePreset::ChromaDark, ImGui::GetStyle());
 
 			first = true;
 		}
@@ -405,26 +449,12 @@ namespace Polychrome
 
 		if (ImGui::BeginMenu("Window##MAIN_MENU_BAR"))
 		{
-			if (ImGui::MenuItem("Hierarchy##MAIN_MENU_BAR", "", &Hierarchy::Open))
-			{
-				//Hierarchy::Open = !Hierarchy::Open;
-			}
-			if (ImGui::MenuItem("Inspector##MAIN_MENU_BAR", "", &Inspector::Open))
-			{
-				//Inspector::Open = !Inspector::Open;
-			}
-			if (ImGui::MenuItem("Viewport##MAIN_MENU_BAR", "", &Viewport::Open))
-			{
-				//Viewport::Open = !Viewport::Open;
-			}
-			if (ImGui::MenuItem("Text Editor##MAIN_MENU_BAR", "", &TextEdit::Open))
-			{
-				//Viewport::Open = !Viewport::Open;
-			}
-			if (ImGui::MenuItem("Settings##MAIN_MENU_BAR", "", &SettingsWindowOpen))
-			{
-				//SettingsWindowOpen = !SettingsWindowOpen;
-			}
+			ImGui::MenuItem("Hierarchy##MAIN_MENU_BAR", "", &Hierarchy::Open)  ;
+			ImGui::MenuItem("Inspector##MAIN_MENU_BAR", "", &Inspector::Open)  ;
+			ImGui::MenuItem("Viewport##MAIN_MENU_BAR", "", &Viewport::Open)	   ;
+			ImGui::MenuItem("Viewport##MAIN_MENU_BAR", "", &LogWindow::Open)   ;
+			ImGui::MenuItem("Settings##MAIN_MENU_BAR", "", &SettingsWindowOpen);
+
 
 			ImGui::EndMenu();
 		}
@@ -435,15 +465,53 @@ namespace Polychrome
 
 		//ImGui::PopStyleVar();
 
-		//ImGui::ShowDemoWindow();
+		ImGui::ShowDemoWindow();
 
 		Hierarchy::Draw();
 		Inspector::Draw();
 		Viewport::Draw(m_Framebuffer);
-		TextEdit::Draw();
+		CodeEditor::Draw();
 		AssetBrowser::Draw();
+		LogWindow::Draw();
 
-		
+		ImGui::Begin("Conroller");
+
+		//Chroma::Input::GamepadState state = Chroma::Input::GetGamepadState();
+		//ImGui::Text(fmt::format("A:				{}", (int)state[Chroma::Input::GamepadButton::A]).c_str());
+		//ImGui::Text(fmt::format("B:				{}", (int)state[Chroma::Input::GamepadButton::B]).c_str());
+		//ImGui::Text(fmt::format("X:				{}", (int)state[Chroma::Input::GamepadButton::X]).c_str());
+		//ImGui::Text(fmt::format("Y:				{}", (int)state[Chroma::Input::GamepadButton::Y]).c_str());
+		//ImGui::Text(fmt::format("Left Bumper:	{}", (int)state[Chroma::Input::GamepadButton::LEFT_BUMPER]).c_str());
+		//ImGui::Text(fmt::format("Right Bumper:	{}", (int)state[Chroma::Input::GamepadButton::RIGHT_BUMPER]).c_str());
+		//ImGui::Text(fmt::format("Back:			{}", (int)state[Chroma::Input::GamepadButton::BACK]).c_str());
+		//ImGui::Text(fmt::format("Start:			{}", (int)state[Chroma::Input::GamepadButton::START]).c_str());
+		//ImGui::Text(fmt::format("Guide:			{}", (int)state[Chroma::Input::GamepadButton::GUIDE]).c_str());
+		//ImGui::Text(fmt::format("Left Thumb:	{}", (int)state[Chroma::Input::GamepadButton::LEFT_THUMB]).c_str());
+		//ImGui::Text(fmt::format("Right Thumb:	{}", (int)state[Chroma::Input::GamepadButton::RIGHT_THUMB]).c_str());
+		//ImGui::Text(fmt::format("DPAD_UP:		{}", (int)state[Chroma::Input::GamepadButton::DPAD_UP]).c_str());
+		//ImGui::Text(fmt::format("DPAD_DOWN:		{}", (int)state[Chroma::Input::GamepadButton::DPAD_DOWN]).c_str());
+		//ImGui::Text(fmt::format("DPAD_LEFT:		{}", (int)state[Chroma::Input::GamepadButton::DPAD_LEFT]).c_str());
+		//ImGui::Text(fmt::format("DPAD_RIGHT:	{}", (int)state[Chroma::Input::GamepadButton::DPAD_RIGHT]).c_str());
+		ImGui::Text(fmt::format("A:				{}", (bool)Chroma::Input::GetGamepadButtonState(Chroma::Input::GamepadButton::A)).c_str());
+		ImGui::Text(fmt::format("B:				{}", (bool)Chroma::Input::GetGamepadButtonState(Chroma::Input::GamepadButton::B)).c_str());
+		ImGui::Text(fmt::format("X:				{}", (bool)Chroma::Input::GetGamepadButtonState(Chroma::Input::GamepadButton::X)).c_str());
+		ImGui::Text(fmt::format("Y:				{}", (bool)Chroma::Input::GetGamepadButtonState(Chroma::Input::GamepadButton::Y)).c_str());
+		ImGui::Text(fmt::format("Left Bumper:	{}", (bool)Chroma::Input::GetGamepadButtonState(Chroma::Input::GamepadButton::LEFT_BUMPER)).c_str());
+		ImGui::Text(fmt::format("Right Bumper:	{}", (bool)Chroma::Input::GetGamepadButtonState(Chroma::Input::GamepadButton::RIGHT_BUMPER)).c_str());
+		ImGui::Text(fmt::format("Back:			{}", (bool)Chroma::Input::GetGamepadButtonState(Chroma::Input::GamepadButton::BACK)).c_str());
+		ImGui::Text(fmt::format("Start:			{}", (bool)Chroma::Input::GetGamepadButtonState(Chroma::Input::GamepadButton::START)).c_str());
+		ImGui::Text(fmt::format("Guide:			{}", (bool)Chroma::Input::GetGamepadButtonState(Chroma::Input::GamepadButton::GUIDE)).c_str());
+		ImGui::Text(fmt::format("Left Thumb:	{}", (bool)Chroma::Input::GetGamepadButtonState(Chroma::Input::GamepadButton::LEFT_THUMB)).c_str());
+		ImGui::Text(fmt::format("Right Thumb:	{}", (bool)Chroma::Input::GetGamepadButtonState(Chroma::Input::GamepadButton::RIGHT_THUMB)).c_str());
+		ImGui::Text(fmt::format("DPAD_UP:		{}", (bool)Chroma::Input::GetGamepadButtonState(Chroma::Input::GamepadButton::DPAD_UP)).c_str());
+		ImGui::Text(fmt::format("DPAD_DOWN:		{}", (bool)Chroma::Input::GetGamepadButtonState(Chroma::Input::GamepadButton::DPAD_DOWN)).c_str());
+		ImGui::Text(fmt::format("DPAD_LEFT:		{}", (bool)Chroma::Input::GetGamepadButtonState(Chroma::Input::GamepadButton::DPAD_LEFT)).c_str());
+		ImGui::Text(fmt::format("DPAD_RIGHT:	{}", (bool)Chroma::Input::GetGamepadButtonState(Chroma::Input::GamepadButton::DPAD_RIGHT)).c_str());
+
+		ImGui::End();
+
+		if (ImGui::IsKeyPressed((int)CHROMA_KEY_MINUS))
+			CHROMA_INFO("Test");
 		//Chroma::ImGuiDebugMenu::Draw();
 
 		if (SettingsWindowOpen)

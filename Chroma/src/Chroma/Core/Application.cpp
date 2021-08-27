@@ -37,6 +37,7 @@ namespace Chroma
 		props.Height = height;
 		m_Window = Scope<Window>(Window::Create(props));
 		m_Window->SetEventCallback(CHROMA_BIND_EVENT_FN(Application::ProcessEvents));
+		Input::Init();
 
 		Renderer::Init();
 
@@ -92,10 +93,13 @@ namespace Chroma
 
 	void Application::Run()
 	{
+		m_ImGuiLayer->OnAttach();
+		m_Window->OnUpdate();
+
 		this->EarlyInit();
 		this->Init();
 		this->LateInit();
-		m_ImGuiLayer->OnAttach();
+
 
 		while (m_Running)
 		{

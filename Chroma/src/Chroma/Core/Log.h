@@ -46,9 +46,11 @@ namespace Chroma
 #define CHROMA_CORE_ERROR(...)     ::Chroma::Log::GetCoreLogger()->error(__VA_ARGS__)
 /// @brief CHROMA_CORE_FATAL
 /// Logs the provided string at fatal level.
-#define CHROMA_CORE_FATAL(...)     ::Chroma::Log::GetCoreLogger()->fatal(__VA_ARGS__)
+#define CHROMA_CORE_CRITICAL(...)     ::Chroma::Log::GetCoreLogger()->critical(__VA_ARGS__)
 
 /// Client Log Macros
+
+#ifndef CHROMA_DEBUG_LOG
 
 /// @brief CHROMA_TRACE
 /// Logs the provided string at trace level.
@@ -64,6 +66,25 @@ namespace Chroma
 #define CHROMA_ERROR(...)          ::Chroma::Log::GetClientLogger()->error(__VA_ARGS__)
 /// @brief CHROMA_FATAL
 /// Logs the provided string at fatal level.
-#define CHROMA_FATAL(...)          ::Chroma::Log::GetClientLogger()->fatal(__VA_ARGS__)
+#define CHROMA_CRITICAL(...)          ::Chroma::Log::GetClientLogger()->critical(__VA_ARGS__)
 
 
+#else
+
+/// @brief CHROMA_TRACE
+/// Logs the provided string at trace level.
+#define CHROMA_TRACE(...)          ::Chroma::Log::GetClientLogger()->log(spdlog::source_loc{__FILE__, __LINE__, SPDLOG_FUNCTION}, spdlog::level::level_enum::trace, __VA_ARGS__)
+/// @brief CHROMA_INFO
+/// Logs the provided string at info level.
+#define CHROMA_INFO(...)           ::Chroma::Log::GetClientLogger()->log(spdlog::source_loc{__FILE__, __LINE__, SPDLOG_FUNCTION}, spdlog::level::level_enum::info, __VA_ARGS__)
+/// @brief CHROMA_WARN
+/// Logs the provided string at warn level.
+#define CHROMA_WARN(...)           ::Chroma::Log::GetClientLogger()->log(spdlog::source_loc{__FILE__, __LINE__, SPDLOG_FUNCTION}, spdlog::level::level_enum::warn, __VA_ARGS__)
+/// @brief CHROMA_ERROR
+/// Logs the provided string at error level.
+#define CHROMA_ERROR(...)          ::Chroma::Log::GetClientLogger()->log(spdlog::source_loc{__FILE__, __LINE__, SPDLOG_FUNCTION}, spdlog::level::level_enum::err, __VA_ARGS__)
+/// @brief CHROMA_FATAL
+/// Logs the provided string at fatal level.
+#define CHROMA_FATAL(...)          ::Chroma::Log::GetClientLogger()->log(spdlog::source_loc{__FILE__, __LINE__, SPDLOG_FUNCTION}, spdlog::level::level_enum::critical, __VA_ARGS__)
+
+#endif

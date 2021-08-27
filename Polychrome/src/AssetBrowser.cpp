@@ -8,7 +8,7 @@
 #include <Chroma/Assets/AssetManager.h>
 #include "EditorApp.h"
 #include "FuzzyFileSearch.h"
-#include "TextEdit.h"
+#include "CodeEditor.h"
 
 namespace Polychrome
 {
@@ -22,11 +22,13 @@ namespace Polychrome
 	bool asset_folder_open = true;
 	float icon_size = 40;
 
-	void AssetBrowser::HandleOpen(std::filesystem::path path)
+	void AssetBrowser::HandleOpen(std::filesystem::path path, TextEditor::Coordinates cursor_pos)
 	{
+		if (!std::filesystem::exists(path) || !std::filesystem::is_regular_file(path))
+			return;
 		
 		TextEditor::LanguageDefinition definition;
-		if (path.extension() == std::filesystem::path(".cpp"))
+		if (path.extension() == std::filesystem::path(".cpp") || path.extension() == std::filesystem::path(".h") || path.extension() == std::filesystem::path(".hpp"))
 		{
 			definition = TextEditor::LanguageDefinition::CPlusPlus();
 		}
@@ -47,17 +49,16 @@ namespace Polychrome
 			return;
 		}
 
-		for (auto& a : TextEdit::Instances)
+		for (auto& a : CodeEditor::Instances)
 		{
 			if (a.Path == path)
 			{
-				TextEdit::Current;
 				return;
 			}
 				
 		}
 
-		TextEdit::Instance instance(path);
+		CodeEditor::Instance instance(path);
 		instance.Definition = definition;
 		if (instance.Path.extension() == std::filesystem::path(".lua"))
 		{
@@ -65,11 +66,13 @@ namespace Polychrome
 			id.mDeclaration = "Current Entity";
 			instance.Definition.mPreprocIdentifiers.insert(std::make_pair("entity", id));
 		}
-		TextEdit::Instances.push_back(instance);
-		TextEdit::Current = path;
-		TextEdit::Editor.SetText(instance.Text);
-		TextEdit::Editor.SetLanguageDefinition(instance.Definition);
-		TextEdit::Open = true;
+
+		CodeEditor::Current = path;
+		CodeEditor::Editor.SetText(instance.Text);
+		CodeEditor::Editor.SetLanguageDefinition(instance.Definition);
+		CodeEditor::Open = true;
+		instance.Coordinates = cursor_pos;
+		CodeEditor::Instances.push_back(instance);
 
 	}
 

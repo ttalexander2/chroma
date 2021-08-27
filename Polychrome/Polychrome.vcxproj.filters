@@ -11,6 +11,7 @@
   <ItemGroup>
     <ClInclude Include="src\AssetBrowser.h" />
     <ClInclude Include="src\Assets.h" />
+    <ClInclude Include="src\CodeEditor.h" />
     <ClInclude Include="src\EditorApp.h" />
     <ClInclude Include="src\EditorConfig.h" />
     <ClInclude Include="src\FileDrop.h" />
@@ -20,33 +21,41 @@
     <ClInclude Include="src\Fonts\IconsForkAwesome.h">
       <Filter>Fonts</Filter>
     </ClInclude>
+    <ClInclude Include="src\FuzzyFileSearch.h" />
     <ClInclude Include="src\Hierarchy.h" />
     <ClInclude Include="src\Inspector.h" />
+    <ClInclude Include="src\LogSink.h" />
+    <ClInclude Include="src\LogWindow.h" />
     <ClInclude Include="src\Style.h" />
-    <ClInclude Include="src\TextEdit.h" />
     <ClInclude Include="src\Viewport.h" />
     <ClInclude Include="src\Widgets\TextEditor.h">
       <Filter>Widgets</Filter>
     </ClInclude>
-    <ClInclude Include="src\FuzzyFileSearch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AssetBrowser.cpp" />
+    <ClCompile Include="src\CodeEditor.cpp" />
     <ClCompile Include="src\EditorApp.cpp" />
     <ClCompile Include="src\FileDrop.cpp" />
+    <ClCompile Include="src\Fonts\Pinch.cpp">
+      <Filter>Fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Fonts\PinchMono.cpp">
+      <Filter>Fonts</Filter>
+    </ClCompile>
     <ClCompile Include="src\Fonts\Roboto.cpp">
       <Filter>Fonts</Filter>
     </ClCompile>
     <ClCompile Include="src\Fonts\RobotoMono.cpp">
       <Filter>Fonts</Filter>
     </ClCompile>
+    <ClCompile Include="src\FuzzyFileSearch.cpp" />
     <ClCompile Include="src\Hierarchy.cpp" />
     <ClCompile Include="src\Inspector.cpp" />
-    <ClCompile Include="src\TextEdit.cpp" />
+    <ClCompile Include="src\LogWindow.cpp" />
     <ClCompile Include="src\Viewport.cpp" />
     <ClCompile Include="src\Widgets\TextEditor.cpp">
       <Filter>Widgets</Filter>
     </ClCompile>
-    <ClCompile Include="src\FuzzyFileSearch.cpp" />
   </ItemGroup>
 </Project>

@@ -54,6 +54,8 @@ namespace Chroma
 
 		/// @brief List of sprite frames.
 		std::vector<Frame> Frames;
+			
+		const Math::vec2 GetSize() const { return Size; }
 
 		bool Load() override;
 		bool Unload() override;
@@ -61,6 +63,9 @@ namespace Chroma
 
 		/// @brief Returns true if the sprite is animated.
 		bool Animated() { return Animations.size() > 0; }
+
+	private:
+		Math::vec2 Size;
 
 
 	};

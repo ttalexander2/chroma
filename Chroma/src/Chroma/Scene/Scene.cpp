@@ -176,7 +176,7 @@ namespace Chroma
 				
 				EntityID newEntity = out->Registry.create(id);
 
-				CHROMA_CORE_TRACE("Deserialized Entity with ID = {0}", id);
+				CHROMA_CORE_TRACE("Deserialized Entity with ID = {0} (hint={1})", newEntity, id);
 				auto components = entity["Components"];
 				if (components)
 				{
@@ -184,7 +184,7 @@ namespace Chroma
 					{
 						std::string key = component.first.as<std::string>();
 						if (key == "LuaScript")
-							ECS::AddComponent(key, newEntity, &out->Registry)->Deserialize(component.second, (uint32_t)id, out);
+							ECS::AddComponent(key, newEntity, &out->Registry)->Deserialize(component.second, newEntity, out);
 						else
 							ECS::AddComponent(key, newEntity, &out->Registry)->Deserialize(component.second);
 					}

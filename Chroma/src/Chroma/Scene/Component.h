@@ -7,6 +7,7 @@
 #include "yaml-cpp/node/convert.h"
 #include "yaml-cpp/node/node.h"
 #include "yaml-cpp/node/parse.h"
+#include <entt.hpp>
 
 namespace Polychrome
 {
@@ -17,6 +18,7 @@ namespace Chroma
 {
 
 	class Scene;
+	using EntityID = entt::entity;
 
 	/// @brief Game object Component interface.
 	///
@@ -65,7 +67,7 @@ namespace Chroma
 		/// }
 		/// ```
 		/// @param out YAML emitter to read from.
-		virtual void Deserialize(YAML::Node& node, uint32_t id, Scene* scene) {};
+		virtual void Deserialize(YAML::Node& node, EntityID id, Scene* scene) {};
 
 		/// @brief Component comparison operator.
 		/// @param other Other Component to compare.

@@ -50,7 +50,9 @@ namespace Chroma
 					Ref<Sprite> s = AssetManager::GetSprite(spriteRenderer.SpriteID);
 					if (spriteRenderer.Playing && s->Animated())
 					{
+						
 						spriteRenderer.SetAnimation(spriteRenderer.Animation);
+
 						Sprite::Animation animation = s->Animations[spriteRenderer.Animation];
 						if (spriteRenderer.time_till_next_frame >= s->Frames[spriteRenderer.CurrentFrame].Durration)
 						{
@@ -109,12 +111,24 @@ namespace Chroma
 
 	void SpriteRendererSystem::Draw(Time delta)
 	{
-		auto view = m_Scene->Registry.view<SpriteRenderer, Transform, Relationship>();
-		for (EntityID e : view)
+		std::map<float, EntityID> sprites;
+		for (EntityID e : m_Scene->Registry.view<SpriteRenderer>())
 		{
-			Transform& transform = view.get<Transform>(e);
-			SpriteRenderer& spriteRenderer = view.get<SpriteRenderer>(e);
-			Relationship& relationship = view.get<Relationship>(e);
+			Transform t = m_Scene->Registry.get<Transform>(e);
+			SpriteRenderer s = m_Scene->Registry.get<SpriteRenderer>(e);
+			if (!AssetManager::HasSprite(s.SpriteID))
+				continue;
+			float y = -1.f*(t.Position.y + s.Offset.y - AssetManager::GetSprite(s.SpriteID)->GetSize().y);
+			sprites[y] = e;
+		}
+
+		//TODO: Cull this shit
+			
+		for (auto &[y_index, e] : sprites)
+		{
+			Transform& transform = m_Scene->Registry.get<Transform>(e);
+			SpriteRenderer& spriteRenderer = m_Scene->Registry.get<SpriteRenderer>(e);
+			Relationship& relationship = m_Scene->Registry.get<Relationship>(e);
 			if (AssetManager::HasSprite(spriteRenderer.SpriteID))
 			{
 				Ref<Sprite> s = AssetManager::GetSprite(spriteRenderer.SpriteID);

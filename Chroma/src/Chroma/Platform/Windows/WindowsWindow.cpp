@@ -41,11 +41,14 @@ namespace Chroma
 
 		if (!s_GLFWInitialized)
 		{
+			glfwInitHint(GLFW_JOYSTICK_HAT_BUTTONS, GLFW_FALSE);
 			int success = glfwInit();
 			CHROMA_CORE_ASSERT(success, "Count not initialize GLFW.");
 			glfwSetErrorCallback(GLFWErrorCallback);
 			s_GLFWInitialized = true;
 		}
+
+
 
 		m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), nullptr, nullptr);
 
@@ -146,6 +149,8 @@ namespace Chroma
 			MouseMovedEvent event((float)xPos, (float)yPos);
 			data.EventCallback(event);
 		});
+
+
 	}
 
 	void WindowsWindow::Shutdown()

@@ -15,11 +15,12 @@ namespace Chroma
 		if (!std::filesystem::exists(Path))
 			return false;
 
-		if (std::filesystem::path(Path).extension() == ".ase")
+		if (std::filesystem::path(Path).extension() == ".ase" || std::filesystem::path(Path).extension() == ".aseprite")
 		{
 			Aseprite a = Aseprite(Path);
 
 			Chroma::Color* data = new Chroma::Color[a.width * a.height];
+			float width = 0.f; float height = 0.f;
 
 			for (auto& frame : a.frames)
 			{
@@ -30,8 +31,14 @@ namespace Chroma
 				frame.image.GetData(data);
 				fr.Texture->SetData(data, sizeof(Chroma::Color) * a.width * a.height);
 				Frames.push_back(fr);
+
+				if (a.width > width)
+					width = a.width;
+				if (a.height > height)
+					height = a.height;
 			}
 
+			Size = { width, height };
 			/*
 			if (a.frames.size() > 1 && a.tags.size() == 0)
 			{
@@ -61,6 +68,7 @@ namespace Chroma
 			Frame fr;
 			fr.Texture = Chroma::Texture2D::Create(Path);
 			Frames.push_back(fr);
+			Size = { fr.Texture->GetWidth(), fr.Texture->GetHeight() };
 			return true;
 		}
 		else if (std::filesystem::path(Path).extension() == ".jpg")
@@ -68,6 +76,7 @@ namespace Chroma
 			Frame fr;
 			fr.Texture = Chroma::Texture2D::Create(Path);
 			Frames.push_back(fr);
+			Size = { fr.Texture->GetWidth(), fr.Texture->GetHeight() };
 			return true;
 		}
 

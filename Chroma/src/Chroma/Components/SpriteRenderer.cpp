@@ -294,7 +294,11 @@ namespace Chroma
 				Animation = s->Animations.size() - 1;
 				return;
 			}
+			bool restart = Animation != animation;
 			Animation = animation;
+			if (restart)
+				RestartAnimation();
+			
 		}
 		else
 		{
@@ -315,7 +319,10 @@ namespace Chroma
 				if (anim.Tag == animation_name)
 				{
 					exists = true;
-					Animation == i;
+					bool restart = Animation != i;
+					Animation = i;
+					if (restart)
+						RestartAnimation();
 				}
 				i++;
 			}
@@ -378,9 +385,13 @@ namespace Chroma
 
 	void SpriteRenderer::RestartAnimation()
 	{
-		if (AssetManager::HasSprite(SpriteID))
+		if (AssetManager::HasSprite(SpriteID) && AssetManager::GetSprite(SpriteID)->Animated())
 		{
 			Ref<Sprite> s = AssetManager::GetSprite(SpriteID);
+			if (Animation >= s->Animations.size())
+				Animation = s->Animations.size() - 1;
+			else if (Animation < 0)
+				Animation = 0;
 			CurrentFrame = s->Animations[Animation].Start;
 		}
 	}

@@ -10,6 +10,8 @@
 #include <glm/gtx/matrix_decompose.hpp>
 
 #include <Chroma/Math/Decompose.h>
+#include <Chroma/Components/LuaScript.h>
+#include <Chroma/Scripting/LuaScripting.h>
 
 namespace Polychrome
 {
@@ -88,6 +90,8 @@ namespace Polychrome
 				if (!EditorApp::ScenePaused)
 				{
 					clone = EditorApp::CurrentScene->Serialize();
+					EditorApp::CurrentScene->Load();
+					EditorApp::CurrentScene->PostLoad();
 					EditorApp::CurrentScene->EarlyInit();
 					EditorApp::CurrentScene->Init();
 					EditorApp::CurrentScene->LateInit();
@@ -126,6 +130,8 @@ namespace Polychrome
 					EditorApp::CurrentScene = out;
 					if (!EditorApp::CurrentScene->Registry.valid(Hierarchy::SelectedEntity))
 						Hierarchy::SelectedEntity = Chroma::ENTITY_NULL;
+					//TODO: Remove
+					EditorApp::CurrentScene->PostLoad();
 				}
 				else
 				{
