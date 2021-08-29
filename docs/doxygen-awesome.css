@@ -1476,3 +1476,7 @@ doxygen-awesome-dark-mode-toggle:hover {
 doxygen-awesome-dark-mode-toggle:after {
     content: var(--darkmode-toggle-button-icon)
 }
+
+.hljsWhitespaceBlock {
+    white-space: pre;
+}

@@ -33,6 +33,7 @@ A small 2D C++ Game Engine and Editor, designed in order to providing simple too
 
 Here is a quite simple application to draw a single square on the screen:
 ```cpp
+
 #include "Chroma.h"
 using namespace Chroma;
 

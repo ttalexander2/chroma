@@ -3,7 +3,13 @@
   <!-- Navigation index tabs for HTML output -->
   <navindex>
     <tab type="mainpage" visible="yes" title="Home"/>
-    <tab type="pages" visible="yes" title="Articles" intro=""/>
+    <tab type="usergroup" visible="yes" title="Articles" intro="">
+
+    </tab>
+    <tab type="usergroup" visible="yes" title="Scripting" intro="">
+      <tab type="user" visible="yes" url="md_scripting_Lua_Scripting.html" title="Lua Scripting"/>
+      <tab type="user" visible="yes" url="md_scripting_API.html" title="Lua API"/>
+    </tab>
     <tab type="modules" visible="yes" title="" intro=""/>
     <tab type="namespaces" visible="yes" title="">
       <tab type="namespacelist" visible="yes" title="" intro=""/>
@@ -33,7 +39,8 @@
       <tab type="filelist" visible="yes" title="" intro=""/>
       <tab type="globals" visible="yes" title="" intro=""/>
     </tab>
-    <tab type="examples" visible="yes" title="" intro=""/>  
+    <tab type="examples" visible="yes" title="" intro=""/> 
+    <tab type="pages" visible="yes" title="Related Docs" intro=""/> 
     <tab type="user" visible="yes" url="https://github.com/ttalexander2/chroma" title="View on Github"/>
   </navindex>
 
