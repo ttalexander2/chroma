@@ -3,8 +3,7 @@
   <!-- Navigation index tabs for HTML output -->
   <navindex>
     <tab type="mainpage" visible="yes" title="Home"/>
-    <tab type="pages" visible="yes" title="Articles" intro=""/>
-    <tab type="pages" visible="yes" title="Scripting" intro="">
+    <tab type="usergroup" visible="yes" title="Scripting" intro="">
       <tab type="pages" visible="yes" title="Lua" intro=""/>
     </tab>
     <tab type="modules" visible="yes" title="" intro=""/>
