@@ -16,6 +16,8 @@ namespace Chroma
 	
 	class LuaScripting
 	{
+		friend class Bindings;
+
 	public:
 
 		static sol::state Lua;

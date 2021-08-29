@@ -15,6 +15,7 @@
 #include <Chroma/Components/SpriteRenderer.h>
 #include <Chroma/Core/Input.h>
 #include <Chroma/Core/Log.h>
+#include <Chroma/Scripting/LuaScripting.h>
 
 
 namespace Chroma
@@ -27,11 +28,26 @@ namespace Chroma
 		BindComponents(lua);
 		BindTime(lua);
 		BindInput(lua);
-		lua->set_function("log", [](std::string fmt) { CHROMA_TRACE(fmt); });
-		lua->set_function("log_info", [](std::string fmt) { CHROMA_INFO(fmt); });
-		lua->set_function("log_warn", [](std::string fmt) { CHROMA_WARN(fmt); });
-		lua->set_function("log_error", [](std::string fmt) { CHROMA_ERROR(fmt); });
-		lua->set_function("log_critical", [](std::string fmt) { CHROMA_CRITICAL(fmt); });
+		lua->set_function("log", [](const std::string& fmt) { CHROMA_TRACE(fmt); });
+		lua->set_function("log_info", [](const std::string& fmt) { CHROMA_INFO(fmt); });
+		lua->set_function("log_warn", [](const std::string& fmt) { CHROMA_WARN(fmt); });
+		lua->set_function("log_error", [](const std::string& fmt) { CHROMA_ERROR(fmt); });
+		lua->set_function("log_critical", [](const std::string& fmt) { CHROMA_CRITICAL(fmt); });
+		lua->set_function("include", [&](const std::string& file) 
+			{ 
+				CHROMA_CORE_INFO("Include called");
+				if (LuaScripting::scripts.find(file) != LuaScripting::scripts.end())
+				{
+					CHROMA_CORE_INFO("File found");
+					return LuaScripting::scripts[file]();
+				}
+				CHROMA_CORE_INFO("File not found");
+				bool result = LuaScripting::LoadScriptFromFile(file);
+				if (result)
+					return LuaScripting::scripts[file]();
+
+				CHROMA_CORE_INFO("File not loaded");
+			});
 
 	}
 
