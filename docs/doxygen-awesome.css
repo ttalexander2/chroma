@@ -1280,7 +1280,8 @@ hr {
 }
 
 .contents hr {
-    box-shadow: var(--content-maxwidth) 0 0 0 var(--separator-color), calc(0px - var(--content-maxwidth)) 0 0 0 var(--separator-color);
+    border-top:2px solid var(--separator-color);
+    width: auto;
 }
 
 .contents img {
@@ -1479,4 +1480,8 @@ doxygen-awesome-dark-mode-toggle:after {
 
 .hljsWhitespaceBlock {
     white-space: pre;
+}
+
+.code_label {
+    color: rgb(78, 201, 176)
 }
