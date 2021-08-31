@@ -22,9 +22,6 @@ namespace Chroma
 
 		friend class Polychrome::EditorApp;
 
-	private:
-		void DrawChild(Time delta, EntityID e);
-
 	};
 
 }

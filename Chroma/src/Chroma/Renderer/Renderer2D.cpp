@@ -7,6 +7,7 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <Chroma/Profiler/Instrumentor.h>
+#include <Chroma/Images/Color.h>
 
 namespace Chroma
 {
@@ -157,6 +158,21 @@ namespace Chroma
 	}
 	void Renderer2D::Shutdown()
 	{	
+	}
+
+	void Renderer2D::Clear()
+	{
+		RenderCommand::Clear();
+	}
+
+	void Renderer2D::SetClearColor(const Color& color)
+	{
+		RenderCommand::SetClearColor(color);
+	}
+
+	void Renderer2D::SetClearColor(const Math::vec4& color)
+	{
+		RenderCommand::SetClearColor(color);
 	}
 
 	void Renderer2D::BeginScene(const OrthographicCamera& camera)

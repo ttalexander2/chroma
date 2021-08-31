@@ -21,39 +21,28 @@
 namespace Chroma
 {
 
-	void Bindings::BindAllTheThings(sol::state* lua)
+	void Bindings::BindAllTheThings(sol::state_view& lua)
 	{
 		BindMath(lua);
 		BindEntity(lua);
 		BindComponents(lua);
 		BindTime(lua);
 		BindInput(lua);
-		lua->set_function("log", [](const std::string& fmt) { CHROMA_TRACE(fmt); });
-		lua->set_function("log_info", [](const std::string& fmt) { CHROMA_INFO(fmt); });
-		lua->set_function("log_warn", [](const std::string& fmt) { CHROMA_WARN(fmt); });
-		lua->set_function("log_error", [](const std::string& fmt) { CHROMA_ERROR(fmt); });
-		lua->set_function("log_critical", [](const std::string& fmt) { CHROMA_CRITICAL(fmt); });
-		lua->set_function("include", [&](const std::string& file) 
-			{ 
-				CHROMA_CORE_INFO("Include called");
-				if (LuaScripting::scripts.find(file) != LuaScripting::scripts.end())
-				{
-					CHROMA_CORE_INFO("File found");
-					return LuaScripting::scripts[file]();
-				}
-				CHROMA_CORE_INFO("File not found");
-				bool result = LuaScripting::LoadScriptFromFile(file);
-				if (result)
-					return LuaScripting::scripts[file]();
-
-				CHROMA_CORE_INFO("File not loaded");
-			});
+		lua.set_function("log", [](const std::string& fmt) { CHROMA_TRACE(fmt); });
+		lua.set_function("log_info", [](const std::string& fmt) { CHROMA_INFO(fmt); });
+		lua.set_function("log_warn", [](const std::string& fmt) { CHROMA_WARN(fmt); });
+		lua.set_function("log_error", [](const std::string& fmt) { CHROMA_ERROR(fmt); });
+		lua.set_function("log_critical", [](const std::string& fmt) { CHROMA_CRITICAL(fmt); });
+		lua.set_function("include", [&](const std::string& file) 
+		{ 
+			//TODO - Needs to load the module into the correct state, which means it needs
+		});
 
 	}
 
-	void Bindings::BindEntity(sol::state* lua)
+	void Bindings::BindEntity(sol::state_view& lua)
 	{
-		lua->new_usertype<Entity>("Entity",
+		lua.new_usertype<Entity>("Entity",
 
 			"Entity", sol::no_constructor,
 
@@ -96,9 +85,9 @@ namespace Chroma
 		);
 	}
 
-	void Bindings::BindComponents(sol::state* lua)
+	void Bindings::BindComponents(sol::state_view& lua)
 	{
-		lua->new_usertype<Component>("Component",
+		lua.new_usertype<Component>("Component",
 			"Component", sol::no_constructor,
 
 			//Properties
@@ -107,7 +96,7 @@ namespace Chroma
 			"Name", sol::readonly_property(&Component::Name)
 		);
 
-		lua->new_usertype<AudioSource>("AudioSource",
+		lua.new_usertype<AudioSource>("AudioSource",
 			"AudioSource", sol::no_constructor,
 			sol::base_classes, sol::bases<Component>(),
 			//Members
@@ -117,7 +106,7 @@ namespace Chroma
 
 		);
 
-		lua->new_usertype<BoxCollider2D>("BoxCollider2D",
+		lua.new_usertype<BoxCollider2D>("BoxCollider2D",
 			"BoxCollider2D", sol::no_constructor,
 			sol::base_classes, sol::bases<Component>(),
 			"Bounds", &BoxCollider2D::Bounds,
@@ -126,7 +115,7 @@ namespace Chroma
 		);
 
 	
-		lua->new_usertype<CircleCollider2D>("CircleCollider2D",
+		lua.new_usertype<CircleCollider2D>("CircleCollider2D",
 			"CircleCollider2D", sol::no_constructor,
 			sol::base_classes, sol::bases<Component>(),
 			"Radius", &CircleCollider2D::Radius,
@@ -134,7 +123,7 @@ namespace Chroma
 		);
 	
 
-		lua->new_usertype<SpriteRenderer>("SpriteRenderer",
+		lua.new_usertype<SpriteRenderer>("SpriteRenderer",
 			"SpriteRenderer", sol::no_constructor,
 			sol::base_classes, sol::bases<Component>(),
 
@@ -159,7 +148,7 @@ namespace Chroma
 		);
 
 
-		lua->new_usertype<Transform>("Transform",
+		lua.new_usertype<Transform>("Transform",
 			"Transform", sol::no_constructor,
 			sol::base_classes, sol::bases<Component>(),
 
@@ -170,23 +159,23 @@ namespace Chroma
 		);
 	}
 
-	void Bindings::BindScene(sol::state* lua)
+	void Bindings::BindScene(sol::state_view& lua)
 	{
 		
 	}
 
-	void Bindings::BindTime(sol::state* lua)
+	void Bindings::BindTime(sol::state_view& lua)
 	{
-		lua->new_usertype<Chroma::Time>("Time",
+		lua.new_usertype<Chroma::Time>("Time",
 			"Time", sol::no_constructor,
 
 			"Delta", sol::readonly_property(&Time::GetSeconds)
 		);
 	}
 
-	void Bindings::BindInput(sol::state* lua)
+	void Bindings::BindInput(sol::state_view& lua)
 	{
-		lua->new_enum<Chroma::Input::Mouse>("Mouse", {
+		lua.new_enum<Chroma::Input::Mouse>("Mouse", {
 			{"BUTTON_1",	Input::Mouse::BUTTON_1		},
 			{"BUTTON_2",	Input::Mouse::BUTTON_2		},
 			{"BUTTON_3",	Input::Mouse::BUTTON_3		},
@@ -201,7 +190,7 @@ namespace Chroma
 			{"MIDDLE"  ,	Input::Mouse::MIDDLE		}}
 		);
 
-		lua->new_enum<Chroma::Input::Key>("Key", {
+		lua.new_enum<Chroma::Input::Key>("Key", {
 			{"SPACE", Input::Key::SPACE},
 			{"APOSTROPHE", Input::Key::APOSTROPHE},
 			{"COMMA", Input::Key::COMMA},
@@ -327,7 +316,7 @@ namespace Chroma
 			{"_LAST", Input::Key::_LAST}
 		});
 
-		lua->new_enum<Chroma::Input::Joystick>("Joystick", {
+		lua.new_enum<Chroma::Input::Joystick>("Joystick", {
 				{"_1",Input::Joystick::_1},
 				{"_2",Input::Joystick::_2},
 				{"_3",Input::Joystick::_3},
@@ -348,7 +337,7 @@ namespace Chroma
 				{"_NULL",Input::Joystick::_NULL}
 		});
 
-		lua->new_enum<Chroma::Input::Gamepad>("Gamepad", {
+		lua.new_enum<Chroma::Input::Gamepad>("Gamepad", {
 				{"_1",Input::Gamepad::_1},
 				{"_2",Input::Gamepad::_2},
 				{"_3",Input::Gamepad::_3},
@@ -369,12 +358,12 @@ namespace Chroma
 				{"_NULL",Input::Gamepad::_NULL}
 			});
 
-		lua->new_enum<Chroma::Input::ButtonState>("ButtonState", {
+		lua.new_enum<Chroma::Input::ButtonState>("ButtonState", {
 			{"PRESSED", Chroma::Input::ButtonState::PRESSED},
 			{"RELEASED", Chroma::Input::ButtonState::RELEASED}
 		});
 
-		lua->new_enum<Chroma::Input::GamepadButton>("GamepadButton", {
+		lua.new_enum<Chroma::Input::GamepadButton>("GamepadButton", {
 			{"A",Input::GamepadButton::A},
 			{"B",Input::GamepadButton::B},
 			{"X",Input::GamepadButton::X},
@@ -397,7 +386,7 @@ namespace Chroma
 			{"TRIANGLE",Input::GamepadButton::TRIANGLE}
 		});
 
-		lua->new_enum<Chroma::Input::GamepadButton>("JoystickButton", {
+		lua.new_enum<Chroma::Input::GamepadButton>("JoystickButton", {
 			{"A",Input::JoystickButton::A},
 			{"B",Input::JoystickButton::B},
 			{"X",Input::JoystickButton::X},
@@ -420,7 +409,7 @@ namespace Chroma
 			{"TRIANGLE",Input::JoystickButton::TRIANGLE}
 			});
 
-		lua->new_enum<Chroma::Input::GamepadAxis>("GamepadAxis", {
+		lua.new_enum<Chroma::Input::GamepadAxis>("GamepadAxis", {
 				{"LEFT_X",Input::GamepadAxis::LEFT_X},
 				{"LEFT_Y",Input::GamepadAxis::LEFT_Y},
 				{"RIGHT_X",Input::GamepadAxis::RIGHT_X},
@@ -430,12 +419,12 @@ namespace Chroma
 				{"_LAST",Input::GamepadAxis::_LAST},
 			});
 
-		lua->new_enum<Chroma::Input::ConnectionState>("ConnectionState", {
+		lua.new_enum<Chroma::Input::ConnectionState>("ConnectionState", {
 			{"DISCONNECTED",Input::ConnectionState::DISCONNECTED},
 			{"CONNECTED",Input::ConnectionState::CONNECTED}
 		});
 
-		lua->new_enum<Chroma::Input::JoystickHatState>("JoystickHatState", {
+		lua.new_enum<Chroma::Input::JoystickHatState>("JoystickHatState", {
 			{"CENTERED",Input::JoystickHatState::CENTERED},
 			{"UP",Input::JoystickHatState::UP},
 			{"RIGHT",Input::JoystickHatState::RIGHT},
@@ -448,7 +437,7 @@ namespace Chroma
 		});
 
 
-		lua->new_usertype<Chroma::Input::GamepadState>("GamepadState",
+		lua.new_usertype<Chroma::Input::GamepadState>("GamepadState",
 			"GamepadState", sol::no_constructor,
 			"ButtonCount", sol::readonly_property([]() { return Chroma::Input::GamepadState::ButtonCount; }),
 			"AxisCount", sol::readonly_property([]() { return Chroma::Input::GamepadState::AxisCount; }),
@@ -462,7 +451,7 @@ namespace Chroma
 
 		
 
-		lua->new_usertype<Chroma::Input>("InputType",
+		lua.new_usertype<Chroma::Input>("InputType",
 			"InputType", sol::no_constructor,
 			"IsKeyPressed", [](Chroma::Input input, Chroma::Input::Key key) { return Chroma::Input::IsKeyPressed(key); },
 			"IsMouseButtonPressed", [](Chroma::Input input, Chroma::Input::Mouse mouse) { return Chroma::Input::IsMouseButtonPressed(mouse); },
@@ -504,7 +493,7 @@ namespace Chroma
 		);
 	}
 
-	void Bindings::BindMath(sol::state* lua)
+	void Bindings::BindMath(sol::state_view& lua)
 	{
 		BindVec2(lua);
 		BindIVec2(lua);
@@ -514,9 +503,9 @@ namespace Chroma
 		BindIVec4(lua);
 	}
 
-	void Bindings::BindVec2(sol::state* lua)
+	void Bindings::BindVec2(sol::state_view& lua)
 	{
-		lua->new_usertype<Math::vec2>("Vec2",
+		lua.new_usertype<Math::vec2>("Vec2",
 
 			//Members
 			"X", &Math::vec2::x,
@@ -541,17 +530,17 @@ namespace Chroma
 		);
 
 		//Constructors
-		lua->set_function("Vec2", []() {return Math::ivec2(); });
-		lua->set_function("Vec2", sol::overload([](float x, float y) {return Math::vec2(x, y); }));
+		lua.set_function("Vec2", []() {return Math::ivec2(); });
+		lua.set_function("Vec2", sol::overload([](float x, float y) {return Math::vec2(x, y); }));
 
 		//Static functions
-		lua->set_function("Vec2_Distance", [](Math::vec2& v1, Math::vec2& v2) { return glm::distance(v1, v2); });
+		lua.set_function("Vec2_Distance", [](Math::vec2& v1, Math::vec2& v2) { return glm::distance(v1, v2); });
 
 	}
 
-	void Bindings::BindIVec2(sol::state* lua)
+	void Bindings::BindIVec2(sol::state_view& lua)
 	{
-		lua->new_usertype<Math::ivec2>("IVec2",
+		lua.new_usertype<Math::ivec2>("IVec2",
 
 			//Members
 			"X", &Math::ivec2::x,
@@ -575,16 +564,16 @@ namespace Chroma
 		);
 
 		//Constructors
-		lua->set_function("IVec2", []() {return Math::ivec2(); });
-		lua->set_function("IVec2", sol::overload([](int x, int y, int z) {return Math::ivec2(x, y); }));
+		lua.set_function("IVec2", []() {return Math::ivec2(); });
+		lua.set_function("IVec2", sol::overload([](int x, int y, int z) {return Math::ivec2(x, y); }));
 
 		//Static functions
-		//lua->set_function("IVec2_Distance", [](Math::ivec2& v1, Math::ivec2& v2) { return glm::distance(v1, v2); });
+		//lua.set_function("IVec2_Distance", [](Math::ivec2& v1, Math::ivec2& v2) { return glm::distance(v1, v2); });
 	}
 
-	void Bindings::BindVec3(sol::state* lua)
+	void Bindings::BindVec3(sol::state_view& lua)
 	{
-		lua->new_usertype<Math::vec3>("Vec3",
+		lua.new_usertype<Math::vec3>("Vec3",
 
 			//Members
 			"X", &Math::vec3::x,
@@ -611,18 +600,18 @@ namespace Chroma
 		);
 
 		//Constructors
-		lua->set_function("Vec3", []() {return Math::ivec3(); });
-		lua->set_function("Vec3", sol::overload([](float x, float y, float z) {return Math::vec3(x, y, z); }));
+		lua.set_function("Vec3", []() {return Math::ivec3(); });
+		lua.set_function("Vec3", sol::overload([](float x, float y, float z) {return Math::vec3(x, y, z); }));
 
 		//Static functions
-		lua->set_function("Vec3_Distance", [](Math::vec3& v1, Math::vec3& v2) { return glm::distance(v1, v2); });
-		lua->set_function("Vec3_Cross", [](Math::vec3& v1, Math::vec3& v2) { return glm::cross(v1, v2); });
+		lua.set_function("Vec3_Distance", [](Math::vec3& v1, Math::vec3& v2) { return glm::distance(v1, v2); });
+		lua.set_function("Vec3_Cross", [](Math::vec3& v1, Math::vec3& v2) { return glm::cross(v1, v2); });
 	}
 
-	void Bindings::BindIVec3(sol::state* lua)
+	void Bindings::BindIVec3(sol::state_view& lua)
 	{
 
-		lua->new_usertype<Math::ivec3>("IVec3",
+		lua.new_usertype<Math::ivec3>("IVec3",
 
 			//Members
 			"X", &Math::ivec3::x,
@@ -647,16 +636,16 @@ namespace Chroma
 		);
 
 		//Constructors
-		lua->set_function("IVec3", []() {return Math::ivec3(); });
-		lua->set_function("IVec3", sol::overload([](int x, int y, int z) {return Math::ivec3(x, y, z); }));
+		lua.set_function("IVec3", []() {return Math::ivec3(); });
+		lua.set_function("IVec3", sol::overload([](int x, int y, int z) {return Math::ivec3(x, y, z); }));
 
 		//Static functions
-		//lua->set_function("IVec3_Distance", [](Math::ivec3& v1, Math::ivec3& v2) { return glm::distance(v1, v2); });
+		//lua.set_function("IVec3_Distance", [](Math::ivec3& v1, Math::ivec3& v2) { return glm::distance(v1, v2); });
 	}
 
-	void Bindings::BindVec4(sol::state* lua)
+	void Bindings::BindVec4(sol::state_view& lua)
 	{
-		lua->new_usertype<Math::vec4>("Vec4",
+		lua.new_usertype<Math::vec4>("Vec4",
 
 			//Members
 			"X", &Math::vec4::x,
@@ -684,17 +673,17 @@ namespace Chroma
 		);
 
 		//Constructors
-		lua->set_function("Vec4", []() {return Math::ivec4(); });
-		lua->set_function("Vec4", sol::overload([](float x, float y, float z, float w) {return Math::vec4(x, y, z, w); }));
+		lua.set_function("Vec4", []() {return Math::ivec4(); });
+		lua.set_function("Vec4", sol::overload([](float x, float y, float z, float w) {return Math::vec4(x, y, z, w); }));
 
 		//Static functions
-		lua->set_function("Vec4_Distance", [](Math::vec4& v1, Math::vec4& v2) { return glm::distance(v1, v2); });
+		lua.set_function("Vec4_Distance", [](Math::vec4& v1, Math::vec4& v2) { return glm::distance(v1, v2); });
 	}
 
-	void Bindings::BindIVec4(sol::state* lua)
+	void Bindings::BindIVec4(sol::state_view& lua)
 	{
 
-		lua->new_usertype<Math::ivec4>("IVec4",
+		lua.new_usertype<Math::ivec4>("IVec4",
 
 			//Members
 			"X", &Math::ivec4::x,
@@ -720,11 +709,11 @@ namespace Chroma
 		);
 
 		//Constructors
-		lua->set_function("IVec4", []() {return Math::ivec4(); });
-		lua->set_function("IVec4", sol::overload([](int x, int y, int z, int w) {return Math::ivec4(x, y, z, w); }));
+		lua.set_function("IVec4", []() {return Math::ivec4(); });
+		lua.set_function("IVec4", sol::overload([](int x, int y, int z, int w) {return Math::ivec4(x, y, z, w); }));
 
 		//Static functions
-		//lua->set_function("IVec4_Distance", [](Math::ivec4& v1, Math::ivec4& v2) { return glm::distance(v1, v2); });
+		//lua.set_function("IVec4_Distance", [](Math::ivec4& v1, Math::ivec4& v2) { return glm::distance(v1, v2); });
 	}
 
 

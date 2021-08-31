@@ -8,6 +8,6 @@ namespace Chroma
 	{
 	public:
 		std::string Path;
-		std::string ScriptName;
+		std::string ScriptName = "Script";
 	};
 }

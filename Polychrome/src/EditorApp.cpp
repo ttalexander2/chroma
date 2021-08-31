@@ -118,6 +118,10 @@ namespace Polychrome
 					CHROMA_CORE_INFO("{}", file.path().string());
 					Chroma::AssetManager::LoadSprite(file.path().string());
 				}
+				else if (extension == ".lua")
+				{
+					Chroma::LuaScripting::Scripts.push_back(file.path().string());
+				}
 			}
 		}
 
@@ -148,16 +152,7 @@ namespace Polychrome
 						}
 						else if (extension == ".lua")
 						{
-							Chroma::LuaScripting::ReloadScriptFromFile(std::filesystem::path(path_to_watch), false);
-							for (auto entity : EditorApp::CurrentScene->Registry.view<Chroma::LuaScript>())
-							{
-								auto& script = EditorApp::CurrentScene->GetComponent<Chroma::LuaScript>(entity);
-								if (std::filesystem::equivalent(script.Path, path_to_watch))
-								{
-									auto result = Chroma::LuaScripting::ExecuteScript(script.Path, script.Thread, script.Environment);
-									script.Success = result.has_value() && result.value().valid();
-								}
-							}
+							Chroma::LuaScripting::Scripts.push_back(path_to_watch);
 						}
 					});
 					break;
@@ -179,15 +174,13 @@ namespace Polychrome
 						}
 						else if (extension == ".lua")
 						{
-							Chroma::LuaScripting::ReloadScriptFromFile(std::filesystem::path(path_to_watch), false);
 							for (auto entity : EditorApp::CurrentScene->Registry.view<Chroma::LuaScript>())
 							{
 								auto& script = EditorApp::CurrentScene->GetComponent<Chroma::LuaScript>(entity);
 								if (std::filesystem::equivalent(script.Path, path_to_watch))
 								{
 									script.ReloadState();
-									auto result = Chroma::LuaScripting::ExecuteScript(script.Path, script.Thread, script.Environment);
-									script.Success = result.has_value() && result.value().valid();
+									script.Success = Chroma::LuaScripting::LoadScriptFromFile(script.Path, script.Environment);
 									script.ReloadCoroutines();
 								}	
 							}
@@ -204,7 +197,8 @@ namespace Polychrome
 						}
 						else if (extension == ".lua")
 						{
-
+							auto it = std::find(Chroma::LuaScripting::Scripts.begin(), Chroma::LuaScripting::Scripts.end(), path_to_watch);
+							Chroma::LuaScripting::Scripts.erase(it);
 						}
 					});
 					
@@ -226,10 +220,8 @@ namespace Polychrome
 		*/
 
 
-
-		scene->PreLoad();
 		scene->Load();
-		scene->PostLoad();
+
 
 
 		
@@ -282,9 +274,7 @@ namespace Polychrome
 
 		if (EditorApp::SceneRunning && !EditorApp::ScenePaused)
 		{
-			EditorApp::CurrentScene->EarlyUpdate(time);
 			EditorApp::CurrentScene->Update(time);
-			EditorApp::CurrentScene->LateUpdate(time);
 		}
 		else if (!EditorApp::SceneRunning && !EditorApp::ScenePaused)
 		{
@@ -318,7 +308,7 @@ namespace Polychrome
 	{
 		CHROMA_PROFILE_SCOPE("Render OnUpdate");
 		Chroma::RenderCommand::SetClearColor({ 0.0f, 0.0f , 0.0f , 1.0f });
-		Chroma::RenderCommand::Clear();
+		Chroma::Renderer2D::Clear();
 		Chroma::Renderer2D::ResetStats();
 		m_Framebuffer->Bind();
 
@@ -326,15 +316,13 @@ namespace Polychrome
 		rotation += time * 20.0f;
 
 		Chroma::RenderCommand::SetClearColor({ 0.0f, 0.0f , 0.0f , 1.0f });
-		Chroma::RenderCommand::Clear();
+		Chroma::Renderer2D::Clear();
 
 
 
 		Chroma::Renderer2D::BeginScene(m_CameraController.GetCamera());
 
-		EditorApp::CurrentScene->PreDraw(time);
 		EditorApp::CurrentScene->Draw(time);
-		EditorApp::CurrentScene->PostDraw(time);
 
 #if 0
 		

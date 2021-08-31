@@ -1,13 +1,15 @@
 #pragma once
 #include "Chroma.h"
 
-class Runtime : public Chroma::Application
+using namespace Chroma;
+
+class Runtime : public Application
 {
 public:
 	Runtime();
-	void Update(Chroma::Time delta) override;
+	void Update(Time delta) override;
 
-	static Chroma::Scene* CurrentScene;
+	static Scene* CurrentScene;
 
 	Application* CreateApplication()
 	{

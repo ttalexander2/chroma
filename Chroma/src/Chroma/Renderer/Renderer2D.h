@@ -3,6 +3,7 @@
 #include <Chroma/Renderer/Texture.h>
 #include <Chroma/Math/Math.h>
 #include <Chroma/Renderer/Frustum.h>
+#include <Chroma/Images/Color.h>
 
 namespace Chroma
 {
@@ -28,6 +29,10 @@ namespace Chroma
 
 		static void DrawQuad(const Math::vec2& position, const Math::vec2& size, const Ref<Texture2D>& texture, const Math::vec4& color = Math::vec4(1.0f), float rotation = 0.0f);
 		static void DrawQuad(const Math::vec3& position, const Math::vec3& size, const Ref<Texture2D>& texture, const Math::vec4& color = Math::vec4(1.0f), float rotation = 0.0f);
+
+		static void Clear();
+		static void SetClearColor(const Color& color);
+		static void SetClearColor(const Math::vec4& color);
 
 		//Stats
 		struct Statistics

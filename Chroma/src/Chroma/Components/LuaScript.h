@@ -6,6 +6,7 @@
 #include <sol/state_view.hpp>	
 #include <sol/thread.hpp>
 #include <sol/coroutine.hpp>
+#include <any>
 
 namespace Chroma
 {
@@ -42,8 +43,9 @@ namespace Chroma
 		void ReloadState();
 		void ReloadCoroutines();
 
+		void LoadScript();
+
 		sol::environment Environment;
-		sol::thread Thread;
 		bool Success = false;
 		
 	private:
@@ -57,7 +59,7 @@ namespace Chroma
 			~Coroutine() { Handle.abandon(); }
 			std::string Name;
 			sol::coroutine Handle;
-			sol::thread Thread;
+			//sol::environment Thread;
 			double Time = 0;
 			int Step;
 		};

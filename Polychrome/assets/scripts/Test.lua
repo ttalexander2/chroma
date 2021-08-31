@@ -1,4 +1,4 @@
-local shared_module = include("assets/scripts/shared_test.lua")
+--local shared_module = include("assets/scripts/shared_test.lua")
 --Global values will be exposed to the editor
 --Any primitives here will be serialized
 Speed = 150.0
@@ -22,7 +22,7 @@ function Init()
 	transform = entity:GetTransform()
 	sprite = entity:GetSpriteRenderer()
 	sprite:SetAnimation("idle front")
-	--start_coroutine("co_test")
+	start_coroutine("co_test")
 end
 
 function co_test()
@@ -51,7 +51,7 @@ end
 --This function executes once every frame, after EarlyUpdate()
 function Update()
 	--log("yeet")
-	shared_module.aaaah()
+	--shared_module.aaaah()
 	local gamepad = Input:GetFirstConnectedGamepad()
 	if Input:GetGamepadButtonState(GamepadButton.DPAD_RIGHT, gamepad) == ButtonState.PRESSED then
 		transform.Position.X = transform.Position.X + (Speed*time.Delta)

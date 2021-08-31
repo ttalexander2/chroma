@@ -13,35 +13,19 @@
 
 namespace Chroma
 {
-	void ScriptingSystem::PreLoad()
-	{
-
-	}
-
 	void ScriptingSystem::Load()
 	{
+		//We could probably cache the source of the scripts here with a single pass, 
+		//such that it doesn't have to be loaded from disk for every instance.
 		auto view = m_Scene->Registry.view<LuaScript>();
 		for (EntityID entity : view)
 		{
+			CHROMA_CORE_ERROR("Entity: {}", entity);
 			auto& script = view.get<LuaScript>(entity);
-			script.Path = "assets/scripts/Test.lua";
-			script.ScriptName = "Test.lua";
-			LuaScripting::ReloadScriptFromFile(script.Path, false);
-		}
-	}
-
-	void ScriptingSystem::PostLoad()
-	{
-		auto view = m_Scene->Registry.view<LuaScript>();
-		for (EntityID entity : view)
-		{
-			auto& script = view.get<LuaScript>(entity);
-			script.Thread.state()["entity"] = Entity(entity, m_Scene);
-			auto result = LuaScripting::ExecuteScript(script.Path, script.Thread, script.Environment);
-			if (result.has_value() && result.value().valid())
-			{
-				script.Success = true;
-			}
+			if (script.Path.empty())
+				continue;
+			script.Environment["entity"] = Entity(entity, m_Scene);
+			script.Success = LuaScripting::LoadScriptFromFile(script.Path, script.Environment, false);
 		}
 	}
 
@@ -51,7 +35,7 @@ namespace Chroma
 		for (EntityID entity : view)
 		{
 			auto& script = view.get<LuaScript>(entity);
-			auto func = script.Thread.state()["EarlyInit"];
+			auto func = script.Environment["EarlyInit"];
 			if (func.valid())
 				func();
 		}
@@ -63,7 +47,7 @@ namespace Chroma
 		for (EntityID entity : view)
 		{
 			auto& script = view.get<LuaScript>(entity);
-			auto func = script.Thread.state()["Init"];
+			auto func = script.Environment["Init"];
 			if (func.valid())
 				func();
 		}
@@ -75,7 +59,7 @@ namespace Chroma
 		for (EntityID entity : view)
 		{
 			auto& script = view.get<LuaScript>(entity);
-			auto func = script.Thread.state()["LateInit"];
+			auto func = script.Environment["LateInit"];
 			if (func.valid())
 				func();
 		}
@@ -87,9 +71,9 @@ namespace Chroma
 		for (EntityID entity : view)
 		{
 			auto& script = view.get<LuaScript>(entity);
-			script.Thread.state().set_function("start_coroutine", [&](const std::string& func) { script.StartCoroutine(func, 0);  });
-			auto func = script.Thread.state()["EarlyUpdate"];
-			script.Thread.state()["time"] = time;
+			script.Environment.set_function("start_coroutine", [&](const std::string& func) { script.StartCoroutine(func, 0);  });
+			auto func = script.Environment["EarlyUpdate"];
+			script.Environment["time"] = time;
 			if (func.valid())
 				func();
 
@@ -124,9 +108,9 @@ namespace Chroma
 			if (!script.Success)
 				continue;
 
-			script.Thread.state().set_function("start_coroutine", [&](const std::string& func) { sol::coroutine c = script.Thread.state()[func]; script.StartCoroutine(func, 1);  });
-			auto func = script.Thread.state()["Update"];
-			script.Thread.state()["time"] = time;
+			script.Environment.set_function("start_coroutine", [&](const std::string& func) { sol::coroutine c = script.Environment[func]; script.StartCoroutine(func, 1);  });
+			auto func = script.Environment["Update"];
+			script.Environment["time"] = time;
 			if (func.valid())
 				func();
 
@@ -178,9 +162,9 @@ namespace Chroma
 		for (EntityID entity : view)
 		{
 			auto& script = view.get<LuaScript>(entity);
-			script.Thread.state().set_function("start_coroutine", [&](const std::string& func) { sol::coroutine c = script.Thread.state()[func]; script.StartCoroutine(func, 2);  });
-			auto func = script.Thread.state()["LateUpdate"];
-			script.Thread.state()["time"] = time;
+			script.Environment.set_function("start_coroutine", [&](const std::string& func) { sol::coroutine c = script.Environment[func]; script.StartCoroutine(func, 2);  });
+			auto func = script.Environment["LateUpdate"];
+			script.Environment["time"] = time;
 			if (func.valid())
 				func();
 

@@ -65,6 +65,7 @@ public:
         return new App();
     }
 }
+
 ```
 
 The engine provides scene data structures which interface with the editor which this example does not make use of. The engine is designed to provide a suite of systems and structures to build games, but none of it is required in order to build a game.

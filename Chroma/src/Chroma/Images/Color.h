@@ -149,6 +149,16 @@ namespace Chroma
 			return Math::vec4(r / 255.0f, g / 255.0f, b / 255.0f, a / 255.0f);
 		}
 
+		operator Math::vec3() const
+		{
+			return Math::vec3(r / 255.0f, g / 255.0f, b / 255.0f);
+		}
+
+		operator Math::vec4() const
+		{
+			return Math::vec4(r / 255.0f, g / 255.0f, b / 255.0f, a / 255.0f);
+		}
+
 		/// @brief Converts the color to a 32-bit integer, each channel taking 8 bits.
 		constexpr uint32_t ToRGBA() const
 		{

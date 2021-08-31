@@ -11,9 +11,7 @@ namespace Chroma
 
 		ScriptingSystem() {}
 
-		void PreLoad() override;
 		void Load() override;
-		void PostLoad() override;
 
 		void EarlyInit() override;
 		void Init() override;

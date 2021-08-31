@@ -18,24 +18,22 @@ namespace Chroma
 
 	LuaScript::LuaScript()
 	{
-		Thread = sol::thread::create(LuaScripting::Lua.lua_state());
 		Environment = sol::environment(LuaScripting::Lua.lua_state(), sol::create, LuaScripting::Lua.globals());
-		Thread.state().set_function("start_coroutine", [&](const std::string& func) { StartCoroutine(func, 1);  });
-		Thread.state().set_function("restart_coroutine", [&](const std::string& func) { RestartCoroutine(func); });
-		Thread.state().set_function("stop_coroutine", [&](const std::string& func) { StopCoroutine(func); });
+		Environment.set_function("start_coroutine", [&](const std::string& func) { StartCoroutine(func, 1);  });
+		Environment.set_function("restart_coroutine", [&](const std::string& func) { RestartCoroutine(func); });
+		Environment.set_function("stop_coroutine", [&](const std::string& func) { StopCoroutine(func); });
 	}
 
 	LuaScript::~LuaScript()
 	{
-		Thread.abandon();
 		Coroutines.clear();
 	}
 
 	void LuaScript::ReloadState()
 	{
-		Thread.state().set_function("start_coroutine", [&](const std::string& func) { StartCoroutine(func, 1);  });
-		Thread.state().set_function("restart_coroutine", [&](const std::string& func) { RestartCoroutine(func); });
-		Thread.state().set_function("stop_coroutine", [&](const std::string& func) { StopCoroutine(func); });
+		Environment.set_function("start_coroutine", [&](const std::string& func) { StartCoroutine(func, 1);  });
+		Environment.set_function("restart_coroutine", [&](const std::string& func) { RestartCoroutine(func); });
+		Environment.set_function("stop_coroutine", [&](const std::string& func) { StopCoroutine(func); });
 
 	}
 
@@ -43,7 +41,7 @@ namespace Chroma
 	{
 		for (auto& [name, co] : Coroutines)
 		{
-			co.Handle = co.Thread.state()[co.Name];
+			//co.Handle = co.Thread[co.Name];
 		}
 	}
 
@@ -51,7 +49,7 @@ namespace Chroma
 	{
 		out << YAML::Key << "Path";
 		out << YAML::Value << Path;
-		if (Success && Thread.valid())
+		if (Success)
 		{
 			/*
 			Environment.for_each([&](const sol::object& key, const sol::object& value) {
@@ -112,15 +110,47 @@ namespace Chroma
 		if (val)
 		{
 			Path = val.as<std::string>();
+			ScriptName = std::filesystem::path(Path).filename().string();
 		}
+	}
 
-		
+
+	void LuaScript::LoadScript()
+	{
+		//this->Environment = sol::environment(this->Thread.thread_state(), sol::create, LuaScripting::Lua.globals());
+		this->Success = LuaScripting::LoadScriptFromFile(this->Path, this->Environment);
 	}
 
 	void LuaScript::DrawImGui()
 	{
-		if (Success && Thread.valid())
+		DrawComponentValue("Script");
+		const char* preview = this->Path.c_str();
+		if (this->Path.empty())
+			preview = "[Select a script]";
+
+		if (ImGui::BeginCombo("##script_compbo", preview))
 		{
+			for (auto& name : LuaScripting::Scripts)
+			{
+				bool selected = name == this->Path;
+				if (ImGui::Selectable(name.c_str(), &selected))
+				{
+					this->ScriptName = std::filesystem::path(name).filename().string();
+					this->Path = name;
+					this->Success = LuaScripting::LoadScriptFromFile(this->Path, this->Environment);
+					break;
+				}
+
+				if (selected)
+					ImGui::SetItemDefaultFocus();
+			}
+			ImGui::EndCombo();
+		}
+
+		
+		if (Success)
+		{
+
 			Environment.for_each([&](const sol::object& key, const sol::object& value) {
 				if (!value.is<sol::function>())
 				{
@@ -132,45 +162,45 @@ namespace Chroma
 					DrawComponentValue(name);
 					if (value.is<bool>())
 					{
-						bool val = Thread.state()[name];
+						bool val = Environment[name];
 						ImGui::Checkbox(hash.c_str(), &val);
-						Thread.state()[name] = val;
+						Environment[name] = val;
 					}
 					else if (value.is<int>())
 					{
-						int val = Thread.state()[name];
+						int val = Environment[name];
 						ImGui::InputInt(hash.c_str(), &val);
-						Thread.state()[name] = val;
+						Environment[name] = val;
 					}
 					else if (value.is<float>())
 					{
-						float val = Thread.state()[name];
+						float val = Environment[name];
 						ImGui::InputFloat(hash.c_str(), &val);
-						Thread.state()[name] = val;
+						Environment[name] = val;
 					}
 					else if (value.is<double>())
 					{
-						double val = Thread.state()[name];
+						double val = Environment[name];
 						ImGui::InputDouble(hash.c_str(), &val);
-						Thread.state()[name] = val;
+						Environment[name] = val;
 					}
 					else if (value.is<std::string>())
 					{
-						std::string val = Thread.state()[name];
+						std::string val = Environment[name];
 						ImGui::InputText(hash.c_str(), &val);
-						Thread.state()[name] = val;
+						Environment[name] = val;
 					}
 					else if (value.is<Math::vec2>())
 					{
-						Math::vec2 val = Thread.state()[name];
+						Math::vec2 val = Environment[name];
 						ImGui::Vec2FloatWithLabels(hash.c_str(), val, true);
-						Thread.state()[name] = val;
+						Environment[name] = val;
 					}
 					else if (value.is<Math::vec3>())
 					{
-						Math::vec3 val = Thread.state()[name];
+						Math::vec3 val = Environment[name];
 						ImGui::Vec3FloatWithLabels(hash.c_str(), val, true);
-						Thread.state()[name] = val;
+						Environment[name] = val;
 					}
 				}
 			});
@@ -180,12 +210,12 @@ namespace Chroma
 
 	void LuaScript::RegisterEntity(EntityID id, Scene* scene)
 	{
-		Thread.state()["entity"] = Entity(id, scene);
+		Environment["entity"] = Entity(id, scene);
 	}
 
 	void LuaScript::RegisterEntity(Entity entity)
 	{
-		Thread.state()["entity"] = entity;
+		Environment["entity"] = entity;
 	}
 
 	void LuaScript::StartCoroutine(const std::string& func, int update_step)
@@ -195,8 +225,8 @@ namespace Chroma
 		Coroutine c;
 		c.Name = func;
 		c.Time = 0;
-		c.Thread = sol::thread::create(Thread.thread_state());
-		c.Handle = c.Thread.state()[func];
+		//c.Thread = sol::environment(Environment.lua_state(), sol::create);
+		c.Handle = Environment[func];
 		c.Step = update_step;
 		Coroutines.emplace(func, c);
 	}
@@ -205,7 +235,7 @@ namespace Chroma
 		if (Coroutines.find(func) == Coroutines.end())
 			return;
 		Coroutines[func].Time = 0;
-		Coroutines[func].Handle = Thread.state()[func];
+		Coroutines[func].Handle = Environment[func];
 	}
 	void LuaScript::StopCoroutine(const std::string& func)
 	{

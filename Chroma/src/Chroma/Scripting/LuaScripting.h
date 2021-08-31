@@ -17,6 +17,7 @@ namespace Chroma
 	class LuaScripting
 	{
 		friend class Bindings;
+		friend class LuaScript;
 
 	public:
 
@@ -24,12 +25,10 @@ namespace Chroma
 
 		static void Init();
 
-		static bool LoadScriptFromFile(std::filesystem::path path, bool is_binary = false);
-		static bool ReloadScriptFromFile(std::filesystem::path path, bool is_binary = false);
-		static bool LoadScript(const std::string& name, const std::string& source);
-		static bool ReloadScript(const std::string& name, const std::string& source);
+		static void BindState(sol::state_view& thread);
 
-		static sol::optional<sol::protected_function_result> ExecuteScript(const std::string& name, sol::thread& thread, sol::optional<sol::environment> env = sol::nullopt);
+		static bool LoadScriptFromFile(std::filesystem::path path, sol::environment& state, bool is_binary = false);
+		static bool LoadScript(const std::string& name, const std::string& source, sol::environment& state);
 
 
 		static void CompileToBytecode(std::filesystem::path script);
@@ -44,10 +43,8 @@ namespace Chroma
 			delete Lua;
 		}
 
-	private:
-		static std::hash<std::string> hash;
-		static std::map<std::string, sol::function> scripts;
+		static std::vector<std::string> Scripts;
 
-
+		
 	};
 }

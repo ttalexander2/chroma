@@ -1,37 +1,49 @@
 #include "Runtime.h"
 #include "Chroma/Utilities/FileDialogs.h"
 #include <Chroma/Core/EntryPoint.h>
+#include <Chroma/Components/SpriteRenderer.h>
+#include <Chroma/Components/LuaScript.h>
+#include <Chroma/Scripting/LuaScripting.h>
 
 
-
-
-Chroma::Scene* Runtime::CurrentScene = nullptr;
+Scene* Runtime::CurrentScene = nullptr;
 
 
 Runtime::Runtime() :
-	Chroma::Application("Chroma Runtime Loader", 1920U, 1080U)
+	Application("Chroma Runtime Loader", 1920U, 1080U)
 {
-	CurrentScene = new Chroma::Scene();
+	CurrentScene = new Scene();
+	auto entity = CurrentScene->NewEntity();
+	auto& sprite = entity.AddComponent<SpriteRenderer>();
+	AssetManager::LoadSprite("../Polychrome/assets/textures/avi.ase");
+	sprite.SetSprite("../Polychrome/assets/textures/avi.ase");
+	auto& script = entity.AddComponent<Chroma::LuaScript>();
+	script.Path = "../Polychrome/assets/scripts/Test.lua";
+	script.ScriptName = "Test.lua";
+
+
+	CurrentScene->Load();
+	CurrentScene->Init();
+
+
 }
 
-void Runtime::Update(Chroma::Time delta)
+void Runtime::Update(Time delta)
 	
 {
 	if (CurrentScene == nullptr)
 	{
-		std::string filepath = Chroma::FileDialogs::OpenFile("Chroma Scene (*.chroma)\0*.chroma\0");
+		std::string filepath = FileDialogs::OpenFile("Chroma Scene (*.chroma)\0*.chroma\0");
 		if (!filepath.empty())
 		{
 			std::ifstream stream(filepath);
 			std::stringstream strStream;
 			strStream << stream.rdbuf();
-			Chroma::Scene* out = new Chroma::Scene();
-			if (Chroma::Scene::Deserialize(out, strStream.str()))
+			Scene* out = new Scene();
+			if (Scene::Deserialize(out, strStream.str()))
 			{
 				CurrentScene = out;
-				CurrentScene->EarlyInit();
 				CurrentScene->Init();
-				CurrentScene->LateInit();
 			}
 			else
 			{
@@ -42,22 +54,20 @@ void Runtime::Update(Chroma::Time delta)
 	else
 	{
 
-		CurrentScene->EarlyUpdate(delta);
 		CurrentScene->Update(delta);
-		CurrentScene->LateUpdate(delta);
 
 
-		static Chroma::OrthographicCameraController cameraController(1920.0f / 1080.0f);
+		static OrthographicCameraController cameraController(1920.0f / 1080.0f);
 
-		Chroma::Renderer2D::BeginScene(cameraController.GetCamera());
+		Renderer2D::Clear();
 
-		CurrentScene->PreDraw(delta);
+		Renderer2D::BeginScene(cameraController.GetCamera());
+
 		CurrentScene->Draw(delta);
-		CurrentScene->PostDraw(delta);
 
-		Chroma::Renderer2D::DrawQuad({ 0,0,0 }, { 2,2,2 }, { 1,1,1,1 });
+		//Renderer2D::DrawQuad({ 0,0,0 }, { 2,2,2 }, { 1,1,1,1 });
 
-		Chroma::Renderer2D::EndScene();
+		Renderer2D::EndScene();
 	}
 
 

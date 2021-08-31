@@ -91,10 +91,7 @@ namespace Polychrome
 				{
 					clone = EditorApp::CurrentScene->Serialize();
 					EditorApp::CurrentScene->Load();
-					EditorApp::CurrentScene->PostLoad();
-					EditorApp::CurrentScene->EarlyInit();
 					EditorApp::CurrentScene->Init();
-					EditorApp::CurrentScene->LateInit();
 				}
 				EditorApp::SceneRunning = true;
 				EditorApp::ScenePaused = false;
@@ -130,8 +127,6 @@ namespace Polychrome
 					EditorApp::CurrentScene = out;
 					if (!EditorApp::CurrentScene->Registry.valid(Hierarchy::SelectedEntity))
 						Hierarchy::SelectedEntity = Chroma::ENTITY_NULL;
-					//TODO: Remove
-					EditorApp::CurrentScene->PostLoad();
 				}
 				else
 				{
@@ -168,9 +163,7 @@ namespace Polychrome
 				}
 				EditorApp::ScenePaused = false;
 				EditorApp::SceneRunning = true;
-				EditorApp::CurrentScene->EarlyInit();
 				EditorApp::CurrentScene->Init();
-				EditorApp::CurrentScene->LateInit();
 			}
 			ImGui::PopItemFlag();
 			ImGui::PopStyleColor();

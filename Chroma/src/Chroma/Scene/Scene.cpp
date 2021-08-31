@@ -271,35 +271,21 @@ namespace Chroma
 		return retval;
 	}
 
-	void Scene::PreLoad()
+	void Scene::Load()
 	{
 		for (System* s : Systems)
 		{
 			s->PreLoad();
 		}
-	}
 
-	void Scene::Load()
-	{
 		for (System* s : Systems)
 		{
 			s->Load();
 		}
-	}
 
-	void Scene::PostLoad()
-	{
 		for (System* s : Systems)
 		{
 			s->PostLoad();
-		}
-	}
-
-	void Scene::EarlyInit()
-	{
-		for (System* s : Systems)
-		{
-			s->EarlyInit();
 		}
 	}
 
@@ -307,23 +293,17 @@ namespace Chroma
 	{
 		for (System* s : Systems)
 		{
+			s->EarlyInit();
+		}
+
+		for (System* s : Systems)
+		{
 			s->Init();
 		}
-	}
 
-	void Scene::LateInit()
-	{
 		for (System* s : Systems)
 		{
 			s->LateInit();
-		}
-	}
-
-	void Scene::EarlyUpdate(Time delta)
-	{
-		for (System* s : Systems)
-		{
-			s->EarlyUpdate(delta);
 		}
 	}
 
@@ -331,23 +311,17 @@ namespace Chroma
 	{
 		for (System* s : Systems)
 		{
+			s->EarlyUpdate(delta);
+		}
+
+		for (System* s : Systems)
+		{
 			s->Update(delta);
 		}
-	}
 
-	void Scene::LateUpdate(Time delta)
-	{
 		for (System* s : Systems)
 		{
 			s->LateUpdate(delta);
-		}
-	}
-
-	void Scene::PreDraw(Time delta)
-	{
-		for (System* s : Systems)
-		{
-			s->EarlyDraw(delta);
 		}
 	}
 
@@ -355,12 +329,14 @@ namespace Chroma
 	{
 		for (System* s : Systems)
 		{
+			s->EarlyDraw(delta);
+		}
+
+		for (System* s : Systems)
+		{
 			s->Draw(delta);
 		}
-	}
 
-	void Scene::PostDraw(Time delta)
-	{
 		for (System* s : Systems)
 		{
 			s->LateDraw(delta);

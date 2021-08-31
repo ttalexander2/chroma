@@ -339,6 +339,8 @@ namespace Polychrome
 			if (open_modal)
 				ImGui::OpenPopup("Delete Entitiy?");
 
+			ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+			ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
 			if (ImGui::BeginPopupModal("Delete Entitiy?", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize))
 			{
 				ImGui::Text("Are you sure you want to delete this entity? It cannot be undone.");
@@ -375,7 +377,7 @@ namespace Polychrome
 					DragDropSeparator(scene, e, relationship.Children[0], 7.0f);
 
 					std::vector<Chroma::EntityID> children_copy(relationship.Children);
-					int i = 0;
+					size_t i = 0;
 					for (Chroma::EntityID child : children_copy)
 					{
 						if (children_copy.size() > i + 1)
