@@ -20,6 +20,7 @@
 #include "Chroma/Components/BoxCollider2D.h"
 #include "Chroma/Components/CircleCollider2D.h"
 #include <Chroma/Components/Relationship.h>
+#include <Chroma/Scripting/NETScripting.h>
 
 namespace Chroma
 {
@@ -46,6 +47,7 @@ namespace Chroma
 		Audio::Init();
 
 		LuaScripting::Init();
+		NETScripting::Init("");
 
 		ECS::RegisterComponent<Tag>();
 		ECS::RegisterComponent<Transform>();

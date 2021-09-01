@@ -29,7 +29,6 @@ IncludeDir["readerwriterqueue"] = "Chroma/third_party/readerwriterqueue"
 IncludeDir["ImGuizmo"] = "Chroma/third_party/ImGuizmo"
 IncludeDir["Sol2"] = "Chroma/third_party/sol2/include"
 IncludeDir["fmt"] = "Chroma/third_party/fmt/include"
-IncludeDir["entt"] = "Chroma/third_party/entt"
 
 group "Dependencies"
     include "Chroma/third_party/GLFW"
@@ -132,7 +131,8 @@ project "Chroma"
         links
         {
             "Chroma/lib/Windows/x64/fmodL_vc.lib",
-            "Chroma/lib/Windows/x64/fmodstudioL_vc.lib"
+            "Chroma/lib/Windows/x64/fmodstudioL_vc.lib",
+            "Chroma/lib/Windows/x64/nethost.lib"
         }
     
     filter "configurations:Debug"
