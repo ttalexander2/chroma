@@ -19,6 +19,10 @@ jobs:
       with:
         submodules: recursive
         
+    - name: Restore NuGet packages
+      working-directory: ${{env.GITHUB_WORKSPACE}}
+      run: nuget restore ${{env.SOLUTION_FILE_PATH}}
+        
     - name: Run bat script on PowerShell
       shell: pwsh
       run: ./WindowsGenerateProjects.bat
