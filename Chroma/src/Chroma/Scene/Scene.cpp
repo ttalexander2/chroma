@@ -25,11 +25,14 @@
 namespace Chroma
 {
 	Scene::Scene()
+		: ID(GUID::CreateGUID())
 	{
 		RegisterSystem<ScriptingSystem>();
 		RegisterSystem<AudioSystem>();
 		RegisterSystem<SpriteRendererSystem>();
 	}
+
+	const GUID Scene::GetID() { return ID; }
 
 	Entity Scene::NewEntity()
 	{
@@ -112,6 +115,7 @@ namespace Chroma
 		YAML::Emitter out;
 		out << YAML::BeginMap;
 		out << YAML::Key << "Scene" << YAML::Value << this->Name;
+		out << YAML::Key << "GUID" << YAML::Value << this->ID.ToString();
 		out << YAML::Key << "Entities" << YAML::Value << YAML::BeginSeq;
 
 		auto view = Registry.view<Transform>();
@@ -163,6 +167,14 @@ namespace Chroma
 
 		std::string sceneName = data["Scene"].as<std::string>();
 		CHROMA_CORE_TRACE("Deserializing Scene '{}'", sceneName);
+
+		std::string guid_string = data["GUID"].as<std::string>();
+		GUID guid = GUID::Parse(guid_string);
+
+		if (guid == GUID::Zero())
+			guid = GUID::CreateGUID();
+
+		out->ID = guid;
 
 		out->Name = sceneName;
 

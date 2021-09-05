@@ -82,7 +82,9 @@
       <AdditionalIncludeDirectories>..\Chroma\third_party\spdlog\include;..\Chroma\src;..\Chroma\third_party\glm;..\Chroma\third_party\imgui;..\Chroma\third_party\fmod;..\Chroma\third_party\yaml-cpp\include;..\Chroma\third_party\sol2\include;..\Chroma\third_party\lua;..\Chroma\third_party\entt;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <MinimalRebuild>false</MinimalRebuild>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
@@ -95,7 +97,9 @@ IF EXIST ..\Chroma\lib\Windows\x64\fmodstudioL.dll\ (xcopy /Q /E /Y /I ..\Chroma
 echo Copying ../Chroma/lib/Windows/x64/fmodL.dll to ../bin/Debug-windows-x86_64/Runtime
 IF EXIST ..\Chroma\lib\Windows\x64\fmodL.dll\ (xcopy /Q /E /Y /I ..\Chroma\lib\Windows\x64\fmodL.dll ..\bin\Debug-windows-x86_64\Runtime &gt; nul) ELSE (xcopy /Q /Y /I ..\Chroma\lib\Windows\x64\fmodL.dll ..\bin\Debug-windows-x86_64\Runtime &gt; nul)
 echo Copying assets to ../bin/Debug-windows-x86_64/Runtime/assets
-IF EXIST assets\ (xcopy /Q /E /Y /I assets ..\bin\Debug-windows-x86_64\Runtime\assets &gt; nul) ELSE (xcopy /Q /Y /I assets ..\bin\Debug-windows-x86_64\Runtime\assets &gt; nul)</Command>
+IF EXIST assets\ (xcopy /Q /E /Y /I assets ..\bin\Debug-windows-x86_64\Runtime\assets &gt; nul) ELSE (xcopy /Q /Y /I assets ..\bin\Debug-windows-x86_64\Runtime\assets &gt; nul)
+echo Copying ../Chroma/third_party/mono/bin/Debug/mono-2.0-sgen.dll to ../bin/Debug-windows-x86_64/Runtime
+IF EXIST "..\Chroma\third_party\mono\bin\Debug\mono-2.0-sgen.dll"\ (xcopy /Q /E /Y /I "..\Chroma\third_party\mono\bin\Debug\mono-2.0-sgen.dll" "..\bin\Debug-windows-x86_64\Runtime" &gt; nul) ELSE (xcopy /Q /Y /I "..\Chroma\third_party\mono\bin\Debug\mono-2.0-sgen.dll" "..\bin\Debug-windows-x86_64\Runtime" &gt; nul)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -109,7 +113,8 @@ IF EXIST assets\ (xcopy /Q /E /Y /I assets ..\bin\Debug-windows-x86_64\Runtime\a
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
@@ -123,7 +128,9 @@ IF EXIST ..\Chroma\lib\Windows\x64\fmodstudioL.dll\ (xcopy /Q /E /Y /I ..\Chroma
 echo Copying ../Chroma/lib/Windows/x64/fmodL.dll to ../bin/Release-windows-x86_64/Runtime
 IF EXIST ..\Chroma\lib\Windows\x64\fmodL.dll\ (xcopy /Q /E /Y /I ..\Chroma\lib\Windows\x64\fmodL.dll ..\bin\Release-windows-x86_64\Runtime &gt; nul) ELSE (xcopy /Q /Y /I ..\Chroma\lib\Windows\x64\fmodL.dll ..\bin\Release-windows-x86_64\Runtime &gt; nul)
 echo Copying assets to ../bin/Release-windows-x86_64/Runtime/assets
-IF EXIST assets\ (xcopy /Q /E /Y /I assets ..\bin\Release-windows-x86_64\Runtime\assets &gt; nul) ELSE (xcopy /Q /Y /I assets ..\bin\Release-windows-x86_64\Runtime\assets &gt; nul)</Command>
+IF EXIST assets\ (xcopy /Q /E /Y /I assets ..\bin\Release-windows-x86_64\Runtime\assets &gt; nul) ELSE (xcopy /Q /Y /I assets ..\bin\Release-windows-x86_64\Runtime\assets &gt; nul)
+echo Copying ../Chroma/third_party/mono/bin/Debug/mono-2.0-sgen.dll to ../bin/Release-windows-x86_64/Runtime
+IF EXIST "..\Chroma\third_party\mono\bin\Debug\mono-2.0-sgen.dll"\ (xcopy /Q /E /Y /I "..\Chroma\third_party\mono\bin\Debug\mono-2.0-sgen.dll" "..\bin\Release-windows-x86_64\Runtime" &gt; nul) ELSE (xcopy /Q /Y /I "..\Chroma\third_party\mono\bin\Debug\mono-2.0-sgen.dll" "..\bin\Release-windows-x86_64\Runtime" &gt; nul)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
@@ -137,7 +144,8 @@ IF EXIST assets\ (xcopy /Q /E /Y /I assets ..\bin\Release-windows-x86_64\Runtime
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
@@ -151,7 +159,9 @@ IF EXIST ..\Chroma\lib\Windows\x64\fmodstudioL.dll\ (xcopy /Q /E /Y /I ..\Chroma
 echo Copying ../Chroma/lib/Windows/x64/fmodL.dll to ../bin/Dist-windows-x86_64/Runtime
 IF EXIST ..\Chroma\lib\Windows\x64\fmodL.dll\ (xcopy /Q /E /Y /I ..\Chroma\lib\Windows\x64\fmodL.dll ..\bin\Dist-windows-x86_64\Runtime &gt; nul) ELSE (xcopy /Q /Y /I ..\Chroma\lib\Windows\x64\fmodL.dll ..\bin\Dist-windows-x86_64\Runtime &gt; nul)
 echo Copying assets to ../bin/Dist-windows-x86_64/Runtime/assets
-IF EXIST assets\ (xcopy /Q /E /Y /I assets ..\bin\Dist-windows-x86_64\Runtime\assets &gt; nul) ELSE (xcopy /Q /Y /I assets ..\bin\Dist-windows-x86_64\Runtime\assets &gt; nul)</Command>
+IF EXIST assets\ (xcopy /Q /E /Y /I assets ..\bin\Dist-windows-x86_64\Runtime\assets &gt; nul) ELSE (xcopy /Q /Y /I assets ..\bin\Dist-windows-x86_64\Runtime\assets &gt; nul)
+echo Copying ../Chroma/third_party/mono/bin/Debug/mono-2.0-sgen.dll to ../bin/Dist-windows-x86_64/Runtime
+IF EXIST "..\Chroma\third_party\mono\bin\Debug\mono-2.0-sgen.dll"\ (xcopy /Q /E /Y /I "..\Chroma\third_party\mono\bin\Debug\mono-2.0-sgen.dll" "..\bin\Dist-windows-x86_64\Runtime" &gt; nul) ELSE (xcopy /Q /Y /I "..\Chroma\third_party\mono\bin\Debug\mono-2.0-sgen.dll" "..\bin\Dist-windows-x86_64\Runtime" &gt; nul)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

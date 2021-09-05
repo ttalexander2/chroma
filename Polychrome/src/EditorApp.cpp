@@ -34,6 +34,7 @@
 #include "AssetBrowser.h"
 #include <Chroma/Scripting/LuaScripting.h>
 #include "LogWindow.h"	
+#include "Project.h"
 
 #define CHROMA_DEBUG_LOG
 #include <Chroma/Core/Log.h>
@@ -64,6 +65,8 @@ namespace Polychrome
 #ifdef CHROMA_PLATFORM_WINDOWS
 		glfwSetDropCallback((GLFWwindow*)this->Get().GetWindow().GetNativeWindow(), FileDrop::HandleFileDrop);
 #endif
+
+		Project::CreateProject("CheeseBurger", "C:/Users/Thomas/Desktop/CheeseBurger");
 
 		LogWindow::Init();
 		
@@ -154,6 +157,11 @@ namespace Polychrome
 						{
 							Chroma::LuaScripting::Scripts.push_back(path_to_watch);
 						}
+						else if (extension == ".cs")
+						{
+							//This is probably a bad idea but idk
+							system("dotnet build ");
+						}
 					});
 					break;
 				case FileStatus::modified:
@@ -170,6 +178,7 @@ namespace Polychrome
 							{
 								Chroma::AssetManager::LoadSprite(path_to_watch);
 							}
+
 							
 						}
 						else if (extension == ".lua")
@@ -185,6 +194,11 @@ namespace Polychrome
 								}	
 							}
 						}
+						else if (extension == ".cs")
+						{
+							//This is probably a bad idea but idk
+							system("dotnet build ");
+						}
 					});
 					break;
 				case FileStatus::erased:
@@ -199,6 +213,11 @@ namespace Polychrome
 						{
 							auto it = std::find(Chroma::LuaScripting::Scripts.begin(), Chroma::LuaScripting::Scripts.end(), path_to_watch);
 							Chroma::LuaScripting::Scripts.erase(it);
+						}
+						else if (extension == ".cs")
+						{
+							//This is probably a bad idea but idk
+							system("dotnet build ");
 						}
 					});
 					

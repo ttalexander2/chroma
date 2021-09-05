@@ -17,7 +17,7 @@ namespace Chroma
 		return dis(gen);
 	}
 
-	GUID GUID::CreateGUID()
+	const GUID GUID::CreateGUID()
 	{
 		GUID result;
 		uint8_t vals[4] = { RandomUnsignedChar(), RandomUnsignedChar(), RandomUnsignedChar(), RandomUnsignedChar() };
@@ -33,12 +33,43 @@ namespace Chroma
 		return result;
 	}
 
-	GUID GUID::Parse(const std::string& guid)
+	const GUID GUID::Parse(const std::string& guid)
 	{
-		return GUID();
+		std::string s = guid;
+		
+		//convert the string to lowercase
+		std::locale loc;
+		for (std::string::size_type i = 0; i < s.length(); i++)
+			s[i] = std::tolower(s[i], loc);
+
+		//Remove non aphanumeric characters
+		s.erase(std::remove_if(s.begin(), s.end(), [](char c) { return !std::isalnum(c); }), s.end());
+		
+		size_t pos = std::string::npos;
+
+		std::string toErase("0x");
+
+		while ((pos = s.find(toErase)) != std::string::npos)
+			s.erase(pos, toErase.length());
+
+		if (s.length() != 32)
+			return GUID::Zero();
+
+		GUID result{};
+		result.Data1 = (uint32_t)strtol(s.substr(0, 8).c_str(), NULL, 16);
+		result.Data2 = (uint16_t)strtol(s.substr(8, 4).c_str(), NULL, 16);
+		result.Data3 = (uint16_t)strtol(s.substr(12, 4).c_str(), NULL, 16);
+		for (size_t i = 0; i < 8; i++)
+		{
+			result.Data4[i] = (uint8_t)strtol(s.substr((2*i) + 16, 2).c_str(), NULL, 16);
+		}
+
+		return result;
+		
+
 	}
 
-	GUID GUID::Zero()
+	const GUID GUID::Zero()
 	{
 		return GUID{};
 	}

@@ -7,6 +7,9 @@
     <Filter Include="Widgets">
       <UniqueIdentifier>{7CB70329-E896-82C4-F1AE-0D9B5D0DE925}</UniqueIdentifier>
     </Filter>
+    <Filter Include="thid_party">
+      <UniqueIdentifier>{9D87813B-893F-C388-F246-9CE4DE1D5E79}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\AssetBrowser.h" />
@@ -26,10 +29,14 @@
     <ClInclude Include="src\Inspector.h" />
     <ClInclude Include="src\LogSink.h" />
     <ClInclude Include="src\LogWindow.h" />
+    <ClInclude Include="src\Project.h" />
     <ClInclude Include="src\Style.h" />
     <ClInclude Include="src\Viewport.h" />
     <ClInclude Include="src\Widgets\TextEditor.h">
       <Filter>Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\thid_party\levenshtein-sse.hpp">
+      <Filter>thid_party</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -53,6 +60,7 @@
     <ClCompile Include="src\Hierarchy.cpp" />
     <ClCompile Include="src\Inspector.cpp" />
     <ClCompile Include="src\LogWindow.cpp" />
+    <ClCompile Include="src\Project.cpp" />
     <ClCompile Include="src\Viewport.cpp" />
     <ClCompile Include="src\Widgets\TextEditor.cpp">
       <Filter>Widgets</Filter>

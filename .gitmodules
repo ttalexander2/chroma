@@ -34,3 +34,9 @@
 [submodule "Chroma/third_party/fmt"]
 	path = Chroma/third_party/fmt
 	url = https://github.com/ttalexander2/fmt.git
+[submodule "Chroma/third_party/mono"]
+	path = Chroma/third_party/mono
+	url = https://github.com/ttalexander2/mono.git
+[submodule "third_party/CppSharp"]
+	path = third_party/CppSharp
+	url = https://github.com/ttalexander2/CppSharp.git
