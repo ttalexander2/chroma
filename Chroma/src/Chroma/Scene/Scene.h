@@ -30,6 +30,8 @@ namespace Chroma
 	public:
 		std::string Name = "Scene";
 
+		const GUID GetID();
+
 		Scene();
 		Scene(const Scene&) {}
 		~Scene() = default;
@@ -174,6 +176,8 @@ namespace Chroma
 	private:
 		std::vector<System*> Systems;
 		std::vector<EntityID> EntityOrder;
+
+		GUID ID;
 
 
 		friend class Entity;

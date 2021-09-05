@@ -78,14 +78,15 @@
       <WarningLevel>Level3</WarningLevel>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;GLM_FORCE_MESSAGES;GLM_FORCE_INTRINSICS;GLM_FORCE_INLINE;GLM_FORCE_ALIGNED_GENTYPES;CHROMA_PLATFORM_WINDOWS;CHROMA_BUILD_DLL;GLFW_INCLUDE_NONE;CHROMA_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;third_party\spdlog\include;third_party\GLFW\include;third_party\Glad\include;third_party\imgui;third_party\imgui\misc\cpp;third_party\glm;third_party\stb_image;third_party\fmod;third_party\lua;third_party\yaml-cpp\include;third_party\cute_headers;third_party\concurrentqueue;third_party\readerwriterqueue;third_party\ImGuizmo;third_party\sol2\include;third_party\fmt\include;third_party\entt;third_party\dotnet;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;third_party;third_party\spdlog\include;third_party\GLFW\include;third_party\Glad\include;third_party\imgui;third_party\imgui\misc\cpp;third_party\glm;third_party\stb_image;third_party\fmod;third_party\lua;third_party\yaml-cpp\include;third_party\cute_headers;third_party\concurrentqueue;third_party\readerwriterqueue;third_party\ImGuizmo;third_party\sol2\include;third_party\fmt\include;third_party\entt;third_party\mono\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
@@ -96,7 +97,7 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalDependencies>opengl32.lib;lib\Windows\x64\fmodL_vc.lib;lib\Windows\x64\fmodstudioL_vc.lib;lib\Windows\x64\nethost.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;third_party\mono\lib\Debug\mono-2.0-sgen.lib;lib\Windows\x64\fmodL_vc.lib;lib\Windows\x64\fmodstudioL_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -105,13 +106,14 @@
       <PrecompiledHeaderFile>chromapch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;GLM_FORCE_MESSAGES;GLM_FORCE_INTRINSICS;GLM_FORCE_INLINE;GLM_FORCE_ALIGNED_GENTYPES;CHROMA_PLATFORM_WINDOWS;CHROMA_BUILD_DLL;GLFW_INCLUDE_NONE;CHROMA_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;third_party\spdlog\include;third_party\GLFW\include;third_party\Glad\include;third_party\imgui;third_party\imgui\misc\cpp;third_party\glm;third_party\stb_image;third_party\fmod;third_party\lua;third_party\yaml-cpp\include;third_party\cute_headers;third_party\concurrentqueue;third_party\readerwriterqueue;third_party\ImGuizmo;third_party\sol2\include;third_party\fmt\include;third_party\entt;third_party\dotnet;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;third_party;third_party\spdlog\include;third_party\GLFW\include;third_party\Glad\include;third_party\imgui;third_party\imgui\misc\cpp;third_party\glm;third_party\stb_image;third_party\fmod;third_party\lua;third_party\yaml-cpp\include;third_party\cute_headers;third_party\concurrentqueue;third_party\readerwriterqueue;third_party\ImGuizmo;third_party\sol2\include;third_party\fmt\include;third_party\entt;third_party\mono\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
@@ -121,7 +123,7 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalDependencies>opengl32.lib;lib\Windows\x64\fmodL_vc.lib;lib\Windows\x64\fmodstudioL_vc.lib;lib\Windows\x64\nethost.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;third_party\mono\lib\Debug\mono-2.0-sgen.lib;lib\Windows\x64\fmodL_vc.lib;lib\Windows\x64\fmodstudioL_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
@@ -130,13 +132,14 @@
       <PrecompiledHeaderFile>chromapch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;GLM_FORCE_MESSAGES;GLM_FORCE_INTRINSICS;GLM_FORCE_INLINE;GLM_FORCE_ALIGNED_GENTYPES;CHROMA_PLATFORM_WINDOWS;CHROMA_BUILD_DLL;GLFW_INCLUDE_NONE;CHROMA_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;third_party\spdlog\include;third_party\GLFW\include;third_party\Glad\include;third_party\imgui;third_party\imgui\misc\cpp;third_party\glm;third_party\stb_image;third_party\fmod;third_party\lua;third_party\yaml-cpp\include;third_party\cute_headers;third_party\concurrentqueue;third_party\readerwriterqueue;third_party\ImGuizmo;third_party\sol2\include;third_party\fmt\include;third_party\entt;third_party\dotnet;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;third_party;third_party\spdlog\include;third_party\GLFW\include;third_party\Glad\include;third_party\imgui;third_party\imgui\misc\cpp;third_party\glm;third_party\stb_image;third_party\fmod;third_party\lua;third_party\yaml-cpp\include;third_party\cute_headers;third_party\concurrentqueue;third_party\readerwriterqueue;third_party\ImGuizmo;third_party\sol2\include;third_party\fmt\include;third_party\entt;third_party\mono\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
@@ -146,7 +149,7 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalDependencies>opengl32.lib;lib\Windows\x64\fmodL_vc.lib;lib\Windows\x64\fmodstudioL_vc.lib;lib\Windows\x64\nethost.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;third_party\mono\lib\Debug\mono-2.0-sgen.lib;lib\Windows\x64\fmodL_vc.lib;lib\Windows\x64\fmodstudioL_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -158,6 +161,7 @@
     <ClInclude Include="src\Chroma\Audio\ChromaFMOD.h" />
     <ClInclude Include="src\Chroma\Components\AudioSource.h" />
     <ClInclude Include="src\Chroma\Components\BoxCollider2D.h" />
+    <ClInclude Include="src\Chroma\Components\CSharpScript.h" />
     <ClInclude Include="src\Chroma\Components\CircleCollider2D.h" />
     <ClInclude Include="src\Chroma\Components\LuaScript.h" />
     <ClInclude Include="src\Chroma\Components\NativeScript.h" />
@@ -175,6 +179,7 @@
     <ClInclude Include="src\Chroma\Core\MouseButtonCodes.h" />
     <ClInclude Include="src\Chroma\Core\Time.h" />
     <ClInclude Include="src\Chroma\Core\Window.h" />
+    <ClInclude Include="src\Chroma\Core\World.h" />
     <ClInclude Include="src\Chroma\Events\ApplicationEvent.h" />
     <ClInclude Include="src\Chroma\Events\Event.h" />
     <ClInclude Include="src\Chroma\Events\KeyEvent.h" />
@@ -249,6 +254,10 @@
     <ClInclude Include="src\Chroma\Scene\System.h" />
     <ClInclude Include="src\Chroma\Scripting\Bindings.h" />
     <ClInclude Include="src\Chroma\Scripting\LuaScripting.h" />
+    <ClInclude Include="src\Chroma\Scripting\MonoScripting.h" />
+    <ClInclude Include="src\Chroma\Scripting\ScriptEngineRegistry.h" />
+    <ClInclude Include="src\Chroma\Scripting\ScriptModuleField.h" />
+    <ClInclude Include="src\Chroma\Scripting\ScriptWrappers.h" />
     <ClInclude Include="src\Chroma\Systems\AudioSystem.h" />
     <ClInclude Include="src\Chroma\Systems\CollisionSystem.h" />
     <ClInclude Include="src\Chroma\Systems\ScriptingSystem.h" />
@@ -259,512 +268,8 @@
     <ClInclude Include="src\Chroma\Utilities\GUID.h" />
     <ClInclude Include="src\Chroma\Utilities\StringHelper.h" />
     <ClInclude Include="src\Chroma\Utilities\Yaml.h" />
+    <ClInclude Include="src\MonoBindings.h" />
     <ClInclude Include="src\chromapch.h" />
-    <ClInclude Include="third_party\ImGuizmo\GraphEditor.h" />
-    <ClInclude Include="third_party\ImGuizmo\ImCurveEdit.h" />
-    <ClInclude Include="third_party\ImGuizmo\ImGradient.h" />
-    <ClInclude Include="third_party\ImGuizmo\ImGuizmo.h" />
-    <ClInclude Include="third_party\ImGuizmo\ImSequencer.h" />
-    <ClInclude Include="third_party\ImGuizmo\ImZoomSlider.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\boostqueue.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\cpuid.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\algs.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\array.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\array\array_kernel.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\array\array_kernel_abstract.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\array\array_tools.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\array\array_tools_abstract.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\assert.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\binary_search_tree.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\binary_search_tree\binary_search_tree_kernel_1.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\binary_search_tree\binary_search_tree_kernel_2.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\binary_search_tree\binary_search_tree_kernel_abstract.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\binary_search_tree\binary_search_tree_kernel_c.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\bound_function_pointer.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\bound_function_pointer\bound_function_pointer_kernel_1.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\bound_function_pointer\bound_function_pointer_kernel_abstract.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\byte_orderer.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\byte_orderer\byte_orderer_kernel_1.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\byte_orderer\byte_orderer_kernel_abstract.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\config.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\console_progress_indicator.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\enable_if.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\error.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\float_details.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\hash.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\interfaces\cmd_line_parser_option.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\interfaces\enumerable.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\interfaces\map_pair.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\interfaces\remover.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\is_kind.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\logger.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\logger\extra_logger_headers.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\logger\logger_config_file.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\logger\logger_kernel_1.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\logger\logger_kernel_abstract.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\map.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\map\map_kernel_1.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\map\map_kernel_abstract.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\map\map_kernel_c.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\member_function_pointer.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\member_function_pointer\make_mfp.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\member_function_pointer\make_mfp_abstract.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\member_function_pointer\member_function_pointer_kernel_1.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\member_function_pointer\member_function_pointer_kernel_abstract.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\memory_manager.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\memory_manager\memory_manager_kernel_1.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\memory_manager\memory_manager_kernel_2.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\memory_manager\memory_manager_kernel_3.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\memory_manager\memory_manager_kernel_abstract.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\memory_manager_global.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\memory_manager_global\memory_manager_global_kernel_1.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\memory_manager_global\memory_manager_global_kernel_abstract.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\memory_manager_stateless.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\memory_manager_stateless\memory_manager_stateless_kernel_1.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\memory_manager_stateless\memory_manager_stateless_kernel_2.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\memory_manager_stateless\memory_manager_stateless_kernel_abstract.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\metaprogramming.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\misc_api.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\misc_api\misc_api_kernel_1.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\misc_api\misc_api_kernel_2.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\misc_api\misc_api_kernel_abstract.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\misc_api\misc_api_shared.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\misc_api\posix.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\misc_api\windows.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\noncopyable.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\numeric_constants.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\numerical_integration.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\numerical_integration\integrate_function_adapt_simpson.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\numerical_integration\integrate_function_adapt_simpson_abstract.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\pipe.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\pipe\pipe_kernel_1.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\pipe\pipe_kernel_abstract.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\platform.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\queue.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\queue\queue_kernel_1.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\queue\queue_kernel_2.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\queue\queue_kernel_abstract.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\queue\queue_kernel_c.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\queue\queue_sort_1.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\queue\queue_sort_abstract.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\ref.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\revision.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\serialize.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\set.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\set\set_compare_1.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\set\set_compare_abstract.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\set\set_kernel_1.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\set\set_kernel_abstract.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\set\set_kernel_c.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\sliding_buffer.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\sliding_buffer\circular_buffer.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\sliding_buffer\circular_buffer_abstract.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\sliding_buffer\sliding_buffer_kernel_1.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\sliding_buffer\sliding_buffer_kernel_abstract.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\sliding_buffer\sliding_buffer_kernel_c.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\sockets.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\sockets\posix.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\sockets\sockets_extensions.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\sockets\sockets_extensions_abstract.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\sockets\sockets_kernel_1.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\sockets\sockets_kernel_2.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\sockets\sockets_kernel_abstract.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\sockets\windows.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\sort.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\sparse_vector.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\stack.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\stack\stack_kernel_1.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\stack\stack_kernel_abstract.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\stack\stack_kernel_c.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\stack_trace.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\std_allocator.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\stl_checked.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\stl_checked\std_vector_c.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\stl_checked\std_vector_c_abstract.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\string.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\string\string.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\string\string_abstract.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\test_for_odr_violations.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\threads.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\threads\async.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\threads\async_abstract.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\threads\auto_mutex_extension.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\threads\auto_mutex_extension_abstract.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\threads\auto_unlock_extension.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\threads\auto_unlock_extension_abstract.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\threads\create_new_thread_extension.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\threads\create_new_thread_extension_abstract.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\threads\multithreaded_object_extension.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\threads\multithreaded_object_extension_abstract.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\threads\parallel_for_extension.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\threads\parallel_for_extension_abstract.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\threads\posix.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\threads\read_write_mutex_extension.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\threads\read_write_mutex_extension_abstract.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\threads\rmutex_extension.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\threads\rmutex_extension_abstract.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\threads\rsignaler_extension.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\threads\rsignaler_extension_abstract.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\threads\thread_function_extension.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\threads\thread_function_extension_abstract.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\threads\thread_pool_extension.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\threads\thread_pool_extension_abstract.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\threads\thread_specific_data_extension.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\threads\thread_specific_data_extension_abstract.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\threads\threaded_object_extension.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\threads\threaded_object_extension_abstract.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\threads\threads_kernel.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\threads\threads_kernel_1.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\threads\threads_kernel_2.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\threads\threads_kernel_abstract.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\threads\threads_kernel_shared.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\threads\windows.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\time_this.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\timeout.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\timeout\timeout.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\timeout\timeout_abstract.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\timer.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\timer\timer.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\timer\timer_abstract.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\timer\timer_heavy.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\timing.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\tokenizer.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\tokenizer\tokenizer_kernel_1.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\tokenizer\tokenizer_kernel_abstract.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\tokenizer\tokenizer_kernel_c.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\uintn.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\unicode.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\unicode\unicode.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\unicode\unicode_abstract.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\unordered_pair.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\vectorstream.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\vectorstream\unserialize.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\vectorstream\unserialize_abstract.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\vectorstream\vectorstream.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\vectorstream\vectorstream_abstract.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlib\windows_magic.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\dlibqueue.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\lockbasedqueue.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\simplelockfree.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\stdqueue.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\aggregator.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\aligned_space.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\arena.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\atomic.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\blocked_range.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\blocked_range2d.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\blocked_range3d.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\cache_aligned_allocator.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\cilk-tbb-interop.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\combinable.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\compat\ppl.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\concurrent_hash_map.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\concurrent_lru_cache.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\concurrent_monitor.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\concurrent_priority_queue.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\concurrent_queue.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\concurrent_unordered_map.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\concurrent_unordered_set.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\concurrent_vector.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\critical_section.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\custom_scheduler.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\dynamic_link.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\enumerable_thread_specific.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\flow_graph.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\governor.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\internal\_aggregator_impl.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\internal\_concurrent_queue_impl.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\internal\_concurrent_unordered_impl.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\internal\_flow_graph_impl.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\internal\_flow_graph_indexer_impl.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\internal\_flow_graph_item_buffer_impl.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\internal\_flow_graph_join_impl.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\internal\_flow_graph_node_impl.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\internal\_flow_graph_tagged_buffer_impl.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\internal\_flow_graph_trace_impl.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\internal\_flow_graph_types_impl.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\internal\_mutex_padding.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\internal\_range_iterator.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\internal\_tbb_strings.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\internal\_tbb_windef.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\internal\_x86_eliding_mutex_impl.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\internal\_x86_rtm_rw_mutex_impl.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\intrusive_list.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\itt_notify.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\machine\gcc_armv7.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\machine\gcc_generic.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\machine\gcc_ia32_common.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\machine\gcc_itsx.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\machine\ibm_aix51.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\machine\icc_generic.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\machine\linux_common.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\machine\linux_ia32.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\machine\linux_ia64.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\machine\linux_intel64.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\machine\mac_ppc.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\machine\macos_common.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\machine\mic_common.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\machine\msvc_armv7.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\machine\msvc_ia32_common.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\machine\sunos_sparc.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\machine\windows_api.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\machine\windows_ia32.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\machine\windows_intel64.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\machine\xbox360_ppc.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\mailbox.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\market.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\memory_pool.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\mutex.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\null_mutex.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\null_rw_mutex.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\observer_proxy.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\parallel_do.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\parallel_for.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\parallel_for_each.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\parallel_invoke.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\parallel_reduce.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\parallel_scan.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\parallel_sort.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\parallel_while.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\partitioner.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\pipeline.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\queuing_mutex.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\queuing_rw_mutex.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\reader_writer_lock.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\recursive_mutex.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\runtime_loader.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\scalable_allocator.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\scheduler.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\scheduler_common.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\scheduler_utility.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\semaphore.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\spin_mutex.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\spin_rw_mutex.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\task.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\task_arena.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\task_group.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\task_scheduler_init.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\task_scheduler_observer.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\task_stream.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\tbb.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\tbb_allocator.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\tbb_assert_impl.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\tbb_config.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\tbb_exception.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\tbb_machine.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\tbb_main.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\tbb_misc.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\tbb_profiling.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\tbb_statistics.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\tbb_stddef.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\tbb_thread.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\tbb_version.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\tbbmalloc_proxy.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\tick_count.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\tls.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\tools_api\disable_warnings.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\tools_api\internal\ittnotify.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\tools_api\ittnotify.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\tools_api\ittnotify_config.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\tools_api\ittnotify_static.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\tools_api\ittnotify_types.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\tools_api\legacy\ittnotify.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbb\tools_api\prototype\ittnotify.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\tbbqueue.h" />
-    <ClInclude Include="third_party\concurrentqueue\benchmarks\wrappers.h" />
-    <ClInclude Include="third_party\concurrentqueue\blockingconcurrentqueue.h" />
-    <ClInclude Include="third_party\concurrentqueue\c_api\concurrentqueue.h" />
-    <ClInclude Include="third_party\concurrentqueue\concurrentqueue.h" />
-    <ClInclude Include="third_party\concurrentqueue\internal\concurrentqueue_internal_debug.h" />
-    <ClInclude Include="third_party\concurrentqueue\lightweightsemaphore.h" />
-    <ClInclude Include="third_party\concurrentqueue\tests\CDSChecker\corealgo.h" />
-    <ClInclude Include="third_party\concurrentqueue\tests\common\simplethread.h" />
-    <ClInclude Include="third_party\concurrentqueue\tests\common\systemtime.h" />
-    <ClInclude Include="third_party\concurrentqueue\tests\corealgos.h" />
-    <ClInclude Include="third_party\concurrentqueue\tests\relacy\relacy\example\cli_ws_deque\stdafx.h" />
-    <ClInclude Include="third_party\concurrentqueue\tests\relacy\relacy\example\condvar\stdafx.h" />
-    <ClInclude Include="third_party\concurrentqueue\tests\relacy\relacy\example\eventcount\stdafx.h" />
-    <ClInclude Include="third_party\concurrentqueue\tests\relacy\relacy\example\examples\stdafx.h" />
-    <ClInclude Include="third_party\concurrentqueue\tests\relacy\relacy\example\java_ws_deque\stdafx.h" />
-    <ClInclude Include="third_party\concurrentqueue\tests\relacy\relacy\example\mpmc\pcx.h" />
-    <ClInclude Include="third_party\concurrentqueue\tests\relacy\relacy\example\mpmc\stdafx.h" />
-    <ClInclude Include="third_party\concurrentqueue\tests\relacy\relacy\example\mutex_business_logic\stdafx.h" />
-    <ClInclude Include="third_party\concurrentqueue\tests\relacy\relacy\example\peterson\stdafx.h" />
-    <ClInclude Include="third_party\concurrentqueue\tests\relacy\relacy\example\proxy_collector\stdafx.h" />
-    <ClInclude Include="third_party\concurrentqueue\tests\relacy\relacy\example\ref_counting\stdafx.h" />
-    <ClInclude Include="third_party\concurrentqueue\tests\relacy\relacy\example\smr\stdafx.h" />
-    <ClInclude Include="third_party\concurrentqueue\tests\relacy\relacy\example\spsc_queue\stdafx.h" />
-    <ClInclude Include="third_party\concurrentqueue\tests\relacy\relacy\example\stack\stdafx.h" />
-    <ClInclude Include="third_party\concurrentqueue\tests\relacy\relacy\example\tbb_eventcount\stdafx.h" />
-    <ClInclude Include="third_party\concurrentqueue\tests\relacy\relacy\example\ws_deque\stdafx.h" />
-    <ClInclude Include="third_party\concurrentqueue\tests\relacy\relacy\example\ws_deque2\stdafx.h" />
-    <ClInclude Include="third_party\concurrentqueue\tests\relacy\relacy\relacy\pthread.h" />
-    <ClInclude Include="third_party\concurrentqueue\tests\relacy\relacy\relacy\windows.h" />
-    <ClInclude Include="third_party\concurrentqueue\tests\relacy\relacy\test\jtest\stdafx.h" />
-    <ClInclude Include="third_party\concurrentqueue\tests\relacy\relacy\test\ntest\stdafx.h" />
-    <ClInclude Include="third_party\concurrentqueue\tests\relacy\relacy\test\stdafx.h" />
-    <ClInclude Include="third_party\concurrentqueue\tests\relacy\relacy_shims.h" />
-    <ClInclude Include="third_party\concurrentqueue\tests\unittests\minitest.h" />
-    <ClInclude Include="third_party\entt\entt.hpp" />
-    <ClInclude Include="third_party\fmt\include\fmt\args.h" />
-    <ClInclude Include="third_party\fmt\include\fmt\chrono.h" />
-    <ClInclude Include="third_party\fmt\include\fmt\color.h" />
-    <ClInclude Include="third_party\fmt\include\fmt\compile.h" />
-    <ClInclude Include="third_party\fmt\include\fmt\core.h" />
-    <ClInclude Include="third_party\fmt\include\fmt\format-inl.h" />
-    <ClInclude Include="third_party\fmt\include\fmt\format.h" />
-    <ClInclude Include="third_party\fmt\include\fmt\locale.h" />
-    <ClInclude Include="third_party\fmt\include\fmt\os.h" />
-    <ClInclude Include="third_party\fmt\include\fmt\ostream.h" />
-    <ClInclude Include="third_party\fmt\include\fmt\printf.h" />
-    <ClInclude Include="third_party\fmt\include\fmt\ranges.h" />
-    <ClInclude Include="third_party\fmt\include\fmt\xchar.h" />
-    <ClInclude Include="third_party\lua\lapi.h" />
-    <ClInclude Include="third_party\lua\lauxlib.h" />
-    <ClInclude Include="third_party\lua\lcode.h" />
-    <ClInclude Include="third_party\lua\lctype.h" />
-    <ClInclude Include="third_party\lua\ldebug.h" />
-    <ClInclude Include="third_party\lua\ldo.h" />
-    <ClInclude Include="third_party\lua\lfunc.h" />
-    <ClInclude Include="third_party\lua\lgc.h" />
-    <ClInclude Include="third_party\lua\ljumptab.h" />
-    <ClInclude Include="third_party\lua\llex.h" />
-    <ClInclude Include="third_party\lua\llimits.h" />
-    <ClInclude Include="third_party\lua\lmem.h" />
-    <ClInclude Include="third_party\lua\lobject.h" />
-    <ClInclude Include="third_party\lua\lopcodes.h" />
-    <ClInclude Include="third_party\lua\lopnames.h" />
-    <ClInclude Include="third_party\lua\lparser.h" />
-    <ClInclude Include="third_party\lua\lprefix.h" />
-    <ClInclude Include="third_party\lua\lstate.h" />
-    <ClInclude Include="third_party\lua\lstring.h" />
-    <ClInclude Include="third_party\lua\ltable.h" />
-    <ClInclude Include="third_party\lua\ltests.h" />
-    <ClInclude Include="third_party\lua\ltm.h" />
-    <ClInclude Include="third_party\lua\lua.h" />
-    <ClInclude Include="third_party\lua\luaconf.h" />
-    <ClInclude Include="third_party\lua\lualib.h" />
-    <ClInclude Include="third_party\lua\lundump.h" />
-    <ClInclude Include="third_party\lua\lvm.h" />
-    <ClInclude Include="third_party\lua\lzio.h" />
-    <ClInclude Include="third_party\readerwriterqueue\atomicops.h" />
-    <ClInclude Include="third_party\readerwriterqueue\benchmarks\ext\1024cores\spscqueue.h" />
-    <ClInclude Include="third_party\readerwriterqueue\benchmarks\ext\folly\ProducerConsumerQueue.h" />
-    <ClInclude Include="third_party\readerwriterqueue\benchmarks\systemtime.h" />
-    <ClInclude Include="third_party\readerwriterqueue\readerwritercircularbuffer.h" />
-    <ClInclude Include="third_party\readerwriterqueue\readerwriterqueue.h" />
-    <ClInclude Include="third_party\readerwriterqueue\tests\common\simplethread.h" />
-    <ClInclude Include="third_party\readerwriterqueue\tests\unittests\minitest.h" />
-    <ClInclude Include="third_party\sol2\include\sol\as_args.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\as_returns.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\assert.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\base_traits.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\bind_traits.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\bytecode.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\call.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\compatibility.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\compatibility\compat-5.3.c.h" />
-    <ClInclude Include="third_party\sol2\include\sol\compatibility\compat-5.3.h" />
-    <ClInclude Include="third_party\sol2\include\sol\compatibility\compat-5.4.h" />
-    <ClInclude Include="third_party\sol2\include\sol\compatibility\lua_version.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\config.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\coroutine.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\debug.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\demangle.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\deprecate.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\dump_handler.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\ebco.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\environment.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\error.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\error_handler.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\forward.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\forward_detail.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\function.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\function_result.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\function_types.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\function_types_core.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\function_types_overloaded.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\function_types_stateful.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\function_types_stateless.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\function_types_templated.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\in_place.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\inheritance.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\load_result.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\lua_table.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\lua_value.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\make_reference.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\metatable.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\object.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\object_base.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\optional.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\optional_implementation.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\overload.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\packaged_coroutine.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\pairs_iterator.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\pointer_like.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\policies.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\property.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\protect.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\protected_function.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\protected_function_result.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\protected_handler.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\proxy_base.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\raii.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\reference.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\resolve.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\sol.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\stack.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\stack_check.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\stack_check_get.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\stack_check_get_qualified.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\stack_check_get_unqualified.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\stack_check_qualified.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\stack_check_unqualified.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\stack_core.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\stack_field.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\stack_get.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\stack_get_qualified.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\stack_get_unqualified.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\stack_guard.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\stack_iterator.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\stack_pop.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\stack_probe.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\stack_proxy.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\stack_proxy_base.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\stack_push.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\stack_reference.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\state.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\state_handling.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\state_view.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\string_view.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\table.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\table_core.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\table_iterator.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\table_proxy.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\thread.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\tie.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\traits.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\trampoline.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\tuple.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\types.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\unicode.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\unique_usertype_traits.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\unsafe_function.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\unsafe_function_result.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\userdata.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\usertype.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\usertype_container.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\usertype_container_launch.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\usertype_core.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\usertype_proxy.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\usertype_storage.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\usertype_traits.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\variadic_args.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\variadic_results.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\version.hpp" />
-    <ClInclude Include="third_party\sol2\include\sol\wrapper.hpp" />
-    <ClInclude Include="third_party\stb_image\stb_image.h" />
-    <ClInclude Include="third_party\stb_image\stb_image_write.h" />
     <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\anchor.h" />
     <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\binary.h" />
     <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\contrib\anchordict.h" />
@@ -802,6 +307,28 @@
     <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\stlemitter.h" />
     <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\traits.h" />
     <ClInclude Include="third_party\yaml-cpp\include\yaml-cpp\yaml.h" />
+    <ClInclude Include="third_party\yaml-cpp\src\collectionstack.h" />
+    <ClInclude Include="third_party\yaml-cpp\src\contrib\graphbuilderadapter.h" />
+    <ClInclude Include="third_party\yaml-cpp\src\directives.h" />
+    <ClInclude Include="third_party\yaml-cpp\src\emitterstate.h" />
+    <ClInclude Include="third_party\yaml-cpp\src\emitterutils.h" />
+    <ClInclude Include="third_party\yaml-cpp\src\exp.h" />
+    <ClInclude Include="third_party\yaml-cpp\src\indentation.h" />
+    <ClInclude Include="third_party\yaml-cpp\src\nodebuilder.h" />
+    <ClInclude Include="third_party\yaml-cpp\src\nodeevents.h" />
+    <ClInclude Include="third_party\yaml-cpp\src\ptr_vector.h" />
+    <ClInclude Include="third_party\yaml-cpp\src\regex_yaml.h" />
+    <ClInclude Include="third_party\yaml-cpp\src\regeximpl.h" />
+    <ClInclude Include="third_party\yaml-cpp\src\scanner.h" />
+    <ClInclude Include="third_party\yaml-cpp\src\scanscalar.h" />
+    <ClInclude Include="third_party\yaml-cpp\src\scantag.h" />
+    <ClInclude Include="third_party\yaml-cpp\src\setting.h" />
+    <ClInclude Include="third_party\yaml-cpp\src\singledocparser.h" />
+    <ClInclude Include="third_party\yaml-cpp\src\stream.h" />
+    <ClInclude Include="third_party\yaml-cpp\src\streamcharsource.h" />
+    <ClInclude Include="third_party\yaml-cpp\src\stringsource.h" />
+    <ClInclude Include="third_party\yaml-cpp\src\tag.h" />
+    <ClInclude Include="third_party\yaml-cpp\src\token.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Chroma\Assets\AssetManager.cpp" />
@@ -857,6 +384,8 @@
     <ClCompile Include="src\Chroma\Scene\Scene.cpp" />
     <ClCompile Include="src\Chroma\Scripting\Bindings.cpp" />
     <ClCompile Include="src\Chroma\Scripting\LuaScripting.cpp" />
+    <ClCompile Include="src\Chroma\Scripting\MonoScripting.cpp" />
+    <ClCompile Include="src\Chroma\Scripting\ScriptEngineRegistry.cpp" />
     <ClCompile Include="src\Chroma\Systems\AudioSystem.cpp" />
     <ClCompile Include="src\Chroma\Systems\CollisionSystem.cpp" />
     <ClCompile Include="src\Chroma\Systems\ScriptingSystem.cpp" />
@@ -881,6 +410,100 @@
     <ClCompile Include="third_party\ImGuizmo\ImSequencer.cpp">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="third_party\yaml-cpp\src\binary.cpp">
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="third_party\yaml-cpp\src\contrib\graphbuilder.cpp">
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="third_party\yaml-cpp\src\contrib\graphbuilderadapter.cpp">
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="third_party\yaml-cpp\src\convert.cpp">
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="third_party\yaml-cpp\src\depthguard.cpp">
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="third_party\yaml-cpp\src\directives.cpp">
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="third_party\yaml-cpp\src\emit.cpp">
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="third_party\yaml-cpp\src\emitfromevents.cpp">
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="third_party\yaml-cpp\src\emitter.cpp">
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="third_party\yaml-cpp\src\emitterstate.cpp">
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="third_party\yaml-cpp\src\emitterutils.cpp">
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="third_party\yaml-cpp\src\exceptions.cpp">
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="third_party\yaml-cpp\src\exp.cpp">
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="third_party\yaml-cpp\src\memory.cpp">
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="third_party\yaml-cpp\src\node.cpp">
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="third_party\yaml-cpp\src\node_data.cpp">
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="third_party\yaml-cpp\src\nodebuilder.cpp">
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="third_party\yaml-cpp\src\nodeevents.cpp">
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="third_party\yaml-cpp\src\null.cpp">
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="third_party\yaml-cpp\src\ostream_wrapper.cpp">
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="third_party\yaml-cpp\src\parse.cpp">
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="third_party\yaml-cpp\src\parser.cpp">
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="third_party\yaml-cpp\src\regex_yaml.cpp">
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="third_party\yaml-cpp\src\scanner.cpp">
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="third_party\yaml-cpp\src\scanscalar.cpp">
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="third_party\yaml-cpp\src\scantag.cpp">
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="third_party\yaml-cpp\src\scantoken.cpp">
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="third_party\yaml-cpp\src\simplekey.cpp">
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="third_party\yaml-cpp\src\singledocparser.cpp">
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="third_party\yaml-cpp\src\stream.cpp">
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="third_party\yaml-cpp\src\tag.cpp">
+      <ObjectFileName>$(IntDir)\tag1.obj</ObjectFileName>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="third_party\GLFW\GLFW.vcxproj">
@@ -891,9 +514,6 @@
     </ProjectReference>
     <ProjectReference Include="third_party\imgui\ImGui.vcxproj">
       <Project>{C0FF640D-2C14-8DBE-F595-301E616989EF}</Project>
-    </ProjectReference>
-    <ProjectReference Include="third_party\yaml-cpp\yaml-cpp.vcxproj">
-      <Project>{88F1A057-74BE-FB62-9DD7-E90A890331F1}</Project>
     </ProjectReference>
     <ProjectReference Include="third_party\lua\lua.vcxproj">
       <Project>{C78D880B-3397-887C-BC12-9F7C281B947C}</Project>

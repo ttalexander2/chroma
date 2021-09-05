@@ -4,6 +4,13 @@
 #include <glm/glm.hpp>
 #include <filesystem>
 
+
+#ifdef _WIN32
+	#ifndef CHROMA_PLATFORM_WINDOWS
+	#define CHROMA_PLATFORM_WINDOWS
+	#endif
+#endif
+
 #ifdef CHROMA_PLATFORM_WINDOWS
 #if CHROMA_DYNAMIC_LINK
 	#ifdef CHROMA_BUILD_DLL

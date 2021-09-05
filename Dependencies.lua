@@ -1,0 +1,20 @@
+IncludeDir = {}
+IncludeDir["GLFW"] = "Chroma/third_party/GLFW/include"
+IncludeDir["Glad"] = "Chroma/third_party/Glad/include"
+IncludeDir["ImGui"] = "Chroma/third_party/imgui"
+IncludeDir["glm"] = "Chroma/third_party/glm"
+IncludeDir["stb_image"] = "Chroma/third_party/stb_image"
+IncludeDir["entt"] = "Chroma/third_party/entt"
+IncludeDir["FMOD"] = "Chroma/third_party/fmod"
+IncludeDir["lua"] = "Chroma/third_party/lua"
+IncludeDir["yaml"] = "Chroma/third_party/yaml-cpp/include"
+IncludeDir["cute_headers"] = "Chroma/third_party/cute_headers"
+IncludeDir["concurrentqueue"] = "Chroma/third_party/concurrentqueue"
+IncludeDir["readerwriterqueue"] = "Chroma/third_party/readerwriterqueue"
+IncludeDir["ImGuizmo"] = "Chroma/third_party/ImGuizmo"
+IncludeDir["Sol2"] = "Chroma/third_party/sol2/include"
+IncludeDir["fmt"] = "Chroma/third_party/fmt/include"
+IncludeDir["mono"] = "Chroma/third_party/mono/include"
+
+Library = {}
+Library["mono"] = "%{wks.location}/Chroma/third_party/mono/lib/Debug/mono-2.0-sgen.lib"

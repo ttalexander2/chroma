@@ -79,10 +79,12 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>CHROMA_PLATFORM_WINDOWS;CHROMA_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Chroma\third_party\spdlog\include;..\Chroma\src;..\Chroma\third_party\glm;..\Chroma\third_party\imgui;..\Chroma\third_party\imgui\misc\cpp;..\Chroma\third_party\entt;..\Chroma\third_party\fmod;..\Chroma\third_party\yaml-cpp\include;..\Chroma\third_party\concurrentqueue;..\Chroma\third_party\readerwriterqueue;..\Chroma\third_party\ImGuizmo;..\Chroma\third_party\sol2\include;..\Chroma\third_party\lua;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Chroma\src;..\Chroma\third_party\spdlog\include;..\Chroma\third_party\glm;..\Chroma\third_party\imgui;..\Chroma\third_party\imgui\misc\cpp;..\Chroma\third_party\entt;..\Chroma\third_party\fmod;..\Chroma\third_party\yaml-cpp\include;..\Chroma\third_party\concurrentqueue;..\Chroma\third_party\readerwriterqueue;..\Chroma\third_party\ImGuizmo;..\Chroma\third_party\sol2\include;..\Chroma\third_party\lua;..\Chroma\third_party\mono\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <MinimalRebuild>false</MinimalRebuild>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
@@ -95,7 +97,19 @@ IF EXIST ..\Chroma\lib\Windows\x64\fmodstudioL.dll\ (xcopy /Q /E /Y /I ..\Chroma
 echo Copying ../Chroma/lib/Windows/x64/fmodL.dll to ../bin/Debug-windows-x86_64/Polychrome
 IF EXIST ..\Chroma\lib\Windows\x64\fmodL.dll\ (xcopy /Q /E /Y /I ..\Chroma\lib\Windows\x64\fmodL.dll ..\bin\Debug-windows-x86_64\Polychrome &gt; nul) ELSE (xcopy /Q /Y /I ..\Chroma\lib\Windows\x64\fmodL.dll ..\bin\Debug-windows-x86_64\Polychrome &gt; nul)
 echo Copying assets to ../bin/Debug-windows-x86_64/Polychrome/assets
-IF EXIST assets\ (xcopy /Q /E /Y /I assets ..\bin\Debug-windows-x86_64\Polychrome\assets &gt; nul) ELSE (xcopy /Q /Y /I assets ..\bin\Debug-windows-x86_64\Polychrome\assets &gt; nul)</Command>
+IF EXIST assets\ (xcopy /Q /E /Y /I assets ..\bin\Debug-windows-x86_64\Polychrome\assets &gt; nul) ELSE (xcopy /Q /Y /I assets ..\bin\Debug-windows-x86_64\Polychrome\assets &gt; nul)
+echo Copying mono dependencies to ../bin/Debug-windows-x86_64/Polychrome
+IF EXIST mono\ (xcopy /Q /E /Y /I mono ..\bin\Debug-windows-x86_64\Polychrome\mono &gt; nul) ELSE (xcopy /Q /Y /I mono ..\bin\Debug-windows-x86_64\Polychrome\mono &gt; nul)
+echo Copying ../Chroma/third_party/mono/bin/Debug/mono-2.0-sgen.dll to ../bin/Debug-windows-x86_64/Polychrome
+IF EXIST "..\Chroma\third_party\mono\bin\Debug\mono-2.0-sgen.dll"\ (xcopy /Q /E /Y /I "..\Chroma\third_party\mono\bin\Debug\mono-2.0-sgen.dll" "..\bin\Debug-windows-x86_64\Polychrome" &gt; nul) ELSE (xcopy /Q /Y /I "..\Chroma\third_party\mono\bin\Debug\mono-2.0-sgen.dll" "..\bin\Debug-windows-x86_64\Polychrome" &gt; nul)
+echo Building Chroma.Mono scripting core...
+dotnet build ../Chroma.Mono/Source/Chroma.Mono.csproj -o ./
+echo Copying Chroma.Mono.dll to ../bin/Debug-windows-x86_64/Polychrome
+IF EXIST Chroma.Mono.dll\ (xcopy /Q /E /Y /I Chroma.Mono.dll ..\bin\Debug-windows-x86_64\Polychrome &gt; nul) ELSE (xcopy /Q /Y /I Chroma.Mono.dll ..\bin\Debug-windows-x86_64\Polychrome &gt; nul)
+echo Copying imgui.ini to ../bin/Debug-windows-x86_64/Polychrome
+IF EXIST imgui.ini\ (xcopy /Q /E /Y /I imgui.ini ..\bin\Debug-windows-x86_64\Polychrome &gt; nul) ELSE (xcopy /Q /Y /I imgui.ini ..\bin\Debug-windows-x86_64\Polychrome &gt; nul)
+echo Copying Chroma.Mono.LINK.csproj to ../bin/Debug-windows-x86_64/Polychrome
+IF EXIST Chroma.Mono.LINK.csproj\ (xcopy /Q /E /Y /I Chroma.Mono.LINK.csproj ..\bin\Debug-windows-x86_64\Polychrome &gt; nul) ELSE (xcopy /Q /Y /I Chroma.Mono.LINK.csproj ..\bin\Debug-windows-x86_64\Polychrome &gt; nul)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -103,13 +117,14 @@ IF EXIST assets\ (xcopy /Q /E /Y /I assets ..\bin\Debug-windows-x86_64\Polychrom
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>CHROMA_PLATFORM_WINDOWS;CHROMA_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Chroma\third_party\spdlog\include;..\Chroma\src;..\Chroma\third_party\glm;..\Chroma\third_party\imgui;..\Chroma\third_party\imgui\misc\cpp;..\Chroma\third_party\entt;..\Chroma\third_party\fmod;..\Chroma\third_party\yaml-cpp\include;..\Chroma\third_party\concurrentqueue;..\Chroma\third_party\readerwriterqueue;..\Chroma\third_party\ImGuizmo;..\Chroma\third_party\sol2\include;..\Chroma\third_party\lua;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Chroma\src;..\Chroma\third_party\spdlog\include;..\Chroma\third_party\glm;..\Chroma\third_party\imgui;..\Chroma\third_party\imgui\misc\cpp;..\Chroma\third_party\entt;..\Chroma\third_party\fmod;..\Chroma\third_party\yaml-cpp\include;..\Chroma\third_party\concurrentqueue;..\Chroma\third_party\readerwriterqueue;..\Chroma\third_party\ImGuizmo;..\Chroma\third_party\sol2\include;..\Chroma\third_party\lua;..\Chroma\third_party\mono\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
@@ -123,7 +138,19 @@ IF EXIST ..\Chroma\lib\Windows\x64\fmodstudioL.dll\ (xcopy /Q /E /Y /I ..\Chroma
 echo Copying ../Chroma/lib/Windows/x64/fmodL.dll to ../bin/Release-windows-x86_64/Polychrome
 IF EXIST ..\Chroma\lib\Windows\x64\fmodL.dll\ (xcopy /Q /E /Y /I ..\Chroma\lib\Windows\x64\fmodL.dll ..\bin\Release-windows-x86_64\Polychrome &gt; nul) ELSE (xcopy /Q /Y /I ..\Chroma\lib\Windows\x64\fmodL.dll ..\bin\Release-windows-x86_64\Polychrome &gt; nul)
 echo Copying assets to ../bin/Release-windows-x86_64/Polychrome/assets
-IF EXIST assets\ (xcopy /Q /E /Y /I assets ..\bin\Release-windows-x86_64\Polychrome\assets &gt; nul) ELSE (xcopy /Q /Y /I assets ..\bin\Release-windows-x86_64\Polychrome\assets &gt; nul)</Command>
+IF EXIST assets\ (xcopy /Q /E /Y /I assets ..\bin\Release-windows-x86_64\Polychrome\assets &gt; nul) ELSE (xcopy /Q /Y /I assets ..\bin\Release-windows-x86_64\Polychrome\assets &gt; nul)
+echo Copying mono dependencies to ../bin/Release-windows-x86_64/Polychrome
+IF EXIST mono\ (xcopy /Q /E /Y /I mono ..\bin\Release-windows-x86_64\Polychrome\mono &gt; nul) ELSE (xcopy /Q /Y /I mono ..\bin\Release-windows-x86_64\Polychrome\mono &gt; nul)
+echo Copying ../Chroma/third_party/mono/bin/Debug/mono-2.0-sgen.dll to ../bin/Release-windows-x86_64/Polychrome
+IF EXIST "..\Chroma\third_party\mono\bin\Debug\mono-2.0-sgen.dll"\ (xcopy /Q /E /Y /I "..\Chroma\third_party\mono\bin\Debug\mono-2.0-sgen.dll" "..\bin\Release-windows-x86_64\Polychrome" &gt; nul) ELSE (xcopy /Q /Y /I "..\Chroma\third_party\mono\bin\Debug\mono-2.0-sgen.dll" "..\bin\Release-windows-x86_64\Polychrome" &gt; nul)
+echo Building Chroma.Mono scripting core...
+dotnet build ../Chroma.Mono/Source/Chroma.Mono.csproj -o ./
+echo Copying Chroma.Mono.dll to ../bin/Release-windows-x86_64/Polychrome
+IF EXIST Chroma.Mono.dll\ (xcopy /Q /E /Y /I Chroma.Mono.dll ..\bin\Release-windows-x86_64\Polychrome &gt; nul) ELSE (xcopy /Q /Y /I Chroma.Mono.dll ..\bin\Release-windows-x86_64\Polychrome &gt; nul)
+echo Copying imgui.ini to ../bin/Release-windows-x86_64/Polychrome
+IF EXIST imgui.ini\ (xcopy /Q /E /Y /I imgui.ini ..\bin\Release-windows-x86_64\Polychrome &gt; nul) ELSE (xcopy /Q /Y /I imgui.ini ..\bin\Release-windows-x86_64\Polychrome &gt; nul)
+echo Copying Chroma.Mono.LINK.csproj to ../bin/Release-windows-x86_64/Polychrome
+IF EXIST Chroma.Mono.LINK.csproj\ (xcopy /Q /E /Y /I Chroma.Mono.LINK.csproj ..\bin\Release-windows-x86_64\Polychrome &gt; nul) ELSE (xcopy /Q /Y /I Chroma.Mono.LINK.csproj ..\bin\Release-windows-x86_64\Polychrome &gt; nul)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
@@ -131,13 +158,14 @@ IF EXIST assets\ (xcopy /Q /E /Y /I assets ..\bin\Release-windows-x86_64\Polychr
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>CHROMA_PLATFORM_WINDOWS;CHROMA_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Chroma\third_party\spdlog\include;..\Chroma\src;..\Chroma\third_party\glm;..\Chroma\third_party\imgui;..\Chroma\third_party\imgui\misc\cpp;..\Chroma\third_party\entt;..\Chroma\third_party\fmod;..\Chroma\third_party\yaml-cpp\include;..\Chroma\third_party\concurrentqueue;..\Chroma\third_party\readerwriterqueue;..\Chroma\third_party\ImGuizmo;..\Chroma\third_party\sol2\include;..\Chroma\third_party\lua;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Chroma\src;..\Chroma\third_party\spdlog\include;..\Chroma\third_party\glm;..\Chroma\third_party\imgui;..\Chroma\third_party\imgui\misc\cpp;..\Chroma\third_party\entt;..\Chroma\third_party\fmod;..\Chroma\third_party\yaml-cpp\include;..\Chroma\third_party\concurrentqueue;..\Chroma\third_party\readerwriterqueue;..\Chroma\third_party\ImGuizmo;..\Chroma\third_party\sol2\include;..\Chroma\third_party\lua;..\Chroma\third_party\mono\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
@@ -151,7 +179,19 @@ IF EXIST ..\Chroma\lib\Windows\x64\fmodstudioL.dll\ (xcopy /Q /E /Y /I ..\Chroma
 echo Copying ../Chroma/lib/Windows/x64/fmodL.dll to ../bin/Dist-windows-x86_64/Polychrome
 IF EXIST ..\Chroma\lib\Windows\x64\fmodL.dll\ (xcopy /Q /E /Y /I ..\Chroma\lib\Windows\x64\fmodL.dll ..\bin\Dist-windows-x86_64\Polychrome &gt; nul) ELSE (xcopy /Q /Y /I ..\Chroma\lib\Windows\x64\fmodL.dll ..\bin\Dist-windows-x86_64\Polychrome &gt; nul)
 echo Copying assets to ../bin/Dist-windows-x86_64/Polychrome/assets
-IF EXIST assets\ (xcopy /Q /E /Y /I assets ..\bin\Dist-windows-x86_64\Polychrome\assets &gt; nul) ELSE (xcopy /Q /Y /I assets ..\bin\Dist-windows-x86_64\Polychrome\assets &gt; nul)</Command>
+IF EXIST assets\ (xcopy /Q /E /Y /I assets ..\bin\Dist-windows-x86_64\Polychrome\assets &gt; nul) ELSE (xcopy /Q /Y /I assets ..\bin\Dist-windows-x86_64\Polychrome\assets &gt; nul)
+echo Copying mono dependencies to ../bin/Dist-windows-x86_64/Polychrome
+IF EXIST mono\ (xcopy /Q /E /Y /I mono ..\bin\Dist-windows-x86_64\Polychrome\mono &gt; nul) ELSE (xcopy /Q /Y /I mono ..\bin\Dist-windows-x86_64\Polychrome\mono &gt; nul)
+echo Copying ../Chroma/third_party/mono/bin/Debug/mono-2.0-sgen.dll to ../bin/Dist-windows-x86_64/Polychrome
+IF EXIST "..\Chroma\third_party\mono\bin\Debug\mono-2.0-sgen.dll"\ (xcopy /Q /E /Y /I "..\Chroma\third_party\mono\bin\Debug\mono-2.0-sgen.dll" "..\bin\Dist-windows-x86_64\Polychrome" &gt; nul) ELSE (xcopy /Q /Y /I "..\Chroma\third_party\mono\bin\Debug\mono-2.0-sgen.dll" "..\bin\Dist-windows-x86_64\Polychrome" &gt; nul)
+echo Building Chroma.Mono scripting core...
+dotnet build ../Chroma.Mono/Source/Chroma.Mono.csproj -o ./
+echo Copying Chroma.Mono.dll to ../bin/Dist-windows-x86_64/Polychrome
+IF EXIST Chroma.Mono.dll\ (xcopy /Q /E /Y /I Chroma.Mono.dll ..\bin\Dist-windows-x86_64\Polychrome &gt; nul) ELSE (xcopy /Q /Y /I Chroma.Mono.dll ..\bin\Dist-windows-x86_64\Polychrome &gt; nul)
+echo Copying imgui.ini to ../bin/Dist-windows-x86_64/Polychrome
+IF EXIST imgui.ini\ (xcopy /Q /E /Y /I imgui.ini ..\bin\Dist-windows-x86_64\Polychrome &gt; nul) ELSE (xcopy /Q /Y /I imgui.ini ..\bin\Dist-windows-x86_64\Polychrome &gt; nul)
+echo Copying Chroma.Mono.LINK.csproj to ../bin/Dist-windows-x86_64/Polychrome
+IF EXIST Chroma.Mono.LINK.csproj\ (xcopy /Q /E /Y /I Chroma.Mono.LINK.csproj ..\bin\Dist-windows-x86_64\Polychrome &gt; nul) ELSE (xcopy /Q /Y /I Chroma.Mono.LINK.csproj ..\bin\Dist-windows-x86_64\Polychrome &gt; nul)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -168,9 +208,11 @@ IF EXIST assets\ (xcopy /Q /E /Y /I assets ..\bin\Dist-windows-x86_64\Polychrome
     <ClInclude Include="src\Inspector.h" />
     <ClInclude Include="src\LogSink.h" />
     <ClInclude Include="src\LogWindow.h" />
+    <ClInclude Include="src\Project.h" />
     <ClInclude Include="src\Style.h" />
     <ClInclude Include="src\Viewport.h" />
     <ClInclude Include="src\Widgets\TextEditor.h" />
+    <ClInclude Include="src\thid_party\levenshtein-sse.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AssetBrowser.cpp" />
@@ -185,6 +227,7 @@ IF EXIST assets\ (xcopy /Q /E /Y /I assets ..\bin\Dist-windows-x86_64\Polychrome
     <ClCompile Include="src\Hierarchy.cpp" />
     <ClCompile Include="src\Inspector.cpp" />
     <ClCompile Include="src\LogWindow.cpp" />
+    <ClCompile Include="src\Project.cpp" />
     <ClCompile Include="src\Viewport.cpp" />
     <ClCompile Include="src\Widgets\TextEditor.cpp" />
   </ItemGroup>

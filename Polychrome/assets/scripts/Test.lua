@@ -22,7 +22,7 @@ function Init()
 	transform = entity:GetTransform()
 	sprite = entity:GetSpriteRenderer()
 	sprite:SetAnimation("idle front")
-	start_coroutine("co_test")
+	--start_coroutine("co_test")
 end
 
 function co_test()
@@ -53,19 +53,19 @@ function Update()
 	--log("yeet")
 	--shared_module.aaaah()
 	local gamepad = Input:GetFirstConnectedGamepad()
-	if Input:GetGamepadButtonState(GamepadButton.DPAD_RIGHT, gamepad) == ButtonState.PRESSED then
+	if Input:GetGamepadButtonState(GamepadButton.DPAD_RIGHT, gamepad) == ButtonState.PRESSED or Input:IsKeyPressed(Key.RIGHT) then
 		transform.Position.X = transform.Position.X + (Speed*time.Delta)
 		transform.Scale.X = -1 * math.abs(transform.Scale.X)
 		sprite:SetAnimation("Left run")
-	elseif Input:GetGamepadButtonState(GamepadButton.DPAD_LEFT, gamepad) == ButtonState.PRESSED then
+	elseif Input:GetGamepadButtonState(GamepadButton.DPAD_LEFT, gamepad) == ButtonState.PRESSED or Input:IsKeyPressed(Key.LEFT) then
 		transform.Position.X = transform.Position.X - (Speed*time.Delta)
 		sprite:SetAnimation("Left run")
 		transform.Scale.X = 1 * math.abs(transform.Scale.X)
-	elseif Input:GetGamepadButtonState(GamepadButton.DPAD_DOWN, gamepad) == ButtonState.PRESSED then
+	elseif Input:GetGamepadButtonState(GamepadButton.DPAD_DOWN, gamepad) == ButtonState.PRESSED or Input:IsKeyPressed(Key.DOWN) then
 		transform.Position.Y = transform.Position.Y - (Speed*time.Delta)
 		sprite:SetAnimation("Front run")
 		transform.Scale.X = 1 * math.abs(transform.Scale.X)
-	elseif Input:GetGamepadButtonState(GamepadButton.DPAD_UP, gamepad) == ButtonState.PRESSED then
+	elseif Input:GetGamepadButtonState(GamepadButton.DPAD_UP, gamepad) == ButtonState.PRESSED or Input:IsKeyPressed(Key.UP) then
 		transform.Position.Y = transform.Position.Y + (Speed*time.Delta)
 		sprite:SetAnimation("Back run")
 		transform.Scale.X = 1 * math.abs(transform.Scale.X)
@@ -92,19 +92,3 @@ end
 function Serialize()
 	return {"to_serialize"}
 end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

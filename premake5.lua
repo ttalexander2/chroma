@@ -7,28 +7,16 @@ workspace "Chroma"
         "Dist"
     }
 
+    flags
+	{
+		"MultiProcessorCompile"
+	}
+
+
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
-MONO_DIR = "Chroma/third_party/Mono"
-
--- Include directories relative to root folder (solution directory)
-IncludeDir = {}
-IncludeDir["GLFW"] = "Chroma/third_party/GLFW/include"
-IncludeDir["Glad"] = "Chroma/third_party/Glad/include"
-IncludeDir["ImGui"] = "Chroma/third_party/imgui"
-IncludeDir["glm"] = "Chroma/third_party/glm"
-IncludeDir["stb_image"] = "Chroma/third_party/stb_image"
-IncludeDir["entt"] = "Chroma/third_party/entt"
-IncludeDir["FMOD"] = "Chroma/third_party/fmod"
-IncludeDir["lua"] = "Chroma/third_party/lua"
-IncludeDir["yaml"] = "Chroma/third_party/yaml-cpp/include"
-IncludeDir["cute_headers"] = "Chroma/third_party/cute_headers"
-IncludeDir["concurrentqueue"] = "Chroma/third_party/concurrentqueue"
-IncludeDir["readerwriterqueue"] = "Chroma/third_party/readerwriterqueue"
-IncludeDir["ImGuizmo"] = "Chroma/third_party/ImGuizmo"
-IncludeDir["Sol2"] = "Chroma/third_party/sol2/include"
-IncludeDir["fmt"] = "Chroma/third_party/fmt/include"
+include "Dependencies.lua"
 
 group "Dependencies"
     include "Chroma/third_party/GLFW"
@@ -36,7 +24,6 @@ group "Dependencies"
     include "Chroma/third_party/imgui"
     include "Chroma/third_party/glm"
     include "Chroma/third_party/lua"
-    include "Chroma/third_party/yaml-cpp"
 group "" -- end of dependencies
 
 
@@ -45,7 +32,7 @@ project "Chroma"
     kind "StaticLib"
     language "C++"
     cppdialect "C++20"
-    staticruntime "on"
+    staticruntime "off"
 
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
     objdir ("obj/" .. outputdir .. "/%{prj.name}")
@@ -56,21 +43,13 @@ project "Chroma"
     {
         "%{prj.name}/src/**.h",
         "%{prj.name}/src/**.cpp",
-        "%{prj.name}/third_party/stb_image/**.h",
-        "%{prj.name}/third_party/stb_image/**.cpp",
-        "%{prj.name}/third_party/entt/**.hpp",
-        "%{prj.name}/third_party/lua/**.h",
-        "%{prj.name}/third_party/yaml-cpp/include/yaml-cpp/**.h",
-        "%{prj.name}/third_party/cute_headers/**.h",
-        "%{prj.name}/third_party/concurrentqueue/**.h",
-        "%{prj.name}/third_party/readerwriterqueue/**.h",
-        "%{prj.name}/third_party/ImGuizmo/*.cpp",
-        "%{prj.name}/third_party/ImGuizmo/*.h",
-        "%{prj.name}/third_party/sol2/include/sol/**.hpp",
-        "%{prj.name}/third_party/sol2/include/sol/**.h",
-        "%{prj.name}/third_party/fmt/include/**.h",
-        "%{prj.name}/third_party/fmt/src/**.cpp",
-        "%{prj.name}/third_party/entt/**.hpp"
+
+        "%{prj.name}/third_party/yaml-cpp/src/**.cpp",
+		"%{prj.name}/third_party/yaml-cpp/src/**.h",
+		"%{prj.name}/third_party/yaml-cpp/include/**.h",
+
+        "%{prj.name}/third_party/ImGuizmo/**.cpp"
+
     }
 
     defines
@@ -85,6 +64,7 @@ project "Chroma"
     includedirs
     {
         "%{prj.name}/src",
+        "%{prj.name}/third_party",
         "%{prj.name}/third_party/spdlog/include",
         "%{IncludeDir.GLFW}",
         "%{IncludeDir.Glad}",
@@ -101,7 +81,8 @@ project "Chroma"
         "%{IncludeDir.ImGuizmo}",
         "%{IncludeDir.Sol2}",
         "%{IncludeDir.fmt}",
-        "%{IncludeDir.entt}"
+        "%{IncludeDir.entt}",
+        "%{IncludeDir.mono}",
 
     }
 
@@ -111,11 +92,11 @@ project "Chroma"
         "Glad",
         "ImGui",
         "opengl32.lib",
-        "yaml-cpp",
-        "lua"
+        "lua",
+        "%{Library.mono}"
     }
 
-    filter "files:Chroma/third_party/ImGuizmo/**.cpp"
+    filter "files:Chroma/third_party/ImGuizmo/**.cpp or files:Chroma/third_party/yaml-cpp/src/**.cpp"
         flags { "NoPCH" }
 
     filter "system:windows"
@@ -131,8 +112,7 @@ project "Chroma"
         links
         {
             "Chroma/lib/Windows/x64/fmodL_vc.lib",
-            "Chroma/lib/Windows/x64/fmodstudioL_vc.lib",
-            "Chroma/lib/Windows/x64/nethost.lib"
+            "Chroma/lib/Windows/x64/fmodstudioL_vc.lib"
         }
     
     filter "configurations:Debug"
@@ -169,6 +149,97 @@ project "Chroma"
         buildoptions { "/bigobj" }    -- Lua bindings made me do this :(
 
 
+project "Polychrome"
+    location "Polychrome"
+    kind "ConsoleApp"
+    language "C++"
+    cppdialect "C++20"
+    staticruntime "off"
+
+    targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+    objdir ("obj/" .. outputdir .. "/%{prj.name}")
+
+    links
+    {
+        "Chroma"
+    }
+
+    files
+    {
+        "%{prj.name}/src/**.h",
+        "%{prj.name}/src/**.c",
+        "%{prj.name}/src/**.hpp",
+        "%{prj.name}/src/**.cpp",
+    }
+
+    includedirs
+    {
+        "Chroma/src",
+        "Chroma/third_party/spdlog/include",
+        "%{IncludeDir.glm}",
+        "%{IncludeDir.ImGui}",
+        "%{IncludeDir.ImGui}/misc/cpp",
+        "%{IncludeDir.entt}",
+        "%{IncludeDir.FMOD}",
+        "%{IncludeDir.yaml}",
+        "%{IncludeDir.concurrentqueue}",
+        "%{IncludeDir.readerwriterqueue}",
+        "%{IncludeDir.ImGuizmo}",
+        "%{IncludeDir.Sol2}",
+        "%{IncludeDir.lua}",
+        "%{IncludeDir.mono}"
+    }
+
+
+    postbuildcommands
+    {
+        "{ECHO} Copying ../Chroma/lib/Windows/x64/fmodstudioL.dll to %{cfg.targetdir}",
+        "{COPY} ../Chroma/lib/Windows/x64/fmodstudioL.dll %{cfg.targetdir}",
+        "{ECHO} Copying ../Chroma/lib/Windows/x64/fmodL.dll to %{cfg.targetdir}",
+        "{COPY} ../Chroma/lib/Windows/x64/fmodL.dll %{cfg.targetdir}",
+        "{ECHO} Copying assets to %{cfg.targetdir}/assets",
+        "{COPY} assets %{cfg.targetdir}/assets",
+        "{ECHO} Copying mono dependencies to %{cfg.targetdir}",
+        "{COPY} mono %{cfg.targetdir}/mono",
+        "{ECHO} Copying ../Chroma/third_party/mono/bin/Debug/mono-2.0-sgen.dll to %{cfg.targetdir}",
+        '{COPY} "../Chroma/third_party/mono/bin/Debug/mono-2.0-sgen.dll" "%{cfg.targetdir}"',
+        "{ECHO} Building Chroma.Mono scripting core...",
+        "dotnet build ../Chroma.Mono/Source/Chroma.Mono.csproj -o ./",
+        "{ECHO} Copying Chroma.Mono.dll to %{cfg.targetdir}",
+        "{COPY} Chroma.Mono.dll %{cfg.targetdir}",
+        "{ECHO} Copying imgui.ini to %{cfg.targetdir}",
+        "{COPY} imgui.ini %{cfg.targetdir}"
+    }
+
+    defines
+    {
+        CHROMA_EDITOR
+    }
+
+    filter "system:windows"
+        systemversion "latest"
+
+        defines
+        {
+            "CHROMA_PLATFORM_WINDOWS",
+        }
+
+    filter "configurations:Debug"
+        defines "CHROMA_DEBUG"
+        runtime "Debug"
+        symbols "On"
+        optimize "Debug"
+
+    filter "configurations:Release"
+        defines "CHROMA_RELEASE"
+        runtime "Release"
+        optimize "On"
+
+    filter "configurations:Dist"
+        defines "CHROMA_DIST"
+        runtime "Release"
+        optimize "On"
+
 
 
 project "Runtime"
@@ -176,7 +247,7 @@ project "Runtime"
     kind "ConsoleApp"
     language "C++"
     cppdialect "C++20"
-    staticruntime "on"
+    staticruntime "off"
 
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
     objdir ("obj/" .. outputdir .. "/%{prj.name}")
@@ -184,8 +255,7 @@ project "Runtime"
     files
     {
         "%{prj.name}/**.h",
-        "%{prj.name}/**.cpp",
-        "%{prj.name}/third_party/yaml-cpp/include/yaml-cpp/**.h"
+        "%{prj.name}/**.cpp"
     }
 
     includedirs
@@ -216,6 +286,8 @@ project "Runtime"
         "{COPY} ../Chroma/lib/Windows/x64/fmodL.dll %{cfg.targetdir}",
         "{ECHO} Copying assets to %{cfg.targetdir}/assets",
         "{COPY} assets %{cfg.targetdir}/assets",
+        "{ECHO} Copying ../Chroma/third_party/mono/bin/Debug/mono-2.0-sgen.dll to %{cfg.targetdir}",
+        '{COPY} "../Chroma/third_party/mono/bin/Debug/mono-2.0-sgen.dll" "%{cfg.targetdir}"'
     }
 
 
@@ -227,88 +299,6 @@ project "Runtime"
             "CHROMA_PLATFORM_WINDOWS",
         }
 
-    filter "configurations:Debug"
-        defines "CHROMA_DEBUG"
-        runtime "Debug"
-        symbols "On"
-        optimize "Debug"
-
-    filter "configurations:Release"
-        defines "CHROMA_RELEASE"
-        runtime "Release"
-        optimize "On"
-
-    filter "configurations:Dist"
-        defines "CHROMA_DIST"
-        runtime "Release"
-        optimize "On"
-
-
-project "Polychrome"
-    location "Polychrome"
-    kind "ConsoleApp"
-    language "C++"
-    cppdialect "C++20"
-    staticruntime "on"
-
-    targetdir ("bin/" .. outputdir .. "/%{prj.name}")
-    objdir ("obj/" .. outputdir .. "/%{prj.name}")
-
-    files
-    {
-        "%{prj.name}/**.h",
-        "%{prj.name}/**.cpp",
-        "%{prj.name}/third_party/yaml-cpp/include/yaml-cpp/**.h",
-        "%{prj.name}/third_party/sol2/include/sol/**.hpp",
-        "%{prj.name}/third_party/sol2/include/sol/**.h"
-    }
-
-    includedirs
-    {
-        "Chroma/third_party/spdlog/include",
-        "Chroma/src",
-        "%{IncludeDir.glm}",
-        "%{IncludeDir.ImGui}",
-        "%{IncludeDir.ImGui}/misc/cpp",
-        "%{IncludeDir.entt}",
-        "%{IncludeDir.FMOD}",
-        "%{IncludeDir.yaml}",
-        "%{IncludeDir.concurrentqueue}",
-        "%{IncludeDir.readerwriterqueue}",
-        "%{IncludeDir.ImGuizmo}",
-        "%{IncludeDir.Sol2}",
-        "%{IncludeDir.lua}"
-    }
-
-    links
-    {
-        "Chroma"
-    }
-
-
-    postbuildcommands
-    {
-        "{ECHO} Copying ../Chroma/lib/Windows/x64/fmodstudioL.dll to %{cfg.targetdir}",
-        "{COPY} ../Chroma/lib/Windows/x64/fmodstudioL.dll %{cfg.targetdir}",
-        "{ECHO} Copying ../Chroma/lib/Windows/x64/fmodL.dll to %{cfg.targetdir}",
-        "{COPY} ../Chroma/lib/Windows/x64/fmodL.dll %{cfg.targetdir}",
-        "{ECHO} Copying assets to %{cfg.targetdir}/assets",
-        "{COPY} assets %{cfg.targetdir}/assets",
-    }
-
-    defines
-    {
-        CHROMA_EDITOR
-    }
-
-    filter "system:windows"
-        systemversion "latest"
-
-        defines
-        {
-            "CHROMA_PLATFORM_WINDOWS",
-        }
-    
     filter "configurations:Debug"
         defines "CHROMA_DEBUG"
         runtime "Debug"
