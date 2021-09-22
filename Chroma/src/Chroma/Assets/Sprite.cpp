@@ -12,12 +12,13 @@ namespace Chroma
 	/// @return Returns true if the sprite was loaded succesfully.
 	bool Sprite::Load()
 	{
-		if (!std::filesystem::exists(Path))
+		std::string path = AssetManager::GetPath(Path);
+		if (!std::filesystem::exists(path))
 			return false;
 
-		if (std::filesystem::path(Path).extension() == ".ase" || std::filesystem::path(Path).extension() == ".aseprite")
+		if (std::filesystem::path(path).extension() == ".ase" || std::filesystem::path(path).extension() == ".aseprite")
 		{
-			Aseprite a = Aseprite(Path);
+			Aseprite a = Aseprite(path);
 
 			Chroma::Color* data = new Chroma::Color[a.width * a.height];
 			float width = 0.f; float height = 0.f;
@@ -63,18 +64,18 @@ namespace Chroma
 			}
 			return true;
 		}
-		else if (std::filesystem::path(Path).extension() == ".png")
+		else if (std::filesystem::path(path).extension() == ".png")
 		{
 			Frame fr;
-			fr.Texture = Chroma::Texture2D::Create(Path);
+			fr.Texture = Chroma::Texture2D::Create(path);
 			Frames.push_back(fr);
 			Size = { fr.Texture->GetWidth(), fr.Texture->GetHeight() };
 			return true;
 		}
-		else if (std::filesystem::path(Path).extension() == ".jpg")
+		else if (std::filesystem::path(path).extension() == ".jpg")
 		{
 			Frame fr;
-			fr.Texture = Chroma::Texture2D::Create(Path);
+			fr.Texture = Chroma::Texture2D::Create(path);
 			Frames.push_back(fr);
 			Size = { fr.Texture->GetWidth(), fr.Texture->GetHeight() };
 			return true;

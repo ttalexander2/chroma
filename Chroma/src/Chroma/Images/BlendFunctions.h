@@ -602,9 +602,6 @@ namespace Chroma
 			return backdrop;
 		}
 
-
-
-
 	};
 
 

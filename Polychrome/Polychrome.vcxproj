@@ -102,14 +102,11 @@ echo Copying mono dependencies to ../bin/Debug-windows-x86_64/Polychrome
 IF EXIST mono\ (xcopy /Q /E /Y /I mono ..\bin\Debug-windows-x86_64\Polychrome\mono &gt; nul) ELSE (xcopy /Q /Y /I mono ..\bin\Debug-windows-x86_64\Polychrome\mono &gt; nul)
 echo Copying ../Chroma/third_party/mono/bin/Debug/mono-2.0-sgen.dll to ../bin/Debug-windows-x86_64/Polychrome
 IF EXIST "..\Chroma\third_party\mono\bin\Debug\mono-2.0-sgen.dll"\ (xcopy /Q /E /Y /I "..\Chroma\third_party\mono\bin\Debug\mono-2.0-sgen.dll" "..\bin\Debug-windows-x86_64\Polychrome" &gt; nul) ELSE (xcopy /Q /Y /I "..\Chroma\third_party\mono\bin\Debug\mono-2.0-sgen.dll" "..\bin\Debug-windows-x86_64\Polychrome" &gt; nul)
-echo Building Chroma.Mono scripting core...
-dotnet build ../Chroma.Mono/Source/Chroma.Mono.csproj -o ./
-echo Copying Chroma.Mono.dll to ../bin/Debug-windows-x86_64/Polychrome
-IF EXIST Chroma.Mono.dll\ (xcopy /Q /E /Y /I Chroma.Mono.dll ..\bin\Debug-windows-x86_64\Polychrome &gt; nul) ELSE (xcopy /Q /Y /I Chroma.Mono.dll ..\bin\Debug-windows-x86_64\Polychrome &gt; nul)
 echo Copying imgui.ini to ../bin/Debug-windows-x86_64/Polychrome
 IF EXIST imgui.ini\ (xcopy /Q /E /Y /I imgui.ini ..\bin\Debug-windows-x86_64\Polychrome &gt; nul) ELSE (xcopy /Q /Y /I imgui.ini ..\bin\Debug-windows-x86_64\Polychrome &gt; nul)
-echo Copying Chroma.Mono.LINK.csproj to ../bin/Debug-windows-x86_64/Polychrome
-IF EXIST Chroma.Mono.LINK.csproj\ (xcopy /Q /E /Y /I Chroma.Mono.LINK.csproj ..\bin\Debug-windows-x86_64\Polychrome &gt; nul) ELSE (xcopy /Q /Y /I Chroma.Mono.LINK.csproj ..\bin\Debug-windows-x86_64\Polychrome &gt; nul)</Command>
+echo Build Chroma.Mono...
+dotnet build ../Script-Core/Chroma.Mono.csproj --output .
+IF EXIST Chroma.Mono.dll\ (xcopy /Q /E /Y /I Chroma.Mono.dll ..\bin\Debug-windows-x86_64\Polychrome &gt; nul) ELSE (xcopy /Q /Y /I Chroma.Mono.dll ..\bin\Debug-windows-x86_64\Polychrome &gt; nul)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -143,14 +140,11 @@ echo Copying mono dependencies to ../bin/Release-windows-x86_64/Polychrome
 IF EXIST mono\ (xcopy /Q /E /Y /I mono ..\bin\Release-windows-x86_64\Polychrome\mono &gt; nul) ELSE (xcopy /Q /Y /I mono ..\bin\Release-windows-x86_64\Polychrome\mono &gt; nul)
 echo Copying ../Chroma/third_party/mono/bin/Debug/mono-2.0-sgen.dll to ../bin/Release-windows-x86_64/Polychrome
 IF EXIST "..\Chroma\third_party\mono\bin\Debug\mono-2.0-sgen.dll"\ (xcopy /Q /E /Y /I "..\Chroma\third_party\mono\bin\Debug\mono-2.0-sgen.dll" "..\bin\Release-windows-x86_64\Polychrome" &gt; nul) ELSE (xcopy /Q /Y /I "..\Chroma\third_party\mono\bin\Debug\mono-2.0-sgen.dll" "..\bin\Release-windows-x86_64\Polychrome" &gt; nul)
-echo Building Chroma.Mono scripting core...
-dotnet build ../Chroma.Mono/Source/Chroma.Mono.csproj -o ./
-echo Copying Chroma.Mono.dll to ../bin/Release-windows-x86_64/Polychrome
-IF EXIST Chroma.Mono.dll\ (xcopy /Q /E /Y /I Chroma.Mono.dll ..\bin\Release-windows-x86_64\Polychrome &gt; nul) ELSE (xcopy /Q /Y /I Chroma.Mono.dll ..\bin\Release-windows-x86_64\Polychrome &gt; nul)
 echo Copying imgui.ini to ../bin/Release-windows-x86_64/Polychrome
 IF EXIST imgui.ini\ (xcopy /Q /E /Y /I imgui.ini ..\bin\Release-windows-x86_64\Polychrome &gt; nul) ELSE (xcopy /Q /Y /I imgui.ini ..\bin\Release-windows-x86_64\Polychrome &gt; nul)
-echo Copying Chroma.Mono.LINK.csproj to ../bin/Release-windows-x86_64/Polychrome
-IF EXIST Chroma.Mono.LINK.csproj\ (xcopy /Q /E /Y /I Chroma.Mono.LINK.csproj ..\bin\Release-windows-x86_64\Polychrome &gt; nul) ELSE (xcopy /Q /Y /I Chroma.Mono.LINK.csproj ..\bin\Release-windows-x86_64\Polychrome &gt; nul)</Command>
+echo Build Chroma.Mono...
+dotnet build ../Script-Core/Chroma.Mono.csproj --output .
+IF EXIST Chroma.Mono.dll\ (xcopy /Q /E /Y /I Chroma.Mono.dll ..\bin\Release-windows-x86_64\Polychrome &gt; nul) ELSE (xcopy /Q /Y /I Chroma.Mono.dll ..\bin\Release-windows-x86_64\Polychrome &gt; nul)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
@@ -184,14 +178,11 @@ echo Copying mono dependencies to ../bin/Dist-windows-x86_64/Polychrome
 IF EXIST mono\ (xcopy /Q /E /Y /I mono ..\bin\Dist-windows-x86_64\Polychrome\mono &gt; nul) ELSE (xcopy /Q /Y /I mono ..\bin\Dist-windows-x86_64\Polychrome\mono &gt; nul)
 echo Copying ../Chroma/third_party/mono/bin/Debug/mono-2.0-sgen.dll to ../bin/Dist-windows-x86_64/Polychrome
 IF EXIST "..\Chroma\third_party\mono\bin\Debug\mono-2.0-sgen.dll"\ (xcopy /Q /E /Y /I "..\Chroma\third_party\mono\bin\Debug\mono-2.0-sgen.dll" "..\bin\Dist-windows-x86_64\Polychrome" &gt; nul) ELSE (xcopy /Q /Y /I "..\Chroma\third_party\mono\bin\Debug\mono-2.0-sgen.dll" "..\bin\Dist-windows-x86_64\Polychrome" &gt; nul)
-echo Building Chroma.Mono scripting core...
-dotnet build ../Chroma.Mono/Source/Chroma.Mono.csproj -o ./
-echo Copying Chroma.Mono.dll to ../bin/Dist-windows-x86_64/Polychrome
-IF EXIST Chroma.Mono.dll\ (xcopy /Q /E /Y /I Chroma.Mono.dll ..\bin\Dist-windows-x86_64\Polychrome &gt; nul) ELSE (xcopy /Q /Y /I Chroma.Mono.dll ..\bin\Dist-windows-x86_64\Polychrome &gt; nul)
 echo Copying imgui.ini to ../bin/Dist-windows-x86_64/Polychrome
 IF EXIST imgui.ini\ (xcopy /Q /E /Y /I imgui.ini ..\bin\Dist-windows-x86_64\Polychrome &gt; nul) ELSE (xcopy /Q /Y /I imgui.ini ..\bin\Dist-windows-x86_64\Polychrome &gt; nul)
-echo Copying Chroma.Mono.LINK.csproj to ../bin/Dist-windows-x86_64/Polychrome
-IF EXIST Chroma.Mono.LINK.csproj\ (xcopy /Q /E /Y /I Chroma.Mono.LINK.csproj ..\bin\Dist-windows-x86_64\Polychrome &gt; nul) ELSE (xcopy /Q /Y /I Chroma.Mono.LINK.csproj ..\bin\Dist-windows-x86_64\Polychrome &gt; nul)</Command>
+echo Build Chroma.Mono...
+dotnet build ../Script-Core/Chroma.Mono.csproj --output .
+IF EXIST Chroma.Mono.dll\ (xcopy /Q /E /Y /I Chroma.Mono.dll ..\bin\Dist-windows-x86_64\Polychrome &gt; nul) ELSE (xcopy /Q /Y /I Chroma.Mono.dll ..\bin\Dist-windows-x86_64\Polychrome &gt; nul)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -201,6 +192,7 @@ IF EXIST Chroma.Mono.LINK.csproj\ (xcopy /Q /E /Y /I Chroma.Mono.LINK.csproj ..\
     <ClInclude Include="src\EditorApp.h" />
     <ClInclude Include="src\EditorConfig.h" />
     <ClInclude Include="src\FileDrop.h" />
+    <ClInclude Include="src\FileWatcherThread.h" />
     <ClInclude Include="src\Fonts\Font.h" />
     <ClInclude Include="src\Fonts\IconsForkAwesome.h" />
     <ClInclude Include="src\FuzzyFileSearch.h" />
@@ -210,15 +202,18 @@ IF EXIST Chroma.Mono.LINK.csproj\ (xcopy /Q /E /Y /I Chroma.Mono.LINK.csproj ..\
     <ClInclude Include="src\LogWindow.h" />
     <ClInclude Include="src\Project.h" />
     <ClInclude Include="src\Style.h" />
+    <ClInclude Include="src\Utilities\GLFWHelpers.h" />
     <ClInclude Include="src\Viewport.h" />
     <ClInclude Include="src\Widgets\TextEditor.h" />
     <ClInclude Include="src\thid_party\levenshtein-sse.hpp" />
+    <ClInclude Include="src\thid_party\platform_folders.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AssetBrowser.cpp" />
     <ClCompile Include="src\CodeEditor.cpp" />
     <ClCompile Include="src\EditorApp.cpp" />
     <ClCompile Include="src\FileDrop.cpp" />
+    <ClCompile Include="src\FileWatcherThread.cpp" />
     <ClCompile Include="src\Fonts\Pinch.cpp" />
     <ClCompile Include="src\Fonts\PinchMono.cpp" />
     <ClCompile Include="src\Fonts\Roboto.cpp" />
@@ -228,8 +223,10 @@ IF EXIST Chroma.Mono.LINK.csproj\ (xcopy /Q /E /Y /I Chroma.Mono.LINK.csproj ..\
     <ClCompile Include="src\Inspector.cpp" />
     <ClCompile Include="src\LogWindow.cpp" />
     <ClCompile Include="src\Project.cpp" />
+    <ClCompile Include="src\Utilities\GLFWHelpers.cpp" />
     <ClCompile Include="src\Viewport.cpp" />
     <ClCompile Include="src\Widgets\TextEditor.cpp" />
+    <ClCompile Include="src\thid_party\platform_folders.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Chroma\Chroma.vcxproj">

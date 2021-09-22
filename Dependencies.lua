@@ -15,6 +15,7 @@ IncludeDir["ImGuizmo"] = "Chroma/third_party/ImGuizmo"
 IncludeDir["Sol2"] = "Chroma/third_party/sol2/include"
 IncludeDir["fmt"] = "Chroma/third_party/fmt/include"
 IncludeDir["mono"] = "Chroma/third_party/mono/include"
+IncludeDir["nfd"] = "Chroma/third_party/nativefiledialog-extended/src/include"
 
 Library = {}
 Library["mono"] = "%{wks.location}/Chroma/third_party/mono/lib/Debug/mono-2.0-sgen.lib"

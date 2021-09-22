@@ -8,6 +8,11 @@
 #include "Chroma/Scene/Entity.h"
 #include "Chroma/Core/Time.h"
 
+namespace Polychrome
+{
+	class EditorApp;
+}
+
 
 namespace Chroma
 {
@@ -42,12 +47,15 @@ namespace Chroma
 	class MonoScripting
 	{
 		friend class Application;
+		friend class Polychrome::EditorApp;
 
-	protected:
+	public:
 		static void Init(const std::string& assemblyPath);
 		static void Shutdown();
 		static void InitMono();
 		static void ShutdownMono();
+
+		static bool BuildAssembly(const std::string& path);
 
 		static bool LoadChromaRuntimeAssembly(const std::string& path);
 		static bool LoadAppAssembly(const std::string& path);
@@ -56,8 +64,8 @@ namespace Chroma
 		
 		static void OnSceneDestruct(GUID sceneID);
 
-		static void SetSceneContext(const Ref<Scene>& scene);
-		static const Ref<Scene>& GetCurrentSceneContext();
+		static void SetSceneContext(Scene* scene);
+		static Scene* GetCurrentSceneContext();
 
 		static MonoObject* Construct(const std::string& fullName, bool callConstructor = true, void** parameters = nullptr);
 		static MonoClass* GetCoreClass(const std::string& fullName);
@@ -66,13 +74,13 @@ namespace Chroma
 		static void ShutdownScriptEntity(Entity entity, const std::string& moduleName);
 		static void InstantiateEntityClass(Entity entity);
 
-		static void PreInit(Entity entity, Time t);
-		static void Init(Entity entity, Time t);
-		static void PostInit(Entity entity, Time t);
+		static void PreInit(Entity entity);
+		static void Init(Entity entity);
+		static void PostInit(Entity entity);
 
-		static void EarlyStart(Entity entity, Time t);
-		static void Start(Entity entity, Time t);
-		static void LateStart(Entity entity, Time t);
+		static void EarlyStart(Entity entity);
+		static void Start(Entity entity);
+		static void LateStart(Entity entity);
 
 		static void EarlyUpdate(Entity entity, Time t);
 		static void Update(Entity entity, Time t);

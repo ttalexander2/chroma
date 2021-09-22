@@ -2,7 +2,6 @@
 #include "MonoScripting.h"
 
 #include "Chroma/Scene/Entity.h"
-
 #include <mono/jit/jit.h>
 #include <mono/metadata/assembly.h>
 #include <mono/metadata/debug-helpers.h>
@@ -15,7 +14,7 @@ namespace Chroma
 {
 	static MonoDomain* currentMonoDomain = nullptr;
 	static MonoDomain* newMonoDomain = nullptr;
-	static Ref<Scene> sceneContext;
+	static Scene* sceneContext;
 
 	static MonoImage* appAssemblyImage = nullptr;
 	static MonoImage* coreAssemblyImage = nullptr;
@@ -106,7 +105,9 @@ namespace Chroma
 
 	void MonoScripting::InitMono()
 	{
-		mono_set_assemblies_path("mono/lib");
+		std::string libs = std::filesystem::absolute("mono/lib").string();
+		CHROMA_CORE_INFO("Loaded Mono libraries: {}", libs);
+		mono_set_assemblies_path(libs.c_str());
 		// mono_jit_set_trace_options("--verbose");
 		auto domain = mono_jit_init("Chroma");
 	}
@@ -114,6 +115,17 @@ namespace Chroma
 	void MonoScripting::ShutdownMono()
 	{
 		//mono_jit_cleanup(domain);
+	}
+
+
+	bool MonoScripting::BuildAssembly(const std::string& path)
+	{
+		CHROMA_CORE_INFO("Building: {}", path + "\\bin\\Debug\\net4.6\\Aesix.dll");
+		system(("dotnet build " + std::string(path)).c_str());
+
+		if (std::filesystem::exists(path + "\\bin\\Debug\\net4.6\\Aesix.dll"))
+			return MonoScripting::LoadAppAssembly(path + "\\bin\\Debug\\net4.6\\Aesix.dll");
+		return false;
 	}
 
 	MonoAssembly* MonoScripting::LoadAssemblyFromFile(const std::string& path)
@@ -288,7 +300,11 @@ namespace Chroma
 
 		MonoMethod* method = mono_method_desc_search_in_image(desc, image);
 		if (!method)
+		{
 			CHROMA_CORE_ERROR("mono_method_desc_search_in_image failed ({})", methodDesc);
+			return nullptr;
+		}
+			
 
 		return method;
 	}
@@ -353,6 +369,7 @@ namespace Chroma
 
 	bool MonoScripting::LoadAppAssembly(const std::string& path)
 	{
+		CHROMA_CORE_INFO("LOADING APP ASSEMBLY");
 		if (appAssembly)
 		{
 			appAssembly = nullptr;
@@ -362,11 +379,19 @@ namespace Chroma
 
 		auto app_assembly = LoadAssemblyFromFile(path);
 		if (!app_assembly)
+		{
+			CHROMA_CORE_ERROR("Failed to load App assembly: {}", path);
 			return false;
+		}
+			
 
 		auto app_assembly_image = mono_assembly_get_image(app_assembly);
 		if (!app_assembly_image)
+		{
+			CHROMA_CORE_ERROR("Failed to load App assembly: {}", path);
 			return false;
+		}
+			
 
 		//ScriptEngineRegistry::RegisterAll();
 
@@ -392,7 +417,7 @@ namespace Chroma
 
 		if (entityInstanceMap.size())
 		{
-			Ref<Scene> scene = GetCurrentSceneContext();
+			Scene* scene = GetCurrentSceneContext();
 			CHROMA_CORE_ASSERT(scene, "No active scene!");
 			const auto& map = entityInstanceMap.find(scene->GetID());
 			if (map != entityInstanceMap.end())
@@ -400,19 +425,20 @@ namespace Chroma
 				for (auto& [entityID, data] : map->second)
 				{
 					CHROMA_CORE_ASSERT(scene->Registry.valid(entityID), "Invalid entity ID");
-					InitScriptEntity(Entity(entityID, scene.get()));
+					InitScriptEntity(Entity(entityID, scene));
 				}
 			}
 		}
 	}
 
-	void MonoScripting::SetSceneContext(const Ref<Scene>& scene)
+	void MonoScripting::SetSceneContext(Scene* scene)
 	{
 		classes.clear();
 		sceneContext = scene;
+		entityInstanceMap[scene->GetID()] = std::unordered_map<EntityID, EntityInstanceData>();
 	}
 
-	const Ref<Scene>& MonoScripting::GetCurrentSceneContext()
+	Scene* MonoScripting::GetCurrentSceneContext()
 	{
 		return sceneContext;
 	}
@@ -505,6 +531,8 @@ namespace Chroma
 				entityMap.erase(entityID);
 		}
 	}
+
+
 
 
 
@@ -710,7 +738,7 @@ namespace Chroma
 		auto& entityIDMap = entityInstanceMap.at(sceneID);
 
 		if (entityIDMap.find(entityID) == entityIDMap.end())
-			MonoScripting::InitScriptEntity(Entity(entityID, sceneContext.get()));
+			MonoScripting::InitScriptEntity(Entity(entityID, sceneContext));
 
 		return entityIDMap.at(entityID);
 	}
@@ -720,7 +748,7 @@ namespace Chroma
 		return entityInstanceMap;
 	}
 
-	void MonoScripting::PreInit(Entity entity, Time t)
+	void MonoScripting::PreInit(Entity entity)
 	{
 		EntityInstanceData& entityInstance = GetEntityInstanceData(entity.GetScene().GetID(), entity.GetID());
 		if (entityInstance.Instance.ScriptClass->PreInitMethod)
@@ -729,7 +757,7 @@ namespace Chroma
 		}
 	}
 
-	void MonoScripting::Init(Entity entity, Time t)
+	void MonoScripting::Init(Entity entity)
 	{
 		EntityInstanceData& entityInstance = GetEntityInstanceData(entity.GetScene().GetID(), entity.GetID());
 		if (entityInstance.Instance.ScriptClass->InitMethod)
@@ -738,7 +766,7 @@ namespace Chroma
 		}
 	}
 
-	void MonoScripting::PostInit(Entity entity, Time t)
+	void MonoScripting::PostInit(Entity entity)
 	{
 		EntityInstanceData& entityInstance = GetEntityInstanceData(entity.GetScene().GetID(), entity.GetID());
 		if (entityInstance.Instance.ScriptClass->PostInitMethod)
@@ -746,7 +774,7 @@ namespace Chroma
 			CallMethod(entityInstance.Instance.GetInstance(), entityInstance.Instance.ScriptClass->PostInitMethod);
 		}
 	}
-	void MonoScripting::EarlyStart(Entity entity, Time t)
+	void MonoScripting::EarlyStart(Entity entity)
 	{
 		EntityInstanceData& entityInstance = GetEntityInstanceData(entity.GetScene().GetID(), entity.GetID());
 		if (entityInstance.Instance.ScriptClass->EarlyStartMethod)
@@ -754,7 +782,7 @@ namespace Chroma
 			CallMethod(entityInstance.Instance.GetInstance(), entityInstance.Instance.ScriptClass->EarlyStartMethod);
 		}
 	}
-	void MonoScripting::Start(Entity entity, Time t)
+	void MonoScripting::Start(Entity entity)
 	{
 		EntityInstanceData& entityInstance = GetEntityInstanceData(entity.GetScene().GetID(), entity.GetID());
 		if (entityInstance.Instance.ScriptClass->StartMethod)
@@ -762,7 +790,7 @@ namespace Chroma
 			CallMethod(entityInstance.Instance.GetInstance(), entityInstance.Instance.ScriptClass->StartMethod);
 		}
 	}
-	void MonoScripting::LateStart(Entity entity, Time t)
+	void MonoScripting::LateStart(Entity entity)
 	{
 		EntityInstanceData& entityInstance = GetEntityInstanceData(entity.GetScene().GetID(), entity.GetID());
 		if (entityInstance.Instance.ScriptClass->LateStartMethod)

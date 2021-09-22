@@ -135,9 +135,9 @@ namespace Polychrome
 						asset_folder_open = ImGui::TreeNodeBehaviorIsOpen(ImGui::GetActiveID());
 						if (ImGui::IsItemClicked(ImGuiMouseButton_Left))
 							active_dir = Chroma::AssetManager::AssetDirectory;
-						ImGui::Indent();
+						//ImGui::Indent();
 						ParseFolder(Chroma::AssetManager::AssetDirectory);
-						ImGui::Unindent();
+						//ImGui::Unindent();
 						ImGui::TreePop();
 					}
 					else
@@ -154,8 +154,8 @@ namespace Polychrome
 
 				ImGui::TableNextColumn();
 
-				std::filesystem::path path_build;
-				for (auto& part : active_dir)
+				std::filesystem::path path_build = std::filesystem::path(Chroma::AssetManager::AssetDirectory).parent_path();
+				for (auto& part : std::filesystem::relative(active_dir, std::filesystem::path(Chroma::AssetManager::AssetDirectory).parent_path()))
 				{
 					if (part == ".")
 						continue;
@@ -505,9 +505,9 @@ namespace Polychrome
 
 					if (has_children)
 					{
-						ImGui::Indent();
+						//ImGui::Indent();
 						ParseFolder(entry);
-						ImGui::Unindent();
+						//ImGui::Unindent();
 					}
 					ImGui::TreePop();
 				}

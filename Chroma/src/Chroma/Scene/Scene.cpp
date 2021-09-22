@@ -18,7 +18,6 @@
 #include <Chroma/Systems/ScriptingSystem.h>
 #include <Chroma/Components/Relationship.h>
 #include <Chroma/Utilities/ContainerHelpers.h>
-//#include <Chroma/Systems/ScriptingSystem.h>
 
 
 

@@ -3,6 +3,7 @@
 #include "Chroma/Core/Application.h"
 
 #include <commdlg.h>
+#include <shobjidl.h>
 #include <GLFW/glfw3.h>
 #define GLFW_EXPOSE_NATIVE_WIN32
 #include <GLFW/glfw3native.h>
@@ -47,5 +48,37 @@ namespace Chroma
 		}
 		return std::string();
 
+	}
+
+	std::string FileDialogs::OpenDirectory()
+	{
+		IFileOpenDialog* pFileOpen;
+
+		auto hr = CoCreateInstance(CLSID_FileOpenDialog, NULL, CLSCTX_ALL,
+			IID_IFileOpenDialog, reinterpret_cast<void**>(&pFileOpen));
+
+		if (SUCCEEDED(hr))
+		{
+			pFileOpen->SetOptions(FOS_PICKFOLDERS);
+			hr = pFileOpen->Show(glfwGetWin32Window((GLFWwindow*)Application::Get().GetWindow().GetNativeWindow()));
+			
+			if (SUCCEEDED(hr))
+			{
+				IShellItem* pItem;
+				hr = pFileOpen->GetResult(&pItem);
+				if (SUCCEEDED(hr))
+				{
+					PWSTR pszFilePath;
+					hr = pItem->GetDisplayName(SIGDN_FILESYSPATH, &pszFilePath);
+					if (SUCCEEDED(hr))
+					{
+						std::wstring ss(pszFilePath);
+						return std::string(ss.begin(), ss.end());
+					}
+				}
+			}
+		}
+		
+		return std::string();
 	}
 }

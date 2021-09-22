@@ -5,12 +5,18 @@
 
 namespace Chroma
 {
-	class CSharpScript : ScriptComponent
+	class CSharpScript : public ScriptComponent
 	{
 	public:
-		const std::string Name() const { return "CSharpScript"; }
+		CSharpScript();
+		~CSharpScript();
+		CSharpScript(const CSharpScript& other) = default;
 
-		std::string ModuleName;
+		const std::string Name() const override { return "CSharp Script"; }
+
+		void DrawImGui() override;
+
+		std::string ModuleName = "Test.TestScript";
 		ScriptModuleFieldMap ModuleFieldMap;
 	};
 }

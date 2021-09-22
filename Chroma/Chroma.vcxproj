@@ -337,6 +337,7 @@
     <ClCompile Include="src\Chroma\Audio\ChromaFMOD.cpp" />
     <ClCompile Include="src\Chroma\Components\AudioSource.cpp" />
     <ClCompile Include="src\Chroma\Components\BoxCollider2D.cpp" />
+    <ClCompile Include="src\Chroma\Components\CSharpScript.cpp" />
     <ClCompile Include="src\Chroma\Components\CircleCollider2D.cpp" />
     <ClCompile Include="src\Chroma\Components\LuaScript.cpp" />
     <ClCompile Include="src\Chroma\Components\Relationship.cpp" />
@@ -386,6 +387,7 @@
     <ClCompile Include="src\Chroma\Scripting\LuaScripting.cpp" />
     <ClCompile Include="src\Chroma\Scripting\MonoScripting.cpp" />
     <ClCompile Include="src\Chroma\Scripting\ScriptEngineRegistry.cpp" />
+    <ClCompile Include="src\Chroma\Scripting\ScriptWrappers.cpp" />
     <ClCompile Include="src\Chroma\Systems\AudioSystem.cpp" />
     <ClCompile Include="src\Chroma\Systems\CollisionSystem.cpp" />
     <ClCompile Include="src\Chroma\Systems\ScriptingSystem.cpp" />

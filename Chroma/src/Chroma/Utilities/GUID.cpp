@@ -4,6 +4,7 @@
 #include <iomanip>
 #include <iostream>
 #include <regex>
+#include <spdlog/fmt/bin_to_hex.h>
 
 namespace Chroma
 {
@@ -63,6 +64,8 @@ namespace Chroma
 		{
 			result.Data4[i] = (uint8_t)strtol(s.substr((2*i) + 16, 2).c_str(), NULL, 16);
 		}
+
+		CHROMA_CORE_WARN("{}", result.ToString());
 
 		return result;
 		

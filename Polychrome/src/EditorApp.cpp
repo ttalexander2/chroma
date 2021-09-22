@@ -8,6 +8,8 @@
 #include <Chroma.h>
 #include <Chroma/Core/EntryPoint.h>
 #include <imgui.h>
+#include <imgui_internal.h>
+#include <imgui_stdlib.h>
 #include <glm/gtc/type_ptr.hpp>
 #include <fmod_studio.hpp>
 #include <random>
@@ -23,6 +25,7 @@
 #include "Fonts/Roboto.cpp"
 #include <Chroma/Images/Aseprite.h>
 #include "Style.h"
+#include <time.h>
 #include <Chroma/Components/Transform.h>
 #include <Chroma/Utilities/FileWatcher.h>
 #include "readerwriterqueue.h"
@@ -33,73 +36,152 @@
 #include <Chroma/Systems/SpriteRendererSystem.h>
 #include "AssetBrowser.h"
 #include <Chroma/Scripting/LuaScripting.h>
+#include <Chroma/Scripting/MonoScripting.h>
 #include "LogWindow.h"	
 #include "Project.h"
+#include "FileWatcherThread.h"
 
 #define CHROMA_DEBUG_LOG
 #include <Chroma/Core/Log.h>
+#include "thid_party/platform_folders.h"
+#include <chrono>
+#include "Utilities/GLFWHelpers.h"
 
 namespace Polychrome
 {
 
-	std::vector<Chroma::Ref<Chroma::Texture2D>> testAseprite;
-
-
-	moodycamel::ReaderWriterQueue<std::function<void()>> file_queue;
-
-	std::thread file_watcher_thread;
-	std::atomic_bool file_watcher_thread_running;
+	
 
 	Chroma::Scene* EditorApp::CurrentScene = nullptr;
+	std::string EditorApp::CurrentScenePath;
 
 	bool EditorApp::SceneRunning = false;
 	bool EditorApp::ScenePaused = false;
 	bool EditorApp::PreviewSprites = true;
 
 	ImFont* EditorApp::LargeIcons = nullptr;
+	ImFont* EditorApp::LargeFont = nullptr;
+
+	GLFWwindow* temp;
+
+	bool ProjectLoaded = false;
+
+
+
+	struct RecentProjectInfo
+	{
+		std::string Name;
+		std::string TimeStamp;
+		std::string Path;
+		bool Pinned = false;
+	};
+
+	std::vector<RecentProjectInfo> recentProjects;
 
 	EditorApp::EditorApp()
-		: Application("Polychrome Editor", 1920U, 1080U), m_CameraController(1920.0f / 1080.0f)
+		: Application("Polychrome Editor", 800U, 400U), m_CameraController(1920.0f / 1080.0f)
 	{
 
 #ifdef CHROMA_PLATFORM_WINDOWS
 		glfwSetDropCallback((GLFWwindow*)this->Get().GetWindow().GetNativeWindow(), FileDrop::HandleFileDrop);
 #endif
-
-		Project::CreateProject("CheeseBurger", "C:/Users/Thomas/Desktop/CheeseBurger");
-
-		LogWindow::Init();
-		
-		Chroma::Scene* scene = new Chroma::Scene();
-
+		//glfwHideWindow((GLFWwindow*)this->Get().GetWindow().GetNativeWindow());
 		
 		
-		Chroma::Entity entity = scene->NewEntity();
+		//glfwMakeContextCurrent(temp);
+		//glfwDestroyWindow((GLFWwindow*)this->Get().GetWindow().GetNativeWindow());
+		//glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
+		//
+		//glfwCreateWindow(800, 400, "", nullptr, temp);
+		//glfwMakeContextCurrent((GLFWwindow*)this->Get().GetWindow().GetNativeWindow());
+		glfwSetWindowCenter((GLFWwindow*)this->Get().GetWindow().GetNativeWindow());
+		glfwSetWindowAttrib((GLFWwindow*)this->Get().GetWindow().GetNativeWindow(), GLFW_DECORATED, GLFW_FALSE);
+		
+
+		std::filesystem::path appData(sago::getDataHome() + "/Polychrome");
+		std::filesystem::path configFile(sago::getDataHome() + "/Polychrome/RecentProjects.yaml");
+
+		if (!std::filesystem::exists(appData))
+		{
+			std::filesystem::create_directory(appData);
+		}
 
 
-		auto entity4 = scene->NewEntity();
-		entity.AddComponent<Chroma::SpriteRenderer>();
-		auto &sprite = entity.GetComponent<Chroma::SpriteRenderer>();
-		entity.AddComponent<Chroma::LuaScript>();
-		entity.CreateChild();
-		entity.CreateChild();
-		entity.CreateChild();
+		if (std::filesystem::exists(configFile))
+		{
+			auto ss = std::ostringstream{};
+			std::ifstream stream(configFile);
+			if (stream.good())
+			{
+				ss << stream.rdbuf();
+				auto yaml = YAML::Load(ss.str());
+				auto seq = yaml["RecentProjects"];
+				if (seq)
+				{
+					for (auto project : seq)
+					{
+						RecentProjectInfo info;
+						if (project["Name"])
+						{
+							info.Name = project["Name"].as<std::string>();
+						}
+						if (project["TimeStamp"])
+						{
+							info.TimeStamp = project["TimeStamp"].as<std::string>();
+						}
+						if (project["Path"])
+						{
+							info.Path = project["Path"].as<std::string>();
+						}
+						if (project["Pinned"])
+						{
+							info.Pinned = project["Pinned"].as<bool>();
+						}
+						if (std::filesystem::exists(info.Path + "\\" + info.Name + ".polychrome"))
+							recentProjects.push_back(info);
+					}
+				}
+			}
+		}
+			
 
-		((Chroma::Transform*)entity.GetComponent("Transform"))->Position.x = 2;
+
+
+
+		//Project::CreateProject("CheeseBurger", "C:/Users/Thomas/Desktop/CheeseBurger");
+
+		
+		
+		//Chroma::Scene* scene = new Chroma::Scene();
+
+		
+		
+		//Chroma::Entity entity = scene->NewEntity();
+
+
+		//auto entity4 = scene->NewEntity();
+		//entity.AddComponent<Chroma::SpriteRenderer>();
+		//auto &sprite = entity.GetComponent<Chroma::SpriteRenderer>();
+		//entity.AddComponent<Chroma::LuaScript>();
+		//entity.CreateChild();
+		//entity.CreateChild();
+		//entity.CreateChild();
+
+		//((Chroma::Transform*)entity.GetComponent("Transform"))->Position.x = 2;
 
 
 
 
 
-		Chroma::Entity e2 = scene->NewEntity();
-		Chroma::BoxCollider2D& aaaa = e2.GetComponent<Chroma::BoxCollider2D>();
+		//Chroma::Entity e2 = scene->NewEntity();
+		//Chroma::BoxCollider2D& aaaa = e2.GetComponent<Chroma::BoxCollider2D>();
 
 		//scene->AddComponent<Chroma::CircleCollider2D>(e2);
 		//scene->AddComponent<Chroma::BoxCollider2D>(e2);
 
-		std::string prefab = e2.ToPrefab();
-		std::ofstream fout("test.prefab");
-		fout << prefab;
+		//std::string prefab = e2.ToPrefab();
+		//std::ofstream fout("test.prefab");
+		//fout << prefab;
 
 
 		//scene->GetAllComponents(entity);
@@ -107,126 +189,9 @@ namespace Polychrome
 
 		//CHROMA_INFO("");
 
-		EditorApp::CurrentScene = scene;
-
-
-		// This needs to be replaced
-		for (auto& file : std::filesystem::recursive_directory_iterator(".\\assets"))
-		{
-			if (file.is_regular_file())
-			{
-				std::string extension = file.path().extension().string();
-				if (extension == ".ase" || extension == ".aseprite" || extension == ".png" || extension == ".jpg")
-				{
-					CHROMA_CORE_INFO("{}", file.path().string());
-					Chroma::AssetManager::LoadSprite(file.path().string());
-				}
-				else if (extension == ".lua")
-				{
-					Chroma::LuaScripting::Scripts.push_back(file.path().string());
-				}
-			}
-		}
-
-		Chroma::Input::SetGamepadConnectionCallback([](Chroma::Input::Joystick j) {CHROMA_CORE_INFO("Controller connected!:  {}", Chroma::Input::GetGamepadName(j)); });
-		Chroma::Input::SetGamepadDisconnectionCallback([](Chroma::Input::Joystick j) {CHROMA_CORE_INFO("Controller disconnected!:  {}", Chroma::Input::GetGamepadName(j)); });
+		//EditorApp::CurrentScene = scene;
 
 		
-		file_watcher_thread_running.store(true);
-
-		file_watcher_thread = std::thread([] {
-			FileWatcher fw{ ".\\assets", std::chrono::milliseconds(3000) };
-			fw.start(file_watcher_thread_running, [](std::string path_to_watch, FileStatus status) -> void {
-				// Process only regular files, all other file types are ignored
-				if (!std::filesystem::is_regular_file(std::filesystem::path(path_to_watch)) && status != FileStatus::erased)
-				{
-					return;
-				}
-
-				switch (status)
-				{
-				case FileStatus::created:
-					file_queue.enqueue([path_to_watch]() {
-						CHROMA_CORE_TRACE("File Created: {}", path_to_watch);
-						std::string extension = std::filesystem::path(path_to_watch).extension().string();
-						if (extension == ".ase" || extension == ".aseprite" || extension == ".png" || extension == ".jpg")
-						{
-							Chroma::AssetManager::LoadSprite(path_to_watch);
-						}
-						else if (extension == ".lua")
-						{
-							Chroma::LuaScripting::Scripts.push_back(path_to_watch);
-						}
-						else if (extension == ".cs")
-						{
-							//This is probably a bad idea but idk
-							system("dotnet build ");
-						}
-					});
-					break;
-				case FileStatus::modified:
-					file_queue.enqueue([path_to_watch]() {
-						CHROMA_CORE_TRACE("File Modified: {}", path_to_watch);
-						std::string extension = std::filesystem::path(path_to_watch).extension().string();
-						if (extension == ".ase" || extension == ".aseprite" || extension == ".png" || extension == ".jpg")
-						{
-							if (Chroma::AssetManager::HasSprite(path_to_watch))
-							{
-								Chroma::AssetManager::GetSprite(path_to_watch)->Reload();
-							}
-							else
-							{
-								Chroma::AssetManager::LoadSprite(path_to_watch);
-							}
-
-							
-						}
-						else if (extension == ".lua")
-						{
-							for (auto entity : EditorApp::CurrentScene->Registry.view<Chroma::LuaScript>())
-							{
-								auto& script = EditorApp::CurrentScene->GetComponent<Chroma::LuaScript>(entity);
-								if (std::filesystem::equivalent(script.Path, path_to_watch))
-								{
-									script.ReloadState();
-									script.Success = Chroma::LuaScripting::LoadScriptFromFile(script.Path, script.Environment);
-									script.ReloadCoroutines();
-								}	
-							}
-						}
-						else if (extension == ".cs")
-						{
-							//This is probably a bad idea but idk
-							system("dotnet build ");
-						}
-					});
-					break;
-				case FileStatus::erased:
-					file_queue.enqueue([path_to_watch]() {
-						CHROMA_CORE_TRACE("File Erased: {}", path_to_watch);
-						std::string extension = std::filesystem::path(path_to_watch).extension().string();
-						if (extension == ".ase" || extension == ".png" || extension == ".jpg")
-						{
-							
-						}
-						else if (extension == ".lua")
-						{
-							auto it = std::find(Chroma::LuaScripting::Scripts.begin(), Chroma::LuaScripting::Scripts.end(), path_to_watch);
-							Chroma::LuaScripting::Scripts.erase(it);
-						}
-						else if (extension == ".cs")
-						{
-							//This is probably a bad idea but idk
-							system("dotnet build ");
-						}
-					});
-					
-					break;
-				default:
-					CHROMA_CORE_TRACE("Error! Unknown file status.\n");
-				}
-			});
-		});
 
 		
 		/*
@@ -239,7 +204,7 @@ namespace Polychrome
 		*/
 
 
-		scene->Load();
+		//scene->Load();
 
 
 
@@ -249,15 +214,14 @@ namespace Polychrome
 
 	void EditorApp::Init()
 	{
-		m_Texture = Chroma::Texture2D::Create("assets/textures/megagfilms.png");
-
 		Chroma::FramebufferInfo fbspec;
 		fbspec.Width = 1920;
 		fbspec.Height = 1080;
 		m_Framebuffer = Chroma::Framebuffer::Create(fbspec);
 
-		Chroma::Audio::LoadBank("assets/fmod/Desktop/Master.bank", FMOD_STUDIO_LOAD_BANK_NORMAL);
-		Chroma::Audio::LoadBank("assets/fmod/Desktop/Master.strings.bank", FMOD_STUDIO_LOAD_BANK_NORMAL);
+		// TODO: Load/Unload FMOD banks on play.
+		//Chroma::Audio::LoadBank("assets/fmod/Desktop/Master.bank", FMOD_STUDIO_LOAD_BANK_NORMAL);
+		//Chroma::Audio::LoadBank("assets/fmod/Desktop/Master.strings.bank", FMOD_STUDIO_LOAD_BANK_NORMAL);
 
 
 		ImGui::CreateContext();
@@ -274,22 +238,27 @@ namespace Polychrome
 		io.FontDefault = font;
 		LargeIcons = io.Fonts->AddFontFromFileTTF("assets/fonts/forkawesome-webfont.ttf", 128.0f, nullptr, icon_ranges);
 
+		LargeFont = io.Fonts->AddFontFromMemoryCompressedTTF(Roboto_compressed_data, Roboto_compressed_size, 64.f);
+
 
 		ImGui::GetStyle().FrameRounding = 1;
 
 		Config.Style = (int)ImGui::ImGuiStylePreset::ChromaDark;
 
 		CodeEditor::Init();
+		LogWindow::Init();
 
 		Chroma::Input::SetGamepadConnectionCallback([](auto joystick) { CHROMA_CORE_WARN("Joystick Connected!"); });
 		Chroma::Input::SetGamepadDisconnectionCallback([](auto joystick) { CHROMA_CORE_WARN("Joystick Disconnected!"); });
-		
+
 
 	}
 
 
 	void EditorApp::Update(Chroma::Time time)
 	{
+		if (!ProjectLoaded)
+			return;
 
 		if (EditorApp::SceneRunning && !EditorApp::ScenePaused)
 		{
@@ -313,7 +282,7 @@ namespace Polychrome
 
 		std::function<void()> func;
 		bool success;
-		while (success = file_queue.try_dequeue(func))
+		while (success = FileWatcherThread::file_queue.try_dequeue(func))
 		{
 			if (success)
 				func();
@@ -325,10 +294,16 @@ namespace Polychrome
 
 	void EditorApp::Draw(Chroma::Time time)
 	{
+
+
 		CHROMA_PROFILE_SCOPE("Render OnUpdate");
 		Chroma::RenderCommand::SetClearColor({ 0.0f, 0.0f , 0.0f , 1.0f });
 		Chroma::Renderer2D::Clear();
 		Chroma::Renderer2D::ResetStats();
+
+		if (!ProjectLoaded)
+			return;
+
 		m_Framebuffer->Bind();
 
 		static float rotation = 0.0f;
@@ -379,11 +354,323 @@ namespace Polychrome
 
 	void EditorApp::ImGuiDraw(Chroma::Time time)
 	{
+
 		if (!first)
 		{
 			ImGui::ResetStyle(ImGui::ImGuiStylePreset::ChromaDark, ImGui::GetStyle());
 
 			first = true;
+
+			ImGui::OpenPopup("##ProjectOpenWindow");
+		}
+
+
+		if (!ProjectLoaded)
+		{
+			ImGui::SetNextWindowSize(ImGui::GetMainViewport()->WorkSize);
+
+			ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0);
+
+			ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+			ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+			if (ImGui::BeginPopup("##ProjectOpenWindow", ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_Modal))
+			{
+				static bool creating_new = false;
+				static std::string creating_name;
+				static std::string creating_path;
+				static std::string creating_starting;
+
+
+
+				ImFont headerf = *LargeFont;
+				headerf.Scale = headerf.Scale * .5f;
+				ImGui::PushFont(&headerf);
+				ImGui::Text("Polychrome Editor");
+				ImGui::PopFont();
+
+				ImGui::SameLine(ImGui::GetContentRegionAvailWidth() - 24.f);
+				ImGui::PushStyleColor(ImGuiCol_Button, { 0,0,0,0 });
+				if (ImGui::Button(ICON_FK_TIMES, { 24, 24 }))
+				{
+					YAML::Emitter e;
+					e << YAML::BeginMap;
+					e << YAML::Key << "RecentProjects" << YAML::Value << YAML::BeginSeq;
+
+					for (auto& proj : recentProjects)
+					{
+						e << YAML::BeginMap;
+						e << YAML::Key << "Name" << YAML::Value << proj.Name;
+						e << YAML::Key << "TimeStamp" << YAML::Value << proj.TimeStamp;
+						e << YAML::Key << "Path" << YAML::Value << proj.Path;
+						e << YAML::Key << "Pinned" << YAML::Value << proj.Pinned;
+						e << YAML::EndMap;
+					}
+
+					e << YAML::EndSeq << YAML::EndMap;
+
+					std::ofstream stream(sago::getDataHome() + "/Polychrome/RecentProjects.yaml");
+					stream.write(e.c_str(), e.size());
+					stream.close();
+					this->Stop();
+				}
+				ImGui::PopStyleColor();
+
+				ImGui::Separator();
+
+				if (!creating_new)
+				{
+					static std::vector<bool> hovered(recentProjects.size(), false);
+					static std::vector<bool> active(recentProjects.size(), false);
+
+					std::sort(recentProjects.begin(), recentProjects.end(), [](RecentProjectInfo a, RecentProjectInfo b) {
+						std::istringstream str1(a.TimeStamp);
+						std::istringstream str2(b.TimeStamp);
+
+						struct std::tm tm1;
+						struct std::tm tm2;
+
+						str1 >> std::get_time(&tm1, "%d/%m/%Y %H:%M");
+						str2 >> std::get_time(&tm2, "%d/%m/%Y %H:%M");
+
+						std::time_t time1 = mktime(&tm1);
+						std::time_t time2 = mktime(&tm2);
+
+						return difftime(time1, time2) > 0.0;
+
+					});
+
+					std::sort(recentProjects.begin(), recentProjects.end(), [](RecentProjectInfo a, RecentProjectInfo b) {
+						return a.Pinned && !b.Pinned;
+					});
+
+					bool is_pinned = false;
+					if (recentProjects.size() > 0 && recentProjects[0].Pinned)
+					{
+						ImGui::Text("Pinned:");
+						is_pinned = true;
+					}
+
+					int i = 0;
+					for (auto& prj : recentProjects)
+					{
+						if (is_pinned && !prj.Pinned)
+						{
+							is_pinned = false;
+							ImGui::Separator();
+						}
+
+						bool f = false;
+						auto col = ImGui::GetColorU32(ImGui::GetStyleColorVec4(ImGuiCol_ButtonActive));
+						if (active[i])
+							col = ImGui::GetColorU32(ImGui::GetStyleColorVec4(ImGuiCol_ButtonHovered));
+						if (hovered[i] || active[i])
+							ImGui::GetWindowDrawList()->AddRectFilled({ ImGui::GetCursorScreenPos().x - ImGui::GetStyle().ItemSpacing.x, ImGui::GetCursorScreenPos().y },
+								ImVec2(ImGui::GetContentRegionAvailWidth() + ImGui::GetCursorScreenPos().x + ImGui::GetStyle().ItemSpacing.x - 30,
+									ImGui::GetCursorScreenPos().y + ImGui::GetTextLineHeight() * 2 + ImGui::GetStyle().ItemSpacing.y * 2), col);
+
+						ImGui::BeginGroup();
+
+						float icon_size = ImGui::GetTextLineHeight() * 2 + ImGui::GetStyle().ItemSpacing.y * 2;
+
+						ImFont _font = *EditorApp::LargeIcons;
+						_font.Scale = icon_size / _font.FontSize;
+
+						ImGui::PushFont(&_font);
+						ImGui::PushStyleColor(ImGuiCol_Button, { 0,0,0,0 });
+						ImGui::PushStyleColor(ImGuiCol_ButtonActive, { 0,0,0,0 });
+						ImGui::PushStyleColor(ImGuiCol_ButtonHovered, { 0,0,0,0 });
+						ImGui::Text(ICON_FK_CSHARP);
+						ImGui::PopStyleColor(3);
+						ImGui::PopFont();
+
+						ImGui::SameLine();
+
+						ImGui::BeginGroup();
+						ImGui::Text(prj.Name.c_str());
+						ImGui::SameLine(ImGui::GetContentRegionAvailWidth() - ImGui::CalcTextSize(prj.TimeStamp.c_str()).x - 30);
+						ImGui::Text(prj.TimeStamp.c_str());
+						ImGui::TextColored(ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled), prj.Path.c_str());
+						ImGui::EndGroup();
+						ImGui::EndGroup();
+
+						if (ImGui::IsItemHovered())
+							hovered[i] = true;
+						else
+							hovered[i] = false;
+
+						if (ImGui::IsItemHovered() && ImGui::IsMouseDown(ImGuiMouseButton_Left))
+							active[i] = true;
+						else
+							active[i] = false;
+
+						if (ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left) && ImGui::IsItemHovered())
+						{
+							std::time_t t = std::time(nullptr);
+							char buffer[80];
+							strftime(buffer, sizeof(buffer), "%d/%m/%Y %H:%M", std::localtime(&t));
+
+							YAML::Emitter e;
+							e << YAML::BeginMap;
+							e << YAML::Key << "RecentProjects" << YAML::Value << YAML::BeginSeq;
+
+							for (auto& proj : recentProjects)
+							{
+								e << YAML::BeginMap;
+								e << YAML::Key << "Name" << YAML::Value << proj.Name;
+								if (proj.Name == prj.Name && proj.Path == prj.Path)
+									e << YAML::Key << "TimeStamp" << YAML::Value << std::string(buffer);
+								else
+									e << YAML::Key << "TimeStamp" << YAML::Value << proj.TimeStamp;
+								
+								e << YAML::Key << "Path" << YAML::Value << proj.Path;
+								e << YAML::Key << "Pinned" << YAML::Value << proj.Pinned;
+								e << YAML::EndMap;
+							}
+
+							e << YAML::EndSeq << YAML::EndMap;
+
+							std::ofstream stream(sago::getDataHome() + "/Polychrome/RecentProjects.yaml");
+							stream.write(e.c_str(), e.size());
+							stream.close();
+
+							Project::LoadProject(prj.Path + "\\" + prj.Name + ".polychrome");
+							EditorApp::CurrentScenePath = Chroma::AssetManager::AssetDirectory + Project::StartingScene;
+
+							glfwSetWindowSize((GLFWwindow*)this->Get().GetWindow().GetNativeWindow(), 1920, 1080);
+							glfwSetWindowCenter((GLFWwindow*)this->Get().GetWindow().GetNativeWindow());
+							glfwMaximizeWindow((GLFWwindow*)this->Get().GetWindow().GetNativeWindow());
+							glfwSetWindowAttrib((GLFWwindow*)this->Get().GetWindow().GetNativeWindow(), GLFW_DECORATED, GLFW_TRUE);
+
+							Polychrome::FileWatcherThread::SetWatch(Chroma::AssetManager::AssetDirectory);
+
+							ProjectLoaded = true;
+							ImGui::CloseCurrentPopup();
+						}
+
+						ImGui::SameLine();
+						ImGui::PushID(&prj.Path);
+						ImGui::PushStyleColor(ImGuiCol_Button, { 0,0,0,0 });
+						if (ImGui::Button(ICON_FK_THUMB_TACK, { 30, 36 }))
+						{
+							prj.Pinned = !prj.Pinned;
+						}
+						ImGui::PopStyleColor();
+						ImGui::PopID();
+
+						i++;
+					}
+
+					ImGui::Dummy({ 1, ImGui::GetContentRegionAvail().y - ImGui::GetTextLineHeightWithSpacing() * 1.8f });
+
+					ImGui::Separator();
+					if (ImGui::Button("Create a new project..."))
+					{
+						creating_new = true;
+						creating_name = "NewProject";
+						creating_path = sago::getDocumentsFolder() + "\\ChromaProjects\\";
+						creating_starting = "New Scene";
+					}
+				}
+				else
+				{
+					ImGui::PushItemWidth(ImGui::GetContentRegionAvailWidth() * 0.7f);
+					ImGui::Text("Name:");
+					ImGui::InputText("##name_new_proj", &creating_name, ImGuiInputTextFlags_CharsNoBlank);
+					ImGui::Dummy({ 1, 12 });
+					ImGui::Text("Location");
+					ImGui::InputText("##path_new_proj", &creating_path, ImGuiInputTextFlags_CharsNoBlank);
+					ImGui::SameLine();
+					ImGui::PopItemWidth();
+					if (ImGui::Button("..."))
+					{
+						std::string selectedFile = Chroma::FileDialogs::OpenDirectory();
+						if (!selectedFile.empty())
+						{
+							creating_path = selectedFile;
+						}
+					}
+					ImGui::PushItemWidth(ImGui::GetContentRegionAvailWidth() * 0.7f);
+					ImGui::Dummy({ 1, 12 });
+					ImGui::Text("Starting Scene Name:");
+					ImGui::InputText("##starting_scene_new_proj", &creating_starting, ImGuiInputTextFlags_CharsNoBlank);
+
+					ImGui::PopItemWidth();
+
+					ImGui::Dummy({ 1, ImGui::GetContentRegionAvail().y - ImGui::GetTextLineHeightWithSpacing() * 1.8f });
+
+					if (ImGui::Button("Cancel"))
+					{
+						creating_new = false;
+					}
+					ImGui::SameLine();
+
+					ImGui::PushItemFlag(ImGuiItemFlags_Disabled, !std::filesystem::exists(std::filesystem::path(creating_path).parent_path()));
+					if (ImGui::Button("Create"))
+					{
+						Project::CreateProject(creating_name, creating_path, "\\Scenes\\" + creating_starting);
+						Chroma::AssetManager::AssetDirectory = creating_path + "\\" + creating_name + "\\Assets";
+						this->CurrentScene = new Chroma::Scene();
+						this->CurrentScene->NewEntity();
+						this->CurrentScene->Name = creating_starting;
+						EditorApp::CurrentScenePath = Chroma::AssetManager::AssetDirectory + "\\Scenes\\" + creating_starting + ".chroma";
+						SaveScene();
+
+						std::time_t t = std::time(nullptr);
+						char buffer[80];
+						strftime(buffer, sizeof(buffer), "%d/%m/%Y %H:%M", std::localtime(&t));
+
+						YAML::Emitter e;
+						e << YAML::BeginMap;
+						e << YAML::Key << "RecentProjects" << YAML::Value << YAML::BeginSeq;
+
+						for (auto& proj : recentProjects)
+						{
+							e << YAML::BeginMap;
+							e << YAML::Key << "Name" << YAML::Value << proj.Name;
+							e << YAML::Key << "TimeStamp" << YAML::Value << proj.TimeStamp;
+							e << YAML::Key << "Path" << YAML::Value << proj.Path;
+							e << YAML::Key << "Pinned" << YAML::Value << proj.Pinned;
+							e << YAML::EndMap;
+						}
+
+						e << YAML::BeginMap;
+						e << YAML::Key << "Name" << YAML::Value << creating_name;
+						e << YAML::Key << "TimeStamp" << YAML::Value << std::string(buffer);
+						e << YAML::Key << "Path" << YAML::Value << creating_path  + creating_name;
+						e << YAML::Key << "Pinned" << YAML::Value << false;
+						e << YAML::EndMap;
+
+
+						e << YAML::EndSeq << YAML::EndMap;
+
+						std::ofstream stream(sago::getDataHome() + "/Polychrome/RecentProjects.yaml");
+						stream.write(e.c_str(), e.size());
+						stream.close();
+
+						glfwSetWindowSize((GLFWwindow*)this->Get().GetWindow().GetNativeWindow(), 1920, 1080);
+						glfwSetWindowCenter((GLFWwindow*)this->Get().GetWindow().GetNativeWindow());
+						glfwMaximizeWindow((GLFWwindow*)this->Get().GetWindow().GetNativeWindow());
+						glfwSetWindowAttrib((GLFWwindow*)this->Get().GetWindow().GetNativeWindow(), GLFW_DECORATED, GLFW_TRUE);
+
+						Polychrome::FileWatcherThread::SetWatch(Chroma::AssetManager::AssetDirectory);
+
+						ProjectLoaded = true;
+						ImGui::CloseCurrentPopup();
+					}
+					ImGui::PopItemFlag();
+					
+
+
+				}
+
+				
+					
+				ImGui::End();
+			}
+			
+			ImGui::PopStyleVar();
+
+			return;
 		}
 			
 
@@ -584,8 +871,16 @@ namespace Polychrome
 
 	void EditorApp::SaveScene()
 	{
+		CHROMA_CORE_TRACE("{}", CurrentScenePath);
 		if (!CurrentScenePath.empty() && std::filesystem::exists(CurrentScenePath))
 		{
+			std::string yaml = EditorApp::CurrentScene->Serialize();
+			std::ofstream fout2(CurrentScenePath);
+			fout2 << yaml;
+		}
+		else if (!CurrentScenePath.empty())
+		{
+			std::filesystem::create_directory(std::filesystem::path(CurrentScenePath).parent_path());
 			std::string yaml = EditorApp::CurrentScene->Serialize();
 			std::ofstream fout2(CurrentScenePath);
 			fout2 << yaml;
@@ -597,12 +892,13 @@ namespace Polychrome
 	EditorApp::~EditorApp()
 	{
 		delete EditorApp::CurrentScene;
-		file_watcher_thread_running.store(false);
-		file_watcher_thread.join();
+		if (FileWatcherThread::file_watcher_thread_running)
+		{
+			FileWatcherThread::file_watcher_thread_running.store(false);
+			FileWatcherThread::file_watcher_thread.join();
+		}
+
 	}
-
-
-
 }
 
 Chroma::Application* Chroma::CreateApplication()

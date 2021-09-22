@@ -203,12 +203,11 @@ project "Polychrome"
         "{COPY} mono %{cfg.targetdir}/mono",
         "{ECHO} Copying ../Chroma/third_party/mono/bin/Debug/mono-2.0-sgen.dll to %{cfg.targetdir}",
         '{COPY} "../Chroma/third_party/mono/bin/Debug/mono-2.0-sgen.dll" "%{cfg.targetdir}"',
-        "{ECHO} Building Chroma.Mono scripting core...",
-        "dotnet build ../Chroma.Mono/Source/Chroma.Mono.csproj -o ./",
-        "{ECHO} Copying Chroma.Mono.dll to %{cfg.targetdir}",
-        "{COPY} Chroma.Mono.dll %{cfg.targetdir}",
         "{ECHO} Copying imgui.ini to %{cfg.targetdir}",
-        "{COPY} imgui.ini %{cfg.targetdir}"
+        "{COPY} imgui.ini %{cfg.targetdir}",
+        "{ECHO} Build Chroma.Mono...",
+        "dotnet build ../Script-Core/Chroma.Mono.csproj --output .",
+        "{COPY} Chroma.Mono.dll %{cfg.targetdir}"
     }
 
     defines
@@ -314,3 +313,22 @@ project "Runtime"
         defines "CHROMA_DIST"
         runtime "Release"
         optimize "On"
+
+
+
+
+project "Chroma.Mono"
+    location "Script-Core"
+    dotnetframework "4.6"
+    kind "SharedLib"
+    language "C#"
+
+    targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+	objdir ("obj/" .. outputdir .. "/%{prj.name}")
+
+    files
+    {
+        "Script-Core/Source/**.cs",  
+    }
+    
+

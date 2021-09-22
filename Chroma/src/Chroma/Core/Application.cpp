@@ -21,6 +21,9 @@
 #include "Chroma/Components/CircleCollider2D.h"
 #include <Chroma/Components/Relationship.h>
 #include <Chroma/Scripting/MonoScripting.h>
+#include <Chroma/Scripting/ScriptEngineRegistry.h>
+#include <Chroma/Components/LuaScript.h>
+#include <Chroma/Components/CSharpScript.h>
 
 namespace Chroma
 {
@@ -48,7 +51,9 @@ namespace Chroma
 
 		LuaScripting::Init();
 		MonoScripting::Init("Chroma.Mono.dll");
+		ScriptEngineRegistry::RegisterAll();
 
+		ECS::RegisterComponent<CSharpScript>();
 		ECS::RegisterComponent<Tag>();
 		ECS::RegisterComponent<Transform>();
 		ECS::RegisterComponent<AudioSource>();
@@ -56,6 +61,10 @@ namespace Chroma
 		ECS::RegisterComponent<BoxCollider2D>();
 		ECS::RegisterComponent<CircleCollider2D>();
 		ECS::RegisterComponent<Relationship>();
+		ECS::RegisterComponent<LuaScript>();
+
+
+
 
 	}
 
@@ -85,6 +94,11 @@ namespace Chroma
 		Renderer::OnWindowResize(e.GetWidth(), e.GetHeight());
 
 		return false;
+	}
+
+	void Application::Stop()
+	{
+		m_Running = false;
 	}
 
 	bool Application::OnWindowClose(WindowCloseEvent& e)

@@ -10,13 +10,14 @@
 #include "Chroma/Components/CircleCollider2D.h"
 #include "Chroma/Components/SpriteRenderer.h"
 #include "Chroma/Components/Transform.h"
+#include <Chroma/Scripting/ScriptWrappers.h>
+
+#include "MonoScripting.cpp"
 
 namespace Chroma
 {
 	std::unordered_map<MonoType*, std::function<bool(Entity&)>> hasComponentFuncs;
 	std::unordered_map<MonoType*, std::function<void(Entity&)>> createComponentFuncs;
-
-	extern MonoImage* coreAssemblyImage;
 
 #define Component_RegisterType(Type) \
 	{\
@@ -42,6 +43,9 @@ namespace Chroma
 	void ScriptEngineRegistry::RegisterAll()
 	{
 		InitComponentTypes();
+
+		mono_add_internal_call("Chroma.Entity::CreateComponent_Native", Chroma::Script::Entity_CreateComponent);
+		mono_add_internal_call("Chroma.Entity::HasComponent_Native", Chroma::Script::Entity_HasComponent);
 		
 
 	}

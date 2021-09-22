@@ -24,7 +24,7 @@ public:
     }
 
     // Monitor "path_to_watch" for changes and in case of a change execute the user supplied "action" function
-    void start(std::atomic_bool& running, const std::function<void (std::string, FileStatus)> &action) {
+    void start(std::atomic_bool& running, const std::function<void (const std::string&, const std::string&, FileStatus)> &action) {
 
         std::chrono::high_resolution_clock sc;
         auto start = sc.now();
@@ -40,7 +40,7 @@ public:
             auto it = paths_.begin();
             while (it != paths_.end()) {
                 if (!std::filesystem::exists(it->first)) {
-                    action(it->first, FileStatus::erased);
+                    action(it->first, path_to_watch, FileStatus::erased);
                     it = paths_.erase(it);
                 }
                 else {
@@ -55,17 +55,16 @@ public:
                 // File creation
                 if(!contains(file.path().string())) {
                     paths_[file.path().string()] = current_file_last_write_time;
-                    action(file.path().string(), FileStatus::created);
+                    action(file.path().string(), path_to_watch, FileStatus::created);
                 // File modification
                 } else {
                     if(paths_[file.path().string()] != current_file_last_write_time) {
                         paths_[file.path().string()] = current_file_last_write_time;
-                        action(file.path().string(), FileStatus::modified);
+                        action(file.path().string(), path_to_watch, FileStatus::modified);
                     }
                 }
             }
         }
-        CHROMA_CORE_ERROR("FINISHED");
     }
 
 

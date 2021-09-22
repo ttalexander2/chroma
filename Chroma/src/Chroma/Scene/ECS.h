@@ -4,7 +4,8 @@
 #include "Chroma/Utilities/GUID.h"
 #include <entt.hpp>
 #include "Component.h"
-#include "Chroma/Components/Transform.h"
+#include "Chroma/Components/CSharpScript.h"
+#include <any>
 
 
 
@@ -30,22 +31,22 @@ namespace Chroma
 
 			Components.emplace(name);
 
-			ComponentFactory_Get.emplace(hash, [&](EntityID entity, entt::registry* registry)
+			ComponentFactory_Get.emplace(hash, [&](EntityID entity, entt::registry* registry) -> Component*
 			{
 				return &registry->get_or_emplace<T>((entt::entity)entity);
 			});
 
-			ComponentFactory_Add.emplace(hash, [&](EntityID entity, entt::registry* registry)
+			ComponentFactory_Add.emplace(hash, [&](EntityID entity, entt::registry* registry) -> Component*
 			{
 				return &registry->emplace<T>((entt::entity)entity);
 			});
 
-			ComponentFactory_Remove.emplace(hash, [&](EntityID entity, entt::registry* registry)
+			ComponentFactory_Remove.emplace(hash, [&](EntityID entity, entt::registry* registry) -> size_t
 			{
 				return registry->remove<T>((entt::entity)entity);
 			});
 
-			ComponentFactory_Has.emplace(hash, [&](EntityID entity, entt::registry* registry)
+			ComponentFactory_Has.emplace(hash, [&](EntityID entity, entt::registry* registry) -> bool
 			{
 				return registry->try_get<T>((entt::entity)entity) != nullptr;
 			});

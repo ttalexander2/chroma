@@ -36,13 +36,14 @@ namespace Chroma
 
 	bool LuaScripting::LoadScriptFromFile(std::filesystem::path path, sol::environment& env, bool is_binary)
 	{
+		std::string p = AssetManager::GetPath(path.string());
 		sol::load_mode mode = sol::load_mode::text;
 		if (is_binary)
 			mode = sol::load_mode::binary;
 
 		try
 		{
-			auto result = Lua.safe_script_file(path.string(), env, mode);
+			auto result = Lua.safe_script_file(p, env, mode);
 			return result.valid();
 
 		}
@@ -88,12 +89,14 @@ namespace Chroma
 
 	void LuaScripting::CompileToBytecode(std::filesystem::path script, std::filesystem::path output)
 	{
+		std::filesystem::path s = AssetManager::GetPath(script.string());
+		std::filesystem::path o = AssetManager::GetPath(output.string());
 		try
 		{
 			// This is really sus, but i couldn't get it to work with sol
-			if (luaL_loadfile(LuaScripting::Lua.lua_state(), script.string().c_str()) == LUA_OK)
+			if (luaL_loadfile(LuaScripting::Lua.lua_state(), s.string().c_str()) == LUA_OK)
 			{
-				FILE* D = fopen(output.string().c_str(), "wb+");
+				FILE* D = fopen(o.string().c_str(), "wb+");
 				lua_lock(LuaScripting::Lua.lua_state());
 				lua_dump(LuaScripting::Lua.lua_state(), writer, D, 0);
 				lua_unlock(LuaScripting::Lua.lua_state());

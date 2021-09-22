@@ -98,6 +98,8 @@ namespace Chroma
 		/// @brief Get the current time.
 		/// Alternatively Time can be accessed statically.
 		Time GetTime() { return m_Time; }
+
+		void Stop();
 		
 
 	private:

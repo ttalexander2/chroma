@@ -35,24 +35,20 @@ namespace Polychrome
 
 		EditorConfig Config;
 		static Chroma::Scene* CurrentScene;
+		static std::string CurrentScenePath;
 		static bool SceneRunning;
 		static bool ScenePaused;
 		static bool PreviewSprites;
 
 		static ImFont* LargeIcons;
+		static ImFont* LargeFont;
 
 	private:
 		Chroma::OrthographicCameraController m_CameraController;
 
 		bool m_ViewportFocused = false;
 
-		std::string CurrentScenePath;
 
-		// TEMP
-		Chroma::Ref<Chroma::VertexArray> m_SquareVA;
-		Chroma::Ref<Chroma::Shader> m_Shader;
-
-		glm::vec4 m_SquareColor = { 0.2f, 0.3f, 0.8f, 1.0f };
 
 		struct ProfileResult
 		{
@@ -61,8 +57,6 @@ namespace Polychrome
 		};
 
 		std::vector<ProfileResult> m_ProfileResults;
-
-		Chroma::Ref<Chroma::Texture2D> m_Texture;
 
 		Chroma::Ref<Chroma::Framebuffer> m_Framebuffer;
 

@@ -84,10 +84,13 @@ namespace Chroma
         if (success)
             AssetManager::Sprites[hashval]->Loaded = true;
 
-        if (success)
-            CHROMA_CORE_TRACE("Sprite Loaded: {}", path);
-        else
+        //if (success)
+           // CHROMA_CORE_TRACE("Sprite Loaded: {}", path);
+        //else
+            //CHROMA_CORE_ERROR("Sprite Failed to Load: {}", path);
+        if (!success)
             CHROMA_CORE_ERROR("Sprite Failed to Load: {}", path);
+
         return success;
     }
 
