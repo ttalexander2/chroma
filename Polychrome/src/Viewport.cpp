@@ -23,10 +23,12 @@ namespace Polychrome
 	bool Viewport::Open = true;
 
 	static const float identityMatrix[16] =
-	{ 1.f, 0.f, 0.f, 0.f,
+	{ 
+		1.f, 0.f, 0.f, 0.f,
 		0.f, 1.f, 0.f, 0.f,
 		0.f, 0.f, 1.f, 0.f,
-		0.f, 0.f, 0.f, 1.f };
+		0.f, 0.f, 0.f, 1.f 
+	};
 
 
 	void Viewport::Draw(Chroma::Ref<Chroma::Framebuffer> frame_buffer)
@@ -247,9 +249,9 @@ namespace Polychrome
 				if (ImGuizmo::IsUsing())
 				{
 
-					glm::vec3 translation = transform.Position;
-					glm::vec3 rotation = transform.Rotation;
-					glm::vec3 scale = transform.Scale;
+					glm::vec3 translation = { transform.Position, 0 };
+					glm::vec3 rotation = { 0,0, transform.Rotation };
+					glm::vec3 scale = { transform.Scale, 0 };
 
 					if (Chroma::DecomposeTransform(transformMat, translation, rotation, scale))
 					{
@@ -264,9 +266,9 @@ namespace Polychrome
 						//CHROMA_CORE_WARN("Rotation: [{},{},{}]", rotation.x, rotation.y, rotation.z);
 						//CHROMA_CORE_WARN("Scale: [{},{},{}]", scale.x, scale.y, scale.z);
 
-						transform.Position = translation;
-						transform.Rotation += deltaRotation;
-						transform.Scale = scale;
+						transform.Position = { translation.x, translation.y };
+						transform.Rotation += deltaRotation.z;
+						transform.Scale = { scale.x, scale.y };
 					}
 
 					

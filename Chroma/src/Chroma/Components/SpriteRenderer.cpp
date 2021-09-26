@@ -141,7 +141,7 @@ namespace Chroma
 
 		
 		DrawComponentValue("Offset");
-		ImGui::Vec3IntWithLabels("##offset", Offset);
+		ImGui::Vec2IntWithLabels("##offset", Offset);
 
 
 		//DrawComponentValue("Layer");
@@ -235,7 +235,7 @@ namespace Chroma
 		val = node["Offset"];
 		if (val)
 		{
-			Offset = val.as<Math::vec3>();
+			Offset = val.as<Math::vec2>();
 		}
 		val = node["Layer"];
 		if (val)

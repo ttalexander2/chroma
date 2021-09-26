@@ -136,13 +136,13 @@ namespace Chroma
 				int h = s->Frames[spriteRenderer.CurrentFrame].Texture->GetHeight();
 				if (!relationship.IsChild())
 				{
-					Chroma::Renderer2D::DrawQuad(transform.Position + spriteRenderer.Offset, transform.Scale * Math::vec3((float)w, (float)h, 1.0f), s->Frames[spriteRenderer.CurrentFrame].Texture, spriteRenderer.Color, transform.Rotation.z);
+					Chroma::Renderer2D::DrawQuad(transform.Position + spriteRenderer.Offset, transform.Scale * Math::vec2((float)w, (float)h), s->Frames[spriteRenderer.CurrentFrame].Texture, spriteRenderer.Color, transform.Rotation);
 				}
 				else
 				{
-					Math::vec3 pos = transform.Position;
-					Math::vec3 scale = transform.Scale;
-					Math::vec3 rotation = transform.Rotation;
+					Math::vec2 pos = transform.Position;
+					Math::vec2 scale = transform.Scale;
+					float rotation = transform.Rotation;
 					EntityID parent = relationship.Parent;
 					while (parent != ENTITY_NULL)
 					{
@@ -152,7 +152,7 @@ namespace Chroma
 						rotation += parentTransform.Rotation;
 						parent = m_Scene->GetComponent<Relationship>(parent).Parent;
 					}
-					Chroma::Renderer2D::DrawQuad(pos + spriteRenderer.Offset, scale * Math::vec3((float)w, (float)h, 1.0f), s->Frames[spriteRenderer.CurrentFrame].Texture, spriteRenderer.Color, rotation.z);
+					Chroma::Renderer2D::DrawQuad(pos + spriteRenderer.Offset, scale * Math::vec2((float)w, (float)h), s->Frames[spriteRenderer.CurrentFrame].Texture, spriteRenderer.Color, rotation);
 				}
 
 			}

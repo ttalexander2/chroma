@@ -30,7 +30,7 @@ namespace Chroma
 		/// @brief Color to render the sprite. Default is White.
 		Math::vec4 Color { 1.0f, 1.0f, 1.0f, 1.0f };
 		/// @brief Offset to render the sprite.
-		Math::vec3 Offset { 0.0f, 0.0f, 0.0f };
+		Math::vec2 Offset { 0.0f, 0.0f};
 		/// @brief Name of the layer to render the sprite.
 		std::string Layer = "Default";
 		/// @brief Whether to play the sprite on start.

@@ -15,8 +15,12 @@ namespace Chroma
 	{
 
 	}
+
 	void CSharpScript::DrawImGui()
 	{
+		if (ModuleName.empty())
+			return;
+
 		if (ModuleFieldMap.find(ModuleName) == ModuleFieldMap.end())
 			return;
 

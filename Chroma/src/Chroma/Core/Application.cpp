@@ -64,8 +64,6 @@ namespace Chroma
 		ECS::RegisterComponent<LuaScript>();
 
 
-
-
 	}
 
 	Application::~Application() 

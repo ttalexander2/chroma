@@ -10,24 +10,25 @@ namespace Chroma
 {
 	Math::mat4 Transform::GetTransform() const
 	{
-		glm::mat4 rotation = glm::toMat4(glm::quat(Rotation));
+		glm::mat4 rotation = glm::toMat4(glm::quat({0,0,Rotation}));
 
-		return Math::translate(glm::mat4(1.0f), Position)
-			* rotation * glm::scale(glm::mat4(1.0f), Scale);
+		return Math::translate(glm::mat4(1.0f), { Position, 0 })
+			* rotation * glm::scale(glm::mat4(1.0f), {Scale, 0});
 	}
 	void Transform::DrawImGui()
 	{
 
 		DrawComponentValue("Position");
-		ImGui::Vec3IntWithLabels(("##transform_position" + std::to_string(this->GetUniqueID())).c_str(), Position);
+		ImGui::Vec2IntWithLabels(("##transform_position" + std::to_string(this->GetUniqueID())).c_str(), Position);
 
 		DrawComponentValue("Rotation");
-		glm::vec3 rot = glm::degrees(Rotation);
-		ImGui::Vec3FloatWithLabels(("##transform_rotation" + std::to_string(this->GetUniqueID())).c_str(), rot);
+		float rot = glm::degrees(Rotation);
+		ImGui::SetNextItemWidth(ImGui::GetColumnWidth(2) - 2);
+		ImGui::SliderFloat(("##transform_rotation" + std::to_string(this->GetUniqueID())).c_str(), &rot, 0.f, 360.f);
 		Rotation = glm::radians(rot);
 
 		DrawComponentValue("Scale");
-		ImGui::Vec3FloatWithLabels(("##transform_scale" + std::to_string(this->GetUniqueID())).c_str(), Scale, false);
+		ImGui::Vec2FloatWithLabels(("##transform_scale" + std::to_string(this->GetUniqueID())).c_str(), Scale, false);
 
 
 	}
@@ -48,19 +49,19 @@ namespace Chroma
 		auto val = node["Position"];
 		if (val)
 		{
-			Position = val.as<Math::vec3>();
+			Position = val.as<Math::vec2>();
 		}
 
 		val = node["Rotation"];
 		if (val)
 		{
-			Rotation = val.as<Math::vec3>();
+			Rotation = val.as<float>();
 		}
 
 		val = node["Scale"];
 		if (val)
 		{
-			Scale = val.as<Math::vec3>();
+			Scale = val.as<Math::vec2>();
 		}
 
 	}

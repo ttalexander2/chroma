@@ -1,22 +1,14 @@
 using System;
 using System.Runtime.CompilerServices;
 
+
 namespace Chroma
 {
-    public class Component
-    {
-        public Entity Entity;
-    }
-
-    public class Transform : Component
-    {
-
-    }
 
     public class Entity
     {
         public ulong ID { get; private set; }
-        //public string Tag => GetComponent<TagComponent>().Tag;
+        public string Tag => GetComponent<TagComponent>().Tag;
 
 
         protected Entity() { ID = 0; }
@@ -66,6 +58,8 @@ namespace Chroma
         public virtual void EarlyUpdate() { }
         public virtual void Update() { }
         public virtual void LateUpdate() { }
+
+
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void CreateComponent_Native(ulong entityID, Type type);

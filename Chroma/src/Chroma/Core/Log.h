@@ -23,6 +23,16 @@ namespace Chroma
 		inline static std::shared_ptr<spdlog::logger>& GetCoreLogger() { return s_CoreLogger;  }
 		inline static std::shared_ptr<spdlog::logger>& GetClientLogger() { return s_ClientLogger; }
 
+		enum class LogLevel
+		{
+			Trace = (1 << 0),
+			Debug = (1 << 1),
+			Info = (1 << 2),
+			Warn = (1 << 3),
+			Error = (1 << 4),
+			Critical = (1 << 5)
+		};
+
 	private:
 		static std::shared_ptr<spdlog::logger> s_CoreLogger;
 		static std::shared_ptr<spdlog::logger> s_ClientLogger;

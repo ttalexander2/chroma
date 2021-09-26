@@ -13,11 +13,11 @@ namespace Chroma
 	struct Transform : public Component
 	{
 		/// @brief Position
-		Math::vec3 Position = { 0.0f, 0.0f, 0.0f };
+		Math::vec2 Position = { 0.0f, 0.0f };
 		/// @brief Rotation
-		Math::vec3 Rotation = { 0.0f, 0.0f, 0.0f };
+		float Rotation = 0.0f;
 		/// @brief Scale
-		Math::vec3 Scale = { 1.0f, 1.0f, 1.0f };
+		Math::vec2 Scale = { 1.0f, 1.0f };
 
 		/// @brief Constructs an empty Transform.
 		Transform() = default;

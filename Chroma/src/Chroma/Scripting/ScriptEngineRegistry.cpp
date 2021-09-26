@@ -44,8 +44,16 @@ namespace Chroma
 	{
 		InitComponentTypes();
 
+		//Entity
 		mono_add_internal_call("Chroma.Entity::CreateComponent_Native", Chroma::Script::Entity_CreateComponent);
 		mono_add_internal_call("Chroma.Entity::HasComponent_Native", Chroma::Script::Entity_HasComponent);
+
+		//Log
+		mono_add_internal_call("Chroma.Log::LogMessage_Native", Chroma::Script::Log_Message);
+
+		//Tag
+		mono_add_internal_call("Chroma.Tag::GetTag_Native", Chroma::Script::TagComponent_GetTag);
+		mono_add_internal_call("Chroma.Tag::SetTag_Native", Chroma::Script::TagComponent_SetTag);
 		
 
 	}
