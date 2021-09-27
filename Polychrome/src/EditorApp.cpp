@@ -570,6 +570,26 @@ namespace Polychrome
 						creating_path = sago::getDocumentsFolder() + "\\ChromaProjects\\";
 						creating_starting = "New Scene";
 					}
+					ImGui::SameLine();
+					if (ImGui::Button("Add an existing project..."))
+					{
+						std::string selectedFile = Chroma::FileDialogs::OpenFile("Polychrome Project (*.polychrome)\0*.polychrome\0");
+						RecentProjectInfo info;
+						auto patha = std::filesystem::path(selectedFile);
+						
+						info.Name = patha.filename().replace_extension("").string();
+						info.Path = patha.parent_path().string();
+						info.Pinned = false;
+						std::time_t t = std::time(nullptr);
+						char buffer[80];
+						strftime(buffer, sizeof(buffer), "%d/%m/%Y %H:%M", std::localtime(&t));
+						info.TimeStamp = std::string(buffer);
+						recentProjects.push_back(info);
+						active.resize(active.size() + 1);
+						active[active.size() - 1] = true;
+						hovered.resize(hovered.size() + 1);
+						hovered[hovered.size() - 1] = false;
+					}
 				}
 				else
 				{
