@@ -29,7 +29,7 @@ namespace Chroma
 		/// This will load the texture from the disk and load it into GPU memory.
 		/// Enable asserts to ensure sucessfull importing of textures.
 		/// See above for supported image formats.
-		OpenGLTexture2D(const std::string& path);
+		OpenGLTexture2D(const std::string& path, bool flip_vertically);
 
 		/// @brief Constructs an empty OpenGLTexture2D.
 		/// @param width Width of the texture.
@@ -65,6 +65,8 @@ namespace Chroma
 		{ 
 			return m_RendererID == ((OpenGLTexture2D&)other).m_RendererID; 
 		}
+
+		virtual uint32_t GetTextureID() const override { return m_RendererID; }
 
 	private:
 		/// @brief Path to the texture file

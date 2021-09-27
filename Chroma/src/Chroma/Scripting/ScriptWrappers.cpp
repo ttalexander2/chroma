@@ -86,11 +86,89 @@ namespace Chroma
 		Transform* t = scene->Registry.try_get<Transform>(id);
 		if (t != nullptr)
 		{
-			out = &t->Position;
+			*out = t->Position;
+		}
+	}
+	float Script::TransformComponent_GetRotation(EntityID id)
+	{
+		Scene* scene = MonoScripting::GetCurrentSceneContext();
+		CHROMA_CORE_ASSERT(scene, "No active scene context!");
+		Transform* t = scene->Registry.try_get<Transform>(id);
+		if (t != nullptr)
+		{
+			return t->Rotation;
+		}
+		return -1.f;
+	}
+	void Script::TransformComponent_GetScale(EntityID id, Math::vec2* out)
+	{
+		Scene* scene = MonoScripting::GetCurrentSceneContext();
+		CHROMA_CORE_ASSERT(scene, "No active scene context!");
+		Transform* t = scene->Registry.try_get<Transform>(id);
+		if (t != nullptr)
+		{
+			*out = t->Scale;
 		}
 	}
 	void Script::TransformComponent_SetPosition(EntityID id, Math::vec2 val)
 	{
+		Scene* scene = MonoScripting::GetCurrentSceneContext();
+		CHROMA_CORE_ASSERT(scene, "No active scene context!");
+		Transform* t = scene->Registry.try_get<Transform>(id);
+		if (t != nullptr)
+		{
+			t->Position = val;
+		}
+	}
+	void Script::TransformComponent_SetRotation(EntityID id, float val)
+	{
+		Scene* scene = MonoScripting::GetCurrentSceneContext();
+		CHROMA_CORE_ASSERT(scene, "No active scene context!");
+		Transform* t = scene->Registry.try_get<Transform>(id);
+		if (t != nullptr)
+		{
+			t->Rotation = val;
+		}
+	}
+	void Script::TransformComponent_SetScale(EntityID id, Math::vec2 val)
+	{
+		Scene* scene = MonoScripting::GetCurrentSceneContext();
+		CHROMA_CORE_ASSERT(scene, "No active scene context!");
+		Transform* t = scene->Registry.try_get<Transform>(id);
+		if (t != nullptr)
+		{
+			t->Scale = val;
+		}
+	}
+	void Script::Input_GetMousePosition(Math::vec2* out)
+	{
+		auto pair = Input::GetMousePos();
+		out->x = pair.first;
+		out->y = pair.second;
+	}
+	void Script::Input_GetAllConnectedControllers(MonoArray* out)
+	{
+		auto vec = Input::GetAllConnectedControllers();
+		int i = 0;
+		for (auto val : vec)
+		{
+			mono_array_set(out, Chroma::Input::Gamepad, i++, val);
+		}
+	}
+	void Script::Input_GetGamepadAxis(Input::Gamepad gamepad, MonoArray* out)
+	{
+		auto vec = Chroma::Input::GetGamepadAxis(gamepad);
+		int i = 0;
+		for (auto val : vec)
+		{
+			mono_array_set(out, float, i++, val);
+		}
+	}
+
+	bool Script::Input_GetGamepadButtonState(Input::Gamepad gamepad, Input::GamepadButton button)
+	{
+		return Chroma::Input::GetGamepadButtonState(button, gamepad) == Chroma::Input::ButtonState::PRESSED;
+
 	}
 }
 

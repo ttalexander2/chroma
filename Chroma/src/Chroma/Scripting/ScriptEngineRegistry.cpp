@@ -10,6 +10,7 @@
 #include "Chroma/Components/CircleCollider2D.h"
 #include "Chroma/Components/SpriteRenderer.h"
 #include "Chroma/Components/Transform.h"
+#include "Chroma/Components/Tag.h"
 #include <Chroma/Scripting/ScriptWrappers.h>
 
 #include "MonoScripting.cpp"
@@ -33,11 +34,12 @@ namespace Chroma
 
 	static void InitComponentTypes()
 	{
+		Component_RegisterType(Transform);
 		Component_RegisterType(AudioSource);
 		Component_RegisterType(BoxCollider2D);
 		Component_RegisterType(CircleCollider2D);
 		Component_RegisterType(SpriteRenderer);
-		Component_RegisterType(Transform);
+		Component_RegisterType(Tag);
 	}
 
 	void ScriptEngineRegistry::RegisterAll()
@@ -54,7 +56,26 @@ namespace Chroma
 		//Tag
 		mono_add_internal_call("Chroma.Tag::GetTag_Native", Chroma::Script::TagComponent_GetTag);
 		mono_add_internal_call("Chroma.Tag::SetTag_Native", Chroma::Script::TagComponent_SetTag);
-		
+
+		//Transform
+		mono_add_internal_call("Chroma.Transform::GetTransformPosition_Native", Chroma::Script::TransformComponent_GetPosition);
+		mono_add_internal_call("Chroma.Transform::GetTransformRotation_Native", Chroma::Script::TransformComponent_GetRotation);
+		mono_add_internal_call("Chroma.Transform::GetTransformScale_Native", Chroma::Script::TransformComponent_GetScale);
+		mono_add_internal_call("Chroma.Transform::SetTransformPosition_Native", Chroma::Script::TransformComponent_SetPosition);
+		mono_add_internal_call("Chroma.Transform::SetTransformRotation_Native", Chroma::Script::TransformComponent_SetRotation);
+		mono_add_internal_call("Chroma.Transform::SetTransformScale_Native", Chroma::Script::TransformComponent_SetScale);
+
+		//Input
+		mono_add_internal_call("Chroma.Input::IsKeyPressed_Native", Chroma::Input::IsKeyPressed);
+		mono_add_internal_call("Chroma.Input::IsMouseButtonPressed_Native", Chroma::Input::IsMouseButtonPressed);
+		mono_add_internal_call("Chroma.Input::IsJoystickConnected_Native", Chroma::Input::IsJoystickConnected);
+		mono_add_internal_call("Chroma.Input::GetMousePosition_Native", Chroma::Script::Input_GetMousePosition);
+		mono_add_internal_call("Chroma.Input::GetFirstConnectedGamepad_Native", Chroma::Input::GetFirstConnectedGamepad);
+		mono_add_internal_call("Chroma.Input::GetAllConnectedControllers", Chroma::Script::Input_GetAllConnectedControllers);
+		mono_add_internal_call("Chroma.Input::SetPrimaryGamepad_Native", Chroma::Input::SetPrimaryGamepad);
+		mono_add_internal_call("Chroma.Input::GetGamepadAxis_Native", Chroma::Script::Input_GetGamepadAxis);
+		mono_add_internal_call("Chroma.Input::GetGamepadButtonPressed_Native", Chroma::Script::Input_GetGamepadButtonState);
+		mono_add_internal_call("Chroma.Input::GetGamepadConnectionState_Native", Chroma::Input::GetGamepadConnectionState);
 
 	}
 

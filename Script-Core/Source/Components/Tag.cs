@@ -3,9 +3,9 @@
 
 namespace Chroma
 {
-    public class TagComponent : Component
+    public class Tag : Component
     {
-        public string Tag
+        public string Name
         {
             get
             {

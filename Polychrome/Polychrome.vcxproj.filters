@@ -13,6 +13,9 @@
     <Filter Include="thid_party">
       <UniqueIdentifier>{9D87813B-893F-C388-F246-9CE4DE1D5E79}</UniqueIdentifier>
     </Filter>
+    <Filter Include="thid_party\edlib">
+      <UniqueIdentifier>{0CD9C0B8-F8D1-DF0A-2104-C58F0D5CBF16}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\AssetBrowser.h" />
@@ -42,8 +45,8 @@
     <ClInclude Include="src\Widgets\TextEditor.h">
       <Filter>Widgets</Filter>
     </ClInclude>
-    <ClInclude Include="src\thid_party\levenshtein-sse.hpp">
-      <Filter>thid_party</Filter>
+    <ClInclude Include="src\thid_party\edlib\edlib.h">
+      <Filter>thid_party\edlib</Filter>
     </ClInclude>
     <ClInclude Include="src\thid_party\platform_folders.h">
       <Filter>thid_party</Filter>
@@ -78,6 +81,9 @@
     <ClCompile Include="src\Viewport.cpp" />
     <ClCompile Include="src\Widgets\TextEditor.cpp">
       <Filter>Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="src\thid_party\edlib\edlib.cpp">
+      <Filter>thid_party\edlib</Filter>
     </ClCompile>
     <ClCompile Include="src\thid_party\platform_folders.cpp">
       <Filter>thid_party</Filter>

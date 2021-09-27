@@ -5,6 +5,9 @@ namespace Chroma
 {
     public class Mathf
     {
+
+        public const float PI = 3.1415926535897931f;
+        public const float E = 2.7182818284590451f;
         public static float Abs(float val)
         {
             return (float)System.Math.Abs((double)val);
@@ -284,5 +287,15 @@ namespace Chroma
             return (float)System.Math.Truncate((double)val);
         }
 
+
+        public static float RadiansToDegrees(float radians)
+        {
+            return (180f / Mathf.PI) * radians;
+        }
+
+        public static float DegreesToRadians(float degrees)
+        {
+            return (Mathf.PI / 180f) * degrees;
+        }
     }
 }

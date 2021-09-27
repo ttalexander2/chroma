@@ -183,7 +183,7 @@ namespace Chroma
 
         public override string ToString()
         {
-            return "Vector3[" + X + ", " + Y + ", " + Z + "]";
+            return "[" + X + ", " + Y + ", " + Z + "]";
         }
 
         public override int GetHashCode()

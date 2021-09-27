@@ -32,7 +32,6 @@
 #include <Chroma/Components/SpriteRenderer.h>
 #include <Chroma/Assets/AssetManager.h>
 #include <Chroma/Components/LuaScript.h>
-#include "CodeEditor.h"
 #include <Chroma/Systems/SpriteRendererSystem.h>
 #include "AssetBrowser.h"
 #include <Chroma/Scripting/LuaScripting.h>
@@ -245,7 +244,6 @@ namespace Polychrome
 
 		Config.Style = (int)ImGui::ImGuiStylePreset::ChromaDark;
 
-		CodeEditor::Init();
 		LogWindow::Init();
 
 		Chroma::Input::SetGamepadConnectionCallback([](auto joystick) { CHROMA_CORE_WARN("Joystick Connected!"); });
@@ -759,6 +757,30 @@ namespace Polychrome
 			ImGui::EndMenu();
 		}
 
+		if (ImGui::BeginMenu("Object##MAIN_MENU_BAR"))
+		{
+			if (ImGui::MenuItem("New Entity##MAIN_MENU_BAR"))
+			{
+				CurrentScene->NewEntity();
+			}
+			if (ImGui::BeginMenu("New Entity...##MAIN_MENU_BAR"))
+			{
+				for (auto& component : Chroma::ECS::GetComponentNames())
+				{
+					if (component == "Transform" || component == "Relationship" || component == "Tag")
+						continue;
+
+					if (ImGui::MenuItem(component.c_str()))
+					{
+						Chroma::Entity ent = CurrentScene->NewEntity();
+						ent.AddComponent(component);
+					}
+				}
+				ImGui::EndMenu();
+			}
+			ImGui::EndMenu();
+		}
+
 		static bool SettingsWindowOpen = false;
 
 		if (ImGui::BeginMenu("Window##MAIN_MENU_BAR"))
@@ -766,7 +788,7 @@ namespace Polychrome
 			ImGui::MenuItem("Hierarchy##MAIN_MENU_BAR", "", &Hierarchy::Open)  ;
 			ImGui::MenuItem("Inspector##MAIN_MENU_BAR", "", &Inspector::Open)  ;
 			ImGui::MenuItem("Viewport##MAIN_MENU_BAR", "", &Viewport::Open)	   ;
-			ImGui::MenuItem("Viewport##MAIN_MENU_BAR", "", &LogWindow::Open)   ;
+			ImGui::MenuItem("LogWindow##MAIN_MENU_BAR", "", &LogWindow::Open)   ;
 			ImGui::MenuItem("Settings##MAIN_MENU_BAR", "", &SettingsWindowOpen);
 
 
@@ -784,7 +806,6 @@ namespace Polychrome
 		Hierarchy::Draw();
 		Inspector::Draw();
 		Viewport::Draw(m_Framebuffer);
-		CodeEditor::Draw();
 		AssetBrowser::Draw();
 		LogWindow::Draw();
 

@@ -9,6 +9,12 @@
 #include "EditorApp.h"
 #include "FuzzyFileSearch.h"
 #include "CodeEditor.h"
+#include <shellapi.h>
+#include <shlobj.h>
+#include <combaseapi.h>
+#include <commoncontrols.h>
+#include <shellapi.h>
+#include "../GLFW/include/GLFW/glfw3.h"
 
 namespace Polychrome
 {
@@ -19,6 +25,7 @@ namespace Polychrome
 	bool show_hidden = false;
 	std::filesystem::path active_dir;
 	std::filesystem::path AssetBrowser::Selected;
+	static std::map<std::filesystem::path, Chroma::Ref<Chroma::Texture2D>> Icons;
 	bool asset_folder_open = true;
 	float icon_size = 40;
 
@@ -26,53 +33,8 @@ namespace Polychrome
 	{
 		if (!std::filesystem::exists(path) || !std::filesystem::is_regular_file(path))
 			return;
+
 		
-		TextEditor::LanguageDefinition definition;
-		if (path.extension() == std::filesystem::path(".cpp") || path.extension() == std::filesystem::path(".h") || path.extension() == std::filesystem::path(".hpp"))
-		{
-			definition = TextEditor::LanguageDefinition::CPlusPlus();
-		}
-		else if (path.extension() == std::filesystem::path(".lua"))
-		{
-			definition = TextEditor::LanguageDefinition::Lua();
-		}
-		else if (path.extension() == std::filesystem::path(".glsl"))
-		{
-			definition = TextEditor::LanguageDefinition::GLSL();
-		}
-		else if (path.extension() == std::filesystem::path(".hlsl"))
-		{
-			definition = TextEditor::LanguageDefinition::HLSL();
-		}
-		else
-		{
-			return;
-		}
-
-		for (auto& a : CodeEditor::Instances)
-		{
-			if (a.Path == path)
-			{
-				return;
-			}
-				
-		}
-
-		CodeEditor::Instance instance(path);
-		instance.Definition = definition;
-		if (instance.Path.extension() == std::filesystem::path(".lua"))
-		{
-			TextEditor::Identifier id;
-			id.mDeclaration = "Current Entity";
-			instance.Definition.mPreprocIdentifiers.insert(std::make_pair("entity", id));
-		}
-
-		CodeEditor::Current = path;
-		CodeEditor::Editor.SetText(instance.Text);
-		CodeEditor::Editor.SetLanguageDefinition(instance.Definition);
-		CodeEditor::Open = true;
-		instance.Coordinates = cursor_pos;
-		CodeEditor::Instances.push_back(instance);
 
 	}
 
@@ -81,9 +43,21 @@ namespace Polychrome
 		if (active_dir.empty() || !std::filesystem::exists(active_dir))
 			active_dir = Chroma::AssetManager::AssetDirectory;
 
+
+		for (std::filesystem::path path : std::filesystem::recursive_directory_iterator(Chroma::AssetManager::AssetDirectory))
+		{
+			if (!Icons.contains(path))
+			{
+				LoadFileIcon(path);
+			}
+		}
+
+
 		ImGui::PushStyleColor(ImGuiCol_Button, { 0,0,0,0 });
 		if (ImGui::Begin("Asset Browser##editor", &Open, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse))
 		{
+
+
 			ImGui::Button((std::string(ICON_FK_PLUS_SQUARE) + " " + std::string(ICON_FK_ANGLE_DOWN)).c_str());
 			ImGui::SameLine(ImGui::GetWindowWidth() - 290);
 			ImGui::Text(ICON_FK_SEARCH);
@@ -266,21 +240,46 @@ namespace Polychrome
 								bool is_selected = (Selected == dir.path());
 								if (dir.is_regular_file())
 								{
+									if (!Icons.contains(dir.path()))
+									{
+										LoadFileIcon(dir.path());
+									}
 									ImGui::PushID(dir.path().string().c_str());
 									ImGui::SetNextItemWidth(icon_size);
 									ImGui::BeginGroup();
 									ImGui::PushFont(&f);
 									if (is_selected)
 										ImGui::PushStyleColor(ImGuiCol_Button, ImGui::GetStyleColorVec4(ImGuiCol_ButtonActive));
-									if (ImGui::Button(ICON_FK_FILE, { icon_size, icon_size }))
+									
+									if (Icons.contains(dir.path()))
 									{
-										Selected = dir.path();
+										auto& texture = Icons.find(dir.path())->second;
+										
+										if (ImGui::ImageButton(reinterpret_cast<void*>(texture->GetTextureID()), { icon_size, icon_size }))
+										{
+											Selected = dir.path();
+										}
 									}
+									else
+									{
+										if (ImGui::Button(ICON_FK_FILE, { icon_size, icon_size }))
+										{
+											Selected = dir.path();
+										}
+									}
+									
+
 									if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
 									{
 										HandleOpen(dir.path());
 										if (Selected == dir.path())
 											Selected.clear();
+									}
+
+									if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Right))
+									{
+										Selected = dir.path();
+										ImGui::OpenPopup("##File_context_menu");
 									}
 
 									if (is_selected)
@@ -327,9 +326,22 @@ namespace Polychrome
 								ImGui::PushFont(&f);
 								if (is_selected)
 									ImGui::PushStyleColor(ImGuiCol_Button, ImGui::GetStyleColorVec4(ImGuiCol_ButtonActive));
-								if (ImGui::Button(ICON_FK_FILE, { icon_size, icon_size }))
+
+								if (Icons.contains(dir))
 								{
-									Selected = dir;
+									auto& texture = Icons.find(dir)->second;
+
+									if (ImGui::ImageButton(reinterpret_cast<void*>(texture->GetTextureID()), { icon_size, icon_size }))
+									{
+										Selected = dir;
+									}
+								}
+								else
+								{
+									if (ImGui::Button(ICON_FK_FILE, { icon_size, icon_size }))
+									{
+										Selected = dir;
+									}
 								}
 								if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
 								{
@@ -337,6 +349,13 @@ namespace Polychrome
 									if (Selected == dir)
 										Selected.clear();
 								}
+
+								if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Right))
+								{
+									Selected = dir;
+									ImGui::OpenPopup("##File_context_menu");
+								}
+
 
 								if (is_selected)
 									ImGui::PopStyleColor();
@@ -422,6 +441,11 @@ namespace Polychrome
 									if (Selected == dir.path())
 										Selected.clear();
 								}
+								if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Right))
+								{
+									Selected = dir.path();
+									ImGui::OpenPopup("##File_context_menu");
+								}
 							}
 
 
@@ -446,6 +470,13 @@ namespace Polychrome
 								if (Selected == dir)
 									Selected.clear();
 							}
+
+							if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Right))
+							{
+								Selected = dir;
+								ImGui::OpenPopup("##File_context_menu");
+							}
+
 						}
 					}
 
@@ -453,6 +484,13 @@ namespace Polychrome
 					{
 						Selected = "";
 					}
+					}
+
+					if (!Selected.empty() && ImGui::BeginPopupContextItem("##File_context_menu"))
+					{
+						
+						FileClickPopup(Selected);
+						ImGui::EndPopup();
 					}
 
 					ImGui::EndChild();
@@ -475,6 +513,140 @@ namespace Polychrome
 		ImGui::PopStyleColor();
 
 		
+	}
+
+	void AssetBrowser::FileClickPopup(std::filesystem::path dir)
+	{
+		if (ImGui::Selectable("Open in VSCode..."))
+		{
+			system(("code " + std::filesystem::path(active_dir).parent_path().string() + " " + dir.string()).c_str());
+		}
+	}
+
+	void AssetBrowser::LoadFileIcon(std::filesystem::path path)
+	{
+#ifdef _WIN32
+		std::wstring w = path.wstring();
+
+		CHROMA_CORE_INFO("path: {}", std::filesystem::absolute(path).string());
+
+		if (path.extension().compare(".png") == 0 || path.extension().compare(".jpg") == 0)
+		{
+			auto icon_texture = Chroma::Texture2D::Create(path.string(), false);
+			//auto image = Chroma::Image(path.string());
+			//auto icon_texture = Chroma::Texture2D::Create(image.Width, image.Height);
+			//Chroma::Color* data = new Chroma::Color[image.Width * image.Width];
+			//image.GetData(data);
+			//icon_texture->SetData(data, image.Height * image.Width * sizeof(Chroma::Color));
+			//
+			//delete[] data;
+
+			Icons[path] = icon_texture;
+			return;
+		}
+
+		if (path.extension().compare(".ase") == 0 || path.extension().compare(".aseprite") == 0)
+		{
+			Chroma::Aseprite a = Chroma::Aseprite(path.string());
+			
+			Chroma::Color* color = new Chroma::Color[a.width * a.height];
+			a.frames[0].image.GetData(color);
+			auto icon_texture = Chroma::Texture2D::Create(a.width, a.height);
+			icon_texture->SetData(color, a.width * a.height * sizeof(Chroma::Color));
+			Icons[path] = icon_texture;
+			delete[] color;
+			return;
+		}
+
+		
+
+		//SHGetFileInfoW(ucPath, FILE_ATTRIBUTE_NORMAL, &info, sizeof(info), SHGFI_ICON | SHGFI_USEFILEATTRIBUTES | SHGFI_LARGEICON);
+		//HICON 
+		//WORD index = 0;
+		//HICON icon = ExtractAssociatedIconW(GetModuleHandleW(NULL), LPWSTR(w.c_str()), &index);
+		// Get the image list index of the icon
+		SHFILEINFO sfi;
+		memset(&sfi, 0, sizeof(sfi));
+		if (!SHGetFileInfo(w.c_str(), 0, &sfi, sizeof(sfi), SHGFI_SYSICONINDEX)) return;
+
+		// Get the jumbo image list
+		IImageList* piml;
+		if (FAILED(SHGetImageList(SHIL_JUMBO, IID_PPV_ARGS(&piml)))) return;
+
+		// Extract an icon
+		HICON icon;
+		piml->GetIcon(sfi.iIcon, ILD_TRANSPARENT, &icon);
+
+		// Clean up
+		piml->Release();
+
+		if (icon == NULL)
+		{
+			return;
+		}
+
+		
+		BITMAP bm;
+		memset(&bm, 0, sizeof(BITMAP));
+		ICONINFO iconInfo;
+		GetIconInfo(icon, &iconInfo);
+		GetObjectW(iconInfo.hbmColor, sizeof(BITMAP), &bm);
+
+
+		int width = bm.bmWidth;
+		int height = bm.bmHeight;
+		int bytesPerScanLine = (width * 3 + 3) & 0xFFFFFFFC;
+		int size = bytesPerScanLine * height;
+		BITMAPINFO infoheader;
+		memset(&infoheader, 0, sizeof(BITMAPINFO));
+		infoheader.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+		infoheader.bmiHeader.biWidth = width;
+		infoheader.bmiHeader.biHeight = height;
+		infoheader.bmiHeader.biPlanes = 1;
+		infoheader.bmiHeader.biBitCount = 24;
+		infoheader.bmiHeader.biCompression = BI_RGB;
+		infoheader.bmiHeader.biSizeImage = size; // allocate Memory for Icon RGB data plus Icon mask plus ARGB buffer for the resulting image 
+		
+		std::vector<uint8_t> pMemBlock = std::vector<uint8_t>((size * 2 + height * width * 4));
+		uint8_t* pixelsIconRGB = (uint8_t*)&pMemBlock[0];
+		uint8_t* alphaPixels = (uint8_t*)(pixelsIconRGB + size);
+		uint32_t* imagePixels = (uint32_t*)(alphaPixels + size);
+		HDC hDC = CreateCompatibleDC(NULL); // Get Icon RGB data
+		HBITMAP hBmpOld = (HBITMAP)SelectObject(hDC, (HGDIOBJ)iconInfo.hbmColor);
+		if (!GetDIBits(hDC, iconInfo.hbmColor, 0, height, (LPVOID)pixelsIconRGB, &infoheader, DIB_RGB_COLORS)) return;
+		SelectObject(hDC, hBmpOld);
+		// now get the mask
+		if (!GetDIBits(hDC, iconInfo.hbmMask, 0, height, (LPVOID)alphaPixels, &infoheader, DIB_RGB_COLORS)) return;
+
+		int x = 0;
+		int currentSrcPos = 0;
+		int currentDestPos = 0;
+		int linePosSrc = 0;
+		int linePosDest = 0;
+		int lsSrc = width * 3;
+		int vsDest = height - 1;
+		for (int y = 0; y < height; y++)
+		{
+			linePosSrc = (vsDest - y) * lsSrc;
+			linePosDest = y * width;
+			for (x = 0; x < width; x++)
+			{
+				//pixels from Icon are stored in BGR vertical and horizontal flipped order 
+				currentDestPos = linePosDest + x;
+				currentSrcPos = linePosSrc + x * 3;
+				// BGR -> ARGB
+				uint8_t alpha = 255;
+				if (pixelsIconRGB[currentSrcPos] == 0 && pixelsIconRGB[currentSrcPos + 1] == 0 && pixelsIconRGB[currentSrcPos + 2] == 0)
+					alpha = 0;
+				imagePixels[currentDestPos] = (((uint32_t)((((pixelsIconRGB[currentSrcPos + 2] << 0x10 /*Red*/) | (pixelsIconRGB[currentSrcPos + 1] << 8 /*Green*/)) | pixelsIconRGB[currentSrcPos] /*Blue*/) | (alpha << 0x18))) & 0xffffffffL);
+			}
+		}
+
+		auto icon_texture = Chroma::Texture2D::Create(width, height);
+		icon_texture->SetData((void*)(uint8_t*)imagePixels, height * width * sizeof(uint32_t));
+		Icons[path] = icon_texture;
+
+#endif
 	}
 
 	void AssetBrowser::ParseFolder(std::filesystem::path path)

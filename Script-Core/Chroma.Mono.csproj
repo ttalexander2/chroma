@@ -7,7 +7,7 @@
     <ProjectGuid>{A6972A73-124D-A368-9B41-9D3F07F6996C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Chroma</RootNamespace>
+    <RootNamespace>Chroma.Mono</RootNamespace>
     <AssemblyName>Chroma.Mono</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -20,8 +20,7 @@
     <OutputPath>..\bin\Debug-windows-x86_64\Chroma.Mono\</OutputPath>
     <BaseIntermediateOutputPath>..\obj\Debug-windows-x86_64\Chroma.Mono\</BaseIntermediateOutputPath>
     <IntermediateOutputPath>$(BaseIntermediateOutputPath)</IntermediateOutputPath>
-    <DefineConstants>
-    </DefineConstants>
+    <DefineConstants></DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -32,8 +31,7 @@
     <OutputPath>..\bin\Release-windows-x86_64\Chroma.Mono\</OutputPath>
     <BaseIntermediateOutputPath>..\obj\Release-windows-x86_64\Chroma.Mono\</BaseIntermediateOutputPath>
     <IntermediateOutputPath>$(BaseIntermediateOutputPath)</IntermediateOutputPath>
-    <DefineConstants>
-    </DefineConstants>
+    <DefineConstants></DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -44,13 +42,11 @@
     <OutputPath>..\bin\Dist-windows-x86_64\Chroma.Mono\</OutputPath>
     <BaseIntermediateOutputPath>..\obj\Dist-windows-x86_64\Chroma.Mono\</BaseIntermediateOutputPath>
     <IntermediateOutputPath>$(BaseIntermediateOutputPath)</IntermediateOutputPath>
-    <DefineConstants>
-    </DefineConstants>
+    <DefineConstants></DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Source\Math\Vector2.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Source\Component.cs" />
@@ -60,6 +56,7 @@
     <Compile Include="Source\Input.cs" />
     <Compile Include="Source\Log.cs" />
     <Compile Include="Source\Math\Mathf.cs" />
+    <Compile Include="Source\Math\Vector2.cs" />
     <Compile Include="Source\Math\Vector3.cs" />
     <Compile Include="Source\Math\Vector4.cs" />
     <Compile Include="Source\RuntimeException.cs" />
@@ -74,4 +71,13 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <PropertyGroup>
+    <PostBuildEvent>echo $(SolutionDir)bin\Debug-windows-x86_64\$(ProjectName)\Chroma.Mono.dll
+IF EXIST $(SolutionDir)bin\Debug-windows-x86_64\$(ProjectName)\Chroma.Mono.dll\ (xcopy /Q /E /Y /I $(SolutionDir)bin\Debug-windows-x86_64\$(ProjectName)\Chroma.Mono.dll $(SolutionDir)Polychrome &gt; nul) ELSE (xcopy /Q /Y /I $(SolutionDir)bin\Debug-windows-x86_64\$(ProjectName)\Chroma.Mono.dll $(SolutionDir)Polychrome &gt; nul)
+IF EXIST $(SolutionDir)bin\Debug-windows-x86_64\$(ProjectName)\Chroma.Mono.pdb\ (xcopy /Q /E /Y /I $(SolutionDir)bin\Debug-windows-x86_64\$(ProjectName)\Chroma.Mono.pdb $(SolutionDir)Polychrome &gt; nul) ELSE (xcopy /Q /Y /I $(SolutionDir)bin\Debug-windows-x86_64\$(ProjectName)\Chroma.Mono.pdb $(SolutionDir)Polychrome &gt; nul)
+IF EXIST $(SolutionDir)bin\Debug-windows-x86_64\$(ProjectName)\Chroma.Mono.dll\ (xcopy /Q /E /Y /I $(SolutionDir)bin\Debug-windows-x86_64\$(ProjectName)\Chroma.Mono.dll $(SolutionDir)bin\Debug-windows-x86_64\Polychrome &gt; nul) ELSE (xcopy /Q /Y /I $(SolutionDir)bin\Debug-windows-x86_64\$(ProjectName)\Chroma.Mono.dll $(SolutionDir)bin\Debug-windows-x86_64\Polychrome &gt; nul)
+IF EXIST $(SolutionDir)bin\Debug-windows-x86_64\$(ProjectName)\Chroma.Mono.dll\ (xcopy /Q /E /Y /I $(SolutionDir)bin\Debug-windows-x86_64\$(ProjectName)\Chroma.Mono.dll $(SolutionDir)Runtime &gt; nul) ELSE (xcopy /Q /Y /I $(SolutionDir)bin\Debug-windows-x86_64\$(ProjectName)\Chroma.Mono.dll $(SolutionDir)Runtime &gt; nul)
+IF EXIST $(SolutionDir)bin\Debug-windows-x86_64\$(ProjectName)\Chroma.Mono.pdb\ (xcopy /Q /E /Y /I $(SolutionDir)bin\Debug-windows-x86_64\$(ProjectName)\Chroma.Mono.pdb $(SolutionDir)Runtime &gt; nul) ELSE (xcopy /Q /Y /I $(SolutionDir)bin\Debug-windows-x86_64\$(ProjectName)\Chroma.Mono.pdb $(SolutionDir)Runtime &gt; nul)
+IF EXIST $(SolutionDir)bin\Debug-windows-x86_64\$(ProjectName)\Chroma.Mono.dll\ (xcopy /Q /E /Y /I $(SolutionDir)bin\Debug-windows-x86_64\$(ProjectName)\Chroma.Mono.dll $(SolutionDir)bin\Debug-windows-x86_64\Runtime &gt; nul) ELSE (xcopy /Q /Y /I $(SolutionDir)bin\Debug-windows-x86_64\$(ProjectName)\Chroma.Mono.dll $(SolutionDir)bin\Debug-windows-x86_64\Runtime &gt; nul)</PostBuildEvent>
+  </PropertyGroup>
 </Project>

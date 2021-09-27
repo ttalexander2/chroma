@@ -20,12 +20,12 @@ namespace Chroma
 		return nullptr;
 	}
 
-	Ref<Texture2D> Texture2D::Create(const std::string& path)
+	Ref<Texture2D> Texture2D::Create(const std::string& path, bool flip)
 	{
 		switch (Renderer::GetAPI())
 		{
 			case RendererAPI::API::None: CHROMA_CORE_ASSERT(false, "RendererAPI::API::None not supported!"); return nullptr;
-			case RendererAPI::API::OpenGL: return CreateRef<OpenGLTexture2D>(path);
+			case RendererAPI::API::OpenGL: return CreateRef<OpenGLTexture2D>(path, flip);
 
 		}
 

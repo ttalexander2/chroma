@@ -8,7 +8,7 @@ namespace Chroma
     public class Entity
     {
         public ulong ID { get; private set; }
-        public string Tag => GetComponent<TagComponent>().Tag;
+        public string Name => GetComponent<Tag>().Name;
 
 
         protected Entity() { ID = 0; }

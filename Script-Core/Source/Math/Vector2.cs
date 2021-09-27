@@ -144,7 +144,7 @@ namespace Chroma
 
         public override string ToString()
         {
-            return "Vector2[" + X + ", " + Y + "]";
+            return "[" + X + ", " + Y + "]";
         }
 
         public override int GetHashCode()

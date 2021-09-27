@@ -17,7 +17,18 @@ namespace Chroma
                 SetTransformPosition_Native(Entity.ID, value);
             }
         }
-        public float Rotation;
+
+        public float Rotation
+        {
+            get
+            {
+                return Mathf.RadiansToDegrees(GetTransformRotation_Native(Entity.ID));
+            }
+            set
+            {
+                SetTransformRotation_Native(Entity.ID, Mathf.DegreesToRadians(value));
+            }
+        }
         public Vector2 Scale
         {
             get
@@ -30,6 +41,11 @@ namespace Chroma
             {
                 SetTransformScale_Native(Entity.ID, value);
             }
+        }
+
+        public override string ToString()
+        {
+            return string.Format("Position: {0}, Rotation: {1}, Scale: {2}", Position.ToString(), Rotation, Scale.ToString());
         }
 
 

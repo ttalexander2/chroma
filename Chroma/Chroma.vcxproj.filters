@@ -791,6 +791,9 @@
     <ClCompile Include="src\Chroma\Scripting\ScriptEngineRegistry.cpp">
       <Filter>src\Chroma\Scripting</Filter>
     </ClCompile>
+    <ClCompile Include="src\Chroma\Scripting\ScriptWrappers.cpp">
+      <Filter>src\Chroma\Scripting</Filter>
+    </ClCompile>
     <ClCompile Include="src\Chroma\Systems\AudioSystem.cpp">
       <Filter>src\Chroma\Systems</Filter>
     </ClCompile>
@@ -920,6 +923,5 @@
     <ClCompile Include="third_party\yaml-cpp\src\tag.cpp">
       <Filter>third_party\yaml-cpp\src</Filter>
     </ClCompile>
-    <ClCompile Include="src\Chroma\Scripting\ScriptWrappers.cpp" />
   </ItemGroup>
 </Project>

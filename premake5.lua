@@ -39,6 +39,8 @@ project "Chroma"
     pchheader "chromapch.h"
     pchsource "%{prj.name}/src/chromapch.cpp"
 
+    dependson { "Chroma.Mono" }
+
     files
     {
         "%{prj.name}/src/**.h",
@@ -159,6 +161,8 @@ project "Polychrome"
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
     objdir ("obj/" .. outputdir .. "/%{prj.name}")
 
+    dependson { "Chroma.Mono" }
+
     links
     {
         "Chroma"
@@ -205,8 +209,6 @@ project "Polychrome"
         '{COPY} "../Chroma/third_party/mono/bin/Debug/mono-2.0-sgen.dll" "%{cfg.targetdir}"',
         "{ECHO} Copying imgui.ini to %{cfg.targetdir}",
         "{COPY} imgui.ini %{cfg.targetdir}",
-        "{ECHO} Build Chroma.Mono...",
-        "dotnet build ../Script-Core/Chroma.Mono.csproj --output .",
         "{COPY} Chroma.Mono.dll %{cfg.targetdir}"
     }
 
@@ -331,4 +333,15 @@ project "Chroma.Mono"
         "Script-Core/Source/**.cs",  
     }
     
+    
+    postbuildcommands
+    {
+        "{ECHO} %{wks.location}bin\\" .. outputdir .. "\\%{prj.name}\\Chroma.Mono.dll",
+        "{COPY} %{wks.location}bin\\" .. outputdir .. "\\%{prj.name}\\Chroma.Mono.dll %{wks.location}Polychrome",
+        "{COPY} %{wks.location}bin\\" .. outputdir .. "\\%{prj.name}\\Chroma.Mono.pdb %{wks.location}Polychrome",
+        "{COPY} %{wks.location}bin\\" .. outputdir .. "\\%{prj.name}\\Chroma.Mono.dll %{wks.location}bin/" .. outputdir .. "/Polychrome",
+        "{COPY} %{wks.location}bin\\" .. outputdir .. "\\%{prj.name}\\Chroma.Mono.dll %{wks.location}Runtime",
+        "{COPY} %{wks.location}bin\\" .. outputdir .. "\\%{prj.name}\\Chroma.Mono.pdb %{wks.location}Runtime",
+        "{COPY} %{wks.location}bin\\" .. outputdir .. "\\%{prj.name}\\Chroma.Mono.dll %{wks.location}bin/" .. outputdir .. "/Runtime",
+    }
 
