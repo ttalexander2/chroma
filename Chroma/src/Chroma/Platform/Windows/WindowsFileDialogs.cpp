@@ -2,16 +2,19 @@
 #include "Chroma/Utilities/FileDialogs.h"
 #include "Chroma/Core/Application.h"
 
+#if _WIN32
 #include <commdlg.h>
 #include <shobjidl.h>
 #include <GLFW/glfw3.h>
 #define GLFW_EXPOSE_NATIVE_WIN32
 #include <GLFW/glfw3native.h>
+#endif
 
 namespace Chroma
 {
 	std::string FileDialogs::OpenFile(const char* filter)
 	{
+#if _WIN32
 		OPENFILENAMEA ofn;
 		CHAR szFile[260] = { 0 };
 		ZeroMemory(&ofn, sizeof(OPENFILENAME));
@@ -26,12 +29,14 @@ namespace Chroma
 		{
 			return ofn.lpstrFile;
 		}
+#endif
 		return std::string();
 
 	}
 
 	std::string FileDialogs::SaveFile(const char* filter)
 	{
+#if _WIN32
 		OPENFILENAMEA ofn;
 		CHAR szFile[260] = { 0 };
 		ZeroMemory(&ofn, sizeof(OPENFILENAME));
@@ -46,12 +51,14 @@ namespace Chroma
 		{
 			return ofn.lpstrFile;
 		}
+#endif
 		return std::string();
 
 	}
 
 	std::string FileDialogs::OpenDirectory()
 	{
+#if _WIN32
 		IFileOpenDialog* pFileOpen;
 
 		auto hr = CoCreateInstance(CLSID_FileOpenDialog, NULL, CLSCTX_ALL,
@@ -78,7 +85,7 @@ namespace Chroma
 				}
 			}
 		}
-		
+#endif
 		return std::string();
 	}
 }

@@ -572,21 +572,26 @@ namespace Polychrome
 					if (ImGui::Button("Add an existing project..."))
 					{
 						std::string selectedFile = Chroma::FileDialogs::OpenFile("Polychrome Project (*.polychrome)\0*.polychrome\0");
-						RecentProjectInfo info;
-						auto patha = std::filesystem::path(selectedFile);
+
+						if (!selectedFile.empty())
+						{
+							RecentProjectInfo info;
+							auto patha = std::filesystem::path(selectedFile);
+
+							info.Name = patha.filename().replace_extension("").string();
+							info.Path = patha.parent_path().string();
+							info.Pinned = false;
+							std::time_t t = std::time(nullptr);
+							char buffer[80];
+							strftime(buffer, sizeof(buffer), "%d/%m/%Y %H:%M", std::localtime(&t));
+							info.TimeStamp = std::string(buffer);
+							recentProjects.push_back(info);
+							active.resize(active.size() + 1);
+							active[active.size() - 1] = true;
+							hovered.resize(hovered.size() + 1);
+							hovered[hovered.size() - 1] = false;
+						}
 						
-						info.Name = patha.filename().replace_extension("").string();
-						info.Path = patha.parent_path().string();
-						info.Pinned = false;
-						std::time_t t = std::time(nullptr);
-						char buffer[80];
-						strftime(buffer, sizeof(buffer), "%d/%m/%Y %H:%M", std::localtime(&t));
-						info.TimeStamp = std::string(buffer);
-						recentProjects.push_back(info);
-						active.resize(active.size() + 1);
-						active[active.size() - 1] = true;
-						hovered.resize(hovered.size() + 1);
-						hovered[hovered.size() - 1] = false;
 					}
 				}
 				else
@@ -806,10 +811,11 @@ namespace Polychrome
 		Hierarchy::Draw();
 		Inspector::Draw();
 		Viewport::Draw(m_Framebuffer);
-		AssetBrowser::Draw();
 		LogWindow::Draw();
+		AssetBrowser::Draw();
 
-		ImGui::Begin("Conroller");
+
+		ImGui::Begin("Controller");
 
 		//Chroma::Input::GamepadState state = Chroma::Input::GetGamepadState();
 		//ImGui::Text(fmt::format("A:				{}", (int)state[Chroma::Input::GamepadButton::A]).c_str());
@@ -912,7 +918,7 @@ namespace Polychrome
 
 	void EditorApp::SaveScene()
 	{
-		CHROMA_CORE_TRACE("{}", CurrentScenePath);
+		//CHROMA_CORE_TRACE("{}", CurrentScenePath);
 		if (!CurrentScenePath.empty() && std::filesystem::exists(CurrentScenePath))
 		{
 			std::string yaml = EditorApp::CurrentScene->Serialize();

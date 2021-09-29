@@ -26,7 +26,13 @@ namespace Chroma
 		{
 		}
 
-		const std::string Name() const override { return "Tag"; }
+		const std::string Name() const override { return StaticName(); }
+		const static std::string StaticName()
+		{
+			return "Tag";
+		}
+
+
 		const bool EditorVisible() const override { return false; }
 
 		const bool AllowMultiple() const override { return false; };

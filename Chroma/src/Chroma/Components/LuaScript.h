@@ -27,11 +27,15 @@ namespace Chroma
 
 
 
-		const std::string Name() const override { return "LuaScript"; }
+		const std::string Name() const override { return StaticName(); }
+
+		const static std::string StaticName()
+		{
+			return "LuaScript";
+		}
 
 		void Serialize(YAML::Emitter& out) override;
 		void Deserialize(YAML::Node& node, EntityID id, Scene* out) override;
-		void DrawImGui() override;
 
 		void RegisterEntity(EntityID id, Scene* scene);
 		void RegisterEntity(Entity entity);

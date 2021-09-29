@@ -8,13 +8,12 @@ namespace Chroma
         {
             get
             {
-                Vector2 result;
-                GetTransformPosition_Native(Entity.ID, out result);
+                GetTransformPosition_Native(Entity.ID, out Vector2 result);
                 return result;
             }
             set 
             {
-                SetTransformPosition_Native(Entity.ID, value);
+                SetTransformPosition_Native(Entity.ID, ref value);
             }
         }
 
@@ -33,13 +32,12 @@ namespace Chroma
         {
             get
             {
-                Vector2 result;
-                GetTransformScale_Native(Entity.ID, out result);
+                GetTransformScale_Native(Entity.ID, out Vector2 result);
                 return result;
             }
             set
             {
-                SetTransformScale_Native(Entity.ID, value);
+                SetTransformScale_Native(Entity.ID, ref value);
             }
         }
 
@@ -59,13 +57,13 @@ namespace Chroma
         internal static extern void GetTransformScale_Native(ulong id, out Vector2 result);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void SetTransformPosition_Native(ulong id, Vector2 value);
+        internal static extern void SetTransformPosition_Native(ulong id, ref Vector2 value);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void SetTransformRotation_Native(ulong id, float value);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void SetTransformScale_Native(ulong id, Vector2 value);
+        internal static extern void SetTransformScale_Native(ulong id, ref Vector2 value);
 
     }
 }

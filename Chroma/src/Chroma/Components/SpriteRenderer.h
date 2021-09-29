@@ -2,7 +2,6 @@
 
 #include "Chroma/Scene/Component.h"
 #include "Chroma/Math/Vec4.h";
-#include <imgui.h>
 #include "Chroma/Renderer/Texture.h"
 #include "Chroma/Assets/Sprite.h"
 
@@ -62,7 +61,7 @@ namespace Chroma
 
 		/// @brief Get the number of the current animation.
 		/// @return 
-		int GetAnimation();
+		unsigned int GetAnimation();
 
 		/// @brief Get the name of the animation given the number.
 		/// @param animation animation number.
@@ -85,10 +84,13 @@ namespace Chroma
 
 		const std::string Name() const override
 		{
-			return "Sprite Renderer";
+			return StaticName();
 		}
 
-		void DrawImGui() override;
+		const static std::string StaticName()
+		{
+			return "Sprite Renderer";
+		}
 
 		void Serialize(YAML::Emitter& out) override;
 

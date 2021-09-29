@@ -21,10 +21,13 @@ namespace Chroma
 
 		const std::string Name() const override
 		{
-			return "Circle Collider 2D";
+			return StaticName();
 		}
 
-		void DrawImGui() override;
+		const static std::string StaticName()
+		{
+			return "Circle Collider 2D";
+		}
 
 		void Serialize(YAML::Emitter& out) override;
 

@@ -13,7 +13,7 @@ namespace Chroma
 
 	void LuaScripting::Init()
 	{
-		CHROMA_CORE_TRACE("Initializing Lua State...");
+		CHROMA_CORE_INFO("Initializing Lua State...");
 
 		Lua.open_libraries(sol::lib::base, sol::lib::coroutine, sol::lib::math, sol::lib::string, sol::lib::table, sol::lib::bit32, sol::lib::utf8);
 		Bindings::BindAllTheThings(Lua);

@@ -42,7 +42,6 @@ namespace Chroma
 		Registry.emplace<Relationship>(entity);
 
 		EntityOrder.push_back(entity);
-
 		return e;
 	}
 
@@ -165,7 +164,7 @@ namespace Chroma
 			return false;
 
 		std::string sceneName = data["Scene"].as<std::string>();
-		CHROMA_CORE_TRACE("Deserializing Scene '{}'", sceneName);
+		//CHROMA_CORE_TRACE("Deserializing Scene '{}'", sceneName);
 
 		std::string guid_string = data["GUID"].as<std::string>();
 		GUID guid = GUID::Parse(guid_string);
@@ -187,17 +186,19 @@ namespace Chroma
 				
 				EntityID newEntity = out->Registry.create(id);
 
-				CHROMA_CORE_TRACE("Deserialized Entity with ID = {0} (hint={1})", newEntity, id);
+				//CHROMA_CORE_TRACE("Deserialized Entity with ID = {0} (hint={1})", newEntity, id);
 				auto components = entity["Components"];
 				if (components)
 				{
 					for (auto component : components)
 					{
 						std::string key = component.first.as<std::string>();
+						auto created = ECS::AddComponent(key, newEntity, &out->Registry);
+						created->_Deserialize(component.second);
 						if (key == "LuaScript")
-							ECS::AddComponent(key, newEntity, &out->Registry)->Deserialize(component.second, newEntity, out);
+							created->Deserialize(component.second, newEntity, out);
 						else
-							ECS::AddComponent(key, newEntity, &out->Registry)->Deserialize(component.second);
+							created->Deserialize(component.second);
 					}
 				}
 			}

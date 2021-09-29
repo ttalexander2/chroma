@@ -1,205 +1,11 @@
 #include "chromapch.h"
 #include "SpriteRenderer.h"
-#include "Chroma/ImGui/Widgets/VecWithLabels.h"
-#include "Chroma/ImGui/Widgets/EditableList.h"
-#include "Chroma/ImGui/Widgets/AlternateCheckBox.h"
-#include "imgui_internal.h"
 #include "Chroma/Core/Application.h"
 #include "Chroma/Assets/AssetManager.h"
 
 namespace Chroma
 {
 	
-	void SpriteRenderer::DrawImGui()
-	{
-
-		std::string selectedSprite = SpriteID;
-
-		DrawComponentValue("Sprite");
-
-		if (ImGui::BeginCombo("##Sprite", SpriteID.c_str()))
-		{
-			for (auto& [id, sprite] : *AssetManager::GetSprites())
-			{
-				bool selected = (SpriteID == sprite->GetPath());
-				if (ImGui::Selectable(sprite->GetPath().c_str(), &selected))
-				{
-					SetSprite(sprite->GetPath());
-					SetCurrentFrame(0);
-				}
-					
-				if (selected)
-				{
-					ImGui::SetItemDefaultFocus();
-				}
-					
-
-			}
-			ImGui::EndCombo();
-		}
-
-		
-
-		if (AssetManager::HasSprite(SpriteID))
-		{
-			Ref<Sprite> s = AssetManager::GetSprite(SpriteID);
-
-			DrawComponentValue("Size");
-			ImGui::Text(("[" + std::to_string(s->Frames[CurrentFrame].Texture->GetWidth()) + ", " + std::to_string(s->Frames[CurrentFrame].Texture->GetHeight()) + "]").c_str());
-
-			if (s->Animated())
-			{
-				DrawComponentValue("Animation");
-				std::string selectedStr;
-				if (Animation > s->Animations.size())
-					selectedStr = s->Animations[0].Tag;
-				else
-					selectedStr = s->Animations[Animation].Tag;
-
-				if (ImGui::BeginCombo("##animation", selectedStr.c_str()))
-				{
-					int i = 0;
-					for (Sprite::Animation anim : s->Animations)
-					{
-						bool selected = (Animation == i);
-						if (ImGui::Selectable(anim.Tag.c_str(), &selected))
-							SetAnimation(i);
-						if (selected)
-						{
-							ImGui::SetItemDefaultFocus();
-						}
-
-						i++;
-					}
-					ImGui::EndCombo();
-				}
-
-				if (Animation >= 0 && Animation < s->Animations.size())
-				{
-					DrawComponentValue("");
-					std::string frms = std::to_string(s->Animations[Animation].Start + 1) + " - " + std::to_string(s->Animations[Animation].End + 1);
-					Sprite::LoopDirection direction = s->Animations[Animation].Direction;
-					std::string res;
-					if (direction == Sprite::LoopDirection::Forward)
-						res = "Forward";
-					else if (direction == Sprite::LoopDirection::PingPong)
-						res = "Ping Pong";
-					else
-						res = "Reverse";
-
-					ImGui::Text((frms + " " + res).c_str());
-				}
-		
-
-			}
-
-			if (s->Frames.size() > 1)
-			{
-				DrawComponentValue("Frame");
-
-				int curr = (int)CurrentFrame + 1;
-				ImGui::SliderInt("##frame", &curr, 1, s->Frames.size());
-				SetCurrentFrame((unsigned int)curr - 1);
-
-
-				ImGui::SameLine();
-				ImGui::Text((std::to_string(s->Frames[CurrentFrame].Durration) + " ms").c_str());
-			}
-
-
-			if (s->Animated())
-			{
-				DrawComponentValue("Loop");
-				ImGui::Checkbox("##loop", &Loop);
-
-				DrawComponentValue("Play On Start");
-				ImGui::Checkbox("##play_on_start", &PlayOnStart);
-
-				DrawComponentValue("Playing");
-				ImGui::Checkbox("##playing", &Playing);
-			}
-
-
-		}
-		
-
-
-
-
-
-
-		
-
-		DrawComponentValue("Color");
-		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-
-		float col[4]{ Color.r, Color.b, Color.g, Color.a };
-		if (ImGui::ColorEdit4("##Color", col))
-		{
-			Color = { col[0], col[1], col[2], col[3] };
-		}
-
-		
-		DrawComponentValue("Offset");
-		ImGui::Vec2IntWithLabels("##offset", Offset);
-
-
-		//DrawComponentValue("Layer");
-
-		//static bool editing = false;
-
-		/*
-		if (!editing && ImGui::BeginCombo("##Layer", Layer.c_str()))
-		{
-			for (std::string name : Application::Get().m_ActiveScene->Layers)
-			{
-				bool isSelected = (name == Layer);
-				if (ImGui::Selectable(name.c_str(), isSelected))
-					Layer = name;
-
-				if (isSelected)
-					ImGui::SetItemDefaultFocus();
-			}
-			ImGui::EndCombo();
-		}
-
-		ImGui::SameLine();
-
-		if (std::find(Application::Get().m_ActiveScene->Layers.begin(), Application::Get().m_ActiveScene->Layers.end(), "Default") == Application::Get().m_ActiveScene->Layers.end())
-		{
-			Application::Get().m_ActiveScene->Layers.push_back("Default");
-		}
-
-		if (std::find(Application::Get().m_ActiveScene->Layers.begin(), Application::Get().m_ActiveScene->Layers.end(), Layer) == Application::Get().m_ActiveScene->Layers.end())
-		{
-			Layer = "Default";
-		}
-
-
-		if (!editing && ImGui::Button(ICON_FK_COG))
-		{
-			editing = true;
-		}
-
-		if (editing)
-		{
-			DrawComponentValue("    " ICON_FK_ANGLE_DOUBLE_RIGHT);
-			ImGui::EditableList(Application::Get().m_ActiveScene->Layers, true);
-			if (ImGui::Button(ICON_FK_CHECK " Accept"))
-			{
-				editing = false;
-			}
-		}
-
-		*/
-
-
-		//bool open = DrawComponentValueCollapsible("Layer");
-		//ImGui::EditableList(this->ListTest, open);
-	
-
-	}
-
 	void SpriteRenderer::Serialize(YAML::Emitter& out)
 	{
 		out << YAML::Key << "Color";
@@ -337,7 +143,7 @@ namespace Chroma
 		}
 	}
 
-	int SpriteRenderer::GetAnimation()
+	unsigned int SpriteRenderer::GetAnimation()
 	{
 		return Animation;
 	}
@@ -370,7 +176,10 @@ namespace Chroma
 		{
 			Ref<Sprite> s = AssetManager::GetSprite(SpriteID);
 			if (frame >= s->Frames.size())
+			{
+				frame = s->Frames.size() - 1;
 				CHROMA_CORE_WARN("Attempted to set sprite frame. Frame [{}] is an invalid frame for Sprite [{}].", frame, SpriteID);
+			}
 			else
 				CurrentFrame = frame;
 

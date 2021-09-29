@@ -1,9 +1,6 @@
 #include "chromapch.h"
 #include "LuaScript.h"
-#include "imgui.h"
-#include "imgui_stdlib.h"
 
-#include "Chroma/ImGui/Widgets/VecWithLabels.h"
 #include "Chroma/Scene/Scene.h"
 #include "Chroma/Scripting/LuaScripting.h"
 #include "Chroma/Scene/Entity.h"
@@ -121,91 +118,7 @@ namespace Chroma
 		this->Success = LuaScripting::LoadScriptFromFile(this->Path, this->Environment);
 	}
 
-	void LuaScript::DrawImGui()
-	{
-		DrawComponentValue("Script");
-		const char* preview = this->Path.c_str();
-		if (this->Path.empty())
-			preview = "[Select a script]";
 
-		if (ImGui::BeginCombo("##script_compbo", preview))
-		{
-			for (auto& name : LuaScripting::Scripts)
-			{
-				bool selected = name == this->Path;
-				if (ImGui::Selectable(name.c_str(), &selected))
-				{
-					this->ScriptName = std::filesystem::path(name).filename().string();
-					this->Path = name;
-					this->Success = LuaScripting::LoadScriptFromFile(this->Path, this->Environment);
-					break;
-				}
-
-				if (selected)
-					ImGui::SetItemDefaultFocus();
-			}
-			ImGui::EndCombo();
-		}
-
-		
-		if (Success)
-		{
-
-			Environment.for_each([&](const sol::object& key, const sol::object& value) {
-				if (!value.is<sol::function>())
-				{
-					std::string name = key.as<std::string>();
-					if (name == "entity" || name == "time")
-						return;
-					std::string hash = fmt::format("##{}", name);
-
-					DrawComponentValue(name);
-					if (value.is<bool>())
-					{
-						bool val = Environment[name];
-						ImGui::Checkbox(hash.c_str(), &val);
-						Environment[name] = val;
-					}
-					else if (value.is<int>())
-					{
-						int val = Environment[name];
-						ImGui::InputInt(hash.c_str(), &val);
-						Environment[name] = val;
-					}
-					else if (value.is<float>())
-					{
-						float val = Environment[name];
-						ImGui::InputFloat(hash.c_str(), &val);
-						Environment[name] = val;
-					}
-					else if (value.is<double>())
-					{
-						double val = Environment[name];
-						ImGui::InputDouble(hash.c_str(), &val);
-						Environment[name] = val;
-					}
-					else if (value.is<std::string>())
-					{
-						std::string val = Environment[name];
-						ImGui::InputText(hash.c_str(), &val);
-						Environment[name] = val;
-					}
-					else if (value.is<Math::vec2>())
-					{
-						Math::vec2 val = Environment[name];
-						ImGui::Vec2FloatWithLabels(hash.c_str(), val, true);
-						Environment[name] = val;
-					}
-					else if (value.is<Math::vec3>())
-					{
-						Math::vec3 val = Environment[name];
-						ImGui::Vec3FloatWithLabels(hash.c_str(), val, true);
-						Environment[name] = val;
-					}
-				}
-			});
-		}
-	}
 
 
 	void LuaScript::RegisterEntity(EntityID id, Scene* scene)

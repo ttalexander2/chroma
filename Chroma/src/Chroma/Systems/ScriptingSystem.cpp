@@ -32,7 +32,7 @@ namespace Chroma
 		}
 
 		{
-
+			MonoScripting::SetDeltaTime(0.f, 0.f);
 			MonoScripting::SetSceneContext(m_Scene);
 			auto view = m_Scene->Registry.view<CSharpScript>();
 			for (EntityID entity : view)
@@ -42,6 +42,7 @@ namespace Chroma
 				MonoScripting::InitScriptEntity(entityObj);
 				MonoScripting::InstantiateEntityClass(entityObj);
 			}
+
 		}
 
 	}
@@ -121,6 +122,7 @@ namespace Chroma
 
 	void ScriptingSystem::EarlyUpdate(Time time)
 	{
+		MonoScripting::SetDeltaTime(time, time);
 		{
 			auto view = m_Scene->Registry.view<LuaScript>();
 			for (EntityID entity : view)

@@ -51,6 +51,7 @@
     <ClInclude Include="src\thid_party\platform_folders.h">
       <Filter>thid_party</Filter>
     </ClInclude>
+    <ClInclude Include="src\ComponentWidgets.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AssetBrowser.cpp" />
@@ -88,5 +89,6 @@
     <ClCompile Include="src\thid_party\platform_folders.cpp">
       <Filter>thid_party</Filter>
     </ClCompile>
+    <ClCompile Include="src\ComponentWidgets.cpp" />
   </ItemGroup>
 </Project>

@@ -7,6 +7,7 @@
 #include <mono/jit/jit.h>
 #include <Chroma/Components/Tag.h>
 #include <Chroma/Components/Transform.h>
+#include <Chroma/Components/SpriteRenderer.h>
 
 
 namespace Chroma
@@ -110,14 +111,14 @@ namespace Chroma
 			*out = t->Scale;
 		}
 	}
-	void Script::TransformComponent_SetPosition(EntityID id, Math::vec2 val)
+	void Script::TransformComponent_SetPosition(EntityID id, Math::vec2* val)
 	{
 		Scene* scene = MonoScripting::GetCurrentSceneContext();
 		CHROMA_CORE_ASSERT(scene, "No active scene context!");
 		Transform* t = scene->Registry.try_get<Transform>(id);
 		if (t != nullptr)
 		{
-			t->Position = val;
+			t->Position = *val;
 		}
 	}
 	void Script::TransformComponent_SetRotation(EntityID id, float val)
@@ -127,17 +128,17 @@ namespace Chroma
 		Transform* t = scene->Registry.try_get<Transform>(id);
 		if (t != nullptr)
 		{
-			t->Rotation = val;
+			t->Rotation = Math::normalize(val, 0.f, Math::two_pi<float>());
 		}
 	}
-	void Script::TransformComponent_SetScale(EntityID id, Math::vec2 val)
+	void Script::TransformComponent_SetScale(EntityID id, Math::vec2* val)
 	{
 		Scene* scene = MonoScripting::GetCurrentSceneContext();
 		CHROMA_CORE_ASSERT(scene, "No active scene context!");
 		Transform* t = scene->Registry.try_get<Transform>(id);
 		if (t != nullptr)
 		{
-			t->Scale = val;
+			t->Scale = *val;
 		}
 	}
 	void Script::Input_GetMousePosition(Math::vec2* out)
@@ -169,6 +170,245 @@ namespace Chroma
 	{
 		return Chroma::Input::GetGamepadButtonState(button, gamepad) == Chroma::Input::ButtonState::PRESSED;
 
+	}
+	void Script::SpriteRenderer_GetColor(EntityID id, Math::vec4* vec)
+	{
+		Scene* scene = MonoScripting::GetCurrentSceneContext();
+		CHROMA_CORE_ASSERT(scene, "No active scene context!");
+		SpriteRenderer* sr = scene->Registry.try_get<SpriteRenderer>(id);
+		if (sr != nullptr)
+		{
+			*vec = sr->Color;
+		}
+	}
+	void Script::SpriteRenderer_SetColor(EntityID id, Math::vec4* vec)
+	{
+		Scene* scene = MonoScripting::GetCurrentSceneContext();
+		CHROMA_CORE_ASSERT(scene, "No active scene context!");
+		SpriteRenderer* sr = scene->Registry.try_get<SpriteRenderer>(id);
+		if (sr != nullptr)
+		{
+			sr->Color = *vec;
+		}
+	}
+	void Script::SpriteRenderer_GetOffset(EntityID id, Math::vec2* vec)
+	{
+		Scene* scene = MonoScripting::GetCurrentSceneContext();
+		CHROMA_CORE_ASSERT(scene, "No active scene context!");
+		SpriteRenderer* sr = scene->Registry.try_get<SpriteRenderer>(id);
+		if (sr != nullptr)
+		{
+			*vec = sr->Offset;
+		}
+	}
+	void Script::SpriteRenderer_SetOffset(EntityID id, Math::vec2* vec)
+	{
+		Scene* scene = MonoScripting::GetCurrentSceneContext();
+		CHROMA_CORE_ASSERT(scene, "No active scene context!");
+		SpriteRenderer* sr = scene->Registry.try_get<SpriteRenderer>(id);
+		if (sr != nullptr)
+		{
+			sr->Offset = *vec;
+		}
+	}
+	MonoString* Script::SpriteRenderer_GetLayer(EntityID id)
+	{
+		Scene* scene = MonoScripting::GetCurrentSceneContext();
+		CHROMA_CORE_ASSERT(scene, "No active scene context!");
+		SpriteRenderer* sr = scene->Registry.try_get<SpriteRenderer>(id);
+		if (sr != nullptr)
+		{
+			return mono_string_new(mono_domain_get(), sr->Layer.c_str());
+		}
+		return nullptr;
+	}
+	void Script::SpriteRenderer_SetLayer(EntityID id, MonoString* val)
+	{
+		Scene* scene = MonoScripting::GetCurrentSceneContext();
+		CHROMA_CORE_ASSERT(scene, "No active scene context!");
+		SpriteRenderer* sr = scene->Registry.try_get<SpriteRenderer>(id);
+		if (sr != nullptr)
+		{
+			sr->Layer = mono_string_to_utf8(val);
+		}
+	}
+	bool Script::SpriteRenderer_GetPlayOnStart(EntityID id)
+	{
+		Scene* scene = MonoScripting::GetCurrentSceneContext();
+		CHROMA_CORE_ASSERT(scene, "No active scene context!");
+		SpriteRenderer* sr = scene->Registry.try_get<SpriteRenderer>(id);
+		if (sr != nullptr)
+		{
+			return sr->PlayOnStart;
+		}
+		return false;
+	}
+	void Script::SpriteRenderer_SetPlayOnStart(EntityID id, bool val)
+	{
+		Scene* scene = MonoScripting::GetCurrentSceneContext();
+		CHROMA_CORE_ASSERT(scene, "No active scene context!");
+		SpriteRenderer* sr = scene->Registry.try_get<SpriteRenderer>(id);
+		if (sr != nullptr)
+		{
+			sr->PlayOnStart = val;
+		}
+	}
+	bool Script::SpriteRenderer_GetPlaying(EntityID id)
+	{
+		Scene* scene = MonoScripting::GetCurrentSceneContext();
+		CHROMA_CORE_ASSERT(scene, "No active scene context!");
+		SpriteRenderer* sr = scene->Registry.try_get<SpriteRenderer>(id);
+		if (sr != nullptr)
+		{
+			return sr->Playing;
+		}
+		return false;
+	}
+	void Script::SpriteRenderer_SetPlaying(EntityID id, bool val)
+	{
+		Scene* scene = MonoScripting::GetCurrentSceneContext();
+		CHROMA_CORE_ASSERT(scene, "No active scene context!");
+		SpriteRenderer* sr = scene->Registry.try_get<SpriteRenderer>(id);
+		if (sr != nullptr)
+		{
+			sr->Playing = val;
+		}
+	}
+	bool Script::SpriteRenderer_GetLoop(EntityID id)
+	{
+		Scene* scene = MonoScripting::GetCurrentSceneContext();
+		CHROMA_CORE_ASSERT(scene, "No active scene context!");
+		SpriteRenderer* sr = scene->Registry.try_get<SpriteRenderer>(id);
+		if (sr != nullptr)
+		{
+			return sr->Loop;
+		}
+		return false;
+	}
+	void Script::SpriteRenderer_SetLoop(EntityID id, bool val)
+	{
+		Scene* scene = MonoScripting::GetCurrentSceneContext();
+		CHROMA_CORE_ASSERT(scene, "No active scene context!");
+		SpriteRenderer* sr = scene->Registry.try_get<SpriteRenderer>(id);
+		if (sr != nullptr)
+		{
+			sr->Loop = val;
+		}
+	}
+	float Script::SpriteRenderer_GetSpeedMultiplier(EntityID id)
+	{
+		Scene* scene = MonoScripting::GetCurrentSceneContext();
+		CHROMA_CORE_ASSERT(scene, "No active scene context!");
+		SpriteRenderer* sr = scene->Registry.try_get<SpriteRenderer>(id);
+		if (sr != nullptr)
+		{
+			return sr->SpeedMultiplier;
+		}
+		return 1.0f;
+	}
+	void Script::SpriteRenderer_SetSpeedMultiplier(EntityID id, float val)
+	{
+		Scene* scene = MonoScripting::GetCurrentSceneContext();
+		CHROMA_CORE_ASSERT(scene, "No active scene context!");
+		SpriteRenderer* sr = scene->Registry.try_get<SpriteRenderer>(id);
+		if (sr != nullptr)
+		{
+			sr->SpeedMultiplier = val;
+		}
+	}
+	MonoString* Script::SpriteRenderer_GetSprite(EntityID id)
+	{
+		Scene* scene = MonoScripting::GetCurrentSceneContext();
+		CHROMA_CORE_ASSERT(scene, "No active scene context!");
+		SpriteRenderer* sr = scene->Registry.try_get<SpriteRenderer>(id);
+		if (sr != nullptr)
+		{
+			return mono_string_new(mono_domain_get(), sr->GetSpriteID().c_str());
+		}
+		return nullptr;
+	}
+	void Script::SpriteRenderer_SetSprite(EntityID id, MonoString* val)
+	{
+		Scene* scene = MonoScripting::GetCurrentSceneContext();
+		CHROMA_CORE_ASSERT(scene, "No active scene context!");
+		SpriteRenderer* sr = scene->Registry.try_get<SpriteRenderer>(id);
+		if (sr != nullptr)
+		{
+			sr->SetSprite(mono_string_to_utf8(val));
+		}
+	}
+	unsigned int Script::SpriteRenderer_GetAnimation(EntityID id)
+	{
+		Scene* scene = MonoScripting::GetCurrentSceneContext();
+		CHROMA_CORE_ASSERT(scene, "No active scene context!");
+		SpriteRenderer* sr = scene->Registry.try_get<SpriteRenderer>(id);
+		if (sr != nullptr)
+		{
+			return sr->GetAnimation();
+		}
+		return 0;
+	}
+	void Script::SpriteRenderer_SetAnimation(EntityID id, unsigned int val)
+	{
+		Scene* scene = MonoScripting::GetCurrentSceneContext();
+		CHROMA_CORE_ASSERT(scene, "No active scene context!");
+		SpriteRenderer* sr = scene->Registry.try_get<SpriteRenderer>(id);
+		if (sr != nullptr)
+		{
+			sr->SetAnimation(val);
+		}
+	}
+	unsigned int Script::SpriteRenderer_GetFrame(EntityID id)
+	{
+		Scene* scene = MonoScripting::GetCurrentSceneContext();
+		CHROMA_CORE_ASSERT(scene, "No active scene context!");
+		SpriteRenderer* sr = scene->Registry.try_get<SpriteRenderer>(id);
+		if (sr != nullptr)
+		{
+			return sr->GetCurrentFrame();
+		}
+		return 0;
+	}
+	void Script::SpriteRenderer_SetFrame(EntityID id, unsigned int val)
+	{
+		Scene* scene = MonoScripting::GetCurrentSceneContext();
+		CHROMA_CORE_ASSERT(scene, "No active scene context!");
+		SpriteRenderer* sr = scene->Registry.try_get<SpriteRenderer>(id);
+		if (sr != nullptr)
+		{
+			sr->SetCurrentFrame(val);
+		}
+	}
+	MonoString* Script::SpriteRenderer_GetAnimationTag(EntityID id, unsigned int val)
+	{
+		Scene* scene = MonoScripting::GetCurrentSceneContext();
+		CHROMA_CORE_ASSERT(scene, "No active scene context!");
+		SpriteRenderer* sr = scene->Registry.try_get<SpriteRenderer>(id);
+		if (sr != nullptr)
+		{
+			return mono_string_new(mono_domain_get(), sr->GetAnimationName(val).c_str());
+		}
+		return nullptr;
+	}
+	void Script::SpriteRenderer_SetAnimationByTag(EntityID id, MonoString* val)
+	{
+		Scene* scene = MonoScripting::GetCurrentSceneContext();
+		CHROMA_CORE_ASSERT(scene, "No active scene context!");
+		SpriteRenderer* sr = scene->Registry.try_get<SpriteRenderer>(id);
+		if (sr != nullptr)
+		{
+			sr->SetAnimation(mono_string_to_utf8(val));
+		}
+	}
+	void Script::SpriteRenderer_RestartAnimation(EntityID id)
+	{
+		Scene* scene = MonoScripting::GetCurrentSceneContext();
+		CHROMA_CORE_ASSERT(scene, "No active scene context!");
+		SpriteRenderer* sr = scene->Registry.try_get<SpriteRenderer>(id);
+		if (sr != nullptr)
+		{
+			sr->RestartAnimation();
+		}
 	}
 }
 

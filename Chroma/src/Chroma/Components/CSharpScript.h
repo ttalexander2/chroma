@@ -12,9 +12,15 @@ namespace Chroma
 		~CSharpScript();
 		CSharpScript(const CSharpScript& other) = default;
 
-		const std::string Name() const override { return "CSharp Script"; }
+		const std::string Name() const override 
+		{ 
+			return StaticName();
+		}
 
-		void DrawImGui() override;
+		const static std::string StaticName()
+		{
+			return "CSharp Script";
+		}
 
 		std::string ModuleName = "Test.TestScript";
 		ScriptModuleFieldMap ModuleFieldMap;

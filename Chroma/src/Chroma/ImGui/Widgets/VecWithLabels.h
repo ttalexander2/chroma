@@ -225,6 +225,7 @@ namespace ImGui
 
 		ImGui::SameLine(0.0f, 6.0f);
 		ImGui::NewLine();
+		return true;
 	}
 
 	/// @brief Displays 2 component vectors with component labels (x,y) and reset buttons.
@@ -302,6 +303,7 @@ namespace ImGui
 
 		ImGui::SameLine(0.0f, 6.0f);
 		ImGui::NewLine();
+		return true;
 	}
 
 	/// @brief Displays 2 component vectors with component labels (x,y) and reset buttons.
@@ -381,5 +383,6 @@ namespace ImGui
 
 		ImGui::SameLine(0.0f, 6.0f);
 		ImGui::NewLine();
+		return true;
 	}
 }

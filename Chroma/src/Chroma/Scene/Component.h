@@ -12,6 +12,7 @@
 namespace Polychrome
 {
 	class Inspector;
+	class ComponentWidgets;
 }
 
 namespace Chroma
@@ -27,7 +28,7 @@ namespace Chroma
 	/// By default, a component will show in the editor, to prevent an entry, override EditorVisible().
 	struct Component
 	{
-
+		friend class Scene;
 		Component() = default;
 		Component(const Component&) = default;
 		/// @brief Function to serialize the scene to YAML.
@@ -83,9 +84,6 @@ namespace Chroma
 		/// @return name of the component.
 		const virtual std::string Name() const = 0;
 
-		/// @brief Function to draw the ImGui component widget.
-		virtual void DrawImGui() {};
-
 		/// @brief Whether multiple instances of the component can exist for a single entity.
 		/// 
 		/// Override this to only allow one instance of the component for a single entity.
@@ -104,14 +102,10 @@ namespace Chroma
 
 		const virtual bool EditorVisible() const { return true; }
 
-	protected:
-
-		void DrawComponentValue(std::string label);
-		bool DrawComponentValueCollapsible(std::string label);
-
 	private:
 		void BeginSerialize(YAML::Emitter& out);
 		void EndSerialize(YAML::Emitter& out);
+		void _Deserialize(YAML::Node& node);
 
 		/// @brief Checks whether the Component is a Transform.
 		const virtual bool IsTransform() const { return false; }
@@ -124,6 +118,8 @@ namespace Chroma
 		/// @brief Whether the compoennt is visible in the editor.
 		bool editor_visible = true;
 
+		unsigned int order_id = 0;
+
 
 		/// @brief Set the component's comparison ID.
 		void SetComparisonID()
@@ -135,13 +131,11 @@ namespace Chroma
 		/// @brief Counter for component IDs.
 		static unsigned int component_counter;
 
-		static bool show_context;
-		static std::function<void(const std::string&, unsigned int)> context_function;
-
 		friend class Polychrome::Inspector;
 		friend struct Tag;
 		friend struct Transform;
 		friend struct Relationship;
+		friend class Polychrome::ComponentWidgets;
 	};
 				
 }

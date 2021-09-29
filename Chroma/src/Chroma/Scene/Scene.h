@@ -15,6 +15,7 @@
 namespace Polychrome
 {
 	class Hierarchy;
+	class Inspector;
 }
 
 namespace Chroma
@@ -27,6 +28,7 @@ namespace Chroma
 	//This entire class is a template-caused mess
 	class Scene
 	{
+		friend class ECS;
 	public:
 		std::string Name = "Scene";
 
@@ -48,6 +50,7 @@ namespace Chroma
 		bool IsRoot(EntityID entity);
 		EntityID GetRootEntity(EntityID child);
 		std::vector<EntityID> FindAllDescendants(EntityID entity);
+		
 
 
 		template <typename T>
@@ -73,8 +76,9 @@ namespace Chroma
 			{
 				ECS::RegisterComponent<T>();
 			}
-
-			return Registry.emplace<T>(id);
+			
+			auto& comp = Registry.emplace<T>(id);
+			return comp;
 		}
 
 		Component* AddComponent(const std::string& component, EntityID entity)
@@ -179,9 +183,9 @@ namespace Chroma
 
 		GUID ID;
 
-
 		friend class Entity;
 		friend class Polychrome::Hierarchy;
+		friend class Polychrome::Inspector;
 
 
 	};

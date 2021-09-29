@@ -9,8 +9,10 @@
 #include <Chroma/ImGui/ImGuiHelper.h>
 #include <Chroma/Scene/Inspectable.h>
 #include "EditorApp.h"
+#include "ComponentWidgets.h"
 #include "Chroma/Scene/ECS.h"
 #include <Chroma/Components/LuaScript.h>
+#include <Chroma/Components/Tag.h>
 
 namespace Polychrome
 {
@@ -19,7 +21,7 @@ namespace Polychrome
 	void Inspector::Draw()
 	{
 
-		if (Chroma::Component::context_function == nullptr)
+		if (ComponentWidgets::context_function == nullptr)
 		{
 			std::function<void(const::std::string&, unsigned int)> func = [&](const std::string& component, unsigned int id) {
 				ImGui::PushID(fmt::format("##id{}.{}", component, id).c_str());
@@ -34,13 +36,13 @@ namespace Polychrome
 				ImGui::PopStyleColor();
 				ImGui::PopID();
 			};
-			Chroma::Component::context_function = func;
+			ComponentWidgets::context_function = func;
 		}
 
 		if (EditorApp::ScenePaused)
-			Chroma::Component::show_context = true;
+			ComponentWidgets::show_context = true;
 		else
-			Chroma::Component::show_context = false;
+			ComponentWidgets::show_context = false;
 
 		if (Open)
 		{
@@ -90,7 +92,10 @@ namespace Polychrome
 		ImGui::BeginTable("##Inspector_table", 2, ImGuiTableFlags_None | ImGuiTableFlags_SizingStretchProp | ImGuiTableFlags_Resizable | ImGuiTableFlags_NoBordersInBodyUntilResize | ImGuiTableFlags_NoClip);
 		ImGui::TableNextColumn();
 
-		for (Chroma::Component* c : scene->GetAllComponents(Hierarchy::SelectedEntity))
+		std::vector<Chroma::Component*> comps(scene->GetAllComponents(Hierarchy::SelectedEntity));
+		std::sort(comps.begin(), comps.end(), [](Chroma::Component* a, Chroma::Component* b) { return a->order_id < b->order_id; });
+
+		for (Chroma::Component* c : comps)
 		{
 			if (!c->EditorVisible())
 				continue;
@@ -110,7 +115,7 @@ namespace Polychrome
 
 			bool selected = true;
 			std::string comp_name(c->Name());
-			if (comp_name == "LuaScript")
+			if (comp_name == Chroma::LuaScript::StaticName())
 			{
 				try
 				{
@@ -121,7 +126,18 @@ namespace Polychrome
 				{
 					CHROMA_CORE_WARN("{}", e.what());
 				}
-
+			}
+			if (comp_name == Chroma::CSharpScript::StaticName())
+			{
+				try
+				{
+					Chroma::CSharpScript* a = reinterpret_cast<Chroma::CSharpScript*>(c);
+					comp_name = std::string(a->ModuleName);
+				}
+				catch (const std::exception& e)
+				{
+					CHROMA_CORE_WARN("{}", e.what());
+				}
 			}
 
 			if (ImGui::Selectable((std::string(" ") + icon + std::string("  ") + comp_name.c_str() + "##" + std::to_string(unique)).c_str(), &selected, ImGuiSelectableFlags_SpanAllColumns | ImGuiSelectableFlags_AllowItemOverlap))
@@ -181,7 +197,9 @@ namespace Polychrome
 			{
 				ImGui::TableNextRow();
 				ImGui::PushID(unique);
-				c->DrawImGui();
+
+				ComponentWidgets::Draw(c);
+
 				ImGui::PopID();
 			}
 
@@ -210,7 +228,7 @@ namespace Polychrome
 
 			for (auto& name : names)
 			{
-				if (name == "Transform" || name == "Tag" || name == "Relationship")
+				if (name == Chroma::Transform::StaticName() || name == Chroma::Tag::StaticName() || name == Chroma::Relationship::StaticName())
 					continue;
 				bool enabled = true;
 				if (scene->HasComponent(name, Hierarchy::SelectedEntity))

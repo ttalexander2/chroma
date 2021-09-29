@@ -9,12 +9,14 @@
 #include "EditorApp.h"
 #include "FuzzyFileSearch.h"
 #include "CodeEditor.h"
+#if _WIN32
 #include <shellapi.h>
 #include <shlobj.h>
 #include <combaseapi.h>
 #include <commoncontrols.h>
 #include <shellapi.h>
 #include "../GLFW/include/GLFW/glfw3.h"
+#endif
 
 namespace Polychrome
 {
@@ -25,9 +27,11 @@ namespace Polychrome
 	bool show_hidden = false;
 	std::filesystem::path active_dir;
 	std::filesystem::path AssetBrowser::Selected;
+	std::filesystem::path context_item;
 	static std::map<std::filesystem::path, Chroma::Ref<Chroma::Texture2D>> Icons;
 	bool asset_folder_open = true;
-	float icon_size = 40;
+	float icon_size = 80;
+	std::string last_search;
 
 	void AssetBrowser::HandleOpen(std::filesystem::path path, TextEditor::Coordinates cursor_pos)
 	{
@@ -67,9 +71,13 @@ namespace Polychrome
 			ImGui::InputText("##asset_browser_search_bar", &search_term);
 			bool searching = !search_term.empty();
 
-			std::vector<std::filesystem::path> search_paths;
-			if (searching)
+			static std::vector<std::filesystem::path> search_paths;
+			if (searching && last_search != search_term)
+			{
 				search_paths = FuzzyFileSearch::Search(search_term, Chroma::AssetManager::AssetDirectory);
+				last_search = search_term;
+			}
+				
 
 			ImGui::SameLine();
 			if (ImGui::Button(ICON_FK_TIMES_CIRCLE))
@@ -207,6 +215,19 @@ namespace Polychrome
 									if (is_selected)
 										ImGui::PopStyleColor();
 									ImGui::PopFont();
+
+									if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
+									{
+										context_item = dir.path();
+										ImGui::OpenPopup("##File_context_menu7");
+									}
+
+									if (context_item == dir.path() && ImGui::BeginPopup("##File_context_menu7"))
+									{
+										FolderClickPopup();
+										ImGui::EndPopup();
+									}
+
 									ImVec2 text_size = ImGui::CalcTextSize(dir.path().filename().string().c_str());
 									if (text_size.x < icon_size && icon_size - text_size.x > 0)
 									{
@@ -267,6 +288,10 @@ namespace Polychrome
 											Selected = dir.path();
 										}
 									}
+
+									if (is_selected)
+										ImGui::PopStyleColor();
+									ImGui::PopFont();
 									
 
 									if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
@@ -276,15 +301,19 @@ namespace Polychrome
 											Selected.clear();
 									}
 
-									if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Right))
+									if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
 									{
-										Selected = dir.path();
-										ImGui::OpenPopup("##File_context_menu");
+										context_item = dir.path();
+										ImGui::OpenPopup("##File_context_menu1");
 									}
 
-									if (is_selected)
-										ImGui::PopStyleColor();
-									ImGui::PopFont();
+									if (context_item == dir.path() && ImGui::BeginPopup("##File_context_menu1"))
+									{
+										FileClickPopup();
+										ImGui::EndPopup();
+									}
+
+
 									ImVec2 text_size = ImGui::CalcTextSize(dir.path().filename().string().c_str());
 									if (text_size.x < icon_size && icon_size - text_size.x > 0)
 									{
@@ -350,10 +379,16 @@ namespace Polychrome
 										Selected.clear();
 								}
 
-								if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Right))
+								if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
 								{
-									Selected = dir;
+									context_item = dir;
 									ImGui::OpenPopup("##File_context_menu");
+								}
+
+								if (context_item == dir && ImGui::BeginPopup("##File_context_menu"))
+								{
+									FileClickPopup();
+									ImGui::EndPopup();
 								}
 
 
@@ -419,6 +454,18 @@ namespace Polychrome
 									active_dir = dir.path();
 								}
 
+								if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
+								{
+									context_item = dir.path();
+									ImGui::OpenPopup("##File_context_menu5");
+
+								}
+								if (context_item == dir.path() && ImGui::BeginPopup("##File_context_menu5"))
+								{
+									FolderClickPopup();
+									ImGui::EndPopup();
+								}
+
 							}
 
 						}
@@ -441,10 +488,18 @@ namespace Polychrome
 									if (Selected == dir.path())
 										Selected.clear();
 								}
-								if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Right))
+
+								if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
 								{
-									Selected = dir.path();
-									ImGui::OpenPopup("##File_context_menu");
+									context_item = dir.path();
+									ImGui::OpenPopup("##File_context_menu2");
+
+								}
+
+								if (context_item == dir.path() && ImGui::BeginPopup("##File_context_menu2"))
+								{
+									FileClickPopup();
+									ImGui::EndPopup();
 								}
 							}
 
@@ -471,10 +526,15 @@ namespace Polychrome
 									Selected.clear();
 							}
 
-							if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Right))
+							if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
 							{
-								Selected = dir;
-								ImGui::OpenPopup("##File_context_menu");
+								context_item = dir;
+								ImGui::OpenPopup("##File_context_menu3");
+							}
+							if (context_item == dir && ImGui::BeginPopup("##File_context_menu3"))
+							{
+								FileClickPopup();
+								ImGui::EndPopup();
 							}
 
 						}
@@ -484,13 +544,6 @@ namespace Polychrome
 					{
 						Selected = "";
 					}
-					}
-
-					if (!Selected.empty() && ImGui::BeginPopupContextItem("##File_context_menu"))
-					{
-						
-						FileClickPopup(Selected);
-						ImGui::EndPopup();
 					}
 
 					ImGui::EndChild();
@@ -515,20 +568,38 @@ namespace Polychrome
 		
 	}
 
-	void AssetBrowser::FileClickPopup(std::filesystem::path dir)
+	void AssetBrowser::FileClickPopup()
 	{
-		if (ImGui::Selectable("Open in VSCode..."))
+#ifdef _WIN32
+		if (ImGui::Selectable("Show in File Explorer.."))
 		{
-			system(("code " + std::filesystem::path(active_dir).parent_path().string() + " " + dir.string()).c_str());
+			std::string directory_to_open = std::filesystem::absolute(context_item).string();
+			system(("explorer /select," + directory_to_open).c_str());
 		}
+#endif
+		if (ImGui::Selectable("Open in VSCode.."))
+		{
+			system(("code " + std::filesystem::path(active_dir).parent_path().parent_path().string() + " " + context_item.string()).c_str());
+			context_item.clear();
+		}
+	}
+
+	void AssetBrowser::FolderClickPopup()
+	{
+#ifdef _WIN32
+		if (ImGui::Selectable("Open in File Explorer.."))
+		{
+			std::string directory_to_open = std::filesystem::absolute(context_item).string();
+			system(("explorer " + directory_to_open).c_str());
+		}
+#endif
 	}
 
 	void AssetBrowser::LoadFileIcon(std::filesystem::path path)
 	{
-#ifdef _WIN32
 		std::wstring w = path.wstring();
 
-		CHROMA_CORE_INFO("path: {}", std::filesystem::absolute(path).string());
+		//CHROMA_CORE_INFO("path: {}", std::filesystem::absolute(path).string());
 
 		if (path.extension().compare(".png") == 0 || path.extension().compare(".jpg") == 0)
 		{
@@ -558,7 +629,7 @@ namespace Polychrome
 			return;
 		}
 
-		
+#if _WIN32
 
 		//SHGetFileInfoW(ucPath, FILE_ATTRIBUTE_NORMAL, &info, sizeof(info), SHGFI_ICON | SHGFI_USEFILEATTRIBUTES | SHGFI_LARGEICON);
 		//HICON 

@@ -10,9 +10,9 @@ A small 2D C++ Game Engine and Editor, designed in order to providing simple too
 
 #### Building
 ##### Windows
-- Requires C++17 at minimum and Visual Studio 2019
+- Requires C++20, Visual Studio 2019 and .NET Framework 4.6
 - Uses premake build system
-- All dependencies are either included within the project, or provided as github submodules.
+- All other dependencies are either included within the project, or provided as github submodules.
 - Instructions
     - `git clone --recurse-submodules -j8 https://github.com/ttalexander2/chroma.git`
     - Execute `WindowsGenerateProjects.bat` to generate Visual Studio Solution.

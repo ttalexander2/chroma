@@ -7,6 +7,8 @@
 #include "EditorApp.h"
 #include <readerwriterqueue.h>
 #include <Chroma/Scripting/MonoScripting.h>
+#include "Project.h"
+#include <Chroma/Scripting/ScriptEngineRegistry.h>
 
 
 namespace Polychrome
@@ -23,9 +25,9 @@ namespace Polychrome
 
 	void Polychrome::FileWatcherThread::SetWatch(const std::string& asset_dir)
 	{
-		CHROMA_CORE_INFO("{}", asset_dir);
+		//CHROMA_CORE_INFO("{}", asset_dir);
 		std::string watch_dir = std::filesystem::path(asset_dir).parent_path().string();
-		CHROMA_CORE_INFO("{}", watch_dir);
+		//CHROMA_CORE_INFO("{}", watch_dir);
 		// This needs to be replaced
 		for (auto& file : std::filesystem::recursive_directory_iterator(watch_dir))
 		{
@@ -44,8 +46,10 @@ namespace Polychrome
 			}
 		}
 
-		Chroma::MonoScripting::BuildAssembly(watch_dir);
+		auto result = Chroma::MonoScripting::BuildAssembly(watch_dir, Project::Name);
 		Chroma::MonoScripting::SetSceneContext(EditorApp::CurrentScene);
+		Chroma::ScriptEngineRegistry::RegisterAll();
+
 
 
 		file_watcher_thread_running.store(true);
@@ -66,7 +70,7 @@ namespace Polychrome
 				case FileStatus::created:
 					file_queue.enqueue([file, root]() {
 						std::string relative = std::filesystem::path(file).parent_path().lexically_relative(root).string();
-						CHROMA_CORE_TRACE("File Created: {}", relative);
+						//CHROMA_CORE_TRACE("File Created: {}", relative);
 						std::string extension = std::filesystem::path(file).extension().string();
 						if (extension == ".ase" || extension == ".aseprite" || extension == ".png" || extension == ".jpg")
 						{
@@ -78,7 +82,10 @@ namespace Polychrome
 						}
 						else if (extension == ".cs")
 						{
-							Chroma::MonoScripting::BuildAssembly(root);
+							auto result = Chroma::MonoScripting::BuildAssembly(root, Project::Name);
+							Chroma::MonoScripting::SetSceneContext(EditorApp::CurrentScene);
+							Chroma::ScriptEngineRegistry::RegisterAll();
+
 						}
 						});
 					break;
@@ -86,7 +93,7 @@ namespace Polychrome
 					file_queue.enqueue([file, root]() {
 						std::string extension = std::filesystem::path(file).extension().string();
 						std::string relative = std::filesystem::path(file).parent_path().lexically_relative(root).string();
-						CHROMA_CORE_TRACE("File Modified: {}", relative);
+						//CHROMA_CORE_TRACE("File Modified: {}", relative);
 						if (extension == ".ase" || extension == ".aseprite" || extension == ".png" || extension == ".jpg")
 						{
 							if (Chroma::AssetManager::HasSprite(relative))
@@ -113,15 +120,17 @@ namespace Polychrome
 						}
 						else if (extension == ".cs")
 						{
-							auto result = Chroma::MonoScripting::BuildAssembly(root);
-							CHROMA_CORE_INFO("Build Result: {}", result);
+							auto result = Chroma::MonoScripting::BuildAssembly(root, Project::Name);
+							Chroma::MonoScripting::SetSceneContext(EditorApp::CurrentScene);
+							Chroma::ScriptEngineRegistry::RegisterAll();
+							
 						}
 					});
 					break;
 				case FileStatus::erased:
 					file_queue.enqueue([file, root]() {
 						std::string relative = std::filesystem::path(file).parent_path().lexically_relative(root).string();
-						CHROMA_CORE_TRACE("File Erased: {}", relative);
+						//CHROMA_CORE_TRACE("File Erased: {}", relative);
 						std::string extension = std::filesystem::path(relative).extension().string();
 						if (extension == ".ase" || extension == ".png" || extension == ".jpg")
 						{
@@ -134,7 +143,9 @@ namespace Polychrome
 						}
 						else if (extension == ".cs")
 						{
-							Chroma::MonoScripting::BuildAssembly(root);
+							auto result = Chroma::MonoScripting::BuildAssembly(root, Project::Name);
+							Chroma::MonoScripting::SetSceneContext(EditorApp::CurrentScene);
+							Chroma::ScriptEngineRegistry::RegisterAll();
 						}
 						});
 

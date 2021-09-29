@@ -77,6 +77,32 @@ namespace Chroma
 		mono_add_internal_call("Chroma.Input::GetGamepadButtonPressed_Native", Chroma::Script::Input_GetGamepadButtonState);
 		mono_add_internal_call("Chroma.Input::GetGamepadConnectionState_Native", Chroma::Input::GetGamepadConnectionState);
 
+
+		//Sprite Renderer
+		mono_add_internal_call("Chroma.SpriteRenderer::GetColor_Native", Chroma::Script::SpriteRenderer_GetColor);
+		mono_add_internal_call("Chroma.SpriteRenderer::SetColor_Native", Chroma::Script::SpriteRenderer_SetColor);
+		mono_add_internal_call("Chroma.SpriteRenderer::GetOffset_Native", Chroma::Script::SpriteRenderer_GetOffset);
+		mono_add_internal_call("Chroma.SpriteRenderer::SetOffset_Native", Chroma::Script::SpriteRenderer_SetOffset);
+		mono_add_internal_call("Chroma.SpriteRenderer::GetLayer_Native", Chroma::Script::SpriteRenderer_GetLayer);
+		mono_add_internal_call("Chroma.SpriteRenderer::SetLayer_Native", Chroma::Script::SpriteRenderer_SetLayer);
+		mono_add_internal_call("Chroma.SpriteRenderer::GetPlayOnStart_Native", Chroma::Script::SpriteRenderer_GetPlayOnStart);
+		mono_add_internal_call("Chroma.SpriteRenderer::SetPlayOnStart_Native", Chroma::Script::SpriteRenderer_SetPlayOnStart);
+		mono_add_internal_call("Chroma.SpriteRenderer::GetPlaying_Native", Chroma::Script::SpriteRenderer_GetPlaying);
+		mono_add_internal_call("Chroma.SpriteRenderer::SetPlaying_Native", Chroma::Script::SpriteRenderer_SetPlaying);
+		mono_add_internal_call("Chroma.SpriteRenderer::GetLoop_Native", Chroma::Script::SpriteRenderer_GetLoop);
+		mono_add_internal_call("Chroma.SpriteRenderer::SetLoop_Native", Chroma::Script::SpriteRenderer_SetLoop);
+		mono_add_internal_call("Chroma.SpriteRenderer::GetSpeedMultiplier_Native", Chroma::Script::SpriteRenderer_GetSpeedMultiplier);
+		mono_add_internal_call("Chroma.SpriteRenderer::SetSpeedMultiplier_Native", Chroma::Script::SpriteRenderer_SetSpeedMultiplier);
+		mono_add_internal_call("Chroma.SpriteRenderer::GetSprite_Native", Chroma::Script::SpriteRenderer_GetSprite);
+		mono_add_internal_call("Chroma.SpriteRenderer::SetSprite_Native", Chroma::Script::SpriteRenderer_SetSprite);
+		mono_add_internal_call("Chroma.SpriteRenderer::GetAnimation_Native", Chroma::Script::SpriteRenderer_GetAnimation);
+		mono_add_internal_call("Chroma.SpriteRenderer::SetAnimation_Native", Chroma::Script::SpriteRenderer_SetAnimation);
+		mono_add_internal_call("Chroma.SpriteRenderer::GetFrame_Native", Chroma::Script::SpriteRenderer_GetFrame);
+		mono_add_internal_call("Chroma.SpriteRenderer::SetFrame_Native", Chroma::Script::SpriteRenderer_SetFrame);
+		mono_add_internal_call("Chroma.SpriteRenderer::GetAnimationTag_Native", Chroma::Script::SpriteRenderer_GetAnimationTag);
+		mono_add_internal_call("Chroma.SpriteRenderer::SetAnimationByTag_Native", Chroma::Script::SpriteRenderer_SetAnimationByTag);
+		mono_add_internal_call("Chroma.SpriteRenderer::RestartAnimation_Native", Chroma::Script::SpriteRenderer_RestartAnimation);
+
 	}
 
 }

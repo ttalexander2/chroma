@@ -118,13 +118,13 @@ namespace Chroma
 	}
 
 
-	bool MonoScripting::BuildAssembly(const std::string& path)
+	bool MonoScripting::BuildAssembly(const std::string& path, const std::string& name)
 	{
-		CHROMA_CORE_INFO("Building: {}", path + "\\bin\\Debug\\net4.6\\Aesix.dll");
+		CHROMA_CORE_INFO("Building: {}", path + "\\bin\\Debug\\net4.6\\" + name + ".dll");
 		system(("dotnet build " + std::string(path)).c_str());
 
-		if (std::filesystem::exists(path + "\\bin\\Debug\\net4.6\\Aesix.dll"))
-			return MonoScripting::LoadAppAssembly(path + "\\bin\\Debug\\net4.6\\Aesix.dll");
+		if (std::filesystem::exists(path + "\\bin\\Debug\\net4.6\\" + name + ".dll"))
+			return MonoScripting::LoadAppAssembly(path + "\\bin\\Debug\\net4.6\\" + name + ".dll");
 		return false;
 	}
 
@@ -369,7 +369,7 @@ namespace Chroma
 
 	bool MonoScripting::LoadAppAssembly(const std::string& path)
 	{
-		CHROMA_CORE_INFO("LOADING APP ASSEMBLY");
+		//CHROMA_CORE_INFO("LOADING APP ASSEMBLY");
 		if (appAssembly)
 		{
 			appAssembly = nullptr;
@@ -731,6 +731,19 @@ namespace Chroma
 			for (auto& [name, field] : publicFields)
 				field.CopyStoredValueFromRuntime(entityInstance);
 		}
+	}
+
+	void MonoScripting::SetDeltaTime(double dtime, float ftime)
+	{
+		MonoClass* c = mono_class_from_name(coreAssemblyImage, "Chroma", "Time");
+		MonoProperty* prop = mono_class_get_property_from_name(c, "Delta");
+		void* data[] = { &dtime };
+		mono_property_set_value(prop, nullptr, data, nullptr);
+
+		MonoProperty* prop2 = mono_class_get_property_from_name(c, "DeltaF");
+		void* data2[] = { &ftime };
+		mono_property_set_value(prop2, nullptr, data2, nullptr);
+		
 	}
 
 	EntityInstanceData& MonoScripting::GetEntityInstanceData(GUID sceneID, EntityID entityID)

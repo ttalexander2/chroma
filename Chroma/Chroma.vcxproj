@@ -357,6 +357,7 @@
     <ClCompile Include="src\Chroma\Images\Color.cpp" />
     <ClCompile Include="src\Chroma\Images\Image.cpp" />
     <ClCompile Include="src\Chroma\Math\Decompose.cpp" />
+    <ClCompile Include="src\Chroma\Math\Math.cpp" />
     <ClCompile Include="src\Chroma\Platform\OpenGL\OpenGLBuffer.cpp" />
     <ClCompile Include="src\Chroma\Platform\OpenGL\OpenGLContext.cpp" />
     <ClCompile Include="src\Chroma\Platform\OpenGL\OpenGLFramebuffer.cpp" />

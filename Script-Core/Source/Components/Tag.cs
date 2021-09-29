@@ -22,6 +22,7 @@ namespace Chroma
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern string SetTag_Native(ulong id, string tag);
+
     }
 
 }

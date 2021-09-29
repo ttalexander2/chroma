@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-using Gamepad = Chroma.Input.Joystick;
+using Joystick = Chroma.Input.Gamepad;
 
 namespace Chroma
 {
@@ -155,7 +155,7 @@ namespace Chroma
 			_LAST = MENU
 		};
 
-		public enum Joystick
+		public enum Gamepad
 		{
 			_1 = 0,
 			_2 = 1,
@@ -234,17 +234,28 @@ namespace Chroma
 
 		private static Joystick PrimaryGamepad = Joystick._1;
 
-
-
-		public static bool IsKeyPressed(Key key)
+		public static bool IsPressed(Key key)
 		{
 			return IsKeyPressed_Native(key);
 		}
 
-		public static bool IsMouseButtonPressed(Mouse button)
+		public static bool IsPressed(Mouse button)
 		{
 			return IsMouseButtonPressed_Native(button);
 		}
+
+		public static bool IsPressed(GamepadButton button)
+		{
+			return IsPressed(button, PrimaryGamepad);
+		}
+
+		public static bool IsPressed(GamepadButton button, Gamepad gamepad)
+		{
+			return GetGamepadButtonPressed_Native(gamepad, button);
+		}
+
+
+
 
 		public static Vector2 GetMousePos()
 		{
@@ -300,16 +311,6 @@ namespace Chroma
 			List<float> res;
 			GetGamepadAxis_Native(gamepad, out res);
 			return res;
-		}
-
-		public static bool GetGamepadButtonPressed(GamepadButton button)
-		{
-			return GetGamepadButtonPressed(PrimaryGamepad, button);
-		}
-
-		public static bool GetGamepadButtonPressed(Gamepad gamepad, GamepadButton button)
-		{
-			return GetGamepadButtonPressed_Native(gamepad, button);
 		}
 
 		public static ConnectionState GetGamepadConnectionState()

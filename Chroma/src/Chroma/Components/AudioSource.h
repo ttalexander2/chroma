@@ -39,10 +39,13 @@ namespace Chroma
 		/// @return Name of the Component
 		const std::string Name() const override
 		{
-			return "Audio Source";
+			return StaticName();
 		}
 
-		void DrawImGui() override;
+		const static std::string StaticName()
+		{
+			return "Audio Source";
+		}
 
 		void Serialize(YAML::Emitter& out) override;
 

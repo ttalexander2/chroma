@@ -20,7 +20,8 @@
     <OutputPath>..\bin\Debug-windows-x86_64\Chroma.Mono\</OutputPath>
     <BaseIntermediateOutputPath>..\obj\Debug-windows-x86_64\Chroma.Mono\</BaseIntermediateOutputPath>
     <IntermediateOutputPath>$(BaseIntermediateOutputPath)</IntermediateOutputPath>
-    <DefineConstants></DefineConstants>
+    <DefineConstants>
+    </DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -31,7 +32,8 @@
     <OutputPath>..\bin\Release-windows-x86_64\Chroma.Mono\</OutputPath>
     <BaseIntermediateOutputPath>..\obj\Release-windows-x86_64\Chroma.Mono\</BaseIntermediateOutputPath>
     <IntermediateOutputPath>$(BaseIntermediateOutputPath)</IntermediateOutputPath>
-    <DefineConstants></DefineConstants>
+    <DefineConstants>
+    </DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -42,7 +44,8 @@
     <OutputPath>..\bin\Dist-windows-x86_64\Chroma.Mono\</OutputPath>
     <BaseIntermediateOutputPath>..\obj\Dist-windows-x86_64\Chroma.Mono\</BaseIntermediateOutputPath>
     <IntermediateOutputPath>$(BaseIntermediateOutputPath)</IntermediateOutputPath>
-    <DefineConstants></DefineConstants>
+    <DefineConstants>
+    </DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -50,16 +53,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Source\Component.cs" />
+    <Compile Include="Source\Components\SpriteRenderer.cs" />
     <Compile Include="Source\Components\Tag.cs" />
     <Compile Include="Source\Components\Transform.cs" />
     <Compile Include="Source\Entity.cs" />
     <Compile Include="Source\Input.cs" />
     <Compile Include="Source\Log.cs" />
+    <Compile Include="Source\Math\Color.cs" />
     <Compile Include="Source\Math\Mathf.cs" />
     <Compile Include="Source\Math\Vector2.cs" />
     <Compile Include="Source\Math\Vector3.cs" />
     <Compile Include="Source\Math\Vector4.cs" />
     <Compile Include="Source\RuntimeException.cs" />
+    <Compile Include="Source\Time.cs" />
   </ItemGroup>
   <ItemGroup>
   </ItemGroup>

@@ -2,6 +2,7 @@
 #include "thid_party/edlib/edlib.h"
 #include <map>
 #include <Chroma/Core/Log.h>
+#include <Chroma/Math/Math.h>
 
 
 namespace Polychrome
@@ -17,7 +18,7 @@ namespace Polychrome
 		{
 			if (p.is_regular_file())
 			{
-				std::string filename(p.path().filename().replace_extension().string());
+				std::string filename(p.path().filename().string());
 				std::transform(filename.begin(), filename.end(), filename.begin(),
 					[](unsigned char c) { return std::tolower(c); });
 				
@@ -30,6 +31,17 @@ namespace Polychrome
 						distance = result.editDistance;
 				}
 				edlibFreeAlignResult(result);
+
+				int i = 0;
+				for (char c : term)
+				{
+					if (filename.length() >= i || c != filename[i])
+						break;
+				}
+
+				distance -= i;
+
+				distance += Math::abs(term.length() - filename.length());
 
 
 				if (distance <= threshold)

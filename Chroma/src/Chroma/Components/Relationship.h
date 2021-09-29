@@ -17,7 +17,13 @@ namespace Chroma
 		const bool HasChild(EntityID child) const { return std::find(Children.begin(), Children.end(), child) != Children.end(); }
 
 
-		const std::string Name() const override { return "Relationship"; }
+		const std::string Name() const override { return StaticName(); }
+
+		const static std::string StaticName()
+		{
+			return "Relationship";
+		}
+
 		const bool EditorVisible() const override { return false; }
 
 		void Serialize(YAML::Emitter& out) override;

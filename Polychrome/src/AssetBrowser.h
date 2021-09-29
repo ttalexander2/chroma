@@ -15,7 +15,8 @@ namespace Polychrome
 		static void HandleOpen(std::filesystem::path path, TextEditor::Coordinates cursor_pos = TextEditor::Coordinates(1,0));
 	private:
 		static void ParseFolder(std::filesystem::path path);
-		static void FileClickPopup(std::filesystem::path dir);
+		static void FileClickPopup();
+		static void FolderClickPopup();
 		static void LoadFileIcon(std::filesystem::path path);
 		//static std::map<std::filesystem::path, Chroma::Ref<Chroma::Texture2D>> Icons;
 	};

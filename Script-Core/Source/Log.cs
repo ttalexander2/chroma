@@ -16,7 +16,6 @@ namespace Chroma
 		}
 
 		public static void Trace(string format, params object[] parameters) => LogMessage_Native(LogLevel.Trace, string.Format(format, parameters));
-
 		public static void WriteLine(string format, params object[] parameters) => LogMessage_Native(LogLevel.Trace, string.Format(format, parameters));
 		public static void Debug(string format, params object[] parameters) => LogMessage_Native(LogLevel.Debug, string.Format(format, parameters));
 		public static void Info(string format, params object[] parameters) => LogMessage_Native(LogLevel.Info, string.Format(format, parameters));
@@ -25,6 +24,7 @@ namespace Chroma
 		public static void Critical(string format, params object[] parameters) => LogMessage_Native(LogLevel.Critical, string.Format(format, parameters));
 
 		public static void Trace(object value) => LogMessage_Native(LogLevel.Trace, value.ToString());
+		public static void WriteLine(object value) => LogMessage_Native(LogLevel.Trace, value.ToString());
 		public static void Debug(object value) => LogMessage_Native(LogLevel.Debug, value.ToString());
 		public static void Info(object value) => LogMessage_Native(LogLevel.Info, value.ToString());
 		public static void Warn(object value) => LogMessage_Native(LogLevel.Warn, value.ToString());

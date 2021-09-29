@@ -37,12 +37,15 @@ namespace Chroma
 
 		const std::string Name() const override
 		{
+			return StaticName();
+		}
+
+		const static std::string StaticName()
+		{
 			return "Transform";
 		}
 
 		const bool AllowMultiple() const override { return false; };
-
-		void DrawImGui() override;
 
 		void Serialize(YAML::Emitter& out) override;
 

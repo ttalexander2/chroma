@@ -55,7 +55,7 @@ namespace Chroma
 		static void InitMono();
 		static void ShutdownMono();
 
-		static bool BuildAssembly(const std::string& path);
+		static bool BuildAssembly(const std::string& path, const std::string& name);
 
 		static bool LoadChromaRuntimeAssembly(const std::string& path);
 		static bool LoadAppAssembly(const std::string& path);
@@ -73,6 +73,8 @@ namespace Chroma
 		static void InitScriptEntity(Entity entity);
 		static void ShutdownScriptEntity(Entity entity, const std::string& moduleName);
 		static void InstantiateEntityClass(Entity entity);
+
+		static void SetDeltaTime(double dtime, float ftime);
 
 		static void PreInit(Entity entity);
 		static void Init(Entity entity);
