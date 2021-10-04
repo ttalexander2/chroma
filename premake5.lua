@@ -205,8 +205,8 @@ project "Polychrome"
         "{COPY} assets %{cfg.targetdir}/assets",
         "{ECHO} Copying mono dependencies to %{cfg.targetdir}",
         "{COPY} mono %{cfg.targetdir}/mono",
-        "{ECHO} Copying ../Chroma/third_party/mono/bin/Debug/mono-2.0-sgen.dll to %{cfg.targetdir}",
-        '{COPY} "../Chroma/third_party/mono/bin/Debug/mono-2.0-sgen.dll" "%{cfg.targetdir}"',
+        "{ECHO} Copying ../Chroma/third_party/mono/bin/mono-2.0-sgen.dll to %{cfg.targetdir}",
+        '{COPY} "../Chroma/third_party/mono/bin/mono-2.0-sgen.dll" "%{cfg.targetdir}"',
         "{ECHO} Copying imgui.ini to %{cfg.targetdir}",
         "{COPY} imgui.ini %{cfg.targetdir}",
         "{COPY} Chroma.Mono.dll %{cfg.targetdir}"
@@ -287,8 +287,8 @@ project "Runtime"
         "{COPY} ../Chroma/lib/Windows/x64/fmodL.dll %{cfg.targetdir}",
         "{ECHO} Copying assets to %{cfg.targetdir}/assets",
         "{COPY} assets %{cfg.targetdir}/assets",
-        "{ECHO} Copying ../Chroma/third_party/mono/bin/Debug/mono-2.0-sgen.dll to %{cfg.targetdir}",
-        '{COPY} "../Chroma/third_party/mono/bin/Debug/mono-2.0-sgen.dll" "%{cfg.targetdir}"'
+        "{ECHO} Copying ../Chroma/third_party/mono/bin/mono-2.0-sgen.dll to %{cfg.targetdir}",
+        '{COPY} "../Chroma/third_party/mono/bin/mono-2.0-sgen.dll" "%{cfg.targetdir}"'
     }
 
 
@@ -321,27 +321,50 @@ project "Runtime"
 
 project "Chroma.Mono"
     location "Script-Core"
-    dotnetframework "4.6"
-    kind "SharedLib"
-    language "C#"
+    kind "None"
 
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("obj/" .. outputdir .. "/%{prj.name}")
 
     files
     {
-        "Script-Core/Source/**.cs",  
+        "Script-Core/Source/**.cs",
     }
+
+    filter "configurations:Debug"
+        buildcommands {
+            "{ECHO} Building Chroma.Mono.dll with mcs...",
+            "%{wks.location}Polychrome\\mono\\bin\\mono.exe %{wks.location}Polychrome\\mono\\lib\\mono\\4.5\\mcs.exe -debug -target:library -nostdlib -out:%{wks.location}bin\\" .. outputdir .. "\\%{prj.name}\\Chroma.Mono.dll -r:%{wks.location}Polychrome\\mono\\lib\\mono\\4.5\\mscorlib.dll,%{wks.location}Polychrome\\mono\\lib\\mono\\4.5\\System.dll,%{wks.location}Polychrome\\mono\\lib\\mono\\4.5\\System.Core.dll -recurse:Source\\**.cs",
+            "{ECHO} Copying %{wks.location}bin\\" .. outputdir .. "\\%{prj.name}\\Chroma.Mono.dll",
+            "{COPY} %{wks.location}bin\\" .. outputdir .. "\\%{prj.name}\\Chroma.Mono.dll %{wks.location}Polychrome",
+            "{COPY} %{wks.location}bin\\" .. outputdir .. "\\%{prj.name}\\Chroma.Mono.dll %{wks.location}bin/" .. outputdir .. "/Polychrome",
+            "{COPY} %{wks.location}bin\\" .. outputdir .. "\\%{prj.name}\\Chroma.Mono.dll %{wks.location}Runtime",
+            "{COPY} %{wks.location}bin\\" .. outputdir .. "\\%{prj.name}\\Chroma.Mono.dll %{wks.location}bin/" .. outputdir .. "/Runtime",
+        }
+
+    filter "configurations:Release"
+        buildcommands {
+            "{ECHO} Building Chroma.Mono.dll with mcs...",
+            "%{wks.location}Polychrome\\mono\\bin\\mono.exe %{wks.location}Polychrome\\mono\\lib\\mono\\4.5\\mcs.exe -target:library -nostdlib -optimize -out:%{wks.location}bin\\" .. outputdir .. "\\%{prj.name}\\Chroma.Mono.dll -r:%{wks.location}Polychrome\\mono\\lib\\mono\\4.5\\mscorlib.dll,%{wks.location}Polychrome\\mono\\lib\\mono\\4.5\\System.dll,%{wks.location}Polychrome\\mono\\lib\\mono\\4.5\\System.Core.dll -recurse:**.cs",
+            "{ECHO} Copying %{wks.location}bin\\" .. outputdir .. "\\%{prj.name}\\Chroma.Mono.dll",
+            "{COPY} %{wks.location}bin\\" .. outputdir .. "\\%{prj.name}\\Chroma.Mono.dll %{wks.location}Polychrome",
+            "{COPY} %{wks.location}bin\\" .. outputdir .. "\\%{prj.name}\\Chroma.Mono.dll %{wks.location}bin/" .. outputdir .. "/Polychrome",
+            "{COPY} %{wks.location}bin\\" .. outputdir .. "\\%{prj.name}\\Chroma.Mono.dll %{wks.location}Runtime",
+            "{COPY} %{wks.location}bin\\" .. outputdir .. "\\%{prj.name}\\Chroma.Mono.dll %{wks.location}bin/" .. outputdir .. "/Runtime",
+        }
+
+    filter "configurations:Dist"
+        buildcommands {
+            "{ECHO} Building Chroma.Mono.dll with mcs...",
+            "%{wks.location}Polychrome\\mono\\bin\\mono.exe %{wks.location}Polychrome\\mono\\lib\\mono\\4.5\\mcs.exe -target:library -nostdlib -optimize -out:%{wks.location}bin\\" .. outputdir .. "\\%{prj.name}\\Chroma.Mono.dll -r:%{wks.location}Polychrome\\mono\\lib\\mono\\4.5\\mscorlib.dll,%{wks.location}Polychrome\\mono\\lib\\mono\\4.5\\System.dll,%{wks.location}Polychrome\\mono\\lib\\mono\\4.5\\System.Core.dll -recurse:**.cs",
+            "{ECHO}Copying  %{wks.location}bin\\" .. outputdir .. "\\%{prj.name}\\Chroma.Mono.dll",
+            "{COPY} %{wks.location}bin\\" .. outputdir .. "\\%{prj.name}\\Chroma.Mono.dll %{wks.location}Polychrome",
+            "{COPY} %{wks.location}bin\\" .. outputdir .. "\\%{prj.name}\\Chroma.Mono.dll %{wks.location}bin/" .. outputdir .. "/Polychrome",
+            "{COPY} %{wks.location}bin\\" .. outputdir .. "\\%{prj.name}\\Chroma.Mono.dll %{wks.location}Runtime",
+            "{COPY} %{wks.location}bin\\" .. outputdir .. "\\%{prj.name}\\Chroma.Mono.dll %{wks.location}bin/" .. outputdir .. "/Runtime",
+        }
+
     
     
-    postbuildcommands
-    {
-        "{ECHO} %{wks.location}bin\\" .. outputdir .. "\\%{prj.name}\\Chroma.Mono.dll",
-        "{COPY} %{wks.location}bin\\" .. outputdir .. "\\%{prj.name}\\Chroma.Mono.dll %{wks.location}Polychrome",
-        "{COPY} %{wks.location}bin\\" .. outputdir .. "\\%{prj.name}\\Chroma.Mono.pdb %{wks.location}Polychrome",
-        "{COPY} %{wks.location}bin\\" .. outputdir .. "\\%{prj.name}\\Chroma.Mono.dll %{wks.location}bin/" .. outputdir .. "/Polychrome",
-        "{COPY} %{wks.location}bin\\" .. outputdir .. "\\%{prj.name}\\Chroma.Mono.dll %{wks.location}Runtime",
-        "{COPY} %{wks.location}bin\\" .. outputdir .. "\\%{prj.name}\\Chroma.Mono.pdb %{wks.location}Runtime",
-        "{COPY} %{wks.location}bin\\" .. outputdir .. "\\%{prj.name}\\Chroma.Mono.dll %{wks.location}bin/" .. outputdir .. "/Runtime",
-    }
+
 

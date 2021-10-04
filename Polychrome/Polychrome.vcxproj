@@ -100,8 +100,8 @@ echo Copying assets to ../bin/Debug-windows-x86_64/Polychrome/assets
 IF EXIST assets\ (xcopy /Q /E /Y /I assets ..\bin\Debug-windows-x86_64\Polychrome\assets &gt; nul) ELSE (xcopy /Q /Y /I assets ..\bin\Debug-windows-x86_64\Polychrome\assets &gt; nul)
 echo Copying mono dependencies to ../bin/Debug-windows-x86_64/Polychrome
 IF EXIST mono\ (xcopy /Q /E /Y /I mono ..\bin\Debug-windows-x86_64\Polychrome\mono &gt; nul) ELSE (xcopy /Q /Y /I mono ..\bin\Debug-windows-x86_64\Polychrome\mono &gt; nul)
-echo Copying ../Chroma/third_party/mono/bin/Debug/mono-2.0-sgen.dll to ../bin/Debug-windows-x86_64/Polychrome
-IF EXIST "..\Chroma\third_party\mono\bin\Debug\mono-2.0-sgen.dll"\ (xcopy /Q /E /Y /I "..\Chroma\third_party\mono\bin\Debug\mono-2.0-sgen.dll" "..\bin\Debug-windows-x86_64\Polychrome" &gt; nul) ELSE (xcopy /Q /Y /I "..\Chroma\third_party\mono\bin\Debug\mono-2.0-sgen.dll" "..\bin\Debug-windows-x86_64\Polychrome" &gt; nul)
+echo Copying ../Chroma/third_party/mono/bin/mono-2.0-sgen.dll to ../bin/Debug-windows-x86_64/Polychrome
+IF EXIST "..\Chroma\third_party\mono\bin\mono-2.0-sgen.dll"\ (xcopy /Q /E /Y /I "..\Chroma\third_party\mono\bin\mono-2.0-sgen.dll" "..\bin\Debug-windows-x86_64\Polychrome" &gt; nul) ELSE (xcopy /Q /Y /I "..\Chroma\third_party\mono\bin\mono-2.0-sgen.dll" "..\bin\Debug-windows-x86_64\Polychrome" &gt; nul)
 echo Copying imgui.ini to ../bin/Debug-windows-x86_64/Polychrome
 IF EXIST imgui.ini\ (xcopy /Q /E /Y /I imgui.ini ..\bin\Debug-windows-x86_64\Polychrome &gt; nul) ELSE (xcopy /Q /Y /I imgui.ini ..\bin\Debug-windows-x86_64\Polychrome &gt; nul)
 IF EXIST Chroma.Mono.dll\ (xcopy /Q /E /Y /I Chroma.Mono.dll ..\bin\Debug-windows-x86_64\Polychrome &gt; nul) ELSE (xcopy /Q /Y /I Chroma.Mono.dll ..\bin\Debug-windows-x86_64\Polychrome &gt; nul)</Command>
@@ -136,8 +136,8 @@ echo Copying assets to ../bin/Release-windows-x86_64/Polychrome/assets
 IF EXIST assets\ (xcopy /Q /E /Y /I assets ..\bin\Release-windows-x86_64\Polychrome\assets &gt; nul) ELSE (xcopy /Q /Y /I assets ..\bin\Release-windows-x86_64\Polychrome\assets &gt; nul)
 echo Copying mono dependencies to ../bin/Release-windows-x86_64/Polychrome
 IF EXIST mono\ (xcopy /Q /E /Y /I mono ..\bin\Release-windows-x86_64\Polychrome\mono &gt; nul) ELSE (xcopy /Q /Y /I mono ..\bin\Release-windows-x86_64\Polychrome\mono &gt; nul)
-echo Copying ../Chroma/third_party/mono/bin/Debug/mono-2.0-sgen.dll to ../bin/Release-windows-x86_64/Polychrome
-IF EXIST "..\Chroma\third_party\mono\bin\Debug\mono-2.0-sgen.dll"\ (xcopy /Q /E /Y /I "..\Chroma\third_party\mono\bin\Debug\mono-2.0-sgen.dll" "..\bin\Release-windows-x86_64\Polychrome" &gt; nul) ELSE (xcopy /Q /Y /I "..\Chroma\third_party\mono\bin\Debug\mono-2.0-sgen.dll" "..\bin\Release-windows-x86_64\Polychrome" &gt; nul)
+echo Copying ../Chroma/third_party/mono/bin/mono-2.0-sgen.dll to ../bin/Release-windows-x86_64/Polychrome
+IF EXIST "..\Chroma\third_party\mono\bin\mono-2.0-sgen.dll"\ (xcopy /Q /E /Y /I "..\Chroma\third_party\mono\bin\mono-2.0-sgen.dll" "..\bin\Release-windows-x86_64\Polychrome" &gt; nul) ELSE (xcopy /Q /Y /I "..\Chroma\third_party\mono\bin\mono-2.0-sgen.dll" "..\bin\Release-windows-x86_64\Polychrome" &gt; nul)
 echo Copying imgui.ini to ../bin/Release-windows-x86_64/Polychrome
 IF EXIST imgui.ini\ (xcopy /Q /E /Y /I imgui.ini ..\bin\Release-windows-x86_64\Polychrome &gt; nul) ELSE (xcopy /Q /Y /I imgui.ini ..\bin\Release-windows-x86_64\Polychrome &gt; nul)
 IF EXIST Chroma.Mono.dll\ (xcopy /Q /E /Y /I Chroma.Mono.dll ..\bin\Release-windows-x86_64\Polychrome &gt; nul) ELSE (xcopy /Q /Y /I Chroma.Mono.dll ..\bin\Release-windows-x86_64\Polychrome &gt; nul)</Command>
@@ -172,8 +172,8 @@ echo Copying assets to ../bin/Dist-windows-x86_64/Polychrome/assets
 IF EXIST assets\ (xcopy /Q /E /Y /I assets ..\bin\Dist-windows-x86_64\Polychrome\assets &gt; nul) ELSE (xcopy /Q /Y /I assets ..\bin\Dist-windows-x86_64\Polychrome\assets &gt; nul)
 echo Copying mono dependencies to ../bin/Dist-windows-x86_64/Polychrome
 IF EXIST mono\ (xcopy /Q /E /Y /I mono ..\bin\Dist-windows-x86_64\Polychrome\mono &gt; nul) ELSE (xcopy /Q /Y /I mono ..\bin\Dist-windows-x86_64\Polychrome\mono &gt; nul)
-echo Copying ../Chroma/third_party/mono/bin/Debug/mono-2.0-sgen.dll to ../bin/Dist-windows-x86_64/Polychrome
-IF EXIST "..\Chroma\third_party\mono\bin\Debug\mono-2.0-sgen.dll"\ (xcopy /Q /E /Y /I "..\Chroma\third_party\mono\bin\Debug\mono-2.0-sgen.dll" "..\bin\Dist-windows-x86_64\Polychrome" &gt; nul) ELSE (xcopy /Q /Y /I "..\Chroma\third_party\mono\bin\Debug\mono-2.0-sgen.dll" "..\bin\Dist-windows-x86_64\Polychrome" &gt; nul)
+echo Copying ../Chroma/third_party/mono/bin/mono-2.0-sgen.dll to ../bin/Dist-windows-x86_64/Polychrome
+IF EXIST "..\Chroma\third_party\mono\bin\mono-2.0-sgen.dll"\ (xcopy /Q /E /Y /I "..\Chroma\third_party\mono\bin\mono-2.0-sgen.dll" "..\bin\Dist-windows-x86_64\Polychrome" &gt; nul) ELSE (xcopy /Q /Y /I "..\Chroma\third_party\mono\bin\mono-2.0-sgen.dll" "..\bin\Dist-windows-x86_64\Polychrome" &gt; nul)
 echo Copying imgui.ini to ../bin/Dist-windows-x86_64/Polychrome
 IF EXIST imgui.ini\ (xcopy /Q /E /Y /I imgui.ini ..\bin\Dist-windows-x86_64\Polychrome &gt; nul) ELSE (xcopy /Q /Y /I imgui.ini ..\bin\Dist-windows-x86_64\Polychrome &gt; nul)
 IF EXIST Chroma.Mono.dll\ (xcopy /Q /E /Y /I Chroma.Mono.dll ..\bin\Dist-windows-x86_64\Polychrome &gt; nul) ELSE (xcopy /Q /Y /I Chroma.Mono.dll ..\bin\Dist-windows-x86_64\Polychrome &gt; nul)</Command>

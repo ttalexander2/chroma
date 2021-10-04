@@ -7,6 +7,7 @@
 #include <mono/metadata/debug-helpers.h>
 #include <mono/metadata/attrdefs.h>
 #include <mono/metadata/mono-gc.h>
+#include <mono/metadata/mono-config.h>
 #include <Chroma/Components/CSharpScript.h>
 
 
@@ -105,11 +106,11 @@ namespace Chroma
 
 	void MonoScripting::InitMono()
 	{
-		std::string libs = std::filesystem::absolute("mono/lib").string();
+		std::string libs = std::filesystem::absolute("mono\\lib\\mono\\4.5").string();
 		CHROMA_CORE_INFO("Loaded Mono libraries: {}", libs);
 		mono_set_assemblies_path(libs.c_str());
 		// mono_jit_set_trace_options("--verbose");
-		auto domain = mono_jit_init("Chroma");
+		auto domain = mono_jit_init_version("Chroma", "v4.0.30319");
 	}
 
 	void MonoScripting::ShutdownMono()
@@ -120,11 +121,16 @@ namespace Chroma
 
 	bool MonoScripting::BuildAssembly(const std::string& path, const std::string& name)
 	{
-		CHROMA_CORE_INFO("Building: {}", path + "\\bin\\Debug\\net4.6\\" + name + ".dll");
-		system(("dotnet build " + std::string(path)).c_str());
+		CHROMA_CORE_INFO("Building: {}", path + "\\bin\\" + name + ".dll");
+		if (!std::filesystem::exists(path + "\\bin\\"))
+			std::filesystem::create_directories(path + "\\bin\\");
 
-		if (std::filesystem::exists(path + "\\bin\\Debug\\net4.6\\" + name + ".dll"))
-			return MonoScripting::LoadAppAssembly(path + "\\bin\\Debug\\net4.6\\" + name + ".dll");
+		//If there's a better (still portable) way to do this, i would prefer that lol
+		//Also this bat file assumes mono is installed (it uses system variables), so it should probably change anyways
+		system((".\\mono\\bin\\mcs.bat -debug -target:library -nostdlib -out:\"" + std::filesystem::absolute(path).string() + "\"\\bin\\" + name + ".dll -r:Chroma.Mono.dll -r:mono\\lib\\mono\\4.5\\mscorlib.dll -r:mono\\lib\\mono\\4.5\\System.dll -r:mono\\lib\\mono\\4.5\\System.Core.dll -recurse:\"" + std::filesystem::absolute(path).string()  + "\"\\**.cs").c_str());
+
+		if (std::filesystem::exists(path + "\\bin\\" + name + ".dll"))
+			return MonoScripting::LoadAppAssembly(path + "\\bin\\" + name + ".dll");
 		return false;
 	}
 
@@ -230,6 +236,7 @@ namespace Chroma
 
 	static uint32_t Instantiate(EntityScriptClass& scriptClass)
 	{
+		//CHROMA_CORE_INFO("Instantiate: {}, scriptClass: {}, currentMonoDomain: {}", scriptClass.ClassName, scriptClass.Class != nullptr, currentMonoDomain != nullptr);
 		MonoObject* instance = mono_object_new(currentMonoDomain, scriptClass.Class);
 		if (!instance)
 			std::cout << "mono_object_new failed" << std::endl;
@@ -327,8 +334,6 @@ namespace Chroma
 		CHROMA_CORE_ASSERT(false, "Unknown field type!");
 		return 0;
 	}
-
-
 
 
 	static bool postLoadCleanup = false;

@@ -97,7 +97,7 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalDependencies>opengl32.lib;third_party\mono\lib\Debug\mono-2.0-sgen.lib;lib\Windows\x64\fmodL_vc.lib;lib\Windows\x64\fmodstudioL_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;third_party\mono\lib\mono-2.0-sgen.lib;lib\Windows\x64\fmodL_vc.lib;lib\Windows\x64\fmodstudioL_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -123,7 +123,7 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalDependencies>opengl32.lib;third_party\mono\lib\Debug\mono-2.0-sgen.lib;lib\Windows\x64\fmodL_vc.lib;lib\Windows\x64\fmodstudioL_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;third_party\mono\lib\mono-2.0-sgen.lib;lib\Windows\x64\fmodL_vc.lib;lib\Windows\x64\fmodstudioL_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
@@ -149,7 +149,7 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalDependencies>opengl32.lib;third_party\mono\lib\Debug\mono-2.0-sgen.lib;lib\Windows\x64\fmodL_vc.lib;lib\Windows\x64\fmodstudioL_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;third_party\mono\lib\mono-2.0-sgen.lib;lib\Windows\x64\fmodL_vc.lib;lib\Windows\x64\fmodstudioL_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>

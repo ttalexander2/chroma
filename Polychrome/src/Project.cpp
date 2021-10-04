@@ -51,7 +51,7 @@ namespace Polychrome
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net4.7</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>

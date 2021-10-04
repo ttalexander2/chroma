@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
 
@@ -14,6 +16,11 @@ namespace Chroma
         protected Entity() { ID = 0; }
         internal Entity(ulong id) { ID = id; }
         ~Entity() { }
+
+        //internal List<Coroutine> coroutines;
+
+        public Coroutine CreateCoroutine() => new Coroutine();
+        public Coroutine CreateCoroutine(IEnumerator function) => new Coroutine(function);
 
         public T CreateComponent<T>() where T : Component, new()
         {

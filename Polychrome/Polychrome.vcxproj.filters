@@ -21,6 +21,7 @@
     <ClInclude Include="src\AssetBrowser.h" />
     <ClInclude Include="src\Assets.h" />
     <ClInclude Include="src\CodeEditor.h" />
+    <ClInclude Include="src\ComponentWidgets.h" />
     <ClInclude Include="src\EditorApp.h" />
     <ClInclude Include="src\EditorConfig.h" />
     <ClInclude Include="src\FileDrop.h" />
@@ -51,11 +52,11 @@
     <ClInclude Include="src\thid_party\platform_folders.h">
       <Filter>thid_party</Filter>
     </ClInclude>
-    <ClInclude Include="src\ComponentWidgets.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AssetBrowser.cpp" />
     <ClCompile Include="src\CodeEditor.cpp" />
+    <ClCompile Include="src\ComponentWidgets.cpp" />
     <ClCompile Include="src\EditorApp.cpp" />
     <ClCompile Include="src\FileDrop.cpp" />
     <ClCompile Include="src\FileWatcherThread.cpp" />
@@ -89,6 +90,5 @@
     <ClCompile Include="src\thid_party\platform_folders.cpp">
       <Filter>thid_party</Filter>
     </ClCompile>
-    <ClCompile Include="src\ComponentWidgets.cpp" />
   </ItemGroup>
 </Project>

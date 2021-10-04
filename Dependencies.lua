@@ -18,4 +18,4 @@ IncludeDir["mono"] = "Chroma/third_party/mono/include"
 IncludeDir["nfd"] = "Chroma/third_party/nativefiledialog-extended/src/include"
 
 Library = {}
-Library["mono"] = "%{wks.location}/Chroma/third_party/mono/lib/Debug/mono-2.0-sgen.lib"
+Library["mono"] = "%{wks.location}/Chroma/third_party/mono/lib/mono-2.0-sgen.lib"

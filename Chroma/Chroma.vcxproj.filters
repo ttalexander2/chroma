@@ -701,6 +701,9 @@
     <ClCompile Include="src\Chroma\Math\Decompose.cpp">
       <Filter>src\Chroma\Math</Filter>
     </ClCompile>
+    <ClCompile Include="src\Chroma\Math\Math.cpp">
+      <Filter>src\Chroma\Math</Filter>
+    </ClCompile>
     <ClCompile Include="src\Chroma\Platform\OpenGL\OpenGLBuffer.cpp">
       <Filter>src\Chroma\Platform\OpenGL</Filter>
     </ClCompile>
@@ -923,6 +926,5 @@
     <ClCompile Include="third_party\yaml-cpp\src\tag.cpp">
       <Filter>third_party\yaml-cpp\src</Filter>
     </ClCompile>
-    <ClCompile Include="src\Chroma\Math\Math.cpp" />
   </ItemGroup>
 </Project>

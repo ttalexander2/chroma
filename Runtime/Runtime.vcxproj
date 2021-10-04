@@ -98,8 +98,8 @@ echo Copying ../Chroma/lib/Windows/x64/fmodL.dll to ../bin/Debug-windows-x86_64/
 IF EXIST ..\Chroma\lib\Windows\x64\fmodL.dll\ (xcopy /Q /E /Y /I ..\Chroma\lib\Windows\x64\fmodL.dll ..\bin\Debug-windows-x86_64\Runtime &gt; nul) ELSE (xcopy /Q /Y /I ..\Chroma\lib\Windows\x64\fmodL.dll ..\bin\Debug-windows-x86_64\Runtime &gt; nul)
 echo Copying assets to ../bin/Debug-windows-x86_64/Runtime/assets
 IF EXIST assets\ (xcopy /Q /E /Y /I assets ..\bin\Debug-windows-x86_64\Runtime\assets &gt; nul) ELSE (xcopy /Q /Y /I assets ..\bin\Debug-windows-x86_64\Runtime\assets &gt; nul)
-echo Copying ../Chroma/third_party/mono/bin/Debug/mono-2.0-sgen.dll to ../bin/Debug-windows-x86_64/Runtime
-IF EXIST "..\Chroma\third_party\mono\bin\Debug\mono-2.0-sgen.dll"\ (xcopy /Q /E /Y /I "..\Chroma\third_party\mono\bin\Debug\mono-2.0-sgen.dll" "..\bin\Debug-windows-x86_64\Runtime" &gt; nul) ELSE (xcopy /Q /Y /I "..\Chroma\third_party\mono\bin\Debug\mono-2.0-sgen.dll" "..\bin\Debug-windows-x86_64\Runtime" &gt; nul)</Command>
+echo Copying ../Chroma/third_party/mono/bin/mono-2.0-sgen.dll to ../bin/Debug-windows-x86_64/Runtime
+IF EXIST "..\Chroma\third_party\mono\bin\mono-2.0-sgen.dll"\ (xcopy /Q /E /Y /I "..\Chroma\third_party\mono\bin\mono-2.0-sgen.dll" "..\bin\Debug-windows-x86_64\Runtime" &gt; nul) ELSE (xcopy /Q /Y /I "..\Chroma\third_party\mono\bin\mono-2.0-sgen.dll" "..\bin\Debug-windows-x86_64\Runtime" &gt; nul)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -129,8 +129,8 @@ echo Copying ../Chroma/lib/Windows/x64/fmodL.dll to ../bin/Release-windows-x86_6
 IF EXIST ..\Chroma\lib\Windows\x64\fmodL.dll\ (xcopy /Q /E /Y /I ..\Chroma\lib\Windows\x64\fmodL.dll ..\bin\Release-windows-x86_64\Runtime &gt; nul) ELSE (xcopy /Q /Y /I ..\Chroma\lib\Windows\x64\fmodL.dll ..\bin\Release-windows-x86_64\Runtime &gt; nul)
 echo Copying assets to ../bin/Release-windows-x86_64/Runtime/assets
 IF EXIST assets\ (xcopy /Q /E /Y /I assets ..\bin\Release-windows-x86_64\Runtime\assets &gt; nul) ELSE (xcopy /Q /Y /I assets ..\bin\Release-windows-x86_64\Runtime\assets &gt; nul)
-echo Copying ../Chroma/third_party/mono/bin/Debug/mono-2.0-sgen.dll to ../bin/Release-windows-x86_64/Runtime
-IF EXIST "..\Chroma\third_party\mono\bin\Debug\mono-2.0-sgen.dll"\ (xcopy /Q /E /Y /I "..\Chroma\third_party\mono\bin\Debug\mono-2.0-sgen.dll" "..\bin\Release-windows-x86_64\Runtime" &gt; nul) ELSE (xcopy /Q /Y /I "..\Chroma\third_party\mono\bin\Debug\mono-2.0-sgen.dll" "..\bin\Release-windows-x86_64\Runtime" &gt; nul)</Command>
+echo Copying ../Chroma/third_party/mono/bin/mono-2.0-sgen.dll to ../bin/Release-windows-x86_64/Runtime
+IF EXIST "..\Chroma\third_party\mono\bin\mono-2.0-sgen.dll"\ (xcopy /Q /E /Y /I "..\Chroma\third_party\mono\bin\mono-2.0-sgen.dll" "..\bin\Release-windows-x86_64\Runtime" &gt; nul) ELSE (xcopy /Q /Y /I "..\Chroma\third_party\mono\bin\mono-2.0-sgen.dll" "..\bin\Release-windows-x86_64\Runtime" &gt; nul)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
@@ -160,13 +160,10 @@ echo Copying ../Chroma/lib/Windows/x64/fmodL.dll to ../bin/Dist-windows-x86_64/R
 IF EXIST ..\Chroma\lib\Windows\x64\fmodL.dll\ (xcopy /Q /E /Y /I ..\Chroma\lib\Windows\x64\fmodL.dll ..\bin\Dist-windows-x86_64\Runtime &gt; nul) ELSE (xcopy /Q /Y /I ..\Chroma\lib\Windows\x64\fmodL.dll ..\bin\Dist-windows-x86_64\Runtime &gt; nul)
 echo Copying assets to ../bin/Dist-windows-x86_64/Runtime/assets
 IF EXIST assets\ (xcopy /Q /E /Y /I assets ..\bin\Dist-windows-x86_64\Runtime\assets &gt; nul) ELSE (xcopy /Q /Y /I assets ..\bin\Dist-windows-x86_64\Runtime\assets &gt; nul)
-echo Copying ../Chroma/third_party/mono/bin/Debug/mono-2.0-sgen.dll to ../bin/Dist-windows-x86_64/Runtime
-IF EXIST "..\Chroma\third_party\mono\bin\Debug\mono-2.0-sgen.dll"\ (xcopy /Q /E /Y /I "..\Chroma\third_party\mono\bin\Debug\mono-2.0-sgen.dll" "..\bin\Dist-windows-x86_64\Runtime" &gt; nul) ELSE (xcopy /Q /Y /I "..\Chroma\third_party\mono\bin\Debug\mono-2.0-sgen.dll" "..\bin\Dist-windows-x86_64\Runtime" &gt; nul)</Command>
+echo Copying ../Chroma/third_party/mono/bin/mono-2.0-sgen.dll to ../bin/Dist-windows-x86_64/Runtime
+IF EXIST "..\Chroma\third_party\mono\bin\mono-2.0-sgen.dll"\ (xcopy /Q /E /Y /I "..\Chroma\third_party\mono\bin\mono-2.0-sgen.dll" "..\bin\Dist-windows-x86_64\Runtime" &gt; nul) ELSE (xcopy /Q /Y /I "..\Chroma\third_party\mono\bin\mono-2.0-sgen.dll" "..\bin\Dist-windows-x86_64\Runtime" &gt; nul)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClInclude Include="Runtime.h" />
-  </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Runtime.cpp" />
   </ItemGroup>
