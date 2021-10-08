@@ -14,7 +14,6 @@ namespace Chroma
 	{
 		out << YAML::Key << Name();
 		out << YAML::Value << YAML::BeginMap;
-		out << YAML::Key << "Index" << YAML::Value << order_id;
 	}
 
 	/// @brief Function to end the serialization process for the component.
@@ -24,15 +23,6 @@ namespace Chroma
 	void Component::EndSerialize(YAML::Emitter& out)
 	{
 		out << YAML::EndMap;
-	}
-
-	void Component::_Deserialize(YAML::Node& node)
-	{
-		auto val = node["Index"];
-		if (val)
-		{
-			order_id = val.as<unsigned int>();
-		}
 	}
 
 	void Component::DoSerialize(YAML::Emitter& out)

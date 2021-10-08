@@ -17,10 +17,20 @@ namespace Chroma
         internal Entity(ulong id) { ID = id; }
         ~Entity() { }
 
-        //internal List<Coroutine> coroutines;
+        private List<Coroutine> _coroutines = new List<Coroutine>();
 
-        public Coroutine CreateCoroutine() => new Coroutine();
-        public Coroutine CreateCoroutine(IEnumerator function) => new Coroutine(function);
+        public Coroutine CreateCoroutine()
+        {
+            Coroutine c = new Coroutine();
+            _coroutines.Add(c);
+            return c;
+        }
+        public Coroutine CreateCoroutine(Coroutine.CoroutineFunction function)
+        {
+            Coroutine c = new Coroutine(function);
+            _coroutines.Add(c);
+            return c;
+        }
 
         public T CreateComponent<T>() where T : Component, new()
         {
@@ -65,6 +75,15 @@ namespace Chroma
         public virtual void EarlyUpdate() { }
         public virtual void Update() { }
         public virtual void LateUpdate() { }
+
+        public void InternalUpdate()
+        {
+           foreach (Coroutine c in _coroutines)
+           {
+                if (c.Active)
+                    c.Update();
+           }
+        }
 
 
 

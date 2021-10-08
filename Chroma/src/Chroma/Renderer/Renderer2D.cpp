@@ -8,6 +8,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <Chroma/Profiler/Instrumentor.h>
 #include <Chroma/Images/Color.h>
+#include <Chroma/Scene/Scene.h>
 
 namespace Chroma
 {
@@ -175,18 +176,33 @@ namespace Chroma
 		RenderCommand::SetClearColor(color);
 	}
 
+	void Renderer2D::BeginScene(Scene& scene)
+	{
+		BeginScene(scene.GetPrimaryCamera().GetViewProjectionMatrix());
+	}
+
 	void Renderer2D::BeginScene(const OrthographicCamera& camera)
+	{
+		BeginScene(camera.GetViewProjectionMatrix());
+	}
+
+	void Renderer2D::BeginScene(const CameraComponent& camera)
+	{
+		BeginScene(camera.GetViewProjectionMatrix());
+	}
+
+	void Renderer2D::BeginScene(const Math::mat4& camera)
 	{
 		CHROMA_PROFILE_FUNCTION();
 		s_Data.TextureShader->Bind();
-		s_Data.TextureShader->SetUniformMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
+		s_Data.TextureShader->SetUniformMat4("u_ViewProjection", camera);
 		s_Data.TextureShader->SetUniformMat4("u_Transform", glm::mat4(1.0f));
 
 		s_Data.QuadIndexCount = 0;
 		s_Data.TextureSlotIndex = 1;
 		s_Data.QuadVertexBufferPtr = s_Data.QuadVertexBufferBase;
 
-		s_CullingFrustum = Frustum(camera.GetViewProjectionMatrix());
+		s_CullingFrustum = Frustum(camera);
 
 	}
 

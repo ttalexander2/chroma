@@ -12,6 +12,8 @@
 #include <Chroma/Math/Decompose.h>
 #include <Chroma/Components/LuaScript.h>
 #include <Chroma/Scripting/LuaScripting.h>
+#include <Chroma/Scripting/ScriptEngineRegistry.h>
+#include <Chroma/Scripting/MonoScripting.h>
 
 namespace Polychrome
 {
@@ -129,6 +131,16 @@ namespace Polychrome
 					EditorApp::CurrentScene = out;
 					if (!EditorApp::CurrentScene->Registry.valid(Hierarchy::SelectedEntity))
 						Hierarchy::SelectedEntity = Chroma::ENTITY_NULL;
+					Chroma::ScriptEngineRegistry::RegisterAll();
+					Chroma::MonoScripting::SetDeltaTime(0.f, 0.f);
+					Chroma::MonoScripting::SetSceneContext(EditorApp::CurrentScene);
+					auto view = EditorApp::CurrentScene->Registry.view<Chroma::CSharpScript>();
+					for (Chroma::EntityID entity : view)
+					{
+						auto& script = view.get<Chroma::CSharpScript>(entity);
+						auto entityObj = Chroma::Entity(entity, EditorApp::CurrentScene);
+						Chroma::MonoScripting::InitScriptEntity(entityObj);
+					}
 				}
 				else
 				{
@@ -158,14 +170,27 @@ namespace Polychrome
 					EditorApp::CurrentScene = out;
 					if (!EditorApp::CurrentScene->Registry.valid(Hierarchy::SelectedEntity))
 						Hierarchy::SelectedEntity = Chroma::ENTITY_NULL;
+					Chroma::ScriptEngineRegistry::RegisterAll();
+					Chroma::MonoScripting::SetDeltaTime(0.f, 0.f);
+					Chroma::MonoScripting::SetSceneContext(EditorApp::CurrentScene);
+					auto view = EditorApp::CurrentScene->Registry.view<Chroma::CSharpScript>();
+					for (Chroma::EntityID entity : view)
+					{
+						auto& script = view.get<Chroma::CSharpScript>(entity);
+						auto entityObj = Chroma::Entity(entity, EditorApp::CurrentScene);
+						Chroma::MonoScripting::InitScriptEntity(entityObj);
+					}
 				}
 				else
 				{
 					delete out;
 				}
-				EditorApp::ScenePaused = false;
-				EditorApp::SceneRunning = true;
+				clone = EditorApp::CurrentScene->Serialize();
+				EditorApp::CurrentScene->Load();
 				EditorApp::CurrentScene->Init();
+
+				EditorApp::SceneRunning = true;
+				EditorApp::ScenePaused = false;
 			}
 			ImGui::PopItemFlag();
 			ImGui::PopStyleColor();

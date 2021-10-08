@@ -2,20 +2,25 @@
 
 #include "./Vec4.h"
 
+namespace Math = glm;
 
-struct Rect : public Math::vec4
+namespace glm
 {
-	union
+	struct Rect : public vec4
 	{
-		struct
+		union
 		{
-			float x, y, width, height;
+			struct
+			{
+				float x, y, width, height;
+			};
+
 		};
 
+
+		operator vec4() const { return vec4(x, y, width, height); }
 	};
+}
 
-
-	operator Math::vec4() const { return Math::vec4(x, y, width, height); }
-};
 
 

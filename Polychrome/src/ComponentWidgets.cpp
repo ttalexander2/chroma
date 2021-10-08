@@ -12,7 +12,10 @@
 #include <Chroma/Components/CircleCollider2D.h>
 #include <Chroma/Components/LuaScript.h>
 #include <Chroma/Scripting/LuaScripting.h>
+#include <Chroma/Scripting/MonoScripting.h>
 #include <Chroma/Components/SpriteRenderer.h>
+#include "EditorApp.h"
+#include "Hierarchy.h"
 
 namespace Polychrome
 {
@@ -30,8 +33,6 @@ namespace Polychrome
 		else if (name == Chroma::CircleCollider2D::StaticName()) DrawCircleCollider2D(c);
 		else if (name == Chroma::LuaScript::StaticName()) DrawLuaScript(c);
 		else if (name == Chroma::SpriteRenderer::StaticName()) DrawSpriteRenderer(c);
-		
-		
 	}
 
 	void ComponentWidgets::DrawTransform(Chroma::Component* c)
@@ -59,29 +60,62 @@ namespace Polychrome
 		if (script->ModuleFieldMap.find(script->ModuleName) == script->ModuleFieldMap.end())
 			return;
 
-		for (auto& [name, field] : script->ModuleFieldMap[script->ModuleName])
+		if (EditorApp::SceneRunning)
 		{
-			DrawComponentValue(script, name);
-			const char* hash = ("##" + name).c_str();
-			if (field.Type == Chroma::FieldType::Float)
+			Chroma::EntityID entity = Hierarchy::SelectedEntity;
+			//Chroma::MonoScripting::getEntity
+			auto& entityInstanceData = Chroma::MonoScripting::GetEntityInstanceData(EditorApp::CurrentScene->GetID(), entity);
+			for (auto& [name, field] : script->ModuleFieldMap[script->ModuleName])
 			{
-				float val = field.GetStoredValue<float>();
-				ImGui::InputFloat(hash, &val);
-				field.SetStoredValue<float>(val);
-			}
-			else if (field.Type == Chroma::FieldType::Int)
-			{
-				int val = field.GetStoredValue<int>();
-				ImGui::InputInt(hash, &val);
-				field.SetStoredValue<int>(val);
-			}
-			else if (field.Type == Chroma::FieldType::String)
-			{
-				std::string val = field.GetStoredValue<const std::string&>();
-				ImGui::InputText(hash, &val);
-				field.SetStoredValue<const std::string&>(val);
+				DrawComponentValue(script, name);
+				const char* hash = ("##" + name).c_str();
+				if (field.Type == Chroma::FieldType::Float)
+				{
+					float val = field.GetRuntimeValue<float>(entityInstanceData.Instance);
+					ImGui::InputFloat(hash, &val);
+					field.SetStoredValue<float>(val);
+				}
+				else if (field.Type == Chroma::FieldType::Int)
+				{
+					int val = field.GetRuntimeValue<int>(entityInstanceData.Instance);
+					ImGui::InputInt(hash, &val);
+					field.SetStoredValue<int>(val);
+				}
+				else if (field.Type == Chroma::FieldType::String)
+				{
+					std::string val = field.GetRuntimeValue<std::string>(entityInstanceData.Instance);
+					ImGui::InputText(hash, &val);
+					field.SetStoredValue(val);
+				}
 			}
 		}
+		else
+		{
+			for (auto& [name, field] : script->ModuleFieldMap[script->ModuleName])
+			{
+				DrawComponentValue(script, name);
+				const char* hash = ("##" + name).c_str();
+				if (field.Type == Chroma::FieldType::Float)
+				{
+					float val = field.GetStoredValue<float>();
+					ImGui::InputFloat(hash, &val);
+					field.SetStoredValue<float>(val);
+				}
+				else if (field.Type == Chroma::FieldType::Int)
+				{
+					int val = field.GetStoredValue<int>();
+					ImGui::InputInt(hash, &val);
+					field.SetStoredValue<int>(val);
+				}
+				else if (field.Type == Chroma::FieldType::String)
+				{
+					std::string val = field.GetStoredValue<const std::string&>();
+					ImGui::InputText(hash, &val);
+					field.SetStoredValue<const std::string&>(val);
+				}
+			}
+		}
+		
 		//DrawComponentValue()
 	}
 

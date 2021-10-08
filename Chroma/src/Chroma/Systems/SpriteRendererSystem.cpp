@@ -142,17 +142,22 @@ namespace Chroma
 				{
 					Math::vec2 pos = transform.Position;
 					Math::vec2 scale = transform.Scale;
+					Math::vec2 parentPos{ 0,0 };
+					float parentRot = 0;
 					float rotation = transform.Rotation;
 					EntityID parent = relationship.Parent;
 					while (parent != ENTITY_NULL)
 					{
 						Transform& parentTransform = m_Scene->GetComponent<Transform>(parent);
-						pos += parentTransform.Position;
+						parentPos += parentTransform.Position;
 						scale *= parentTransform.Scale;
-						rotation += parentTransform.Rotation;
+						parentRot += parentTransform.Rotation;
 						parent = m_Scene->GetComponent<Relationship>(parent).Parent;
 					}
-					Chroma::Renderer2D::DrawQuad(pos + spriteRenderer.Offset, scale * Math::vec2((float)w, (float)h), s->Frames[spriteRenderer.CurrentFrame].Texture, spriteRenderer.Color, rotation);
+
+					Math::vec2 adjusted = { pos.x * Math::cos(parentRot) - pos.y * Math::sin(parentRot), pos.x * Math::sin(parentRot) + pos.y * Math::cos(parentRot) };
+					//CHROMA_CORE_TRACE("Adjusted: [{}, {}]; ParentPos: [{}, {}]; ParentRot: {}", adjusted.x, adjusted.y, parentPos.x, parentPos.y, parentRot);
+					Chroma::Renderer2D::DrawQuad(parentPos + adjusted + spriteRenderer.Offset, scale * Math::vec2((float)w, (float)h), s->Frames[spriteRenderer.CurrentFrame].Texture, spriteRenderer.Color, rotation + parentRot);
 				}
 
 			}

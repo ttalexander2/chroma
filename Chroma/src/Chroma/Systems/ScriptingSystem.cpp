@@ -233,6 +233,8 @@ namespace Chroma
 				auto& script = view.get<CSharpScript>(entity);
 				auto entityObj = Chroma::Entity(entity, m_Scene);
 				MonoScripting::Update(entityObj, time);
+
+				
 			}
 		}
 	}

@@ -11,6 +11,7 @@
 
 #include "Chroma/Core/Log.h"
 #include "Chroma/Profiler/Instrumentor.h"
+#include <Chroma/Components/CameraComponent.h>
 
 namespace Polychrome
 {
@@ -50,6 +51,9 @@ namespace Chroma
 		bool IsRoot(EntityID entity);
 		EntityID GetRootEntity(EntityID child);
 		std::vector<EntityID> FindAllDescendants(EntityID entity);
+
+		CameraComponent& GetPrimaryCamera() { return *PrimaryCamera; }
+		void SetPrimaryCamera(CameraComponent& camera);
 		
 
 
@@ -180,6 +184,7 @@ namespace Chroma
 	private:
 		std::vector<System*> Systems;
 		std::vector<EntityID> EntityOrder;
+		CameraComponent* PrimaryCamera;
 
 		GUID ID;
 

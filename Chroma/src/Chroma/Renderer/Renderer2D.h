@@ -4,9 +4,12 @@
 #include <Chroma/Math/Math.h>
 #include <Chroma/Renderer/Frustum.h>
 #include <Chroma/Images/Color.h>
+#include <Chroma/Components/CameraComponent.h>
 
 namespace Chroma
 {
+	class Scene;
+
 	class Renderer2D
 	{
 	public:
@@ -14,7 +17,10 @@ namespace Chroma
 		static void Init();
 		static void Shutdown();
 
+		static void BeginScene(Scene& scene);
+		static void BeginScene(const CameraComponent& camera);
 		static void BeginScene(const OrthographicCamera& camera);
+		static void BeginScene(const Math::mat4& viewProjMat);
 		static void EndScene();
 		static void Flush();
 

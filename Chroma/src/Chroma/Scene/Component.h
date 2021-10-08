@@ -17,7 +17,6 @@ namespace Polychrome
 
 namespace Chroma
 {
-
 	class Scene;
 	using EntityID = entt::entity;
 
@@ -28,6 +27,7 @@ namespace Chroma
 	/// By default, a component will show in the editor, to prevent an entry, override EditorVisible().
 	struct Component
 	{
+
 		friend class Scene;
 		Component() = default;
 		Component(const Component&) = default;
@@ -97,15 +97,17 @@ namespace Chroma
 			return comparison_id;
 		}
 
+		const size_t Hash() const { return std::hash<std::string>{}(Name()); }
+
 
 		void DoSerialize(YAML::Emitter& out);
 
 		const virtual bool EditorVisible() const { return true; }
 
+
 	private:
 		void BeginSerialize(YAML::Emitter& out);
 		void EndSerialize(YAML::Emitter& out);
-		void _Deserialize(YAML::Node& node);
 
 		/// @brief Checks whether the Component is a Transform.
 		const virtual bool IsTransform() const { return false; }
@@ -118,7 +120,7 @@ namespace Chroma
 		/// @brief Whether the compoennt is visible in the editor.
 		bool editor_visible = true;
 
-		unsigned int order_id = 0;
+		unsigned int order_id = 1;
 
 
 		/// @brief Set the component's comparison ID.

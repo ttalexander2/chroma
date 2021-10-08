@@ -68,6 +68,12 @@ namespace Chroma
 			return Components.find(name) != Components.end();
 		}
 
+		template <ComponentType T>
+		static bool IsType(Component* comp)
+		{
+			return Hash(comp->Name()) == Hash(T().Name());
+		}
+
 
 	private:
 		static std::unordered_map<size_t, std::function<Component*(EntityID, entt::registry*)>> ComponentFactory_Get;

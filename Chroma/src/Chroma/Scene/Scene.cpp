@@ -108,6 +108,19 @@ namespace Chroma
 		return desc;
 	}
 
+	void Scene::SetPrimaryCamera(CameraComponent& camera)
+	{
+		auto view = Registry.view<CameraComponent>();
+		for (auto& entity : view)
+		{
+			auto& cam = view.get<CameraComponent>(entity);
+			cam.primaryCamera = false;
+		}
+
+		camera.primaryCamera = true;
+		PrimaryCamera = &camera;
+	}
+
 	std::string Scene::Serialize()
 	{
 		YAML::Emitter out;
@@ -122,14 +135,35 @@ namespace Chroma
 		{
 			out << YAML::BeginMap;
 			out << YAML::Key << "Entity" << YAML::Value << (uint32_t)entity;
+
+			Tag& tag = Registry.get_or_emplace<Tag>(entity);
+			out << YAML::Key << "Name" << YAML::Value << tag.EntityName;
+
+
 			out << YAML::Key << "Components" << YAML::Value << YAML::BeginMap;
 
-			for (auto& name : ECS::GetComponentNames())
+			
+			std::vector<Component*> components = this->GetAllComponents(entity);
+			std::sort(components.begin(), components.end(), [](Component* a, Component* b) {return a->order_id < b->order_id; });
+
+			for (Component* comp : components)
 			{
-				if (ECS::HasComponent(name, entity, &Registry))
+				if (ECS::IsType<Relationship>(comp))
 				{
-					ECS::GetComponent(name, entity, &Registry)->DoSerialize(out);
+					Relationship* rel = reinterpret_cast<Relationship*>(comp);
+					if (rel->HasChildren() || rel->IsChild())
+						comp->DoSerialize(out);
+					
 				}
+				else if (ECS::IsType<Tag>(comp))
+				{
+					continue;
+				}
+				else
+				{
+					comp->DoSerialize(out);
+				}
+				
 					
 			}
 			
@@ -186,21 +220,53 @@ namespace Chroma
 				
 				EntityID newEntity = out->Registry.create(id);
 
+				auto name = entity["Name"];
+				Tag& tag = out->Registry.get_or_emplace<Tag>(newEntity);
+				if (name)
+					tag.EntityName = name.as<std::string>();
+
 				//CHROMA_CORE_TRACE("Deserialized Entity with ID = {0} (hint={1})", newEntity, id);
 				auto components = entity["Components"];
 				if (components)
 				{
+					int i = 1;
 					for (auto component : components)
 					{
 						std::string key = component.first.as<std::string>();
 						auto created = ECS::AddComponent(key, newEntity, &out->Registry);
-						created->_Deserialize(component.second);
+						if (key == "Transform" || key == "Relationship")
+							created->order_id = 0;
+						else
+							created->order_id = i;
 						if (key == "LuaScript")
 							created->Deserialize(component.second, newEntity, out);
 						else
 							created->Deserialize(component.second);
+
+						if (key == "Camera")
+						{
+							auto& camera = out->GetComponent<CameraComponent>(newEntity);
+							if (camera.primaryCamera)
+								out->PrimaryCamera = &camera;
+						}
+
+						i++;
 					}
+
+					out->Registry.get_or_emplace<Relationship>(newEntity);
 				}
+			}
+			auto view = out->Registry.view<CameraComponent>();
+			if (view.size() == 0)
+			{
+				auto newCam = out->NewEntity();
+				out->PrimaryCamera = &out->AddComponent<CameraComponent>(newCam.GetID());
+				out->GetComponent<Tag>(newCam.GetID()).EntityName = "Camera";
+			}
+			else
+			{
+				EntityID firstWithCamera = view.front();
+				out->GetComponent<CameraComponent>(firstWithCamera);
 			}
 		}
 

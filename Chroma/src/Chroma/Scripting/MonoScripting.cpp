@@ -59,6 +59,8 @@ namespace Chroma
 		MonoMethod* UpdateMethod = nullptr; 
 		MonoMethod* LateUpdateMethod = nullptr;
 
+		MonoMethod* InternalUpdateMethod = nullptr;
+
 		void InitClassMethods(MonoImage* image)
 		{
 			Constructor = GetMethod(coreAssemblyImage, "Chroma.Entity:.ctor(ulong)");
@@ -74,6 +76,8 @@ namespace Chroma
 			EarlyUpdateMethod = GetMethod(image, FullName + ":EarlyUpdate()");
 			UpdateMethod = GetMethod(image, FullName + ":Update()");
 			LateUpdateMethod = GetMethod(image, FullName + ":LateUpdate()");
+
+			InternalUpdateMethod = GetMethod(coreAssemblyImage, "Chroma.Entity:InternalUpdate()");
 		}
 
 	};
@@ -127,7 +131,15 @@ namespace Chroma
 
 		//If there's a better (still portable) way to do this, i would prefer that lol
 		//Also this bat file assumes mono is installed (it uses system variables), so it should probably change anyways
-		system((".\\mono\\bin\\mcs.bat -debug -target:library -nostdlib -out:\"" + std::filesystem::absolute(path).string() + "\"\\bin\\" + name + ".dll -r:Chroma.Mono.dll -r:mono\\lib\\mono\\4.5\\mscorlib.dll -r:mono\\lib\\mono\\4.5\\System.dll -r:mono\\lib\\mono\\4.5\\System.Core.dll -recurse:\"" + std::filesystem::absolute(path).string()  + "\"\\**.cs").c_str());
+		std::string monoLibStr = "";
+		for (auto& p : std::filesystem::recursive_directory_iterator("mono\\lib\\mono\\4.5\\"))
+		{
+			if (p.path().extension() == ".dll")
+			{
+				monoLibStr += " -r:" + p.path().string();
+			}
+		}
+		system((".\\mono\\bin\\mcs.bat -debug -target:library -nostdlib -out:\"" + std::filesystem::absolute(path).string() + "\"\\bin\\" + name + ".dll -r:Chroma.Mono.dll" + monoLibStr + " -recurse:\"" + std::filesystem::absolute(path).string() + "\"\\**.cs").c_str());
 
 		if (std::filesystem::exists(path + "\\bin\\" + name + ".dll"))
 			return MonoScripting::LoadAppAssembly(path + "\\bin\\" + name + ".dll");
@@ -308,7 +320,7 @@ namespace Chroma
 		MonoMethod* method = mono_method_desc_search_in_image(desc, image);
 		if (!method)
 		{
-			CHROMA_CORE_ERROR("mono_method_desc_search_in_image failed ({})", methodDesc);
+			//CHROMA_CORE_ERROR("mono_method_desc_search_in_image failed ({})", methodDesc);
 			return nullptr;
 		}
 			
@@ -331,7 +343,7 @@ namespace Chroma
 		case FieldType::Asset:       return 8;
 		case FieldType::Entity:		 return 8;
 		}
-		CHROMA_CORE_ASSERT(false, "Unknown field type!");
+		;		CHROMA_CORE_ASSERT(false, "Unknown field type!");
 		return 0;
 	}
 
@@ -827,6 +839,10 @@ namespace Chroma
 	void MonoScripting::Update(Entity entity, Time t)
 	{
 		EntityInstanceData& entityInstance = GetEntityInstanceData(entity.GetScene().GetID(), entity.GetID());
+		if (entityInstance.Instance.ScriptClass->InternalUpdateMethod)
+		{
+			CallMethod(entityInstance.Instance.GetInstance(), entityInstance.Instance.ScriptClass->InternalUpdateMethod);
+		}
 		if (entityInstance.Instance.ScriptClass->UpdateMethod)
 		{
 			CallMethod(entityInstance.Instance.GetInstance(), entityInstance.Instance.ScriptClass->UpdateMethod);

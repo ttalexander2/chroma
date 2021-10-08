@@ -909,6 +909,8 @@ namespace Polychrome
 		std::string filepath = Chroma::FileDialogs::SaveFile("Chroma Scene (*.chroma)\0*.chroma\0");
 		if (!filepath.empty())
 		{
+			if (!std::filesystem::path(filepath).has_extension())
+				filepath += ".chroma";
 			std::string yaml = EditorApp::CurrentScene->Serialize();
 			std::ofstream fout2(filepath);
 			fout2 << yaml;

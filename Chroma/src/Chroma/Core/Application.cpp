@@ -24,6 +24,7 @@
 #include <Chroma/Scripting/ScriptEngineRegistry.h>
 #include <Chroma/Components/LuaScript.h>
 #include <Chroma/Components/CSharpScript.h>
+#include <Chroma/Components/CameraComponent.h>
 
 namespace Chroma
 {
@@ -62,6 +63,7 @@ namespace Chroma
 		ECS::RegisterComponent<CircleCollider2D>();
 		ECS::RegisterComponent<Relationship>();
 		ECS::RegisterComponent<LuaScript>();
+		ECS::RegisterComponent<CameraComponent>();
 
 
 	}

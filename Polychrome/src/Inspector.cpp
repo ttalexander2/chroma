@@ -95,10 +95,16 @@ namespace Polychrome
 		std::vector<Chroma::Component*> comps(scene->GetAllComponents(Hierarchy::SelectedEntity));
 		std::sort(comps.begin(), comps.end(), [](Chroma::Component* a, Chroma::Component* b) { return a->order_id < b->order_id; });
 
+		int i = 0;
+
 		for (Chroma::Component* c : comps)
 		{
 			if (!c->EditorVisible())
+			{
+				i++;
 				continue;
+			}
+				
 
 
 			ImGui::TableSetColumnIndex(0);
@@ -140,9 +146,27 @@ namespace Polychrome
 				}
 			}
 
-			if (ImGui::Selectable((std::string(" ") + icon + std::string("  ") + comp_name.c_str() + "##" + std::to_string(unique)).c_str(), &selected, ImGuiSelectableFlags_SpanAllColumns | ImGuiSelectableFlags_AllowItemOverlap))
+			if (ImGui::Selectable((std::string(" ") + icon + std::string("  ") + comp_name + "##" + std::to_string(unique)).c_str(), &selected, ImGuiSelectableFlags_SpanAllColumns | ImGuiSelectableFlags_AllowItemOverlap))
 			{
 				c->editor_inspector_open = !c->editor_inspector_open;
+			}
+
+			if (comp_name != Chroma::Transform::StaticName() && ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
+			{
+				ImGui::SetDragDropPayload("COMPONENT_REORDER", &i, sizeof(int));
+				ImGui::EndDragDropSource();
+			}
+			if (comp_name != Chroma::Transform::StaticName() && ImGui::BeginDragDropTarget())
+			{
+				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("COMPONENT_REORDER"))
+				{
+					int payload_i = *(const int*)payload->Data;
+					int payload_order = comps[payload_i]->order_id;
+					int order = comps[i]->order_id;
+					comps[payload_i]->order_id = order;
+					comps[i]->order_id = payload_order;
+				}
+				ImGui::EndDragDropTarget();
 			}
 
 			ImGui::PopStyleVar(2);
@@ -206,6 +230,7 @@ namespace Polychrome
 			ImGui::TableNextRow();
 
 			unique++;
+			i++;
 		}
 
 		ImGui::EndTable();

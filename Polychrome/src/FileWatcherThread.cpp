@@ -47,8 +47,16 @@ namespace Polychrome
 		}
 
 		auto result = Chroma::MonoScripting::BuildAssembly(watch_dir, Project::Name);
-		Chroma::MonoScripting::SetSceneContext(EditorApp::CurrentScene);
 		Chroma::ScriptEngineRegistry::RegisterAll();
+		Chroma::MonoScripting::SetDeltaTime(0.f, 0.f);
+		Chroma::MonoScripting::SetSceneContext(EditorApp::CurrentScene);
+		auto view = EditorApp::CurrentScene->Registry.view<Chroma::CSharpScript>();
+		for (Chroma::EntityID entity : view)
+		{
+			auto& script = view.get<Chroma::CSharpScript>(entity);
+			auto entityObj = Chroma::Entity(entity, EditorApp::CurrentScene);
+			Chroma::MonoScripting::InitScriptEntity(entityObj);
+		}
 
 
 
@@ -83,8 +91,16 @@ namespace Polychrome
 						else if (extension == ".cs")
 						{
 							auto result = Chroma::MonoScripting::BuildAssembly(root, Project::Name);
-							Chroma::MonoScripting::SetSceneContext(EditorApp::CurrentScene);
 							Chroma::ScriptEngineRegistry::RegisterAll();
+							Chroma::MonoScripting::SetDeltaTime(0.f, 0.f);
+							Chroma::MonoScripting::SetSceneContext(EditorApp::CurrentScene);
+							auto view = EditorApp::CurrentScene->Registry.view<Chroma::CSharpScript>();
+							for (Chroma::EntityID entity : view)
+							{
+								auto& script = view.get<Chroma::CSharpScript>(entity);
+								auto entityObj = Chroma::Entity(entity, EditorApp::CurrentScene);
+								Chroma::MonoScripting::InitScriptEntity(entityObj);
+							}
 
 						}
 						});
@@ -121,8 +137,16 @@ namespace Polychrome
 						else if (extension == ".cs")
 						{
 							auto result = Chroma::MonoScripting::BuildAssembly(root, Project::Name);
-							Chroma::MonoScripting::SetSceneContext(EditorApp::CurrentScene);
 							Chroma::ScriptEngineRegistry::RegisterAll();
+							Chroma::MonoScripting::SetDeltaTime(0.f, 0.f);
+							Chroma::MonoScripting::SetSceneContext(EditorApp::CurrentScene);
+							auto view = EditorApp::CurrentScene->Registry.view<Chroma::CSharpScript>();
+							for (Chroma::EntityID entity : view)
+							{
+								auto& script = view.get<Chroma::CSharpScript>(entity);
+								auto entityObj = Chroma::Entity(entity, EditorApp::CurrentScene);
+								Chroma::MonoScripting::InitScriptEntity(entityObj);
+							}
 							
 						}
 					});
@@ -144,8 +168,16 @@ namespace Polychrome
 						else if (extension == ".cs")
 						{
 							auto result = Chroma::MonoScripting::BuildAssembly(root, Project::Name);
-							Chroma::MonoScripting::SetSceneContext(EditorApp::CurrentScene);
 							Chroma::ScriptEngineRegistry::RegisterAll();
+							Chroma::MonoScripting::SetDeltaTime(0.f, 0.f);
+							Chroma::MonoScripting::SetSceneContext(EditorApp::CurrentScene);
+							auto view = EditorApp::CurrentScene->Registry.view<Chroma::CSharpScript>();
+							for (Chroma::EntityID entity : view)
+							{
+								auto& script = view.get<Chroma::CSharpScript>(entity);
+								auto entityObj = Chroma::Entity(entity, EditorApp::CurrentScene);
+								Chroma::MonoScripting::InitScriptEntity(entityObj);
+							}
 						}
 						});
 

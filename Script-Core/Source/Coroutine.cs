@@ -6,9 +6,12 @@ namespace Chroma
 {
     public class Coroutine
     {
-
+        public bool Active { get; private set; }
         public bool Finished { get; private set; }
 
+        public delegate IEnumerator CoroutineFunction();
+
+        private CoroutineFunction _func;
         private Stack<IEnumerator> _enumerators = new Stack<IEnumerator>();
 
         private float _waitTimer = 0;
@@ -16,14 +19,18 @@ namespace Chroma
 
         internal Coroutine()
         {
+            Active = false;
+            Finished = false;
         }
 
-        internal Coroutine(IEnumerator function)
+        internal Coroutine(CoroutineFunction function)
         {
-            _enumerators.Push(function);
+            Active = false;
+            Finished = false;
+            _func = function;
         }
 
-        public void Update()
+        internal void Update()
         {
             _ended = false;
             if (_waitTimer > 0)
@@ -58,8 +65,44 @@ namespace Chroma
 
         }
 
-        public void Cancel()
+        public void Start()
         {
+            if (Active)
+            {
+                Log.WriteLine("Coroutine already started!");
+                return;
+            }
+            Active = true;
+            Finished = false;
+            _waitTimer = 0;
+            _ended = false;
+            _enumerators.Clear();
+            _enumerators.Push(_func());
+        }
+
+        public void Pause()
+        {
+            Active = false;
+        }
+
+        public void Resume()
+        {
+            Active = true;
+        }
+
+        public void Restart()
+        {
+            Active = true;
+            Finished = false;
+            _waitTimer = 0;
+            _ended = false;
+            _enumerators.Clear();
+            _enumerators.Push(_func());
+        }
+
+        public void Stop()
+        {
+            Active = false;
             Finished = true;
             _waitTimer = 0;
             _enumerators.Clear();
@@ -67,20 +110,15 @@ namespace Chroma
             _ended = true;
         }
 
-        public void Set(IEnumerator functionCall)
+        public void Set(CoroutineFunction function)
         {
             Finished = false;
             _waitTimer = 0;
             _enumerators.Clear();
-            _enumerators.Push(functionCall);
+            _func = function;
 
             _ended = false;
         }
 
-        public void Add(IEnumerator functionCall)
-        {
-            Finished = false;
-            _enumerators.Push(functionCall);
-        }
     }
 }

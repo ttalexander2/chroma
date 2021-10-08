@@ -259,7 +259,7 @@ namespace Chroma
 
 		public static Vector2 GetMousePos()
 		{
-			Vector2 res;
+			Vector2 res = new Vector2();
 			GetMousePosition_Native(out res);
 			return res;
 		}
@@ -291,7 +291,7 @@ namespace Chroma
 
 		public static List<Gamepad> GetAllConnectedControllers()
 		{
-			List<Gamepad> res;
+			List<Gamepad> res = new List<Gamepad>();
 			GetAllConnectedControllers(out res);
 			return res;
 		}
@@ -308,7 +308,7 @@ namespace Chroma
 
 		public static List<float> GetGamepadAxis(Gamepad gamepad)
 		{
-			List<float> res;
+			List<float> res = new List<float>();
 			GetGamepadAxis_Native(gamepad, out res);
 			return res;
 		}

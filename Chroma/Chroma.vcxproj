@@ -337,6 +337,7 @@
     <ClCompile Include="src\Chroma\Audio\ChromaFMOD.cpp" />
     <ClCompile Include="src\Chroma\Components\AudioSource.cpp" />
     <ClCompile Include="src\Chroma\Components\BoxCollider2D.cpp" />
+    <ClCompile Include="src\Chroma\Components\CameraComponent.cpp" />
     <ClCompile Include="src\Chroma\Components\CSharpScript.cpp" />
     <ClCompile Include="src\Chroma\Components\CircleCollider2D.cpp" />
     <ClCompile Include="src\Chroma\Components\LuaScript.cpp" />
@@ -521,6 +522,9 @@
     <ProjectReference Include="third_party\lua\lua.vcxproj">
       <Project>{C78D880B-3397-887C-BC12-9F7C281B947C}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\Chroma\Components\CameraComponent.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
