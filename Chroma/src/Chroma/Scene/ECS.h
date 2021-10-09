@@ -6,6 +6,7 @@
 #include "Component.h"
 #include "Chroma/Components/CSharpScript.h"
 #include <any>
+#include "Chroma/Components/Transform.h"
 
 
 
@@ -38,7 +39,20 @@ namespace Chroma
 
 			ComponentFactory_Add.emplace(hash, [&](EntityID entity, entt::registry* registry) -> Component*
 			{
-				return &registry->emplace<T>((entt::entity)entity);
+				Component* comp = &registry->emplace<T>((entt::entity)entity);
+				int num = 0;
+				for (auto& name : ECS::GetComponentNames())
+				{
+					if (ECS::HasComponent(name, entity, registry))
+					{
+						num = Math::max<int>(num, ECS::GetComponent(name, entity, registry)->order_id + 1);
+					}
+						
+				}
+
+				comp->order_id = num;
+
+				return comp;
 			});
 
 			ComponentFactory_Remove.emplace(hash, [&](EntityID entity, entt::registry* registry) -> size_t
@@ -73,6 +87,8 @@ namespace Chroma
 		{
 			return Hash(comp->Name()) == Hash(T().Name());
 		}
+
+		static int GetComponentCount(EntityID entity, entt::registry* registry);
 
 
 	private:

@@ -62,6 +62,9 @@ namespace Chroma
 				anim.LabelColor = tag.color;
 				Animations.push_back(anim);
 			}
+
+			delete[] data;
+
 			return true;
 		}
 		else if (std::filesystem::path(path).extension() == ".png")

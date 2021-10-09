@@ -132,7 +132,7 @@ namespace Chroma
 	private:
 
 		/// @brief Whether the image is owned (and therefor responsible for freeing) by stbi.
-		bool m_Stbi_Ownership;
+		bool m_Stbi_Ownership = false;
 
 
 	};

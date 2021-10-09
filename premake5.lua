@@ -74,6 +74,7 @@ project "Chroma"
         "%{IncludeDir.ImGui}/misc/cpp",
         "%{IncludeDir.glm}",
         "%{IncludeDir.stb_image}",
+        "%{IncludeDir.stb_truetype}",
         "%{IncludeDir.FMOD}",
         "%{IncludeDir.lua}",
         "%{IncludeDir.yaml}",

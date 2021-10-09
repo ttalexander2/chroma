@@ -7,6 +7,7 @@
 #include "EditorConfig.h"
 #include <Chroma/Renderer/Framebuffer.h>
 #include <Chroma/Systems/SpriteRendererSystem.h>
+#include "EditorCamera.h"
 
 
 #define CHROMA_EDITOR
@@ -26,12 +27,14 @@ namespace Polychrome
 		void Draw(Chroma::Time time) override;
 		void ImGuiDraw(Chroma::Time time) override;
 
+		bool OnMouseScrolled(Chroma::MouseScrolledEvent& e);
+
 		void NewScene();
 		void OpenScene();
 		void SaveSceneAs();
 		void SaveScene();
 
-		Chroma::OrthographicCameraController& GetCameraController() { return m_CameraController; }
+		static EditorCamera Camera;
 
 		EditorConfig Config;
 		static Chroma::Scene* CurrentScene;
@@ -44,7 +47,6 @@ namespace Polychrome
 		static ImFont* LargeFont;
 
 	private:
-		Chroma::OrthographicCameraController m_CameraController;
 
 		bool m_ViewportFocused = false;
 

@@ -80,7 +80,26 @@ namespace Chroma
 	}
 
 	Aseprite::~Aseprite()
-		= default;
+	{
+		Dispose();
+	}
+
+	void Aseprite::Dispose()
+	{
+		for (Frame f : frames)
+		{
+			f.image.Dispose();
+			for (Cel c : f.cels)
+			{
+				c.image.Dispose();
+			}
+		}
+		frames.clear();
+		layers.clear();
+		tags.clear();
+		slices.clear();
+		palette.clear();
+	}
 
 	void Aseprite::parse(std::fstream & stream)
 	{
@@ -386,7 +405,7 @@ namespace Chroma
 			char* buff = new char[len];
 			stream.read(buff, len);
 			tag.name = std::string(buff, buff + len);
-			delete buff;
+			delete[] buff;
 
 			tags.push_back(tag);
 		}

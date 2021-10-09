@@ -287,6 +287,8 @@ namespace Chroma
 		/// TODO: Should probably double check to make sure that images are succesfully deleted.
 		~Aseprite();
 
+		void Dispose();
+
 	private:
 
 		/// @brief User data

@@ -21,8 +21,10 @@
     <ClInclude Include="src\AssetBrowser.h" />
     <ClInclude Include="src\Assets.h" />
     <ClInclude Include="src\CodeEditor.h" />
+    <ClInclude Include="src\ComponentDebugWidgets.h" />
     <ClInclude Include="src\ComponentWidgets.h" />
     <ClInclude Include="src\EditorApp.h" />
+    <ClInclude Include="src\EditorCamera.h" />
     <ClInclude Include="src\EditorConfig.h" />
     <ClInclude Include="src\FileDrop.h" />
     <ClInclude Include="src\FileWatcherThread.h" />
@@ -56,8 +58,10 @@
   <ItemGroup>
     <ClCompile Include="src\AssetBrowser.cpp" />
     <ClCompile Include="src\CodeEditor.cpp" />
+    <ClCompile Include="src\ComponentDebugWidgets.cpp" />
     <ClCompile Include="src\ComponentWidgets.cpp" />
     <ClCompile Include="src\EditorApp.cpp" />
+    <ClCompile Include="src\EditorCamera.cpp" />
     <ClCompile Include="src\FileDrop.cpp" />
     <ClCompile Include="src\FileWatcherThread.cpp" />
     <ClCompile Include="src\Fonts\Pinch.cpp">

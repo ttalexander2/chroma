@@ -108,19 +108,6 @@ namespace Chroma
 		return desc;
 	}
 
-	void Scene::SetPrimaryCamera(CameraComponent& camera)
-	{
-		auto view = Registry.view<CameraComponent>();
-		for (auto& entity : view)
-		{
-			auto& cam = view.get<CameraComponent>(entity);
-			cam.primaryCamera = false;
-		}
-
-		camera.primaryCamera = true;
-		PrimaryCamera = &camera;
-	}
-
 	std::string Scene::Serialize()
 	{
 		YAML::Emitter out;
@@ -242,13 +229,6 @@ namespace Chroma
 							created->Deserialize(component.second, newEntity, out);
 						else
 							created->Deserialize(component.second);
-
-						if (key == "Camera")
-						{
-							auto& camera = out->GetComponent<CameraComponent>(newEntity);
-							if (camera.primaryCamera)
-								out->PrimaryCamera = &camera;
-						}
 
 						i++;
 					}

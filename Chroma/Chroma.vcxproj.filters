@@ -120,6 +120,9 @@
     <ClInclude Include="src\Chroma\Components\CSharpScript.h">
       <Filter>src\Chroma\Components</Filter>
     </ClInclude>
+    <ClInclude Include="src\Chroma\Components\CameraComponent.h">
+      <Filter>src\Chroma\Components</Filter>
+    </ClInclude>
     <ClInclude Include="src\Chroma\Components\CircleCollider2D.h">
       <Filter>src\Chroma\Components</Filter>
     </ClInclude>
@@ -334,6 +337,9 @@
       <Filter>src\Chroma\Profiler</Filter>
     </ClInclude>
     <ClInclude Include="src\Chroma\Renderer\Buffer.h">
+      <Filter>src\Chroma\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Chroma\Images\Font.h">
       <Filter>src\Chroma\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Chroma\Renderer\Framebuffer.h">
@@ -644,6 +650,9 @@
     <ClCompile Include="src\Chroma\Components\CSharpScript.cpp">
       <Filter>src\Chroma\Components</Filter>
     </ClCompile>
+    <ClCompile Include="src\Chroma\Components\CameraComponent.cpp">
+      <Filter>src\Chroma\Components</Filter>
+    </ClCompile>
     <ClCompile Include="src\Chroma\Components\CircleCollider2D.cpp">
       <Filter>src\Chroma\Components</Filter>
     </ClCompile>
@@ -926,9 +935,6 @@
     <ClCompile Include="third_party\yaml-cpp\src\tag.cpp">
       <Filter>third_party\yaml-cpp\src</Filter>
     </ClCompile>
-    <ClCompile Include="src\Chroma\Components\CameraComponent.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="src\Chroma\Components\CameraComponent.h" />
+    <ClCompile Include="src\Chroma\Images\Font.cpp" />
   </ItemGroup>
 </Project>

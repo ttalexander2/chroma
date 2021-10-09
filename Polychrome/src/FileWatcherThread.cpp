@@ -38,6 +38,7 @@ namespace Polychrome
 				if (extension == ".ase" || extension == ".aseprite" || extension == ".png" || extension == ".jpg")
 				{
 					Chroma::AssetManager::LoadSprite(file.path().lexically_relative(asset_dir).string());
+					CHROMA_CORE_INFO("fie: {}", file.path().string());
 				}
 				else if (extension == ".lua")
 				{

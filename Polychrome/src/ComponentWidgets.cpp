@@ -25,14 +25,14 @@ namespace Polychrome
 
 	void ComponentWidgets::Draw(Chroma::Component* c)
 	{
-		const std::string name = c->Name();
-		if (name == Chroma::Transform::StaticName()) DrawTransform(c);
-		else if (name == Chroma::CSharpScript::StaticName()) DrawCSharpScript(c);
-		else if (name == Chroma::AudioSource::StaticName()) DrawAudioSource(c);
-		else if (name == Chroma::BoxCollider2D::StaticName()) DrawBoxCollider2D(c);
-		else if (name == Chroma::CircleCollider2D::StaticName()) DrawCircleCollider2D(c);
-		else if (name == Chroma::LuaScript::StaticName()) DrawLuaScript(c);
-		else if (name == Chroma::SpriteRenderer::StaticName()) DrawSpriteRenderer(c);
+		if (Chroma::ECS::IsType<Chroma::Transform>(c)) DrawTransform(c);
+		else if (Chroma::ECS::IsType<Chroma::CSharpScript>(c)) DrawCSharpScript(c);
+		else if (Chroma::ECS::IsType<Chroma::AudioSource>(c)) DrawAudioSource(c);
+		else if (Chroma::ECS::IsType<Chroma::BoxCollider2D>(c)) DrawBoxCollider2D(c);
+		else if (Chroma::ECS::IsType<Chroma::CircleCollider2D>(c)) DrawCircleCollider2D(c);
+		else if (Chroma::ECS::IsType<Chroma::LuaScript>(c)) DrawLuaScript(c);
+		else if (Chroma::ECS::IsType<Chroma::SpriteRenderer>(c)) DrawSpriteRenderer(c);
+		else if (Chroma::ECS::IsType<Chroma::CameraComponent>(c)) DrawCameraComponent(c);
 	}
 
 	void ComponentWidgets::DrawTransform(Chroma::Component* c)
@@ -274,6 +274,28 @@ namespace Polychrome
 				}
 				});
 		}
+	}
+
+	void ComponentWidgets::DrawCameraComponent(Chroma::Component* c)
+	{
+		Chroma::CameraComponent* camera = reinterpret_cast<Chroma::CameraComponent*>(c);
+		DrawComponentValue(c, "Size");
+
+		glm::uvec2 camSize = camera->GetSize();
+		glm::uvec2 size = { camSize.x, camSize.y };
+		ImGui::UVec2IntNoReset("##camera_size", size);
+
+		if (size != camSize)
+			camera->SetSize(size.x, size.y);
+
+		DrawComponentValue(c, "PrimaryCamera");
+		bool primary = camera->IsPrimary();
+		if (ImGui::Checkbox("##primary_camera", &primary))
+		{
+			if (primary)
+				camera->SetPrimary();
+		}
+
 	}
 
 

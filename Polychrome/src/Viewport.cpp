@@ -14,12 +14,16 @@
 #include <Chroma/Scripting/LuaScripting.h>
 #include <Chroma/Scripting/ScriptEngineRegistry.h>
 #include <Chroma/Scripting/MonoScripting.h>
+#include "ComponentDebugWidgets.h"
 
 namespace Polychrome
 {
 	static glm::vec2 s_ViewportSize = glm::vec2(1270, 720);
 
 	static bool shouldUpdate = true;
+	static bool viewportFocused = false;
+	static bool viewportHovered = false;
+	static ImVec2 viewportMousePos = { 0,0 };
 	static Chroma::Window* s_ViewportWindow;
 
 	bool Viewport::Open = true;
@@ -35,37 +39,35 @@ namespace Polychrome
 
 	void Viewport::Draw(Chroma::Ref<Chroma::Framebuffer> frame_buffer)
 	{
+		
 		if (Open)
 		{
 			ImGui::Begin(ICON_FK_GAMEPAD " Viewport", &Open, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
-
-			bool viewport_focused = ImGui::IsWindowFocused();
-			Chroma::Application::Get().GetImGuiLayer()->BlockEvents(!viewport_focused && !ImGui::IsWindowHovered());
+			Chroma::Application::Get().GetImGuiLayer()->BlockEvents(!viewportFocused && !ImGui::IsWindowHovered());
 
 
-			ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
 
-			float width, height;
-			// Case 1: Window is wider than 16:9
-			if (viewportPanelSize.x / viewportPanelSize.y > 16.0f / 9.0f)
-			{
-				height = viewportPanelSize.y;
-				width = viewportPanelSize.y * (16.0f / 9.0f);
-			}
-			// Case 1: Window is narrower than 16:9
-			else
-			{
-				height = viewportPanelSize.x * (9.0f / 16.0f);
-				width = viewportPanelSize.x;
-			}
-			height = glm::round(height);
-			width = glm::round(width);
-
-			if ((s_ViewportSize.x != width || s_ViewportSize.y != height) && width > 0 && height > 0)
-			{
-				frame_buffer->Resize((uint32_t)width, (uint32_t)height);
-				s_ViewportSize = { width, height };
-			}
+			//float width, height;
+			//// Case 1: Window is wider than 16:9
+			//if (viewportPanelSize.x / viewportPanelSize.y > 16.0f / 9.0f)
+			//{
+			//	height = viewportPanelSize.y;
+			//	width = viewportPanelSize.y * (16.0f / 9.0f);
+			//}
+			//// Case 1: Window is narrower than 16:9
+			//else
+			//{
+			//	height = viewportPanelSize.x * (9.0f / 16.0f);
+			//	width = viewportPanelSize.x;
+			//}
+			//height = glm::round(height);
+			//width = glm::round(width);
+			//
+			//if ((s_ViewportSize.x != width || s_ViewportSize.y != height) && width > 0 && height > 0)
+			//{
+			//	frame_buffer->Resize((uint32_t)width, (uint32_t)height);
+			//	s_ViewportSize = { width, height };
+			//}
 
 			uint32_t textureID = frame_buffer->GetColorAttachmentRendererID();
 
@@ -239,23 +241,42 @@ namespace Polychrome
 			ImGui::PopStyleColor();
 
 
-			ImGui::BeginChild("##viewport_frame_buffer", ImVec2{ s_ViewportSize.x, s_ViewportSize.y });
+			ImGui::BeginChild("##viewport_frame_buffer");
+
+			ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
+			viewportPanelSize = { viewportPanelSize.x, viewportPanelSize.y - 5.f };
+
+			if ((s_ViewportSize.x != viewportPanelSize.x || s_ViewportSize.y != viewportPanelSize.y) && viewportPanelSize.x > 0 && viewportPanelSize.y > 0)
+			{
+				frame_buffer->Resize((uint32_t)viewportPanelSize.x, (uint32_t)viewportPanelSize.y);
+				s_ViewportSize = { viewportPanelSize.x , viewportPanelSize.y };
+				EditorApp::Camera.SetSize(s_ViewportSize);
+			}
 
 			ImVec2 fb_pos = ImGui::GetCursorScreenPos();
 
 			ImGui::Image(reinterpret_cast<void*>(textureID), ImVec2{ s_ViewportSize.x, s_ViewportSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
+			auto pos = ImGui::GetCursorPos();
+			viewportFocused = ImGui::IsWindowFocused();
+			viewportHovered = ImGui::IsItemHovered();
+			viewportMousePos = ImGui::GetMousePos();
+			viewportMousePos = {Math::min(viewportMousePos.x - ImGui::GetWindowPos().x, ImGui::GetWindowSize().x), Math::min(viewportMousePos.y - ImGui::GetWindowPos().y, ImGui::GetWindowSize().y)};
 			//ImGuizmo
 
-			
+			ComponentDebugWidgets::DrawIcons();
+			EditorCamera::ImGuiUpdate();
+
+			ImGui::SetCursorPos(pos);
 
 			if (Hierarchy::SelectedEntity != Chroma::ENTITY_NULL)
 			{
 				ImGuizmo::SetOrthographic(true);
 				ImGuizmo::SetDrawlist();
 				ImGuizmo::SetRect(fb_pos.x, fb_pos.y, s_ViewportSize.x, s_ViewportSize.y);
-				auto& cam = dynamic_cast<EditorApp&>(EditorApp::Get()).GetCameraController();
-				const Math::mat4& camView = cam.GetCamera().GetViewMatrix();
-				const Math::mat4& camProj = cam.GetCamera().GetProjectionMatrix();
+				//auto& cam = dynamic_cast<EditorApp&>(EditorApp::Get()).GetCameraController();
+				auto& cam = Chroma::CameraComponent::GetPrimaryCamera();
+				const Math::mat4& camView = cam.GetViewMatrix();
+				const Math::mat4& camProj = cam.GetProjectionMatrix();
 
 			
 
@@ -305,5 +326,31 @@ namespace Polychrome
 			ImGui::End();
 		}
 		
+	}
+	const Math::vec2 Viewport::ViewportPositionToWorld(const Math::vec2& pos)
+	{
+		glm::vec3 res = glm::unProject(glm::vec3( pos.x, pos.y, 0.f ), EditorApp::Camera.GetViewMatrix(), EditorApp::Camera.GetProjectionMatrix(), glm::vec4(0.f, 0.f, s_ViewportSize.x, s_ViewportSize.y ));
+		return { res.x, res.y };
+		
+	}
+
+	const Math::vec2 Viewport::WorldToViewportPosition(const Math::vec2& pos)
+	{
+		glm::vec3 res = glm::project(glm::vec3(pos.x, pos.y, 0.f), EditorApp::Camera.GetViewMatrix(), EditorApp::Camera.GetProjectionMatrix(), glm::vec4(0.f, 0.f, s_ViewportSize.x, s_ViewportSize.y));
+		return { res.x, res.y };
+
+	}
+	bool Viewport::IsViewportFocused()
+	{
+		return viewportFocused;
+	}
+
+	bool Viewport::IsViewportHovered()
+	{
+		return viewportHovered;
+	}
+	ImVec2 Viewport::GetViewportMousePos()
+	{
+		return viewportMousePos;
 	}
 }

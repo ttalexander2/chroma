@@ -19,6 +19,18 @@ namespace Chroma
         return Components;
     }
 
+    int ECS::GetComponentCount(EntityID entity, entt::registry* registry)
+    {
+        int num = 0;
+        for (auto& name : ECS::GetComponentNames())
+        {
+            if (ECS::HasComponent(name, entity, registry))
+                num++;
+        }
+
+        return num;
+    }
+
     Component* ECS::GetComponent(const std::string& name, EntityID entity, entt::registry* registry)
     {
         return ComponentFactory_Get[Hash(name)](entity, registry);

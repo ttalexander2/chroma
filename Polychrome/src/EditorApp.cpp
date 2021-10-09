@@ -39,6 +39,7 @@
 #include "LogWindow.h"	
 #include "Project.h"
 #include "FileWatcherThread.h"
+#include "ComponentDebugWidgets.h"
 
 #define CHROMA_DEBUG_LOG
 #include <Chroma/Core/Log.h>
@@ -53,6 +54,8 @@ namespace Polychrome
 
 	Chroma::Scene* EditorApp::CurrentScene = nullptr;
 	std::string EditorApp::CurrentScenePath;
+
+	EditorCamera EditorApp::Camera;
 
 	bool EditorApp::SceneRunning = false;
 	bool EditorApp::ScenePaused = false;
@@ -75,10 +78,10 @@ namespace Polychrome
 		bool Pinned = false;
 	};
 
-	std::vector<RecentProjectInfo> recentProjects;
+	std::vector<RecentProjectInfo> recentProjects = std::vector<RecentProjectInfo>();
 
 	EditorApp::EditorApp()
-		: Application("Polychrome Editor", 800U, 400U), m_CameraController(1920.0f / 1080.0f)
+		: Application("Polychrome Editor", 800U, 400U)
 	{
 
 #ifdef CHROMA_PLATFORM_WINDOWS
@@ -275,7 +278,7 @@ namespace Polychrome
 		// Update
 		{
 			CHROMA_PROFILE_SCOPE("CameraController OnUpdate");
-			m_CameraController.OnUpdate(time);
+			//m_CameraController.OnUpdate(time);
 		}
 
 		std::function<void()> func;
@@ -310,38 +313,20 @@ namespace Polychrome
 		Chroma::RenderCommand::SetClearColor({ 0.0f, 0.0f , 0.0f , 1.0f });
 		Chroma::Renderer2D::Clear();
 
-
-
-		Chroma::Renderer2D::BeginScene(m_CameraController.GetCamera());
+		Chroma::Renderer2D::BeginScene(Camera.GetViewProjectionMatrix());
 
 		EditorApp::CurrentScene->Draw(time);
 
-#if 0
-		
-		std::default_random_engine generator;
-		std::uniform_int_distribution<int> distribution(0, 256);
 
+		ComponentDebugWidgets::DrawWidgets();
 
-		{
-			CHROMA_PROFILE_SCOPE("Draw all the squares");
-			int numQuads = 0;
-			for (int y = -50; y < 50; y++)
-			{
-				for (int x = -50; x < 50; x++)
-				{
-					numQuads++;
-
-					Chroma::Renderer2D::DrawQuad({ x, y }, { 0.9, 0.9 }, m_SquareColor);
-				}
-			}
-		}
-
-
-		Chroma::Renderer2D::DrawQuad({ 0.2f, -0.6f }, { 0.4f, 0.8f }, m_SquareColor);
-		Chroma::Renderer2D::DrawQuad({ -0.4f, -0.3f }, { 0.2f, 0.3f }, m_SquareColor, rotation);
-
-		Chroma::Renderer2D::DrawQuad({ 0.0f, 0.0f }, { 1, 1 }, m_Texture);
-#endif
+		//static float totalTime = time;
+		//totalTime += time.GetSeconds();
+		//float width = (Math::sin(4.f * totalTime) + 1.f);
+		//if (width < 0.5f)
+		//	width = 0.f;
+		//
+		//Chroma::Renderer2D::DrawRect(Chroma::CameraComponent::GetPrimaryCamera().GetPosition() , Chroma::CameraComponent::GetPrimaryCamera().GetSize(), 0.6f, { 0.2f, 0.3f , 0.8f , width });
 
 		Chroma::Renderer2D::EndScene();
 
@@ -352,6 +337,8 @@ namespace Polychrome
 
 	void EditorApp::ImGuiDraw(Chroma::Time time)
 	{
+
+		Camera.ImGuiUpdate();
 
 		if (!first)
 		{
@@ -871,11 +858,6 @@ namespace Polychrome
 
 	}
 
-	void EditorApp::OnEvent(Chroma::Event& e)
-	{
-		m_CameraController.OnEvent(e);
-	}
-
 
 	void EditorApp::NewScene()
 	{
@@ -934,6 +916,30 @@ namespace Polychrome
 			std::ofstream fout2(CurrentScenePath);
 			fout2 << yaml;
 		}
+	}
+
+	void EditorApp::OnEvent(Chroma::Event& e)
+	{
+		Chroma::EventDispatcher dispatcher(e);
+		dispatcher.Dispatch<Chroma::MouseScrolledEvent>(CHROMA_BIND_EVENT_FN(EditorApp::OnMouseScrolled));
+	}
+
+
+	Math::vec2 lerp(Math::vec2 x, Math::vec2 y, float t)
+	{
+		return x * (1.f - t) + y * t;
+	}
+
+	bool EditorApp::OnMouseScrolled(Chroma::MouseScrolledEvent& e)
+	{
+		if (Viewport::IsViewportFocused() && Viewport::IsViewportHovered())
+		{
+			float zoom = Camera.GetZoom();
+			zoom += e.getYOffset() * zoom / 4.0f;
+			Camera.SetZoom(zoom);
+			return true;
+		}
+		return false;
 	}
 
 

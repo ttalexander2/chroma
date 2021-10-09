@@ -51,9 +51,6 @@ namespace Chroma
 		bool IsRoot(EntityID entity);
 		EntityID GetRootEntity(EntityID child);
 		std::vector<EntityID> FindAllDescendants(EntityID entity);
-
-		CameraComponent& GetPrimaryCamera() { return *PrimaryCamera; }
-		void SetPrimaryCamera(CameraComponent& camera);
 		
 
 
@@ -99,6 +96,11 @@ namespace Chroma
 		Component* GetComponent(const std::string& component, EntityID entity)
 		{
 			return ECS::GetComponent(component, entity, &Registry);
+		}
+
+		int GetComponentCount(EntityID entity)
+		{
+			ECS::GetComponentCount(entity, &Registry);
 		}
 
 		/*

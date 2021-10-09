@@ -32,8 +32,7 @@ namespace Chroma
 		for (EntityID e : view)
 		{
 			auto& spriteRenderer = view.get<SpriteRenderer>(e);
-			if (!spriteRenderer.PlayOnStart)
-				spriteRenderer.Playing = false;
+			spriteRenderer.Playing = spriteRenderer.PlayOnStart;
 			spriteRenderer.RestartAnimation();
 		}
 	}

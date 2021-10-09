@@ -17,7 +17,7 @@ namespace Chroma
 		static void Init();
 		static void Shutdown();
 
-		static void BeginScene(Scene& scene);
+		static void BeginScene();
 		static void BeginScene(const CameraComponent& camera);
 		static void BeginScene(const OrthographicCamera& camera);
 		static void BeginScene(const Math::mat4& viewProjMat);
@@ -35,6 +35,8 @@ namespace Chroma
 
 		static void DrawQuad(const Math::vec2& position, const Math::vec2& size, const Ref<Texture2D>& texture, const Math::vec4& color = Math::vec4(1.0f), float rotation = 0.0f);
 		static void DrawQuad(const Math::vec3& position, const Math::vec3& size, const Ref<Texture2D>& texture, const Math::vec4& color = Math::vec4(1.0f), float rotation = 0.0f);
+
+		static void DrawRect(const Math::vec2& position, const Math::vec2& size, float line_width, const Math::vec4& color);
 
 		static void Clear();
 		static void SetClearColor(const Color& color);

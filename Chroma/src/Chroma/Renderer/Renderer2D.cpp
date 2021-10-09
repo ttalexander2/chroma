@@ -176,9 +176,9 @@ namespace Chroma
 		RenderCommand::SetClearColor(color);
 	}
 
-	void Renderer2D::BeginScene(Scene& scene)
+	void Renderer2D::BeginScene()
 	{
-		BeginScene(scene.GetPrimaryCamera().GetViewProjectionMatrix());
+		BeginScene(Chroma::CameraComponent::GetPrimaryCamera().GetViewProjectionMatrix());
 	}
 
 	void Renderer2D::BeginScene(const OrthographicCamera& camera)
@@ -488,6 +488,20 @@ namespace Chroma
 
 		s_Data.Stats.QuadCount++;
 
+	}
+
+	void Renderer2D::DrawRect(const Math::vec2& position, const Math::vec2& size, float line_width, const Math::vec4& color)
+	{
+		DrawQuad({position.x, position.y - size.y/2.f }, { size.x + line_width, line_width }, color); //h
+		DrawQuad({position.x + size.x/2.f, position.y }, { line_width, size.y - line_width }, color); //v
+		DrawQuad({ position.x, position.y + size.y / 2.f }, { size.x + line_width, line_width }, color); //h
+		DrawQuad({ position.x - size.x / 2.f, position.y }, { line_width, size.y - line_width }, color); //v
+
+		//DrawQuad({ position.x, position.y }, { 1,1 }, { 0.8f, 0.2f, 0.3f, 1.0f });
+		//DrawQuad({ position.x, position.y - size.y / 2.f + line_width }, { 1,1 }, { 0.8f, 0.2f, 0.3f, 1.0f }); //h
+		//DrawQuad({ position.x + size.x / 2.f - line_width, position.y }, { 1,1 }, { 0.8f, 0.2f, 0.3f, 1.0f }); //v
+		//DrawQuad({ position.x, position.y + size.y / 2.f - line_width }, { 1,1 }, { 0.8f, 0.2f, 0.3f, 1.0f }); //h
+		//DrawQuad({ position.x - size.x / 2.f + line_width, position.y }, { 1,1 }, { 0.8f, 0.2f, 0.3f, 1.0f }); //v
 	}
 
 

@@ -18,6 +18,7 @@ namespace Polychrome
 namespace Chroma
 {
 	class Scene;
+	class ECS;
 	using EntityID = entt::entity;
 
 	/// @brief Game object Component interface.
@@ -29,6 +30,7 @@ namespace Chroma
 	{
 
 		friend class Scene;
+		friend class ECS;
 		Component() = default;
 		Component(const Component&) = default;
 		/// @brief Function to serialize the scene to YAML.
