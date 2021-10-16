@@ -55,8 +55,6 @@ namespace Chroma
 		static void InitMono();
 		static void ShutdownMono();
 
-		static bool BuildAssembly(const std::string& path, const std::string& name);
-
 		static bool LoadChromaRuntimeAssembly(const std::string& path);
 		static bool LoadAppAssembly(const std::string& path);
 		static bool ReloadAssembly(const std::string& path);
@@ -94,6 +92,8 @@ namespace Chroma
 
 		static bool ModuleExists(const std::string& moduleName);
 		static std::string StripNamespace(const std::string& nameSpace, const std::string& moduleName);
+
+		static std::vector<std::string> GetModules();
 
 
 		static EntityInstanceMap& GetEntityInstanceMap();

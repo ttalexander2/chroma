@@ -88,6 +88,10 @@ IF EXIST $(SolutionDir)bin\Dist-windows-x86_64\$(ProjectName)\Chroma.Mono.dll\ (
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="Source\Component.cs" />
+    <None Include="Source\Components\AudioSource.cs" />
+    <None Include="Source\Components\BoxCollider.cs" />
+    <None Include="Source\Components\Camera.cs" />
+    <None Include="Source\Components\CircleCollider.cs" />
     <None Include="Source\Components\SpriteRenderer.cs" />
     <None Include="Source\Components\Tag.cs" />
     <None Include="Source\Components\Transform.cs" />
@@ -100,6 +104,7 @@ IF EXIST $(SolutionDir)bin\Dist-windows-x86_64\$(ProjectName)\Chroma.Mono.dll\ (
     <None Include="Source\Math\Vector2.cs" />
     <None Include="Source\Math\Vector3.cs" />
     <None Include="Source\Math\Vector4.cs" />
+    <None Include="Source\ReflectionHelper.cs" />
     <None Include="Source\RuntimeException.cs" />
     <None Include="Source\Time.cs" />
   </ItemGroup>

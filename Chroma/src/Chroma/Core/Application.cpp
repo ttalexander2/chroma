@@ -17,14 +17,14 @@
 #include "Chroma/Components/Transform.h"
 #include "Chroma/Components/SpriteRenderer.h"
 #include "Chroma/Components/AudioSource.h"
-#include "Chroma/Components/BoxCollider2D.h"
-#include "Chroma/Components/CircleCollider2D.h"
+#include "Chroma/Components/BoxCollider.h"
+#include "Chroma/Components/CircleCollider.h"
 #include <Chroma/Components/Relationship.h>
 #include <Chroma/Scripting/MonoScripting.h>
 #include <Chroma/Scripting/ScriptEngineRegistry.h>
 #include <Chroma/Components/LuaScript.h>
 #include <Chroma/Components/CSharpScript.h>
-#include <Chroma/Components/CameraComponent.h>
+#include <Chroma/Components/Camera.h>
 
 namespace Chroma
 {
@@ -59,11 +59,11 @@ namespace Chroma
 		ECS::RegisterComponent<Transform>();
 		ECS::RegisterComponent<AudioSource>();
 		ECS::RegisterComponent<SpriteRenderer>();
-		ECS::RegisterComponent<BoxCollider2D>();
-		ECS::RegisterComponent<CircleCollider2D>();
+		ECS::RegisterComponent<BoxCollider>();
+		ECS::RegisterComponent<CircleCollider>();
 		ECS::RegisterComponent<Relationship>();
 		ECS::RegisterComponent<LuaScript>();
-		ECS::RegisterComponent<CameraComponent>();
+		ECS::RegisterComponent<Camera>();
 
 
 	}

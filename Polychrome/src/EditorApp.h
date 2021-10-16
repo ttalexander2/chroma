@@ -46,11 +46,25 @@ namespace Polychrome
 		static ImFont* LargeIcons;
 		static ImFont* LargeFont;
 
+		enum class MessageSeverity
+		{
+			Error = 0,
+			Warning = 1,
+			Info = 2
+		};
+
+		static void SetInfoMessage(const std::string& message, MessageSeverity severity)
+		{
+			InfoMessage = message;
+			InfoSeverity = severity;
+		}
+
 	private:
 
 		bool m_ViewportFocused = false;
 
-
+		static std::string InfoMessage;
+		static MessageSeverity InfoSeverity;
 
 		struct ProfileResult
 		{

@@ -626,6 +626,7 @@ namespace Polychrome
 			icon_texture->SetData(color, a.width * a.height * sizeof(Chroma::Color));
 			Icons[path] = icon_texture;
 			delete[] color;
+			a.Dispose();
 			return;
 		}
 

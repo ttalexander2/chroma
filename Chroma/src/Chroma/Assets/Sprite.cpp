@@ -64,6 +64,7 @@ namespace Chroma
 			}
 
 			delete[] data;
+			a.Dispose();
 
 			return true;
 		}

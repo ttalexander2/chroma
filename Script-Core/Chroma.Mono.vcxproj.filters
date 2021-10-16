@@ -10,6 +10,18 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Source\Component.cs" />
+    <None Include="Source\Components\AudioSource.cs">
+      <Filter>Components</Filter>
+    </None>
+    <None Include="Source\Components\BoxCollider.cs">
+      <Filter>Components</Filter>
+    </None>
+    <None Include="Source\Components\Camera.cs">
+      <Filter>Components</Filter>
+    </None>
+    <None Include="Source\Components\CircleCollider.cs">
+      <Filter>Components</Filter>
+    </None>
     <None Include="Source\Components\SpriteRenderer.cs">
       <Filter>Components</Filter>
     </None>
@@ -40,5 +52,6 @@
     </None>
     <None Include="Source\RuntimeException.cs" />
     <None Include="Source\Time.cs" />
+    <None Include="Source\ReflectionHelper.cs" />
   </ItemGroup>
 </Project>

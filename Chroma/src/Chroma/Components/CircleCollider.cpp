@@ -1,9 +1,9 @@
 #include "chromapch.h"
-#include "CircleCollider2D.h"
+#include "CircleCollider.h"
 
 namespace Chroma
 {
-	void CircleCollider2D::Serialize(YAML::Emitter& out)
+	void CircleCollider::Serialize(YAML::Emitter& out)
 	{
 		out << YAML::Key << "Radius";
 		out << YAML::Value << Radius;
@@ -12,7 +12,7 @@ namespace Chroma
 		out << YAML::Value << Offset;
 	}
 
-	void CircleCollider2D::Deserialize(YAML::Node& node)
+	void CircleCollider::Deserialize(YAML::Node& node)
 	{
 		auto val = node["Radius"];
 		if (val)

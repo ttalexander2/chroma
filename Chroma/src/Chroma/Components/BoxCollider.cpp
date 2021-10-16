@@ -1,9 +1,9 @@
 #include "chromapch.h"
-#include "BoxCollider2D.h"
+#include "BoxCollider.h"
 namespace Chroma
 {
 
-	void BoxCollider2D::Serialize(YAML::Emitter& out)
+	void BoxCollider::Serialize(YAML::Emitter& out)
 	{
 		out << YAML::Key << "Bounds";
 		out << YAML::Value << Bounds;
@@ -11,7 +11,7 @@ namespace Chroma
 		out << YAML::Key << "Offset";
 		out << YAML::Value << Offset;
 	}
-	void BoxCollider2D::Deserialize(YAML::Node& node)
+	void BoxCollider::Deserialize(YAML::Node& node)
 	{
 
 		auto val = node["Bounds"];

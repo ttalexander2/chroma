@@ -972,23 +972,23 @@ namespace ImGui
         case ImGuiStylePreset::Cherry: {
             // Posted by @r-lyeh here: https://github.com/ocornut/imgui/issues/707 (hope I can use it)
 
-            style.WindowPadding = ImVec2(6, 4);
-            style.WindowRounding = 0.0f;
-            style.FramePadding = ImVec2(7, 2);
-            style.FrameRounding = 1.0f;
-            style.ItemSpacing = ImVec2(7, 1);
-            style.ItemInnerSpacing = ImVec2(1, 1);
-            style.TouchExtraPadding = ImVec2(0, 0);
-            style.IndentSpacing = 6.0f;
-            style.ScrollbarSize = 12.0f;
-            style.ScrollbarRounding = 4.0f;
-            style.GrabMinSize = 20.0f;
-            style.GrabRounding = 1.0f;
-
-            style.WindowTitleAlign.x = 0.50f;
-
-            style.FrameBorderSize = 0.0f;
-            style.WindowBorderSize = 1.0f;
+            //style.WindowPadding = ImVec2(6, 4);
+            //style.WindowRounding = 0.0f;
+            //style.FramePadding = ImVec2(7, 2);
+            //style.FrameRounding = 1.0f;
+            //style.ItemSpacing = ImVec2(7, 1);
+            //style.ItemInnerSpacing = ImVec2(1, 1);
+            //style.TouchExtraPadding = ImVec2(0, 0);
+            //style.IndentSpacing = 6.0f;
+            //style.ScrollbarSize = 12.0f;
+            //style.ScrollbarRounding = 4.0f;
+            //style.GrabMinSize = 20.0f;
+            //style.GrabRounding = 1.0f;
+            //
+            //style.WindowTitleAlign.x = 0.50f;
+            //
+            //style.FrameBorderSize = 0.0f;
+            //style.WindowBorderSize = 1.0f;
 
             // cherry colors, 3 intensities
     #define CHERRY_HI(v) ImVec4(0.502f, 0.075f, 0.256f, v)

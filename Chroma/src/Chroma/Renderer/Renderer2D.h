@@ -4,7 +4,7 @@
 #include <Chroma/Math/Math.h>
 #include <Chroma/Renderer/Frustum.h>
 #include <Chroma/Images/Color.h>
-#include <Chroma/Components/CameraComponent.h>
+#include <Chroma/Components/Camera.h>
 
 namespace Chroma
 {
@@ -17,12 +17,15 @@ namespace Chroma
 		static void Init();
 		static void Shutdown();
 
-		static void BeginScene();
-		static void BeginScene(const CameraComponent& camera);
-		static void BeginScene(const OrthographicCamera& camera);
-		static void BeginScene(const Math::mat4& viewProjMat);
-		static void EndScene();
+		static void LoadShaderFromFile(const std::string& shaderFilePath);
+
+		static void Begin(const Camera& camera);
+		static void Begin(const OrthographicCamera& camera);
+		static void Begin(const Math::mat4& viewProjMat);
+		static void End();
 		static void Flush();
+
+		static void DrawSprite(int entityID, const Math::vec2& position, const Math::vec2& size, const Ref<Texture2D>& texture, const Math::vec4& color, float rotation);
 
 		static void DrawQuad(const Math::vec2& position, const Math::vec2& size, const Math::vec4& color, float rotation = 0.0f);
 		static void DrawQuad(const Math::vec3& position, const Math::vec3& size, const Math::vec4& color, float rotation = 0.0f);
@@ -37,6 +40,7 @@ namespace Chroma
 		static void DrawQuad(const Math::vec3& position, const Math::vec3& size, const Ref<Texture2D>& texture, const Math::vec4& color = Math::vec4(1.0f), float rotation = 0.0f);
 
 		static void DrawRect(const Math::vec2& position, const Math::vec2& size, float line_width, const Math::vec4& color);
+		static void DrawLine(const Math::vec2& p1, const Math::vec2& p2, float line_width, const Math::vec4& color);
 
 		static void Clear();
 		static void SetClearColor(const Color& color);

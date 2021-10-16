@@ -14,7 +14,7 @@
 #include <Chroma/Scripting/LuaScripting.h>
 #include <Chroma/Scripting/ScriptEngineRegistry.h>
 #include <Chroma/Scripting/MonoScripting.h>
-#include "ComponentDebugWidgets.h"
+#include "ComponentDebugGizmos.h"
 
 namespace Polychrome
 {
@@ -27,6 +27,7 @@ namespace Polychrome
 	static Chroma::Window* s_ViewportWindow;
 
 	bool Viewport::Open = true;
+	bool Viewport::ShouldDrawGrid = true;
 
 	static const float identityMatrix[16] =
 	{ 
@@ -37,7 +38,7 @@ namespace Polychrome
 	};
 
 
-	void Viewport::Draw(Chroma::Ref<Chroma::Framebuffer> frame_buffer)
+	void Viewport::Draw(Chroma::Time time, Chroma::Ref<Chroma::Framebuffer> frame_buffer)
 	{
 		
 		if (Open)
@@ -69,13 +70,13 @@ namespace Polychrome
 			//	s_ViewportSize = { width, height };
 			//}
 
-			uint32_t textureID = frame_buffer->GetColorAttachmentRendererID();
-
 
 		
 			//TOOLBAR
 
-			static ImGuizmo::OPERATION operation = ImGuizmo::OPERATION::TRANSLATE;
+			static ImGuizmo::OPERATION operation = ImGuizmo::OPERATION::BOUNDS;
+
+			ImVec4 oldButtonColor = ImGui::GetStyleColorVec4(ImGuiCol_Button);
 
 
 			ImGui::PushStyleColor(ImGuiCol_Button, ImGui::GetStyleColorVec4(ImGuiCol_ChildBg));
@@ -203,7 +204,7 @@ namespace Polychrome
 			ImGui::SameLine();
 
 			if (operation == ImGuizmo::OPERATION::BOUNDS)
-				ImGui::PushStyleColor(ImGuiCol_Button, ImGui::GetStyleColorVec4(ImGuiCol_ButtonActive));
+				ImGui::PushStyleColor(ImGuiCol_Button, oldButtonColor);
 			if (ImGui::Button(ICON_FK_MOUSE_POINTER) && operation != ImGuizmo::OPERATION::BOUNDS)
 				operation = ImGuizmo::OPERATION::BOUNDS;
 			else if (operation == ImGuizmo::OPERATION::BOUNDS)
@@ -214,7 +215,7 @@ namespace Polychrome
 
 			//TRANSLATE BUTTON
 			if (operation == ImGuizmo::OPERATION::TRANSLATE)
-				ImGui::PushStyleColor(ImGuiCol_Button, ImGui::GetStyleColorVec4(ImGuiCol_ButtonActive));
+				ImGui::PushStyleColor(ImGuiCol_Button, oldButtonColor);
 			if (ImGui::Button(ICON_FK_ARROWS) && operation != ImGuizmo::OPERATION::TRANSLATE) operation = ImGuizmo::OPERATION::TRANSLATE;
 			else if (operation == ImGuizmo::OPERATION::TRANSLATE)
 				ImGui::PopStyleColor();
@@ -223,7 +224,7 @@ namespace Polychrome
 
 			//SCALE BUTTON
 			if (operation == ImGuizmo::OPERATION::SCALE)
-				ImGui::PushStyleColor(ImGuiCol_Button, ImGui::GetStyleColorVec4(ImGuiCol_ButtonActive));
+				ImGui::PushStyleColor(ImGuiCol_Button, oldButtonColor);
 			if (ImGui::Button(ICON_FK_ARROWS_ALT) && operation != ImGuizmo::OPERATION::SCALE) operation = ImGuizmo::OPERATION::SCALE;
 			else if (operation == ImGuizmo::OPERATION::SCALE)
 				ImGui::PopStyleColor();
@@ -232,7 +233,7 @@ namespace Polychrome
 
 			//ROTATE BUTTON
 			if (operation == ImGuizmo::OPERATION::ROTATE)
-				ImGui::PushStyleColor(ImGuiCol_Button, ImGui::GetStyleColorVec4(ImGuiCol_ButtonActive));
+				ImGui::PushStyleColor(ImGuiCol_Button, oldButtonColor);
 			if (ImGui::Button(ICON_FK_REPEAT) && operation != ImGuizmo::OPERATION::ROTATE) operation = ImGuizmo::OPERATION::ROTATE;
 			else if (operation == ImGuizmo::OPERATION::ROTATE)
 				ImGui::PopStyleColor();
@@ -240,6 +241,136 @@ namespace Polychrome
 
 			ImGui::PopStyleColor();
 
+			ImGui::SameLine();
+
+			//ImGui::Text("Average FPS: %f", 1/time);
+			ImGui::SeparatorEx(ImGuiSeparatorFlags_Vertical);
+			ImGui::SameLine();
+			if (ShouldDrawGrid)
+				ImGui::PushStyleColor(ImGuiCol_Button, ImGui::GetStyleColorVec4(ImGuiCol_Button));
+			else
+				ImGui::PushStyleColor(ImGuiCol_Button, {0,0,0,0});
+			ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 0, 4 });
+			if (ImGui::Button(ICON_FK_TH))
+			{
+				ShouldDrawGrid = !ShouldDrawGrid;
+			}
+			if (ImGui::IsItemHovered())
+				ImGui::SetTooltip("Toggle Grid");
+
+			ImGui::SameLine();
+			if (ImGui::Button(ICON_FK_CARET_DOWN))
+			{
+				ImGui::OpenPopup("##viiewport_grid_settings");
+			}
+			if (ImGui::BeginPopupContextItem("##viiewport_grid_settings"))
+			{
+				ImGui::Text("Grid Settings:");
+				ImGui::Separator();
+				ImGui::Text("Opacity    ");
+				ImGui::SameLine();
+				ImGui::SliderFloat("##viewport_grid_opactiy", &ComponentDebugGizmos::GridOpacity, 0.f, 1.f);
+
+				ImGui::Text("Size          ");
+				ImGui::SameLine();
+				static bool link = true;
+				if (link)
+					ImGui::PushStyleColor(ImGuiCol_Button, ImGui::GetStyleColorVec4(ImGuiCol_Button));
+				else
+					ImGui::PushStyleColor(ImGuiCol_Button, { 0,0,0,0 });
+				if (ImGui::Button(ICON_FK_LINK))
+				{
+					link = !link;
+				}
+				ImGui::PopStyleColor();
+				ImGui::SameLine();
+				float size[] = { ComponentDebugGizmos::GridSize.x, ComponentDebugGizmos::GridSize.y };
+				if (ImGui::DragFloat2("##viewport_grid_size", size, 1.f, 1.f, 0.f))
+				{
+					if (link)
+					{
+						if (ComponentDebugGizmos::GridSize.x != size[0])
+						{
+							ComponentDebugGizmos::GridSize.x = size[0];
+							ComponentDebugGizmos::GridSize.y = size[0];
+						}
+						else
+						{
+							ComponentDebugGizmos::GridSize.x = size[1];
+							ComponentDebugGizmos::GridSize.y = size[1];
+						}
+					}
+					else
+					{
+						ComponentDebugGizmos::GridSize.x = size[0];
+						ComponentDebugGizmos::GridSize.y = size[1];
+					}
+					
+				}
+				ImGui::EndPopup();
+			}
+			if (ImGui::IsItemHovered())
+				ImGui::SetTooltip("Change Grid Settings");
+
+			ImGui::PopStyleVar();
+
+			ImGui::PopStyleColor();
+
+			ImGui::SameLine();
+
+			if (ComponentDebugGizmos::DrawAllGizmos)
+				ImGui::PushStyleColor(ImGuiCol_Button, ImGui::GetStyleColorVec4(ImGuiCol_Button));
+			else
+				ImGui::PushStyleColor(ImGuiCol_Button, { 0,0,0,0 });
+			ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 0, 4 });
+			if (ImGui::Button(ICON_FK_COGS))
+			{
+				ComponentDebugGizmos::DrawAllGizmos = !ComponentDebugGizmos::DrawAllGizmos;
+			}
+			if (ImGui::IsItemHovered())
+				ImGui::SetTooltip("Toggle All Gizmos");
+
+			ImGui::SameLine();
+			if (ImGui::Button(ICON_FK_CARET_DOWN "##viewport_gizmos_settings_caret"))
+			{
+				ImGui::OpenPopup("##viiewport_gizmos_settings");
+			}
+			if (ImGui::BeginPopupContextItem("##viiewport_gizmos_settings"))
+			{
+				ImGui::Text("Gizmos Settings:");
+				ImGui::Checkbox("Camera##gizmos_settings", &ComponentDebugGizmos::DrawCameraGizmos);
+				ImGui::Checkbox("Box Collider##gizmos_settings", &ComponentDebugGizmos::DrawBoxCollider);
+				
+				ImGui::EndPopup();
+			}
+			if (ImGui::IsItemHovered())
+				ImGui::SetTooltip("Change Gizmos Settings");
+
+			ImGui::PopStyleVar();
+
+			ImGui::PopStyleColor();
+			ImGui::SameLine();
+
+
+			if (ComponentDebugGizmos::DrawAllEntities)
+				ImGui::PushStyleColor(ImGuiCol_Button, ImGui::GetStyleColorVec4(ImGuiCol_Button));
+			else
+				ImGui::PushStyleColor(ImGuiCol_Button, { 0,0,0,0 });
+
+			if (ComponentDebugGizmos::DrawAllEntities)
+			{
+				if (ImGui::Button(ICON_FK_USERS "##draw_all_entities"))
+					ComponentDebugGizmos::DrawAllEntities = false;
+			}
+			else
+			{
+				if (ImGui::Button(ICON_FK_USER "##draw_all_entities"))
+					ComponentDebugGizmos::DrawAllEntities = true;
+			}
+			if (ImGui::IsItemHovered())
+				ImGui::SetTooltip("Toggle Viewing All Entity Gizmos");
+
+			ImGui::PopStyleColor();
 
 			ImGui::BeginChild("##viewport_frame_buffer");
 
@@ -255,15 +386,34 @@ namespace Polychrome
 
 			ImVec2 fb_pos = ImGui::GetCursorScreenPos();
 
+			ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 0,0 });
+
+			uint32_t textureID = frame_buffer->GetColorAttachmentRendererID();
 			ImGui::Image(reinterpret_cast<void*>(textureID), ImVec2{ s_ViewportSize.x, s_ViewportSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
 			auto pos = ImGui::GetCursorPos();
 			viewportFocused = ImGui::IsWindowFocused();
 			viewportHovered = ImGui::IsItemHovered();
 			viewportMousePos = ImGui::GetMousePos();
 			viewportMousePos = {Math::min(viewportMousePos.x - ImGui::GetWindowPos().x, ImGui::GetWindowSize().x), Math::min(viewportMousePos.y - ImGui::GetWindowPos().y, ImGui::GetWindowSize().y)};
+			Math::vec2 flippedMousePos = { viewportMousePos.x, s_ViewportSize.y - viewportMousePos.y - 1 };
+			if ((!EditorApp::SceneRunning || EditorApp::ScenePaused) && ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Left))
+			{
+				frame_buffer->Bind();
+				int pixelVal = frame_buffer->ReadPixel(1, flippedMousePos.x, flippedMousePos.y);
+				frame_buffer->Unbind();
+				CHROMA_CORE_INFO("Selected Entity: {}", pixelVal);
+				if (pixelVal > -1)
+				{
+					if (EditorApp::CurrentScene->Registry.valid((Chroma::EntityID)pixelVal))
+					{
+						Hierarchy::SelectedEntity = (Chroma::EntityID)pixelVal;
+					}
+				}
+			}
+				
 			//ImGuizmo
 
-			ComponentDebugWidgets::DrawIcons();
+			ComponentDebugGizmos::DrawIcons();
 			EditorCamera::ImGuiUpdate();
 
 			ImGui::SetCursorPos(pos);
@@ -274,7 +424,7 @@ namespace Polychrome
 				ImGuizmo::SetDrawlist();
 				ImGuizmo::SetRect(fb_pos.x, fb_pos.y, s_ViewportSize.x, s_ViewportSize.y);
 				//auto& cam = dynamic_cast<EditorApp&>(EditorApp::Get()).GetCameraController();
-				auto& cam = Chroma::CameraComponent::GetPrimaryCamera();
+				auto& cam = EditorApp::CurrentScene->GetPrimaryCamera();
 				const Math::mat4& camView = cam.GetViewMatrix();
 				const Math::mat4& camProj = cam.GetProjectionMatrix();
 
@@ -321,6 +471,7 @@ namespace Polychrome
 				}
 			}
 
+			ImGui::PopStyleVar();
 			ImGui::EndChild();
 
 			ImGui::End();

@@ -16,6 +16,8 @@ namespace Chroma
 
 		const bool HasChild(EntityID child) const { return std::find(Children.begin(), Children.end(), child) != Children.end(); }
 
+		const bool AllowMultiple() const override { return false; }
+
 
 		const std::string Name() const override { return StaticName(); }
 

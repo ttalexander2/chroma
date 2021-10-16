@@ -8,8 +8,8 @@
 #include <Chroma/ImGui/Widgets/VecWithLabels.h>
 #include <Chroma/Components/CSharpScript.h>
 #include <Chroma/Scripting/ScriptModuleField.h>
-#include <Chroma/Components/BoxCollider2D.h>
-#include <Chroma/Components/CircleCollider2D.h>
+#include <Chroma/Components/BoxCollider.h>
+#include <Chroma/Components/CircleCollider.h>
 #include <Chroma/Components/LuaScript.h>
 #include <Chroma/Scripting/LuaScripting.h>
 #include <Chroma/Scripting/MonoScripting.h>
@@ -28,11 +28,11 @@ namespace Polychrome
 		if (Chroma::ECS::IsType<Chroma::Transform>(c)) DrawTransform(c);
 		else if (Chroma::ECS::IsType<Chroma::CSharpScript>(c)) DrawCSharpScript(c);
 		else if (Chroma::ECS::IsType<Chroma::AudioSource>(c)) DrawAudioSource(c);
-		else if (Chroma::ECS::IsType<Chroma::BoxCollider2D>(c)) DrawBoxCollider2D(c);
-		else if (Chroma::ECS::IsType<Chroma::CircleCollider2D>(c)) DrawCircleCollider2D(c);
+		else if (Chroma::ECS::IsType<Chroma::BoxCollider>(c)) DrawBoxCollider(c);
+		else if (Chroma::ECS::IsType<Chroma::CircleCollider>(c)) DrawCircleCollider(c);
 		else if (Chroma::ECS::IsType<Chroma::LuaScript>(c)) DrawLuaScript(c);
 		else if (Chroma::ECS::IsType<Chroma::SpriteRenderer>(c)) DrawSpriteRenderer(c);
-		else if (Chroma::ECS::IsType<Chroma::CameraComponent>(c)) DrawCameraComponent(c);
+		else if (Chroma::ECS::IsType<Chroma::Camera>(c)) DrawCameraComponent(c);
 	}
 
 	void ComponentWidgets::DrawTransform(Chroma::Component* c)
@@ -167,9 +167,9 @@ namespace Polychrome
 		ImGui::PopItemWidth();
 	}
 
-	void ComponentWidgets::DrawBoxCollider2D(Chroma::Component* c)
+	void ComponentWidgets::DrawBoxCollider(Chroma::Component* c)
 	{
-		Chroma::BoxCollider2D* b = reinterpret_cast<Chroma::BoxCollider2D*>(c);
+		Chroma::BoxCollider* b = reinterpret_cast<Chroma::BoxCollider*>(c);
 		DrawComponentValue(c, "Bounds");
 		ImGui::Vec2IntWithLabels("##box_collider_2d_bound", b->Bounds);
 
@@ -177,9 +177,9 @@ namespace Polychrome
 		ImGui::Vec2IntWithLabels("##box_collider_2d_offset", b->Offset);
 	}
 
-	void ComponentWidgets::DrawCircleCollider2D(Chroma::Component* c)
+	void ComponentWidgets::DrawCircleCollider(Chroma::Component* c)
 	{
-		Chroma::CircleCollider2D* b = reinterpret_cast<Chroma::CircleCollider2D*>(c);
+		Chroma::CircleCollider* b = reinterpret_cast<Chroma::CircleCollider*>(c);
 		DrawComponentValue(c, "Radius");
 		ImGui::InputFloat("##circle_collider_2d_bounds", &b->Radius);
 
@@ -278,7 +278,8 @@ namespace Polychrome
 
 	void ComponentWidgets::DrawCameraComponent(Chroma::Component* c)
 	{
-		Chroma::CameraComponent* camera = reinterpret_cast<Chroma::CameraComponent*>(c);
+		Chroma::Camera* camera = reinterpret_cast<Chroma::Camera*>(c);
+
 		DrawComponentValue(c, "Size");
 
 		glm::uvec2 camSize = camera->GetSize();
@@ -289,11 +290,11 @@ namespace Polychrome
 			camera->SetSize(size.x, size.y);
 
 		DrawComponentValue(c, "PrimaryCamera");
-		bool primary = camera->IsPrimary();
+		bool primary = Hierarchy::SelectedEntity == EditorApp::CurrentScene->GetPrimaryCameraEntity();
 		if (ImGui::Checkbox("##primary_camera", &primary))
 		{
 			if (primary)
-				camera->SetPrimary();
+				EditorApp::CurrentScene->SetPrimaryCamera(Hierarchy::SelectedEntity);
 		}
 
 	}

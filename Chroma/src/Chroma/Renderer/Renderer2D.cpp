@@ -18,6 +18,9 @@ namespace Chroma
 		glm::vec4	Color;
 		glm::vec2	TexCoord;
 		float		TexIndex;
+
+		// Editor-only
+		int EntityID = -1;
 	};
 
 	struct RenderData
@@ -56,24 +59,23 @@ namespace Chroma
 		#version 330 core
 
 		layout(location = 0) in vec3 a_Position;
-	layout(location = 1) in vec4 a_Color;
-	layout(location = 2) in vec2 a_TextCoord;
-	layout(location = 3) in float a_TexIndex;
+		layout(location = 1) in vec4 a_Color;
+		layout(location = 2) in vec2 a_TextCoord;
+		layout(location = 3) in float a_TexIndex;
 
-	uniform mat4 u_ViewProjection;
+		uniform mat4 u_ViewProjection;
 
-	out vec4 v_Color;
-	out vec2 v_TextCoord;
-	out float v_TexIndex;
-	out vec2 v_TristonCoord;
+		out vec4 v_Color;
+		out vec2 v_TextCoord;
+		out float v_TexIndex;
 
-	void main()
-	{
-		v_Color = a_Color;
-		v_TextCoord = a_TextCoord;
-		v_TexIndex = a_TexIndex;
-		gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
-	}
+		void main()
+		{
+			v_Color = a_Color;
+			v_TextCoord = a_TextCoord;
+			v_TexIndex = a_TexIndex;
+			gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
+		}
 
 	)";
 
@@ -82,19 +84,18 @@ namespace Chroma
 
 		layout(location = 0) out vec4 color;
 
-	in vec4 v_Color;
-	in vec2 v_TextCoord;
-	in float v_TexIndex;
+		in vec4 v_Color;
+		in vec2 v_TextCoord;
+		in float v_TexIndex;
 
-	uniform sampler2D u_Textures[32];
+		uniform sampler2D u_Textures[32];
 
-	void main()
-	{
-
-		color = texture(u_Textures[int(v_TexIndex)], v_TextCoord) * v_Color;
-		//color = vec4(v_TextCoord, 0.0, 1.0);
-	}
+		void main()
+		{
+			color = texture(u_Textures[int(v_TexIndex)], v_TextCoord) * v_Color;
+		}
 	)";
+
 
 	void Renderer2D::Init()
 	{
@@ -106,7 +107,8 @@ namespace Chroma
 			{ Chroma::ShaderDataType::Float3, "a_Position" },
 			{ Chroma::ShaderDataType::Float4, "a_Color" },
 			{ Chroma::ShaderDataType::Float2, "a_TextCoord" },
-			{ Chroma::ShaderDataType::Float, "a_TexIndex" }
+			{ Chroma::ShaderDataType::Float, "a_TexIndex" },
+			{ Chroma::ShaderDataType::Int, "a_EntityID" }
 		});
 
 		s_Data.QuadVertexArray->AddVertexBuffer(s_Data.QuadVertexBuffer);
@@ -146,6 +148,7 @@ namespace Chroma
 			samplers[i] = i;
 
 		s_Data.TextureShader = Shader::Create("Texture_Shader", TextureVertexShader, TextureFragmentShader);
+
 		s_Data.TextureShader->Bind();
 		s_Data.TextureShader->SetUniformIntArray("u_Textures", samplers, s_Data.MaxTextureSlots);
 
@@ -157,8 +160,22 @@ namespace Chroma
 		s_Data.QuadVertexPositions[3] = { -0.5f,  0.5f, 0.0f, 1.0f };
 
 	}
+
 	void Renderer2D::Shutdown()
-	{	
+	{
+	}
+
+	void Renderer2D::LoadShaderFromFile(const std::string& shaderFilePath)
+	{
+		int32_t samplers[s_Data.MaxTextureSlots];
+		for (int32_t i = 0; i < s_Data.MaxTextureSlots; i++)
+			samplers[i] = i;
+
+		s_Data.TextureShader = Shader::Create(shaderFilePath);
+
+		s_Data.TextureShader->Bind();
+		s_Data.TextureShader->SetUniformIntArray("u_Textures", samplers, s_Data.MaxTextureSlots);
+
 	}
 
 	void Renderer2D::Clear()
@@ -176,22 +193,17 @@ namespace Chroma
 		RenderCommand::SetClearColor(color);
 	}
 
-	void Renderer2D::BeginScene()
+	void Renderer2D::Begin(const OrthographicCamera& camera)
 	{
-		BeginScene(Chroma::CameraComponent::GetPrimaryCamera().GetViewProjectionMatrix());
+		Begin(camera.GetViewProjectionMatrix());
 	}
 
-	void Renderer2D::BeginScene(const OrthographicCamera& camera)
+	void Renderer2D::Begin(const Camera& camera)
 	{
-		BeginScene(camera.GetViewProjectionMatrix());
+		Begin(camera.GetViewProjectionMatrix());
 	}
 
-	void Renderer2D::BeginScene(const CameraComponent& camera)
-	{
-		BeginScene(camera.GetViewProjectionMatrix());
-	}
-
-	void Renderer2D::BeginScene(const Math::mat4& camera)
+	void Renderer2D::Begin(const Math::mat4& camera)
 	{
 		CHROMA_PROFILE_FUNCTION();
 		s_Data.TextureShader->Bind();
@@ -206,7 +218,7 @@ namespace Chroma
 
 	}
 
-	void Renderer2D::EndScene()
+	void Renderer2D::End()
 	{
 		CHROMA_PROFILE_FUNCTION();
 		uint32_t dataSize = (uint8_t*)s_Data.QuadVertexBufferPtr - (uint8_t*)s_Data.QuadVertexBufferBase;
@@ -229,9 +241,86 @@ namespace Chroma
 
 	}
 
+	void Renderer2D::DrawSprite(int entityID, const Math::vec2& position, const Math::vec2& size, const Ref<Texture2D>& texture, const Math::vec4& color, float rotation)
+	{
+		CHROMA_PROFILE_FUNCTION();
+
+		glm::vec3 p2 = glm::vec3({ position, 0.f }) + glm::vec3({ size, 0.f });
+
+		glm::mat4 transform;
+
+		if (rotation == 0)
+			transform = glm::translate(glm::mat4(1.0f), { position, 0.f })
+			* glm::scale(glm::mat4(1.0f), { size, 0.f });
+		else
+			transform = glm::translate(glm::mat4(1.0f), { position, 0.f })
+			* glm::rotate(glm::mat4(1.0f), rotation, { 0.0f, 0.0f, 1.0f })
+			* glm::scale(glm::mat4(1.0f), { size, 0.f });
+
+		//if (!s_CullingFrustum.CubeIntersects(glm::min(position, p2), glm::max(position, p2)))
+			//return;
+
+		constexpr size_t quadVertexCount = 4;
+
+		if (s_Data.QuadIndexCount + 6 >= s_Data.MaxIndices)
+			FlushAndReset();
+
+		float textureIndex = 0.0f;
+
+		for (uint32_t i = 1; i < s_Data.TextureSlotIndex; i++)
+		{
+			if (*s_Data.TextureSlots[i].get() == *texture.get())
+			{
+				textureIndex = (float)i;
+				break;
+			}
+		}
+
+		if (textureIndex == 0.0f)
+		{
+			textureIndex = (float)s_Data.TextureSlotIndex;
+			s_Data.TextureSlots[s_Data.TextureSlotIndex] = texture;
+			s_Data.TextureSlotIndex++;
+		}
+
+
+		s_Data.QuadVertexBufferPtr->Position = transform * s_Data.QuadVertexPositions[0];
+		s_Data.QuadVertexBufferPtr->Color = color;
+		s_Data.QuadVertexBufferPtr->TexCoord = { 0.0f, 0.0f };
+		s_Data.QuadVertexBufferPtr->TexIndex = textureIndex;
+		s_Data.QuadVertexBufferPtr->EntityID = entityID;
+		s_Data.QuadVertexBufferPtr++;
+
+		s_Data.QuadVertexBufferPtr->Position = transform * s_Data.QuadVertexPositions[1];
+		s_Data.QuadVertexBufferPtr->Color = color;
+		s_Data.QuadVertexBufferPtr->TexCoord = { 1.0f, 0.0f };
+		s_Data.QuadVertexBufferPtr->TexIndex = textureIndex;
+		s_Data.QuadVertexBufferPtr->EntityID = entityID;
+		s_Data.QuadVertexBufferPtr++;
+
+		s_Data.QuadVertexBufferPtr->Position = transform * s_Data.QuadVertexPositions[2];
+		s_Data.QuadVertexBufferPtr->Color = color;
+		s_Data.QuadVertexBufferPtr->TexCoord = { 1.0f, 1.0f };
+		s_Data.QuadVertexBufferPtr->TexIndex = textureIndex;
+		s_Data.QuadVertexBufferPtr->EntityID = entityID;
+		s_Data.QuadVertexBufferPtr++;
+
+		s_Data.QuadVertexBufferPtr->Position = transform * s_Data.QuadVertexPositions[3];
+		s_Data.QuadVertexBufferPtr->Color = color;
+		s_Data.QuadVertexBufferPtr->TexCoord = { 0.0f, 1.0f };
+		s_Data.QuadVertexBufferPtr->TexIndex = textureIndex;
+		s_Data.QuadVertexBufferPtr->EntityID = entityID;
+		s_Data.QuadVertexBufferPtr++;
+
+		s_Data.QuadIndexCount += 6;
+
+
+		s_Data.Stats.QuadCount++;
+	}
+
 	void Renderer2D::FlushAndReset()
 	{
-		EndScene();
+		End();
 		
 		s_Data.QuadIndexCount = 0;
 		s_Data.QuadVertexBufferPtr = s_Data.QuadVertexBufferBase;
@@ -488,6 +577,15 @@ namespace Chroma
 
 		s_Data.Stats.QuadCount++;
 
+	}
+
+	void Renderer2D::DrawLine(const Math::vec2& p1, const Math::vec2& p2, float line_width, const Math::vec4& color)
+	{
+		Math::vec2 midpoint = { (p1.x + p2.x) / 2.f, (p1.y + p2.y) / 2.f };
+		float length = Math::sqrt(Math::pow((p2.x - p1.x), 2) + Math::pow((p2.y - p1.y), 2));
+		float rotation = Math::atan((p2.y - p1.y) / (p2.x - p1.x));
+		//CHROMA_CORE_INFO("Midpoint: ({}, {}), Length: {}, Rotation: {}, LineWidth: {}", midpoint.x, midpoint.y, length, rotation, line_width);
+		DrawQuad(midpoint, { length, line_width }, color, rotation);
 	}
 
 	void Renderer2D::DrawRect(const Math::vec2& position, const Math::vec2& size, float line_width, const Math::vec4& color)

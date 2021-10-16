@@ -15,8 +15,8 @@
 #include <random>
 #include "../../Chroma/third_party/GLFW/include/GLFW/glfw3.h"
 #include <Chroma/Components/AudioSource.h>
-#include <Chroma/Components/CircleCollider2D.h>
-#include <Chroma/Components/BoxCollider2D.h>
+#include <Chroma/Components/CircleCollider.h>
+#include <Chroma/Components/BoxCollider.h>
 #include "Fonts/IconsForkAwesome.h"
 #include <Chroma/Utilities/FileDialogs.h>
 #include <filesystem>
@@ -39,7 +39,9 @@
 #include "LogWindow.h"	
 #include "Project.h"
 #include "FileWatcherThread.h"
-#include "ComponentDebugWidgets.h"
+#include "ComponentDebugGizmos.h"
+#include "ErrorWindow.h"
+#include "Build.h"
 
 #define CHROMA_DEBUG_LOG
 #include <Chroma/Core/Log.h>
@@ -68,7 +70,8 @@ namespace Polychrome
 
 	bool ProjectLoaded = false;
 
-
+	std::string EditorApp::InfoMessage;
+	EditorApp::MessageSeverity EditorApp::InfoSeverity = EditorApp::MessageSeverity::Info;
 
 	struct RecentProjectInfo
 	{
@@ -98,6 +101,7 @@ namespace Polychrome
 		//glfwMakeContextCurrent((GLFWwindow*)this->Get().GetWindow().GetNativeWindow());
 		glfwSetWindowCenter((GLFWwindow*)this->Get().GetWindow().GetNativeWindow());
 		glfwSetWindowAttrib((GLFWwindow*)this->Get().GetWindow().GetNativeWindow(), GLFW_DECORATED, GLFW_FALSE);
+		this->GetWindow().SetVSync(true);
 		
 
 		std::filesystem::path appData(sago::getDataHome() + "/Polychrome");
@@ -176,10 +180,10 @@ namespace Polychrome
 
 
 		//Chroma::Entity e2 = scene->NewEntity();
-		//Chroma::BoxCollider2D& aaaa = e2.GetComponent<Chroma::BoxCollider2D>();
+		//Chroma::BoxCollider& aaaa = e2.GetComponent<Chroma::BoxCollider>();
 
-		//scene->AddComponent<Chroma::CircleCollider2D>(e2);
-		//scene->AddComponent<Chroma::BoxCollider2D>(e2);
+		//scene->AddComponent<Chroma::CircleCollider>(e2);
+		//scene->AddComponent<Chroma::BoxCollider>(e2);
 
 		//std::string prefab = e2.ToPrefab();
 		//std::ofstream fout("test.prefab");
@@ -216,9 +220,12 @@ namespace Polychrome
 
 	void EditorApp::Init()
 	{
-		Chroma::FramebufferInfo fbspec;
+		Chroma::Renderer2D::LoadShaderFromFile(".\\assets\\shaders\\Texture.glsl");
+
+		Chroma::FramebufferSpecification fbspec;
 		fbspec.Width = 1920;
 		fbspec.Height = 1080;
+		fbspec.Attachments = { Chroma::FramebufferTextureFormat::RGBA8, Chroma::FramebufferTextureFormat::RED_INTEGER, Chroma::FramebufferTextureFormat::Depth };
 		m_Framebuffer = Chroma::Framebuffer::Create(fbspec);
 
 		// TODO: Load/Unload FMOD banks on play.
@@ -245,7 +252,7 @@ namespace Polychrome
 
 		ImGui::GetStyle().FrameRounding = 1;
 
-		Config.Style = (int)ImGui::ImGuiStylePreset::ChromaDark;
+		Config.Style = (int)ImGui::ImGuiStylePreset::Cherry;
 
 		LogWindow::Init();
 
@@ -310,25 +317,21 @@ namespace Polychrome
 		static float rotation = 0.0f;
 		rotation += time * 20.0f;
 
-		Chroma::RenderCommand::SetClearColor({ 0.0f, 0.0f , 0.0f , 1.0f });
+		Chroma::RenderCommand::SetClearColor({ 0.08f, 0.08f , 0.15f , 1.0f });
 		Chroma::Renderer2D::Clear();
 
-		Chroma::Renderer2D::BeginScene(Camera.GetViewProjectionMatrix());
+		m_Framebuffer->ClearAttachment(1, -1);
+
+		Chroma::Renderer2D::Begin(Camera.GetViewProjectionMatrix());
 
 		EditorApp::CurrentScene->Draw(time);
 
 
-		ComponentDebugWidgets::DrawWidgets();
+		ComponentDebugGizmos::DrawGizmos();
+		if (Viewport::ShouldDrawGrid)
+			ComponentDebugGizmos::DrawGrid();
 
-		//static float totalTime = time;
-		//totalTime += time.GetSeconds();
-		//float width = (Math::sin(4.f * totalTime) + 1.f);
-		//if (width < 0.5f)
-		//	width = 0.f;
-		//
-		//Chroma::Renderer2D::DrawRect(Chroma::CameraComponent::GetPrimaryCamera().GetPosition() , Chroma::CameraComponent::GetPrimaryCamera().GetSize(), 0.6f, { 0.2f, 0.3f , 0.8f , width });
-
-		Chroma::Renderer2D::EndScene();
+		Chroma::Renderer2D::End();
 
 		m_Framebuffer->Unbind();
 	}
@@ -342,7 +345,7 @@ namespace Polychrome
 
 		if (!first)
 		{
-			ImGui::ResetStyle(ImGui::ImGuiStylePreset::ChromaDark, ImGui::GetStyle());
+			ImGui::ResetStyle(ImGui::ImGuiStylePreset::Cherry, ImGui::GetStyle());
 
 			first = true;
 
@@ -708,7 +711,8 @@ namespace Polychrome
 		if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
 		{
 			ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
-			ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_None);
+			ImVec2 avail = ImGui::GetContentRegionAvail();
+			ImGui::DockSpace(dockspace_id, ImVec2(avail.x, avail.y - ImGui::GetTextLineHeight() - style.FramePadding.y * 2), ImGuiDockNodeFlags_None);
 		}
 
 		style.WindowMinSize.x = minWinSizeX;
@@ -777,10 +781,11 @@ namespace Polychrome
 
 		if (ImGui::BeginMenu("Window##MAIN_MENU_BAR"))
 		{
-			ImGui::MenuItem("Hierarchy##MAIN_MENU_BAR", "", &Hierarchy::Open)  ;
-			ImGui::MenuItem("Inspector##MAIN_MENU_BAR", "", &Inspector::Open)  ;
-			ImGui::MenuItem("Viewport##MAIN_MENU_BAR", "", &Viewport::Open)	   ;
-			ImGui::MenuItem("LogWindow##MAIN_MENU_BAR", "", &LogWindow::Open)   ;
+			ImGui::MenuItem("Hierarchy##MAIN_MENU_BAR", "", &Hierarchy::Open);
+			ImGui::MenuItem("Inspector##MAIN_MENU_BAR", "", &Inspector::Open);
+			ImGui::MenuItem("Viewport##MAIN_MENU_BAR", "", &Viewport::Open);
+			ImGui::MenuItem("Log##MAIN_MENU_BAR", "", &LogWindow::Open);
+			ImGui::MenuItem("Errors##MAIN_MENU_BAR", "", &ErrorWindow::Open);
 			ImGui::MenuItem("Settings##MAIN_MENU_BAR", "", &SettingsWindowOpen);
 
 
@@ -797,9 +802,10 @@ namespace Polychrome
 
 		Hierarchy::Draw();
 		Inspector::Draw();
-		Viewport::Draw(m_Framebuffer);
+		Viewport::Draw(time, m_Framebuffer);
 		LogWindow::Draw();
 		AssetBrowser::Draw();
+		ErrorWindow::Draw();
 
 
 		ImGui::Begin("Controller");
@@ -851,6 +857,34 @@ namespace Polychrome
 			}
 			ImGui::End();
 		}
+
+		if (InfoSeverity == MessageSeverity::Error)
+		{
+			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.9f, 0.1f, 0.15f, 1.f));
+			ImGui::Text(ICON_FK_EXCLAMATION_CIRCLE);
+		}
+		else if (InfoSeverity == MessageSeverity::Warning)
+		{
+			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.9f, 0.9f, 0.1f, 1.f));
+			ImGui::Text(ICON_FK_EXCLAMATION_TRIANGLE);
+		}
+		else
+		{
+			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.1f, 0.3f, 0.8f, 1.f));
+			ImGui::Text(ICON_FK_INFO_CIRCLE);
+		}
+		ImGui::SameLine();
+		ImGui::Text(InfoMessage.c_str());
+		ImGui::PopStyleColor();
+
+
+
+
+
+
+
+		
+
 
 
 		ImGui::End();
@@ -935,7 +969,7 @@ namespace Polychrome
 		if (Viewport::IsViewportFocused() && Viewport::IsViewportHovered())
 		{
 			float zoom = Camera.GetZoom();
-			zoom += e.getYOffset() * zoom / 4.0f;
+			zoom += e.getYOffset() * zoom / 8.0f;
 			Camera.SetZoom(zoom);
 			return true;
 		}

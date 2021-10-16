@@ -9,6 +9,7 @@
 #include <Chroma/Scripting/MonoScripting.h>
 #include "Project.h"
 #include <Chroma/Scripting/ScriptEngineRegistry.h>
+#include "Build.h"
 
 
 namespace Polychrome
@@ -47,16 +48,22 @@ namespace Polychrome
 			}
 		}
 
-		auto result = Chroma::MonoScripting::BuildAssembly(watch_dir, Project::Name);
+		auto result = Build::BuildMonoAssembly(watch_dir, Project::Name);
 		Chroma::ScriptEngineRegistry::RegisterAll();
 		Chroma::MonoScripting::SetDeltaTime(0.f, 0.f);
 		Chroma::MonoScripting::SetSceneContext(EditorApp::CurrentScene);
 		auto view = EditorApp::CurrentScene->Registry.view<Chroma::CSharpScript>();
+
 		for (Chroma::EntityID entity : view)
 		{
 			auto& script = view.get<Chroma::CSharpScript>(entity);
 			auto entityObj = Chroma::Entity(entity, EditorApp::CurrentScene);
 			Chroma::MonoScripting::InitScriptEntity(entityObj);
+		}
+
+		for (auto& m : Chroma::MonoScripting::GetModules())
+		{
+			CHROMA_CORE_INFO("Module: {}", m);
 		}
 
 
@@ -91,7 +98,7 @@ namespace Polychrome
 						}
 						else if (extension == ".cs")
 						{
-							auto result = Chroma::MonoScripting::BuildAssembly(root, Project::Name);
+							auto result = Build::BuildMonoAssembly(root, Project::Name);
 							Chroma::ScriptEngineRegistry::RegisterAll();
 							Chroma::MonoScripting::SetDeltaTime(0.f, 0.f);
 							Chroma::MonoScripting::SetSceneContext(EditorApp::CurrentScene);
@@ -137,7 +144,7 @@ namespace Polychrome
 						}
 						else if (extension == ".cs")
 						{
-							auto result = Chroma::MonoScripting::BuildAssembly(root, Project::Name);
+							auto result = Build::BuildMonoAssembly(root, Project::Name);
 							Chroma::ScriptEngineRegistry::RegisterAll();
 							Chroma::MonoScripting::SetDeltaTime(0.f, 0.f);
 							Chroma::MonoScripting::SetSceneContext(EditorApp::CurrentScene);
@@ -168,7 +175,7 @@ namespace Polychrome
 						}
 						else if (extension == ".cs")
 						{
-							auto result = Chroma::MonoScripting::BuildAssembly(root, Project::Name);
+							auto result = Build::BuildMonoAssembly(root, Project::Name);
 							Chroma::ScriptEngineRegistry::RegisterAll();
 							Chroma::MonoScripting::SetDeltaTime(0.f, 0.f);
 							Chroma::MonoScripting::SetSceneContext(EditorApp::CurrentScene);

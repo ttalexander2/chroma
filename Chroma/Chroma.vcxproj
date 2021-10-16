@@ -153,6 +153,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Chroma\Scene\Registry.h" />
     <ClInclude Include="src\Chroma.h" />
     <ClInclude Include="src\Chroma\Assets\Asset.h" />
     <ClInclude Include="src\Chroma\Assets\AssetManager.h" />
@@ -160,10 +161,10 @@
     <ClInclude Include="src\Chroma\Audio\Audio.h" />
     <ClInclude Include="src\Chroma\Audio\ChromaFMOD.h" />
     <ClInclude Include="src\Chroma\Components\AudioSource.h" />
-    <ClInclude Include="src\Chroma\Components\BoxCollider2D.h" />
+    <ClInclude Include="src\Chroma\Components\BoxCollider.h" />
     <ClInclude Include="src\Chroma\Components\CSharpScript.h" />
-    <ClInclude Include="src\Chroma\Components\CameraComponent.h" />
-    <ClInclude Include="src\Chroma\Components\CircleCollider2D.h" />
+    <ClInclude Include="src\Chroma\Components\Camera.h" />
+    <ClInclude Include="src\Chroma\Components\CircleCollider.h" />
     <ClInclude Include="src\Chroma\Components\LuaScript.h" />
     <ClInclude Include="src\Chroma\Components\NativeScript.h" />
     <ClInclude Include="src\Chroma\Components\Relationship.h" />
@@ -198,6 +199,7 @@
     <ClInclude Include="src\Chroma\Images\Aseprite.h" />
     <ClInclude Include="src\Chroma\Images\BlendFunctions.h" />
     <ClInclude Include="src\Chroma\Images\Color.h" />
+    <ClInclude Include="src\Chroma\Images\Font.h" />
     <ClInclude Include="src\Chroma\Images\Image.h" />
     <ClInclude Include="src\Chroma\Math\Common.h" />
     <ClInclude Include="src\Chroma\Math\Decompose.h" />
@@ -235,7 +237,6 @@
     <ClInclude Include="src\Chroma\Platform\Windows\WindowsWindow.h" />
     <ClInclude Include="src\Chroma\Profiler\Instrumentor.h" />
     <ClInclude Include="src\Chroma\Renderer\Buffer.h" />
-    <ClInclude Include="src\Chroma\Images\Font.h" />
     <ClInclude Include="src\Chroma\Renderer\Framebuffer.h" />
     <ClInclude Include="src\Chroma\Renderer\Frustum.h" />
     <ClInclude Include="src\Chroma\Renderer\GraphicsContext.h" />
@@ -261,6 +262,7 @@
     <ClInclude Include="src\Chroma\Scripting\ScriptModuleField.h" />
     <ClInclude Include="src\Chroma\Scripting\ScriptWrappers.h" />
     <ClInclude Include="src\Chroma\Systems\AudioSystem.h" />
+    <ClInclude Include="src\Chroma\Systems\CameraSystem.h" />
     <ClInclude Include="src\Chroma\Systems\CollisionSystem.h" />
     <ClInclude Include="src\Chroma\Systems\ScriptingSystem.h" />
     <ClInclude Include="src\Chroma\Systems\SpriteRendererSystem.h" />
@@ -333,15 +335,16 @@
     <ClInclude Include="third_party\yaml-cpp\src\token.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Chroma\Scene\Registry.cpp" />
     <ClCompile Include="src\Chroma\Assets\AssetManager.cpp" />
     <ClCompile Include="src\Chroma\Assets\Sprite.cpp" />
     <ClCompile Include="src\Chroma\Audio\Audio.cpp" />
     <ClCompile Include="src\Chroma\Audio\ChromaFMOD.cpp" />
     <ClCompile Include="src\Chroma\Components\AudioSource.cpp" />
-    <ClCompile Include="src\Chroma\Components\BoxCollider2D.cpp" />
+    <ClCompile Include="src\Chroma\Components\BoxCollider.cpp" />
     <ClCompile Include="src\Chroma\Components\CSharpScript.cpp" />
-    <ClCompile Include="src\Chroma\Components\CameraComponent.cpp" />
-    <ClCompile Include="src\Chroma\Components\CircleCollider2D.cpp" />
+    <ClCompile Include="src\Chroma\Components\Camera.cpp" />
+    <ClCompile Include="src\Chroma\Components\CircleCollider.cpp" />
     <ClCompile Include="src\Chroma\Components\LuaScript.cpp" />
     <ClCompile Include="src\Chroma\Components\Relationship.cpp" />
     <ClCompile Include="src\Chroma\Components\SpriteRenderer.cpp" />
@@ -350,7 +353,6 @@
     <ClCompile Include="src\Chroma\Core\Application.cpp" />
     <ClCompile Include="src\Chroma\Core\Log.cpp" />
     <ClCompile Include="src\Chroma\Core\Time.cpp" />
-    <ClCompile Include="src\Chroma\Images\Font.cpp" />
     <ClCompile Include="src\Chroma\ImGui\ImGuiBuild.cpp" />
     <ClCompile Include="src\Chroma\ImGui\ImGuiDebugMenu.cpp" />
     <ClCompile Include="src\Chroma\ImGui\ImGuiHelper.cpp" />
@@ -359,6 +361,7 @@
     <ClCompile Include="src\Chroma\ImGui\Widgets\GroupPannel.cpp" />
     <ClCompile Include="src\Chroma\Images\Aseprite.cpp" />
     <ClCompile Include="src\Chroma\Images\Color.cpp" />
+    <ClCompile Include="src\Chroma\Images\Font.cpp" />
     <ClCompile Include="src\Chroma\Images\Image.cpp" />
     <ClCompile Include="src\Chroma\Math\Decompose.cpp" />
     <ClCompile Include="src\Chroma\Math\Math.cpp" />
@@ -394,6 +397,7 @@
     <ClCompile Include="src\Chroma\Scripting\ScriptEngineRegistry.cpp" />
     <ClCompile Include="src\Chroma\Scripting\ScriptWrappers.cpp" />
     <ClCompile Include="src\Chroma\Systems\AudioSystem.cpp" />
+    <ClCompile Include="src\Chroma\Systems\CameraSystem.cpp" />
     <ClCompile Include="src\Chroma\Systems\CollisionSystem.cpp" />
     <ClCompile Include="src\Chroma\Systems\ScriptingSystem.cpp" />
     <ClCompile Include="src\Chroma\Systems\SpriteRendererSystem.cpp" />

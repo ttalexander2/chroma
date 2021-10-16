@@ -10,8 +10,8 @@
 #include <Chroma/Components/Tag.h>
 #include <Chroma/Components/Transform.h>
 #include <Chroma/Components/AudioSource.h>
-#include <Chroma/Components/BoxCollider2D.h>
-#include <Chroma/Components/CircleCollider2D.h>
+#include <Chroma/Components/BoxCollider.h>
+#include <Chroma/Components/CircleCollider.h>
 #include <Chroma/Components/SpriteRenderer.h>
 #include <Chroma/Core/Input.h>
 #include <Chroma/Core/Log.h>
@@ -58,22 +58,22 @@ namespace Chroma
 
 			"HasComponent", [](Entity& e, const std::string& component) {return e.HasComponent(component); },
 			"HasAudioSource", & Entity::HasComponent<AudioSource>,
-			"HasBoxCollider2D", &Entity::HasComponent<BoxCollider2D>,
-			"HasCircleCollider2D", &Entity::HasComponent<CircleCollider2D>,
+			"HasBoxCollider", &Entity::HasComponent<BoxCollider>,
+			"HasCircleCollider", &Entity::HasComponent<CircleCollider>,
 			"HasSpriteRenderer", &Entity::HasComponent<SpriteRenderer>,
 			
 			"AddComponent", [](Entity& e, const std::string& component) {return e.AddComponent(component); },
 			"AddAudioSource", [](Entity& e) { return std::ref(e.AddComponent<AudioSource>()); },
-			"AddBoxCollider2D", [](Entity& e) { return std::ref(e.AddComponent<BoxCollider2D>()); },
-			"AddCircleCollider2D", [](Entity& e) { return std::ref(e.AddComponent<CircleCollider2D>()); },
+			"AddBoxCollider", [](Entity& e) { return std::ref(e.AddComponent<BoxCollider>()); },
+			"AddCircleCollider", [](Entity& e) { return std::ref(e.AddComponent<CircleCollider>()); },
 			"AddSpriteRenderer", [](Entity& e) { return std::ref(e.AddComponent<SpriteRenderer>()); },
 
 			"GetComponent", [](Entity& e, const std::string& component) { return e.GetComponent(component); },
 			"GetTag", [](Entity& e) { return std::ref(e.GetComponent<Tag>()); },
 			"GetTransform", [](Entity& e) { return std::ref(e.GetComponent<Transform>()); },
 			"GetAudioSource", [](Entity& e) { return std::ref(e.GetComponent<AudioSource>()); },
-			"GetBoxCollider2D", [](Entity& e) { return std::ref(e.GetComponent<BoxCollider2D>()); },
-			"GetCircleCollider2D", [](Entity& e) { return std::ref(e.GetComponent<CircleCollider2D>()); },
+			"GetBoxCollider", [](Entity& e) { return std::ref(e.GetComponent<BoxCollider>()); },
+			"GetCircleCollider", [](Entity& e) { return std::ref(e.GetComponent<CircleCollider>()); },
 			"GetSpriteRenderer", [](Entity& e) { return std::ref(e.GetComponent<SpriteRenderer>()); },
 
 
@@ -106,20 +106,20 @@ namespace Chroma
 
 		);
 
-		lua.new_usertype<BoxCollider2D>("BoxCollider2D",
-			"BoxCollider2D", sol::no_constructor,
+		lua.new_usertype<BoxCollider>("BoxCollider",
+			"BoxCollider", sol::no_constructor,
 			sol::base_classes, sol::bases<Component>(),
-			"Bounds", &BoxCollider2D::Bounds,
-			"Offset", &BoxCollider2D::Offset
+			"Bounds", &BoxCollider::Bounds,
+			"Offset", &BoxCollider::Offset
 
 		);
 
 	
-		lua.new_usertype<CircleCollider2D>("CircleCollider2D",
-			"CircleCollider2D", sol::no_constructor,
+		lua.new_usertype<CircleCollider>("CircleCollider",
+			"CircleCollider", sol::no_constructor,
 			sol::base_classes, sol::bases<Component>(),
-			"Radius", &CircleCollider2D::Radius,
-			"Offset", &CircleCollider2D::Offset
+			"Radius", &CircleCollider::Radius,
+			"Offset", &CircleCollider::Offset
 		);
 	
 

@@ -6,7 +6,7 @@
 
 namespace Chroma
 {
-	Ref<Framebuffer> Framebuffer::Create(const FramebufferInfo& spec)
+	Ref<Framebuffer> Framebuffer::Create(const FramebufferSpecification& spec)
 	{
 		switch (Renderer::GetAPI())
 		{

@@ -6,13 +6,13 @@
 namespace Chroma
 {
 	/// @brief 2D circle collider. Collision is calulated based on radius, offset, and transform position.
-	struct CircleCollider2D : Component
+	struct CircleCollider : Component
 	{
-		/// @brief Constructs an empty CircleCollider2D
-		CircleCollider2D() = default;
-		/// @brief Constructs a new CircleCollider2D from an existing CircleCollider2D.
+		/// @brief Constructs an empty CircleCollider
+		CircleCollider() = default;
+		/// @brief Constructs a new CircleCollider from an existing CircleCollider.
 		/// @param  AudioSource to copy.
-		CircleCollider2D(const CircleCollider2D&) = default;
+		CircleCollider(const CircleCollider&) = default;
 
 		/// @brief Radius of the circle collider.
 		float Radius = 1.0f;
@@ -26,7 +26,7 @@ namespace Chroma
 
 		const static std::string StaticName()
 		{
-			return "Circle Collider 2D";
+			return "Circle Collider";
 		}
 
 		void Serialize(YAML::Emitter& out) override;

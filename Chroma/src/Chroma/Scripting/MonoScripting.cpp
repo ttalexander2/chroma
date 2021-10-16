@@ -122,30 +122,6 @@ namespace Chroma
 		//mono_jit_cleanup(domain);
 	}
 
-
-	bool MonoScripting::BuildAssembly(const std::string& path, const std::string& name)
-	{
-		CHROMA_CORE_INFO("Building: {}", path + "\\bin\\" + name + ".dll");
-		if (!std::filesystem::exists(path + "\\bin\\"))
-			std::filesystem::create_directories(path + "\\bin\\");
-
-		//If there's a better (still portable) way to do this, i would prefer that lol
-		//Also this bat file assumes mono is installed (it uses system variables), so it should probably change anyways
-		std::string monoLibStr = "";
-		for (auto& p : std::filesystem::recursive_directory_iterator("mono\\lib\\mono\\4.5\\"))
-		{
-			if (p.path().extension() == ".dll")
-			{
-				monoLibStr += " -r:" + p.path().string();
-			}
-		}
-		system((".\\mono\\bin\\mcs.bat -debug -target:library -nostdlib -out:\"" + std::filesystem::absolute(path).string() + "\"\\bin\\" + name + ".dll -r:Chroma.Mono.dll" + monoLibStr + " -recurse:\"" + std::filesystem::absolute(path).string() + "\"\\**.cs").c_str());
-
-		if (std::filesystem::exists(path + "\\bin\\" + name + ".dll"))
-			return MonoScripting::LoadAppAssembly(path + "\\bin\\" + name + ".dll");
-		return false;
-	}
-
 	MonoAssembly* MonoScripting::LoadAssemblyFromFile(const std::string& path)
 	{
 		if (path.empty() || !std::filesystem::exists(std::filesystem::path(path)))
@@ -499,6 +475,34 @@ namespace Chroma
 	bool MonoScripting::IsEntityModuleValid(Entity entity)
 	{
 		return entity.HasComponent<CSharpScript>() && ModuleExists(entity.GetComponent<CSharpScript>().ModuleName);
+	}
+
+	std::vector<std::string> MonoScripting::GetModules()
+	{
+		if (!coreAssemblyImage)
+			return std::vector<std::string>();
+
+		if (!appAssemblyImage)
+			return std::vector<std::string>();
+
+		MonoMethod* method = GetMethod(coreAssemblyImage, "Chroma.ReflectionHelper:GetEntityTypes");
+
+		if (!method)
+			return std::vector<std::string>();
+		
+		CHROMA_CORE_INFO("Entity Types:");
+		MonoArray* arr = (MonoArray*)mono_runtime_invoke(method, nullptr, nullptr, nullptr);
+		uintptr_t length = mono_array_length(arr);
+		std::vector<std::string> vec = std::vector<std::string>();
+		vec.reserve(length);
+		for (int i = 0; i < length; i++)
+		{
+			MonoString* type = mono_array_get(arr, MonoString*, i);
+			vec.push_back(mono_string_to_utf8(type));
+		}
+		return vec;
+
+		
 	}
 
 	bool MonoScripting::ModuleExists(const std::string& moduleName)

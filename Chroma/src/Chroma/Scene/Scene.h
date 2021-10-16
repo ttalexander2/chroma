@@ -11,7 +11,7 @@
 
 #include "Chroma/Core/Log.h"
 #include "Chroma/Profiler/Instrumentor.h"
-#include <Chroma/Components/CameraComponent.h>
+#include <Chroma/Components/Camera.h>
 
 namespace Polychrome
 {
@@ -180,13 +180,17 @@ namespace Chroma
 		void Draw(Time delta);
 		void PostDraw(Time delta);
 
+		Camera& GetPrimaryCamera();
+		EntityID GetPrimaryCameraEntity() { return PrimaryCameraEntity; }
+		void SetPrimaryCamera(EntityID entity);
+
 #pragma endregion
 		entt::registry Registry;
 
 	private:
 		std::vector<System*> Systems;
 		std::vector<EntityID> EntityOrder;
-		CameraComponent* PrimaryCamera;
+		EntityID PrimaryCameraEntity = ENTITY_NULL;
 
 		GUID ID;
 

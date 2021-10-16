@@ -135,7 +135,7 @@ namespace Chroma
 				int h = s->Frames[spriteRenderer.CurrentFrame].Texture->GetHeight();
 				if (!relationship.IsChild())
 				{
-					Chroma::Renderer2D::DrawQuad(transform.Position + spriteRenderer.Offset, transform.Scale * Math::vec2((float)w, (float)h), s->Frames[spriteRenderer.CurrentFrame].Texture, spriteRenderer.Color, transform.Rotation);
+					Chroma::Renderer2D::DrawSprite((int)e, transform.Position + spriteRenderer.Offset, transform.Scale * Math::vec2((float)w, (float)h), s->Frames[spriteRenderer.CurrentFrame].Texture, spriteRenderer.Color, transform.Rotation);
 				}
 				else
 				{
@@ -156,7 +156,7 @@ namespace Chroma
 
 					Math::vec2 adjusted = { pos.x * Math::cos(parentRot) - pos.y * Math::sin(parentRot), pos.x * Math::sin(parentRot) + pos.y * Math::cos(parentRot) };
 					//CHROMA_CORE_TRACE("Adjusted: [{}, {}]; ParentPos: [{}, {}]; ParentRot: {}", adjusted.x, adjusted.y, parentPos.x, parentPos.y, parentRot);
-					Chroma::Renderer2D::DrawQuad(parentPos + adjusted + spriteRenderer.Offset, scale * Math::vec2((float)w, (float)h), s->Frames[spriteRenderer.CurrentFrame].Texture, spriteRenderer.Color, rotation + parentRot);
+					Chroma::Renderer2D::DrawSprite((int)e, parentPos + adjusted + spriteRenderer.Offset, scale * Math::vec2((float)w, (float)h), s->Frames[spriteRenderer.CurrentFrame].Texture, spriteRenderer.Color, rotation + parentRot);
 				}
 
 			}

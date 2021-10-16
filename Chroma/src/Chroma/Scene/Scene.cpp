@@ -6,8 +6,8 @@
 #include <Chroma/Components/Tag.h>
 #include <Chroma/Components/AudioSource.h>
 #include <Chroma/Components/SpriteRenderer.h>
-#include <Chroma/Components/BoxCollider2D.h>
-#include <Chroma/Components/CircleCollider2D.h>
+#include <Chroma/Components/BoxCollider.h>
+#include <Chroma/Components/CircleCollider.h>
 #include <Chroma/Systems/AudioSystem.h>
 #include <Chroma/Systems/SpriteRendererSystem.h>
 #include <yaml-cpp/node/node.h>
@@ -18,6 +18,7 @@
 #include <Chroma/Systems/ScriptingSystem.h>
 #include <Chroma/Components/Relationship.h>
 #include <Chroma/Utilities/ContainerHelpers.h>
+#include <Chroma/Systems/CameraSystem.h>
 
 
 
@@ -29,6 +30,7 @@ namespace Chroma
 		RegisterSystem<ScriptingSystem>();
 		RegisterSystem<AudioSystem>();
 		RegisterSystem<SpriteRendererSystem>();
+		RegisterSystem<CameraSystem>();
 	}
 
 	const GUID Scene::GetID() { return ID; }
@@ -126,9 +128,7 @@ namespace Chroma
 			Tag& tag = Registry.get_or_emplace<Tag>(entity);
 			out << YAML::Key << "Name" << YAML::Value << tag.EntityName;
 
-
 			out << YAML::Key << "Components" << YAML::Value << YAML::BeginMap;
-
 			
 			std::vector<Component*> components = this->GetAllComponents(entity);
 			std::sort(components.begin(), components.end(), [](Component* a, Component* b) {return a->order_id < b->order_id; });
@@ -146,11 +146,22 @@ namespace Chroma
 				{
 					continue;
 				}
+				else if (ECS::IsType<Camera>(comp))
+				{
+					comp->BeginSerialize(out);
+					comp->Serialize(out);
+					if (PrimaryCameraEntity == entity)
+					{
+						out << YAML::Key << "Primary";
+						out << YAML::Value << true;
+					}
+					comp->EndSerialize(out);
+
+				}
 				else
 				{
 					comp->DoSerialize(out);
 				}
-				
 					
 			}
 			
@@ -229,6 +240,16 @@ namespace Chroma
 							created->Deserialize(component.second, newEntity, out);
 						else
 							created->Deserialize(component.second);
+						if (key == Camera::StaticName())
+						{
+							auto val = component.second["Primary"];
+							if (val)
+							{
+								bool primary = val.as<bool>();
+								if (primary)
+									out->SetPrimaryCamera(newEntity);
+							}
+						}
 
 						i++;
 					}
@@ -236,17 +257,13 @@ namespace Chroma
 					out->Registry.get_or_emplace<Relationship>(newEntity);
 				}
 			}
-			auto view = out->Registry.view<CameraComponent>();
+			auto view = out->Registry.view<Camera>();
 			if (view.size() == 0)
 			{
 				auto newCam = out->NewEntity();
-				out->PrimaryCamera = &out->AddComponent<CameraComponent>(newCam.GetID());
+				&out->AddComponent<Camera>(newCam.GetID());
+				out->PrimaryCameraEntity = newCam.GetID();
 				out->GetComponent<Tag>(newCam.GetID()).EntityName = "Camera";
-			}
-			else
-			{
-				EntityID firstWithCamera = view.front();
-				out->GetComponent<CameraComponent>(firstWithCamera);
 			}
 		}
 
@@ -399,6 +416,24 @@ namespace Chroma
 		{
 			s->LateDraw(delta);
 		}
+	}
+
+	Camera& Scene::GetPrimaryCamera()
+	{
+		if (PrimaryCameraEntity == ENTITY_NULL)
+		{
+			auto ent = NewEntity();
+			return ent.AddComponent<Camera>();
+		}
+		return Registry.get_or_emplace<Camera>(PrimaryCameraEntity);
+	}
+
+	void Scene::SetPrimaryCamera(EntityID entity)
+	{
+		if (!Registry.valid(entity))
+			return;
+		PrimaryCameraEntity = entity;
+		Registry.get_or_emplace<Camera>(PrimaryCameraEntity);
 	}
 
 }

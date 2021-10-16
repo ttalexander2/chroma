@@ -40,5 +40,6 @@ namespace Chroma
 
 		/// @brief Current time.
 		static Time* m_Instance;
+
 	};
 }

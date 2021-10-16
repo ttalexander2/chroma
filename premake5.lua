@@ -369,3 +369,53 @@ project "Chroma.Mono"
     
 
 
+project "Test"
+    location "Test"
+    kind "ConsoleApp"
+    language "C++"
+    cppdialect "C++20"
+    staticruntime "off"
+
+    targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+    objdir ("obj/" .. outputdir .. "/%{prj.name}")
+
+    links
+    {
+        "Chroma"
+    }
+
+    files
+    {
+        "%{prj.name}/src/**.h",
+        "%{prj.name}/src/**.c",
+        "%{prj.name}/src/**.hpp",
+        "%{prj.name}/src/**.cpp",
+    }
+
+    includedirs{
+        "Chroma/third_party/spdlog/include",
+        "Chroma/src",
+        "%{IncludeDir.glm}",
+        "%{IncludeDir.ImGui}",
+        "%{IncludeDir.FMOD}",
+        "%{IncludeDir.yaml}",
+        "%{IncludeDir.Sol2}",
+        "%{IncludeDir.lua}",
+        "%{IncludeDir.entt}"
+    }
+
+    filter "configurations:Debug"
+    defines "CHROMA_DEBUG"
+    runtime "Debug"
+    symbols "On"
+    optimize "Debug"
+
+    filter "configurations:Release"
+        defines "CHROMA_RELEASE"
+        runtime "Release"
+        optimize "On"
+
+    filter "configurations:Dist"
+        defines "CHROMA_DIST"
+        runtime "Release"
+        optimize "On"
