@@ -28,6 +28,7 @@ namespace Polychrome
 
 	bool Viewport::Open = true;
 	bool Viewport::ShouldDrawGrid = true;
+	bool Viewport::SnapToGrid = true;
 
 	static const float identityMatrix[16] =
 	{ 
@@ -36,6 +37,11 @@ namespace Polychrome
 		0.f, 0.f, 1.f, 0.f,
 		0.f, 0.f, 0.f, 1.f 
 	};
+
+	inline float snapf(float original, int numerator, int denominator)
+	{
+		return round(original * denominator / numerator) * numerator / denominator;
+	}
 
 
 	void Viewport::Draw(Chroma::Time time, Chroma::Ref<Chroma::Framebuffer> frame_buffer)
@@ -278,15 +284,19 @@ namespace Polychrome
 					ImGui::PushStyleColor(ImGuiCol_Button, ImGui::GetStyleColorVec4(ImGuiCol_Button));
 				else
 					ImGui::PushStyleColor(ImGuiCol_Button, { 0,0,0,0 });
-				if (ImGui::Button(ICON_FK_LINK))
+				if (ImGui::Button(ICON_FK_LINK "##link_size"))
 				{
 					link = !link;
 				}
 				ImGui::PopStyleColor();
 				ImGui::SameLine();
-				float size[] = { ComponentDebugGizmos::GridSize.x, ComponentDebugGizmos::GridSize.y };
-				if (ImGui::DragFloat2("##viewport_grid_size", size, 1.f, 1.f, 0.f))
+				int size[] = { ComponentDebugGizmos::GridSize.x, ComponentDebugGizmos::GridSize.y };
+				if (ImGui::DragInt2("##viewport_grid_size", size, 1.f, 1, 0))
 				{
+					if (size[0] < 1)
+						size[0] = 1;
+					if (size[1] < 1)
+						size[1] = 1;
 					if (link)
 					{
 						if (ComponentDebugGizmos::GridSize.x != size[0])
@@ -307,6 +317,47 @@ namespace Polychrome
 					}
 					
 				}
+
+				ImGui::Text("Snap        ");
+				ImGui::SameLine();
+				static bool linkSnap = true;
+				if (linkSnap)
+					ImGui::PushStyleColor(ImGuiCol_Button, ImGui::GetStyleColorVec4(ImGuiCol_Button));
+				else
+					ImGui::PushStyleColor(ImGuiCol_Button, { 0,0,0,0 });
+				if (ImGui::Button(ICON_FK_LINK "##link_snap"))
+				{
+					linkSnap = !linkSnap;
+				}
+				ImGui::PopStyleColor();
+				ImGui::SameLine();
+				int snap[] = { ComponentDebugGizmos::SnapSize.x, ComponentDebugGizmos::SnapSize.y };
+				if (ImGui::DragInt2("##viewport_grid_snap", snap, 1.f, 1, 0))
+				{
+					if (snap[0] < 1)
+						snap[0] = 1;
+					if (snap[1] < 1)
+						snap[1] = 1;
+					if (link)
+					{
+						if (ComponentDebugGizmos::SnapSize.x != snap[0])
+						{
+							ComponentDebugGizmos::SnapSize.x = snap[0];
+							ComponentDebugGizmos::SnapSize.y = snap[0];
+						}
+						else
+						{
+							ComponentDebugGizmos::SnapSize.x = snap[1];
+							ComponentDebugGizmos::SnapSize.y = snap[1];
+						}
+					}
+					else
+					{
+						ComponentDebugGizmos::SnapSize.x = snap[0];
+						ComponentDebugGizmos::SnapSize.y = snap[1];
+					}
+
+				}
 				ImGui::EndPopup();
 			}
 			if (ImGui::IsItemHovered())
@@ -316,6 +367,23 @@ namespace Polychrome
 
 			ImGui::PopStyleColor();
 
+			ImGui::SameLine();
+
+			if (Viewport::SnapToGrid)
+				ImGui::PushStyleColor(ImGuiCol_Button, ImGui::GetStyleColorVec4(ImGuiCol_Button));
+			else
+				ImGui::PushStyleColor(ImGuiCol_Button, { 0,0,0,0 });
+
+			if (ImGui::Button(ICON_FK_MAGNET "##snap_to_grid"))
+				Viewport::SnapToGrid = !Viewport::SnapToGrid;
+
+			if (ImGui::IsItemHovered())
+				ImGui::SetTooltip("Snap to Grid");
+
+			ImGui::PopStyleColor();
+
+			ImGui::SameLine();
+			ImGui::SeparatorEx(ImGuiSeparatorFlags_Vertical);
 			ImGui::SameLine();
 
 			if (ComponentDebugGizmos::DrawAllGizmos)
@@ -396,19 +464,57 @@ namespace Polychrome
 			viewportMousePos = ImGui::GetMousePos();
 			viewportMousePos = {Math::min(viewportMousePos.x - ImGui::GetWindowPos().x, ImGui::GetWindowSize().x), Math::min(viewportMousePos.y - ImGui::GetWindowPos().y, ImGui::GetWindowSize().y)};
 			Math::vec2 flippedMousePos = { viewportMousePos.x, s_ViewportSize.y - viewportMousePos.y - 1 };
-			if ((!EditorApp::SceneRunning || EditorApp::ScenePaused) && ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Left))
+			static bool itemDrag = false;
+
+			if (itemDrag && !ImGui::IsMouseDown(ImGuiMouseButton_Left) && Hierarchy::SelectedEntity != Chroma::ENTITY_NULL)
+			{
+				Math::vec2 nonSnapPos = EditorApp::CurrentScene->GetTransformAbsolutePosition(Hierarchy::SelectedEntity);
+				EditorApp::CurrentScene->SetTransformAbsolutePosition(Hierarchy::SelectedEntity, { snapf(nonSnapPos.x, 1, 1), snapf(nonSnapPos.y, 1, 1) });
+			}
+
+			static Math::vec2 offset = { 0,0 };
+			if ((!EditorApp::SceneRunning || EditorApp::ScenePaused) && ImGui::IsItemHovered() && (ImGui::IsMouseClicked(ImGuiMouseButton_Left) || ImGui::IsMouseDragging(ImGuiMouseButton_Left)))
 			{
 				frame_buffer->Bind();
 				int pixelVal = frame_buffer->ReadPixel(1, flippedMousePos.x, flippedMousePos.y);
 				frame_buffer->Unbind();
-				CHROMA_CORE_INFO("Selected Entity: {}", pixelVal);
-				if (pixelVal > -1)
+				//CHROMA_CORE_INFO("Selected Entity: {}", pixelVal);
+				if (pixelVal > -1 && !ImGui::IsMouseDragging(ImGuiMouseButton_Left))
 				{
 					if (EditorApp::CurrentScene->Registry.valid((Chroma::EntityID)pixelVal))
 					{
+						itemDrag = true;
 						Hierarchy::SelectedEntity = (Chroma::EntityID)pixelVal;
+						offset = ViewportPositionToWorld({ flippedMousePos.x, flippedMousePos.y }) - EditorApp::CurrentScene->GetTransformAbsolutePosition(Hierarchy::SelectedEntity);
 					}
 				}
+				else if (!ImGui::IsMouseDragging(ImGuiMouseButton_Left) && !ImGui::IsKeyDown((int)Chroma::Input::Key::LEFT_CONTROL))
+				{
+					itemDrag = false;
+					offset = { 0,0 };
+					Hierarchy::SelectedEntity = Chroma::ENTITY_NULL;
+				}
+			}
+
+			if (!ImGui::IsMouseDown(ImGuiMouseButton_Left))
+
+			if (!ImGui::IsMouseDown(ImGuiMouseButton_Left))
+			{
+				itemDrag = false;
+				offset = { 0,0 };
+			}
+				
+
+			
+
+			if (Hierarchy::SelectedEntity != Chroma::ENTITY_NULL && itemDrag && ImGui::IsMouseDragging(ImGuiMouseButton_Left) && (ImGui::IsKeyDown((int)Chroma::Input::Key::LEFT_CONTROL) || operation == ImGuizmo::OPERATION::TRANSLATE))
+			{
+				Math::vec2 posToMove = ViewportPositionToWorld({ flippedMousePos.x, flippedMousePos.y }) - offset;
+				bool doSnap = SnapToGrid && !ImGui::IsKeyDown((int)Chroma::Input::Key::LEFT_ALT);
+				if (doSnap)
+					EditorApp::CurrentScene->SetTransformAbsolutePosition(Hierarchy::SelectedEntity, { snapf(posToMove.x, ComponentDebugGizmos::SnapSize.x, 1), snapf(posToMove.y, ComponentDebugGizmos::SnapSize.y, 1)});
+				else
+					EditorApp::CurrentScene->SetTransformAbsolutePosition(Hierarchy::SelectedEntity, posToMove);
 			}
 				
 			//ImGuizmo

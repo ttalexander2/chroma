@@ -42,6 +42,9 @@ namespace Chroma
 		Entity NewEntity();
 		Entity NewChild(Entity id);
 
+		const Math::vec2 GetTransformAbsolutePosition(EntityID entity);
+		void SetTransformAbsolutePosition(EntityID entity, const Math::vec2& position);
+
 		void DestroyEntity(EntityID id, bool destroy_children = false);
 
 		std::string Serialize();

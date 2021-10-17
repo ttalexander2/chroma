@@ -34,6 +34,8 @@ namespace Polychrome
 		void SaveSceneAs();
 		void SaveScene();
 
+		static void DrawSelectionMask(Chroma::Time time);
+
 		static EditorCamera Camera;
 
 		EditorConfig Config;
@@ -75,6 +77,7 @@ namespace Polychrome
 		std::vector<ProfileResult> m_ProfileResults;
 
 		Chroma::Ref<Chroma::Framebuffer> m_Framebuffer;
+		Chroma::Ref<Chroma::Shader> m_HighlightShader;
 
 		Chroma::SpriteRendererSystem sprite_system;
 	};

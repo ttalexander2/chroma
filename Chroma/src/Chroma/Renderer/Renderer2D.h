@@ -5,6 +5,7 @@
 #include <Chroma/Renderer/Frustum.h>
 #include <Chroma/Images/Color.h>
 #include <Chroma/Components/Camera.h>
+#include <Chroma/Renderer/Shader.h>
 
 namespace Chroma
 {
@@ -17,13 +18,14 @@ namespace Chroma
 		static void Init();
 		static void Shutdown();
 
-		static void LoadShaderFromFile(const std::string& shaderFilePath);
-
 		static void Begin(const Camera& camera);
 		static void Begin(const OrthographicCamera& camera);
 		static void Begin(const Math::mat4& viewProjMat);
+		static void StartBatch();
+		static void NextBatch();
 		static void End();
 		static void Flush();
+		static void Flush(const Ref<Shader>& shader);
 
 		static void DrawSprite(int entityID, const Math::vec2& position, const Math::vec2& size, const Ref<Texture2D>& texture, const Math::vec4& color, float rotation);
 

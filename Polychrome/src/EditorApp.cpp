@@ -150,77 +150,13 @@ namespace Polychrome
 			}
 		}
 			
-
-
-
-
-		//Project::CreateProject("CheeseBurger", "C:/Users/Thomas/Desktop/CheeseBurger");
-
-		
-		
-		//Chroma::Scene* scene = new Chroma::Scene();
-
-		
-		
-		//Chroma::Entity entity = scene->NewEntity();
-
-
-		//auto entity4 = scene->NewEntity();
-		//entity.AddComponent<Chroma::SpriteRenderer>();
-		//auto &sprite = entity.GetComponent<Chroma::SpriteRenderer>();
-		//entity.AddComponent<Chroma::LuaScript>();
-		//entity.CreateChild();
-		//entity.CreateChild();
-		//entity.CreateChild();
-
-		//((Chroma::Transform*)entity.GetComponent("Transform"))->Position.x = 2;
-
-
-
-
-
-		//Chroma::Entity e2 = scene->NewEntity();
-		//Chroma::BoxCollider& aaaa = e2.GetComponent<Chroma::BoxCollider>();
-
-		//scene->AddComponent<Chroma::CircleCollider>(e2);
-		//scene->AddComponent<Chroma::BoxCollider>(e2);
-
-		//std::string prefab = e2.ToPrefab();
-		//std::ofstream fout("test.prefab");
-		//fout << prefab;
-
-
-		//scene->GetAllComponents(entity);
-
-
-		//CHROMA_INFO("");
-
-		//EditorApp::CurrentScene = scene;
-
-		
-
-		
-		/*
-		for (int i = 0; i < 500; i++)
-		{
-			auto aaaa = EditorApp::CurrentScene->NewEntity();
-			aaaa.AddComponent<Chroma::LuaScript>();
-			aaaa.AddComponent<Chroma::SpriteRenderer>().SetSprite(".\\assets\\textures\\test.ase");
-		}
-		*/
-
-
-		//scene->Load();
-
-
-
-		
+	
 
 	}
 
 	void EditorApp::Init()
 	{
-		Chroma::Renderer2D::LoadShaderFromFile(".\\assets\\shaders\\Texture.glsl");
+		m_HighlightShader = Chroma::Shader::Create(".\\assets\\shaders\\Highlight.glsl");
 
 		Chroma::FramebufferSpecification fbspec;
 		fbspec.Width = 1920;
@@ -303,7 +239,6 @@ namespace Polychrome
 	void EditorApp::Draw(Chroma::Time time)
 	{
 
-
 		CHROMA_PROFILE_SCOPE("Render OnUpdate");
 		Chroma::RenderCommand::SetClearColor({ 0.0f, 0.0f , 0.0f , 1.0f });
 		Chroma::Renderer2D::Clear();
@@ -325,6 +260,17 @@ namespace Polychrome
 		Chroma::Renderer2D::Begin(Camera.GetViewProjectionMatrix());
 
 		EditorApp::CurrentScene->Draw(time);
+
+		if (!EditorApp::SceneRunning || EditorApp::ScenePaused)
+		{
+			Chroma::Renderer2D::NextBatch();
+
+			DrawSelectionMask(time);
+
+			Chroma::Renderer2D::Flush(m_HighlightShader);
+			Chroma::Renderer2D::StartBatch();
+		}
+
 
 
 		ComponentDebugGizmos::DrawGizmos();
@@ -804,8 +750,9 @@ namespace Polychrome
 		Inspector::Draw();
 		Viewport::Draw(time, m_Framebuffer);
 		LogWindow::Draw();
-		AssetBrowser::Draw();
 		ErrorWindow::Draw();
+		AssetBrowser::Draw();
+
 
 
 		ImGui::Begin("Controller");
@@ -974,6 +921,55 @@ namespace Polychrome
 			return true;
 		}
 		return false;
+	}
+
+
+	void EditorApp::DrawSelectionMask(Chroma::Time time)
+	{
+		static float totalTime = time;
+		totalTime += time.GetSeconds();
+		float offset = (Math::sin(4.f * totalTime) + 1.f);
+
+		//CHROMA_CORE_INFO("offset: {}", offset);
+
+		if (Hierarchy::SelectedEntity == Chroma::ENTITY_NULL || !EditorApp::CurrentScene->HasComponent<Chroma::SpriteRenderer>(Hierarchy::SelectedEntity))
+			return;
+
+		Chroma::Transform& transform = EditorApp::CurrentScene->Registry.get<Chroma::Transform>(Hierarchy::SelectedEntity);
+		Chroma::SpriteRenderer& spriteRenderer = EditorApp::CurrentScene->Registry.get<Chroma::SpriteRenderer>(Hierarchy::SelectedEntity);
+		Chroma::Relationship& relationship = EditorApp::CurrentScene->Registry.get<Chroma::Relationship>(Hierarchy::SelectedEntity);
+		if (Chroma::AssetManager::HasSprite(spriteRenderer.GetSpriteID()))
+		{
+			Chroma::Ref<Chroma::Sprite> s = Chroma::AssetManager::GetSprite(spriteRenderer.GetSpriteID());
+			int w = s->Frames[spriteRenderer.GetCurrentFrame()].Texture->GetWidth();
+			int h = s->Frames[spriteRenderer.GetCurrentFrame()].Texture->GetHeight();
+			if (!relationship.IsChild())
+			{
+				Chroma::Renderer2D::DrawQuad(transform.Position + spriteRenderer.Offset, transform.Scale * Math::vec2((float)w + offset, (float)h + offset), s->Frames[spriteRenderer.GetCurrentFrame()].Texture, {0.f,1.f,1.f,1.f}, transform.Rotation);
+			}
+			else
+			{
+				Math::vec2 pos = transform.Position;
+				Math::vec2 scale = transform.Scale;
+				Math::vec2 parentPos{ 0,0 };
+				float parentRot = 0;
+				float rotation = transform.Rotation;
+				Chroma::EntityID parent = relationship.Parent;
+				while (parent != Chroma::ENTITY_NULL)
+				{
+					Chroma::Transform& parentTransform = EditorApp::CurrentScene->GetComponent<Chroma::Transform>(parent);
+					parentPos += parentTransform.Position;
+					scale *= parentTransform.Scale;
+					parentRot += parentTransform.Rotation;
+					parent = EditorApp::CurrentScene->GetComponent<Chroma::Relationship>(parent).Parent;
+				}
+
+				Math::vec2 adjusted = { pos.x * Math::cos(parentRot) - pos.y * Math::sin(parentRot), pos.x * Math::sin(parentRot) + pos.y * Math::cos(parentRot) };
+				//CHROMA_CORE_TRACE("Adjusted: [{}, {}]; ParentPos: [{}, {}]; ParentRot: {}", adjusted.x, adjusted.y, parentPos.x, parentPos.y, parentRot);
+				Chroma::Renderer2D::DrawQuad(parentPos + adjusted + spriteRenderer.Offset, scale * Math::vec2((float)w + offset, (float)h + offset), s->Frames[spriteRenderer.GetCurrentFrame()].Texture, { 0.f,1.f,1.f,1.f }, rotation + parentRot);
+			}
+
+		}
 	}
 
 

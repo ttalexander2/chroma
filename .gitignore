@@ -11,5 +11,15 @@ Sandbox\imgui.ini
 Chroma.Mono/Source/bin
 Chroma.Mono/Source/obj
 
+.vs/
+**.sln
+**.vcxproj
+**.vcxproj.filters
+**.vcxproj.user
+
+scripts\__pycache__
+Chroma/third_party/VulkanSDK
+Polychorme/assets/cache
+
 # Files
 *.user

@@ -20,12 +20,14 @@
   <ItemGroup>
     <ClInclude Include="src\AssetBrowser.h" />
     <ClInclude Include="src\Assets.h" />
+    <ClInclude Include="src\Build.h" />
     <ClInclude Include="src\CodeEditor.h" />
     <ClInclude Include="src\ComponentDebugGizmos.h" />
     <ClInclude Include="src\ComponentWidgets.h" />
     <ClInclude Include="src\EditorApp.h" />
     <ClInclude Include="src\EditorCamera.h" />
     <ClInclude Include="src\EditorConfig.h" />
+    <ClInclude Include="src\ErrorWindow.h" />
     <ClInclude Include="src\FileDrop.h" />
     <ClInclude Include="src\FileWatcherThread.h" />
     <ClInclude Include="src\Fonts\Font.h">
@@ -54,16 +56,16 @@
     <ClInclude Include="src\thid_party\platform_folders.h">
       <Filter>thid_party</Filter>
     </ClInclude>
-    <ClInclude Include="src\Build.h" />
-    <ClInclude Include="src\ErrorWindow.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AssetBrowser.cpp" />
+    <ClCompile Include="src\Build.cpp" />
     <ClCompile Include="src\CodeEditor.cpp" />
     <ClCompile Include="src\ComponentDebugGizmos.cpp" />
     <ClCompile Include="src\ComponentWidgets.cpp" />
     <ClCompile Include="src\EditorApp.cpp" />
     <ClCompile Include="src\EditorCamera.cpp" />
+    <ClCompile Include="src\ErrorWindow.cpp" />
     <ClCompile Include="src\FileDrop.cpp" />
     <ClCompile Include="src\FileWatcherThread.cpp" />
     <ClCompile Include="src\Fonts\Pinch.cpp">
@@ -96,10 +98,5 @@
     <ClCompile Include="src\thid_party\platform_folders.cpp">
       <Filter>thid_party</Filter>
     </ClCompile>
-    <ClCompile Include="src\Build.cpp" />
-    <ClCompile Include="src\ErrorWindow.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="assets\shaders\Texture.glsl" />
   </ItemGroup>
 </Project>

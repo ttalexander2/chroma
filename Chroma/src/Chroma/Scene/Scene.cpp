@@ -63,6 +63,45 @@ namespace Chroma
 		
 	}
 
+	const Math::vec2 Scene::GetTransformAbsolutePosition(EntityID entity)
+	{
+		Transform& transform = Registry.get<Transform>(entity);
+		Relationship& relationship = Registry.get<Relationship>(entity);
+		if (!relationship.IsChild())
+			return transform.Position;
+		Math::vec2 finalPos = transform.Position;
+		auto parentID = relationship.Parent;
+		while (parentID != ENTITY_NULL)
+		{
+			Transform& parentTransform = Registry.get<Transform>(parentID);
+			Relationship& ParentRelationship = Registry.get<Relationship>(parentID);
+			finalPos += parentTransform.Position;
+			parentID = ParentRelationship.Parent;
+		}
+		return finalPos;
+	}
+
+	void Scene::SetTransformAbsolutePosition(EntityID entity, const Math::vec2& position)
+	{
+		Transform& transform = Registry.get<Transform>(entity);
+		Relationship& relationship = Registry.get<Relationship>(entity);
+		if (!relationship.IsChild())
+		{
+			transform.Position = { position.x, position.y };
+			return;
+		}
+		Math::vec2 finalPos = position;
+		auto parentID = relationship.Parent;
+		while (parentID != ENTITY_NULL)
+		{
+			Transform& parentTransform = Registry.get<Transform>(parentID);
+			Relationship& ParentRelationship = Registry.get<Relationship>(parentID);
+			finalPos -= parentTransform.Position;
+			parentID = ParentRelationship.Parent;
+		}
+		transform.Position = finalPos;
+	}
+
 	void Scene::DestroyEntity(EntityID entity, bool destroy_children)
 	{
 		auto& rel = Registry.get<Relationship>(entity);

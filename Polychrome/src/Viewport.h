@@ -16,6 +16,7 @@ namespace Polychrome
 		static bool IsViewportHovered();
 		static ImVec2 GetViewportMousePos();
 		static bool ShouldDrawGrid;
+		static bool SnapToGrid;
 	};
 }
 

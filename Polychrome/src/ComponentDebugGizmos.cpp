@@ -9,8 +9,8 @@
 
 namespace Polychrome
 {
-	Math::vec2 ComponentDebugGizmos::GridSize = {32.f, 32.f};
-	Math::vec2 ComponentDebugGizmos::Snap;
+	Math::uvec2 ComponentDebugGizmos::GridSize = {16.f, 16.f};
+	Math::uvec2 ComponentDebugGizmos::SnapSize = { 16.f, 16.f };
 	float ComponentDebugGizmos::GridOpacity = .08f;
 
 	bool ComponentDebugGizmos::DrawAllGizmos = true;
@@ -27,7 +27,7 @@ namespace Polychrome
 		if (DrawCameraGizmos)
 		{
 			auto camEntity = EditorApp::CurrentScene->GetPrimaryCameraEntity();
-			auto& camPos = EditorApp::CurrentScene->GetComponent<Chroma::Transform>(camEntity).Position;
+			auto& camPos = EditorApp::CurrentScene->GetTransformAbsolutePosition(camEntity);
 			Chroma::Renderer2D::DrawRect(camPos, EditorApp::CurrentScene->GetPrimaryCamera().GetSize(), 1.f / EditorApp::Camera.GetZoom(), { 0.2f, 0.3f , 0.8f , 1.f });
 		}
 
@@ -40,7 +40,7 @@ namespace Polychrome
 		}
 		else if (DrawAllEntities)
 		{
-			for (auto entity : EditorApp::CurrentScene->Registry.view<Chroma::Transform>())
+			for (auto entity : EditorApp::CurrentScene->Registry.view<Chroma::BoxCollider>())
 			{
 				DrawBoxColliderGizmos(entity);
 			}
@@ -49,11 +49,11 @@ namespace Polychrome
 
 	void ComponentDebugGizmos::DrawBoxColliderGizmos(Chroma::EntityID entity)
 	{
-		auto& transform = EditorApp::CurrentScene->GetComponent<Chroma::Transform>(entity);
-		if (DrawBoxCollider && EditorApp::CurrentScene->HasComponent<Chroma::BoxCollider>(entity))
+		if (DrawBoxCollider)
 		{
 			auto& collider = EditorApp::CurrentScene->GetComponent<Chroma::BoxCollider>(entity);
-			Chroma::Renderer2D::DrawRect(transform.Position + collider.Offset, collider.Bounds, 1.f / EditorApp::Camera.GetZoom(), { 0.2f, 0.9f , 0.3f , 1.f });
+			const Math::vec2 absolutePos = EditorApp::CurrentScene->GetTransformAbsolutePosition(entity);
+			Chroma::Renderer2D::DrawRect(absolutePos + collider.Offset, collider.Bounds, 1.f / EditorApp::Camera.GetZoom(), { 0.2f, 0.9f , 0.3f , 1.f });
 		}
 	}
 
@@ -67,7 +67,7 @@ namespace Polychrome
 			float y = ImGui::GetCursorPosY();
 			//CAMERA
 			auto camEntity = EditorApp::CurrentScene->GetPrimaryCameraEntity();
-			auto& camPos = EditorApp::CurrentScene->GetComponent<Chroma::Transform>(camEntity).Position;
+			auto& camPos = EditorApp::CurrentScene->GetTransformAbsolutePosition(camEntity);
 			auto& camSize = EditorApp::CurrentScene->GetPrimaryCamera().GetSize();
 			Math::vec2 pos = { camPos.x - 10.f / EditorApp::Camera.GetZoom() , camPos.y + 10.f / EditorApp::Camera.GetZoom() + camSize.y / 2.f };
 			Math::vec2 screen = Viewport::WorldToViewportPosition(pos);
@@ -89,7 +89,7 @@ namespace Polychrome
 		const Math::uvec2& size = EditorApp::Camera.GetSize();
 		const Math::vec2& pos = EditorApp::Camera.GetPosition();
 		const float zoom = EditorApp::Camera.GetZoom();
-		const float zoomMultiplier = Math::pow(10.0f, Math::floor(log10f(zoom)));
+		const float zoomMultiplier = Math::pow(10.f, Math::floor(log10f(zoom)));
 		const float opacity = (zoom - zoomMultiplier) / zoom * GridOpacity;
 		const float line_width = 1.f / EditorApp::Camera.GetZoom();
 		const float x_mult = GridSize.x * 1 / zoomMultiplier;

@@ -50,8 +50,8 @@
     <None Include="Source\Math\Vector4.cs">
       <Filter>Math</Filter>
     </None>
+    <None Include="Source\ReflectionHelper.cs" />
     <None Include="Source\RuntimeException.cs" />
     <None Include="Source\Time.cs" />
-    <None Include="Source\ReflectionHelper.cs" />
   </ItemGroup>
 </Project>

@@ -86,6 +86,7 @@ project "Chroma"
         "%{IncludeDir.fmt}",
         "%{IncludeDir.entt}",
         "%{IncludeDir.mono}",
+        "%{IncludeDir.VulkanSDK}"
 
     }
 
@@ -126,6 +127,12 @@ project "Chroma"
         runtime "Debug"
         symbols "On"
         optimize "On"
+        links
+		{
+			"%{Library.ShaderC_Debug}",
+			"%{Library.SPIRV_Cross_Debug}",
+			"%{Library.SPIRV_Cross_GLSL_Debug}"
+		}
 
 
     filter "configurations:Release"
@@ -135,11 +142,23 @@ project "Chroma"
         }
         runtime "Release"
         optimize "On"
+        links
+		{
+			"%{Library.ShaderC_Release}",
+			"%{Library.SPIRV_Cross_Release}",
+			"%{Library.SPIRV_Cross_GLSL_Release}"
+		}
 
     filter "configurations:Dist"
         defines "CHROMA_DIST"
         runtime "Release"
         optimize "On"
+        links
+		{
+			"%{Library.ShaderC_Release}",
+			"%{Library.SPIRV_Cross_Release}",
+			"%{Library.SPIRV_Cross_GLSL_Release}"
+		}
 
 
     filter { "files:**.hpp" }
@@ -231,6 +250,10 @@ project "Polychrome"
         runtime "Debug"
         symbols "On"
         optimize "Debug"
+        postbuildcommands
+		{
+			"{COPYDIR} \"%{LibraryDir.VulkanSDK_DebugDLL}\" \"%{cfg.targetdir}\""
+		}
 
     filter "configurations:Release"
         defines "CHROMA_RELEASE"

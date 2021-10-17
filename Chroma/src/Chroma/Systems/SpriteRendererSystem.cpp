@@ -110,56 +110,67 @@ namespace Chroma
 
 	void SpriteRendererSystem::Draw(Time delta)
 	{
-		std::map<float, EntityID> sprites;
+		std::map<float, std::vector<EntityID>> sprites;
 		for (EntityID e : m_Scene->Registry.view<SpriteRenderer>())
 		{
 			Transform t = m_Scene->Registry.get<Transform>(e);
 			SpriteRenderer s = m_Scene->Registry.get<SpriteRenderer>(e);
 			if (!AssetManager::HasSprite(s.SpriteID))
 				continue;
-			float y = -1.f*(t.Position.y + s.Offset.y - AssetManager::GetSprite(s.SpriteID)->GetSize().y);
-			sprites[y] = e;
+			float y = -1.f*(t.Position.y + s.Offset.y - AssetManager::GetSprite(s.SpriteID)->GetSize().y/2.f);
+			if (sprites.find(y) == sprites.end())
+				sprites[y] = std::vector<EntityID>();
+			sprites[y].push_back(e);
 		}
 
-		//TODO: Cull this shit
+		//TODO: Cull sprites?
 			
-		for (auto &[y_index, e] : sprites)
+		for (auto &[y_index, sp_list] : sprites)
 		{
-			Transform& transform = m_Scene->Registry.get<Transform>(e);
-			SpriteRenderer& spriteRenderer = m_Scene->Registry.get<SpriteRenderer>(e);
-			Relationship& relationship = m_Scene->Registry.get<Relationship>(e);
-			if (AssetManager::HasSprite(spriteRenderer.SpriteID))
+			for (auto& e : sp_list)
 			{
-				Ref<Sprite> s = AssetManager::GetSprite(spriteRenderer.SpriteID);
-				int w = s->Frames[spriteRenderer.CurrentFrame].Texture->GetWidth();
-				int h = s->Frames[spriteRenderer.CurrentFrame].Texture->GetHeight();
-				if (!relationship.IsChild())
+				Transform& transform = m_Scene->Registry.get<Transform>(e);
+				SpriteRenderer& spriteRenderer = m_Scene->Registry.get<SpriteRenderer>(e);
+				Relationship& relationship = m_Scene->Registry.get<Relationship>(e);
+				if (AssetManager::HasSprite(spriteRenderer.SpriteID))
 				{
-					Chroma::Renderer2D::DrawSprite((int)e, transform.Position + spriteRenderer.Offset, transform.Scale * Math::vec2((float)w, (float)h), s->Frames[spriteRenderer.CurrentFrame].Texture, spriteRenderer.Color, transform.Rotation);
-				}
-				else
-				{
-					Math::vec2 pos = transform.Position;
-					Math::vec2 scale = transform.Scale;
-					Math::vec2 parentPos{ 0,0 };
-					float parentRot = 0;
-					float rotation = transform.Rotation;
-					EntityID parent = relationship.Parent;
-					while (parent != ENTITY_NULL)
+					Ref<Sprite> s = AssetManager::GetSprite(spriteRenderer.SpriteID);
+					int w = s->Frames[spriteRenderer.CurrentFrame].Texture->GetWidth();
+					int h = s->Frames[spriteRenderer.CurrentFrame].Texture->GetHeight();
+					if (!relationship.IsChild())
 					{
-						Transform& parentTransform = m_Scene->GetComponent<Transform>(parent);
-						parentPos += parentTransform.Position;
-						scale *= parentTransform.Scale;
-						parentRot += parentTransform.Rotation;
-						parent = m_Scene->GetComponent<Relationship>(parent).Parent;
+						//Math::vec2 finalPos = transform.Position + spriteRenderer.Offset;
+						//if (relationship.HasChildren())
+						//	CHROMA_CORE_TRACE("Position: {}, {}", finalPos.x, finalPos.y);
+						Chroma::Renderer2D::DrawSprite((int)e, transform.Position + spriteRenderer.Offset, transform.Scale * Math::vec2((float)w, (float)h), s->Frames[spriteRenderer.CurrentFrame].Texture, spriteRenderer.Color, transform.Rotation);
+					}
+					else
+					{
+						Math::vec2 pos = transform.Position;
+						Math::vec2 scale = transform.Scale;
+						Math::vec2 parentPos{ 0,0 };
+						float parentRot = 0;
+						float rotation = transform.Rotation;
+						EntityID parent = relationship.Parent;
+						while (parent != ENTITY_NULL)
+						{
+							const Transform& parentTransform = m_Scene->GetComponent<Transform>(parent);
+							parentPos += parentTransform.Position;
+							scale *= parentTransform.Scale;
+							parentRot += parentTransform.Rotation;
+							parent = m_Scene->GetComponent<Relationship>(parent).Parent;
+						}
+
+						Math::vec2 adjusted = { pos.x * Math::cos(parentRot) - pos.y * Math::sin(parentRot), pos.x * Math::sin(parentRot) + pos.y * Math::cos(parentRot) };
+						//Math::vec2 finalPos = parentPos + adjusted + spriteRenderer.Offset;
+						//CHROMA_CORE_TRACE("Adjusted: [{}, {}]; ParentPos: [{}, {}]; ParentRot: {}, FINAL: [{},{}]", adjusted.x, adjusted.y, parentPos.x, parentPos.y, parentRot, finalPos.x, finalPos.y);
+
+						Chroma::Renderer2D::DrawSprite((int)e, parentPos + adjusted + spriteRenderer.Offset, scale * Math::vec2((float)w, (float)h), s->Frames[spriteRenderer.CurrentFrame].Texture, spriteRenderer.Color, rotation + parentRot);
 					}
 
-					Math::vec2 adjusted = { pos.x * Math::cos(parentRot) - pos.y * Math::sin(parentRot), pos.x * Math::sin(parentRot) + pos.y * Math::cos(parentRot) };
-					//CHROMA_CORE_TRACE("Adjusted: [{}, {}]; ParentPos: [{}, {}]; ParentRot: {}", adjusted.x, adjusted.y, parentPos.x, parentPos.y, parentRot);
-					Chroma::Renderer2D::DrawSprite((int)e, parentPos + adjusted + spriteRenderer.Offset, scale * Math::vec2((float)w, (float)h), s->Frames[spriteRenderer.CurrentFrame].Texture, spriteRenderer.Color, rotation + parentRot);
 				}
-
 			}
+			
 		}
 	}
 }

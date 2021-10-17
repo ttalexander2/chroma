@@ -11,8 +11,8 @@ namespace Polychrome
 		static void DrawIcons();
 		static void DrawGrid();
 
-		static Math::vec2 GridSize;
-		static Math::vec2 Snap;
+		static Math::uvec2 GridSize;
+		static Math::uvec2 SnapSize;
 		static float GridOpacity;
 		static bool DrawAllGizmos;
 		static bool DrawCameraGizmos;

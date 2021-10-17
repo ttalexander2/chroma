@@ -126,15 +126,19 @@ namespace Chroma
 		/// @return Resulting OpenGL handle for the shader.
 		std::unordered_map<GLenum, std::string> PreProcess(const std::string& source);
 
-		/// @brief Compiles all the provided shader sources.
-		/// @param Map containing shader OpenGL handle and sources.
-		void Compile(const std::unordered_map<GLenum, std::string>&);
+		void CompileOrGetVulkanBinaries(const std::unordered_map<GLenum, std::string>& shaderSources);
+		void CompileOrGetOpenGLBinaries();
+		void CreateProgram();
+		void Reflect(GLenum stage, const std::vector<uint32_t>& shaderData);
 
 	private:
-		/// @brief Shader's renderer ID.
 		uint32_t m_RendererID;
-
-		/// @brief Name of the shader.
+		std::string m_FilePath;
 		std::string m_Name;
+
+		std::unordered_map<GLenum, std::vector<uint32_t>> m_VulkanSPIRV;
+		std::unordered_map<GLenum, std::vector<uint32_t>> m_OpenGLSPRIV;
+
+		std::unordered_map<GLenum, std::string> m_OpenGLSourceCode;
 	};
 }
