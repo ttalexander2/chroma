@@ -4,8 +4,6 @@
 ./obj
 ./.vs
 
-Polychrome/assets/
-
 Sandbox\imgui.ini
 
 Chroma.Mono/Source/bin
