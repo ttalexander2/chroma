@@ -15,7 +15,7 @@ namespace Polychrome
 
 	bool ComponentDebugGizmos::DrawAllGizmos = true;
 	bool ComponentDebugGizmos::DrawCameraGizmos = true;
-	bool ComponentDebugGizmos::DrawBoxCollider = true;
+	bool ComponentDebugGizmos::DrawBoxCollider = false;
 
 	bool ComponentDebugGizmos::DrawAllEntities = false;
 

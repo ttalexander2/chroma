@@ -3,6 +3,7 @@
 #include "Hierarchy.h"
 #include <imgui.h>
 #include <imgui_internal.h>
+#include <imgui_stdlib.h>
 #include <string>
 #include "Fonts/IconsForkAwesome.h"
 #include <Chroma/ImGui/ImGuiDebugMenu.h>
@@ -58,6 +59,22 @@ namespace Polychrome
 					{
 						ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled));
 					}
+
+					ImFont* defaultFont = ImGui::GetIO().FontDefault;
+					ImFont f = *EditorApp::LargeIcons;
+					f.Scale = f.Scale * 0.2f;
+					ImGui::SetCurrentFont(&f);
+					
+					ImGui::TextColored(ImGui::GetStyleColorVec4(ImGuiCol_ButtonActive), ICON_FK_CUBE);
+					ImGui::SetCurrentFont(defaultFont);
+					
+					
+					ImGui::SameLine();
+
+					Chroma::Tag& tagComp = EditorApp::CurrentScene->GetComponent<Chroma::Tag>(Hierarchy::SelectedEntity);
+					ImGui::InputText("##entity_name", &tagComp.EntityName);
+
+
 					DrawEntity();
 					if (EditorApp::SceneRunning && !EditorApp::ScenePaused)
 					{
@@ -173,23 +190,23 @@ namespace Polychrome
 
 			ImGui::AlignTextToFramePadding();
 
-			ImGui::SameLine(ImGui::GetWindowWidth() - 50);
-			
-			//auto color = ImGui::GetStyleColorVec4(ImGuiCol_Button);
-			//ImGui::PushStyleColor(ImGuiCol_Button, { color.x, color.y, color.z, 0.99f });
+			//ImGui::SameLine(ImGui::GetWindowWidth() - 50);
+			//
+			////auto color = ImGui::GetStyleColorVec4(ImGuiCol_Button);
+			////ImGui::PushStyleColor(ImGuiCol_Button, { color.x, color.y, color.z, 0.99f });
+			//
+			//std::string iconVisible;
+			//if (c->editor_visible)
+			//	iconVisible = ICON_FK_EYE;
+			//else
+			//	iconVisible = ICON_FK_EYE_SLASH;
+			//
+			//if (ImGui::Button((iconVisible + "##MENU_BAR_INSPECTOR_BUTTON_VISIBLE" + std::to_string(unique)).c_str()))
+			//{
+			//	c->editor_visible = !c->editor_visible;
+			//}
 
-			std::string iconVisible;
-			if (c->editor_visible)
-				iconVisible = ICON_FK_EYE;
-			else
-				iconVisible = ICON_FK_EYE_SLASH;
-
-			if (ImGui::Button((iconVisible + "##MENU_BAR_INSPECTOR_BUTTON_VISIBLE" + std::to_string(unique)).c_str()))
-			{
-				c->editor_visible = !c->editor_visible;
-			}
-
-			ImGui::SameLine(ImGui::GetWindowWidth() - 26);
+			ImGui::SameLine(ImGui::GetWindowWidth() - 28);
 
 
 			if (ImGui::Button((ICON_FK_COG "##MENU_BAR_INSPECTOR_BUTTON_" + std::to_string(unique)).c_str()))

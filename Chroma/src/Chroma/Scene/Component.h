@@ -119,8 +119,9 @@ namespace Chroma
 
 		/// @brief Whether the component is open in the editor inspector.
 		bool editor_inspector_open = true;
-		/// @brief Whether the compoennt is visible in the editor.
-		bool editor_visible = true;
+
+		// @brief Whether the compoennt is visible in the editor.
+		//bool editor_visible = true;
 
 		unsigned int order_id = 1;
 

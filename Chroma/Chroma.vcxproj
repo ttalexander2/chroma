@@ -256,6 +256,7 @@
     <ClInclude Include="src\Chroma\Scene\Registry.h" />
     <ClInclude Include="src\Chroma\Scene\Scene.h" />
     <ClInclude Include="src\Chroma\Scene\System.h" />
+    <ClInclude Include="src\Chroma\Scene\World.h" />
     <ClInclude Include="src\Chroma\Scripting\Bindings.h" />
     <ClInclude Include="src\Chroma\Scripting\LuaScripting.h" />
     <ClInclude Include="src\Chroma\Scripting\MonoScripting.h" />
@@ -394,6 +395,7 @@
     <ClCompile Include="src\Chroma\Scene\Entity.cpp" />
     <ClCompile Include="src\Chroma\Scene\Registry.cpp" />
     <ClCompile Include="src\Chroma\Scene\Scene.cpp" />
+    <ClCompile Include="src\Chroma\Scene\World.cpp" />
     <ClCompile Include="src\Chroma\Scripting\Bindings.cpp" />
     <ClCompile Include="src\Chroma\Scripting\LuaScripting.cpp" />
     <ClCompile Include="src\Chroma\Scripting\MonoScripting.cpp" />

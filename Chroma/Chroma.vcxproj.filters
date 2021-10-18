@@ -635,6 +635,7 @@
     </ClInclude>
     <ClInclude Include="src\Chroma\Renderer\UniformBuffer.h" />
     <ClInclude Include="src\Chroma\Platform\OpenGL\OpenGLUniformBuffer.h" />
+    <ClInclude Include="src\Chroma\Scene\World.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Chroma\Assets\AssetManager.cpp">
@@ -954,5 +955,6 @@
     </ClCompile>
     <ClCompile Include="src\Chroma\Renderer\UniformBuffer.cpp" />
     <ClCompile Include="src\Chroma\Platform\OpenGL\OpenGLUniformBuffer.cpp" />
+    <ClCompile Include="src\Chroma\Scene\World.cpp" />
   </ItemGroup>
 </Project>

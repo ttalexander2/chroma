@@ -188,7 +188,7 @@ namespace Polychrome
 
 		ImGui::GetStyle().FrameRounding = 1;
 
-		Config.Style = (int)ImGui::ImGuiStylePreset::Cherry;
+		Config.Style = (int)ImGui::ImGuiStylePreset::ChromaDark;
 
 		LogWindow::Init();
 
@@ -291,7 +291,6 @@ namespace Polychrome
 
 		if (!first)
 		{
-			ImGui::ResetStyle(ImGui::ImGuiStylePreset::Cherry, ImGui::GetStyle());
 
 			first = true;
 
@@ -474,10 +473,12 @@ namespace Polychrome
 							glfwSetWindowCenter((GLFWwindow*)this->Get().GetWindow().GetNativeWindow());
 							glfwMaximizeWindow((GLFWwindow*)this->Get().GetWindow().GetNativeWindow());
 							glfwSetWindowAttrib((GLFWwindow*)this->Get().GetWindow().GetNativeWindow(), GLFW_DECORATED, GLFW_TRUE);
+							glfwSetWindowTitle((GLFWwindow*)this->Get().GetWindow().GetNativeWindow(), ("Polychrome Editor - " + prj.Name + " - " + std::filesystem::path(Project::StartingScene).filename().string()).c_str());
 
 							Polychrome::FileWatcherThread::SetWatch(Chroma::AssetManager::AssetDirectory);
 
 							ProjectLoaded = true;
+							ImGui::ResetStyle(ImGui::ImGuiStylePreset::Cherry, ImGui::GetStyle());
 							ImGui::CloseCurrentPopup();
 						}
 
@@ -610,10 +611,12 @@ namespace Polychrome
 						glfwSetWindowCenter((GLFWwindow*)this->Get().GetWindow().GetNativeWindow());
 						glfwMaximizeWindow((GLFWwindow*)this->Get().GetWindow().GetNativeWindow());
 						glfwSetWindowAttrib((GLFWwindow*)this->Get().GetWindow().GetNativeWindow(), GLFW_DECORATED, GLFW_TRUE);
+						glfwSetWindowTitle((GLFWwindow*)this->Get().GetWindow().GetNativeWindow(), ("Polychrome Editor - " + creating_name + " - " + creating_starting).c_str());
 
 						Polychrome::FileWatcherThread::SetWatch(Chroma::AssetManager::AssetDirectory);
 
 						ProjectLoaded = true;
+						ImGui::ResetStyle(ImGui::ImGuiStylePreset::Cherry, ImGui::GetStyle());
 						ImGui::CloseCurrentPopup();
 					}
 					ImGui::PopItemFlag();
