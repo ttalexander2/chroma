@@ -6,6 +6,7 @@
 #include <Chroma.h>
 #include "EditorConfig.h"
 #include <Chroma/Renderer/Framebuffer.h>
+#include <Chroma/Renderer/UniformBuffer.h>
 #include <Chroma/Systems/SpriteRendererSystem.h>
 #include "EditorCamera.h"
 
@@ -77,6 +78,7 @@ namespace Polychrome
 		std::vector<ProfileResult> m_ProfileResults;
 
 		Chroma::Ref<Chroma::Framebuffer> m_Framebuffer;
+		Chroma::Ref<Chroma::Framebuffer> m_GuizmoFramebuffer;
 		Chroma::Ref<Chroma::Shader> m_HighlightShader;
 
 		Chroma::SpriteRendererSystem sprite_system;

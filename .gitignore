@@ -1,8 +1,8 @@
 # Directories
 
-./bin
-./obj
-./.vs
+/bin
+/obj
+/.vs
 
 Sandbox\imgui.ini
 

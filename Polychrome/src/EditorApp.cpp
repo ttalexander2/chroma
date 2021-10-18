@@ -163,6 +163,7 @@ namespace Polychrome
 		fbspec.Height = 1080;
 		fbspec.Attachments = { Chroma::FramebufferTextureFormat::RGBA8, Chroma::FramebufferTextureFormat::RED_INTEGER, Chroma::FramebufferTextureFormat::Depth };
 		m_Framebuffer = Chroma::Framebuffer::Create(fbspec);
+		m_GuizmoFramebuffer = Chroma::Framebuffer::Create(fbspec);
 
 		// TODO: Load/Unload FMOD banks on play.
 		//Chroma::Audio::LoadBank("assets/fmod/Desktop/Master.bank", FMOD_STUDIO_LOAD_BANK_NORMAL);
@@ -261,9 +262,19 @@ namespace Polychrome
 
 		EditorApp::CurrentScene->Draw(time);
 
+		Chroma::Renderer2D::End();
+
+		m_Framebuffer->Unbind();
+
+		m_GuizmoFramebuffer->Bind();
+
+		Chroma::Renderer2D::Begin(Camera.GetViewProjectionMatrix());
+
+		Chroma::RenderCommand::SetClearColor({ 0.f, 0.f, 0.f, 0.f });
+		Chroma::Renderer2D::Clear();
+
 		if (!EditorApp::SceneRunning || EditorApp::ScenePaused)
 		{
-			Chroma::Renderer2D::NextBatch();
 
 			DrawSelectionMask(time);
 
@@ -271,15 +282,13 @@ namespace Polychrome
 			Chroma::Renderer2D::StartBatch();
 		}
 
-
-
-		ComponentDebugGizmos::DrawGizmos();
 		if (Viewport::ShouldDrawGrid)
 			ComponentDebugGizmos::DrawGrid();
+		ComponentDebugGizmos::DrawGizmos();
 
 		Chroma::Renderer2D::End();
 
-		m_Framebuffer->Unbind();
+		m_GuizmoFramebuffer->Unbind();
 	}
 
 	static bool first = false;
@@ -751,7 +760,7 @@ namespace Polychrome
 
 		Hierarchy::Draw();
 		Inspector::Draw();
-		Viewport::Draw(time, m_Framebuffer);
+		Viewport::Draw(time, m_Framebuffer, m_GuizmoFramebuffer);
 		LogWindow::Draw();
 		ErrorWindow::Draw();
 		AssetBrowser::Draw();
@@ -941,6 +950,9 @@ namespace Polychrome
 		Chroma::Transform& transform = EditorApp::CurrentScene->Registry.get<Chroma::Transform>(Hierarchy::SelectedEntity);
 		Chroma::SpriteRenderer& spriteRenderer = EditorApp::CurrentScene->Registry.get<Chroma::SpriteRenderer>(Hierarchy::SelectedEntity);
 		Chroma::Relationship& relationship = EditorApp::CurrentScene->Registry.get<Chroma::Relationship>(Hierarchy::SelectedEntity);
+		
+		const Math::vec2& origin = spriteRenderer.GetSpriteOriginVector();
+		
 		if (Chroma::AssetManager::HasSprite(spriteRenderer.GetSpriteID()))
 		{
 			Chroma::Ref<Chroma::Sprite> s = Chroma::AssetManager::GetSprite(spriteRenderer.GetSpriteID());
@@ -948,7 +960,11 @@ namespace Polychrome
 			int h = s->Frames[spriteRenderer.GetCurrentFrame()].Texture->GetHeight();
 			if (!relationship.IsChild())
 			{
-				Chroma::Renderer2D::DrawQuad(transform.Position + spriteRenderer.Offset, transform.Scale * Math::vec2((float)w + offset, (float)h + offset), s->Frames[spriteRenderer.GetCurrentFrame()].Texture, {0.f,1.f,1.f,1.f}, transform.Rotation);
+				Math::vec2 size = transform.Scale * Math::vec2((float)w, (float)h);
+				Math::vec2 originAdjustment = { Math::abs(size.x) / 2.f - origin.x, -Math::abs(size.y) / 2.f + origin.y };
+
+
+				Chroma::Renderer2D::DrawQuad(transform.Position + spriteRenderer.Offset + originAdjustment, transform.Scale * Math::vec2((float)w + offset, (float)h + offset), s->Frames[spriteRenderer.GetCurrentFrame()].Texture, {0.f,1.f,1.f,1.f}, transform.Rotation);
 			}
 			else
 			{
@@ -969,7 +985,11 @@ namespace Polychrome
 
 				Math::vec2 adjusted = { pos.x * Math::cos(parentRot) - pos.y * Math::sin(parentRot), pos.x * Math::sin(parentRot) + pos.y * Math::cos(parentRot) };
 				//CHROMA_CORE_TRACE("Adjusted: [{}, {}]; ParentPos: [{}, {}]; ParentRot: {}", adjusted.x, adjusted.y, parentPos.x, parentPos.y, parentRot);
-				Chroma::Renderer2D::DrawQuad(parentPos + adjusted + spriteRenderer.Offset, scale * Math::vec2((float)w + offset, (float)h + offset), s->Frames[spriteRenderer.GetCurrentFrame()].Texture, { 0.f,1.f,1.f,1.f }, rotation + parentRot);
+				Math::vec2 size = scale * Math::vec2((float)w, (float)h);
+				Math::vec2 originAdjustment = { Math::abs(size.x) / 2.f - origin.x, -Math::abs(size.y) / 2.f + origin.y };
+
+				
+				Chroma::Renderer2D::DrawQuad(parentPos + adjusted + spriteRenderer.Offset + originAdjustment, scale * Math::vec2((float)w + offset, (float)h + offset), s->Frames[spriteRenderer.GetCurrentFrame()].Texture, { 0.f,1.f,1.f,1.f }, rotation + parentRot);
 			}
 
 		}

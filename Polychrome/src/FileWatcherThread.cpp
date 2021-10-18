@@ -66,6 +66,13 @@ namespace Polychrome
 			CHROMA_CORE_INFO("Module: {}", m);
 		}
 
+		auto spriteView = EditorApp::CurrentScene->Registry.view<Chroma::SpriteRenderer>();
+		for (Chroma::EntityID e : spriteView)
+		{
+			auto& spriteRenderer = spriteView.get<Chroma::SpriteRenderer>(e);
+			spriteRenderer.SetSpriteOrigin(spriteRenderer.GetSpriteOrigin());
+		}
+
 
 
 		file_watcher_thread_running.store(true);

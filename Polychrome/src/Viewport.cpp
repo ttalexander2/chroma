@@ -2,7 +2,6 @@
 #include <imgui.h>
 #include <imgui_internal.h>
 #include "Fonts/IconsForkAwesome.h"
-#include <ImGuizmo.h>
 #include "Hierarchy.h"
 #include "EditorApp.h"
 #include <Chroma/Components/Transform.h>
@@ -15,6 +14,7 @@
 #include <Chroma/Scripting/ScriptEngineRegistry.h>
 #include <Chroma/Scripting/MonoScripting.h>
 #include "ComponentDebugGizmos.h"
+#include "../../Chroma/third_party/GLFW/include/GLFW/glfw3.h"
 
 namespace Polychrome
 {
@@ -43,15 +43,20 @@ namespace Polychrome
 		return round(original * denominator / numerator) * numerator / denominator;
 	}
 
+	enum class ViewportOperation
+	{
+		Select = 0,
+		Move = 1
+	};
 
-	void Viewport::Draw(Chroma::Time time, Chroma::Ref<Chroma::Framebuffer> frame_buffer)
+
+	void Viewport::Draw(Chroma::Time time, Chroma::Ref<Chroma::Framebuffer> frame_buffer, Chroma::Ref<Chroma::Framebuffer> guizmo_framebuffer)
 	{
 		
 		if (Open)
 		{
 			ImGui::Begin(ICON_FK_GAMEPAD " Viewport", &Open, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 			Chroma::Application::Get().GetImGuiLayer()->BlockEvents(!viewportFocused && !ImGui::IsWindowHovered());
-
 
 
 			//float width, height;
@@ -80,7 +85,12 @@ namespace Polychrome
 		
 			//TOOLBAR
 
-			static ImGuizmo::OPERATION operation = ImGuizmo::OPERATION::BOUNDS;
+			static ViewportOperation operation = ViewportOperation::Select;
+
+			if (ImGui::IsKeyPressed((int)Chroma::Input::Key::F1))
+				operation = ViewportOperation::Select;
+			if (ImGui::IsKeyPressed((int)Chroma::Input::Key::F2))
+				operation = ViewportOperation::Move;
 
 			ImVec4 oldButtonColor = ImGui::GetStyleColorVec4(ImGuiCol_Button);
 
@@ -91,6 +101,8 @@ namespace Polychrome
 			ImGui::SameLine();
 
 			static std::string clone;
+
+			static bool PlayFocus = false;
 
 			// PLAY BUTTON
 			if (EditorApp::SceneRunning && !EditorApp::ScenePaused)
@@ -108,6 +120,7 @@ namespace Polychrome
 				}
 				EditorApp::SceneRunning = true;
 				EditorApp::ScenePaused = false;
+				PlayFocus = true;
 			}
 			ImGui::PopItemFlag();
 			ImGui::PopStyleColor();
@@ -150,6 +163,12 @@ namespace Polychrome
 						auto entityObj = Chroma::Entity(entity, EditorApp::CurrentScene);
 						Chroma::MonoScripting::InitScriptEntity(entityObj);
 					}
+					auto spriteView = EditorApp::CurrentScene->Registry.view<Chroma::SpriteRenderer>();
+					for (Chroma::EntityID e : spriteView)
+					{
+						auto& spriteRenderer = spriteView.get<Chroma::SpriteRenderer>(e);
+						spriteRenderer.SetSpriteOrigin(spriteRenderer.GetSpriteOrigin());
+					}
 				}
 				else
 				{
@@ -189,6 +208,12 @@ namespace Polychrome
 						auto entityObj = Chroma::Entity(entity, EditorApp::CurrentScene);
 						Chroma::MonoScripting::InitScriptEntity(entityObj);
 					}
+					auto spriteView = EditorApp::CurrentScene->Registry.view<Chroma::SpriteRenderer>();
+					for (Chroma::EntityID e : spriteView)
+					{
+						auto& spriteRenderer = spriteView.get<Chroma::SpriteRenderer>(e);
+						spriteRenderer.SetSpriteOrigin(spriteRenderer.GetSpriteOrigin());
+					}
 				}
 				else
 				{
@@ -209,40 +234,28 @@ namespace Polychrome
 			ImGui::SeparatorEx(ImGuiSeparatorFlags_Vertical);
 			ImGui::SameLine();
 
-			if (operation == ImGuizmo::OPERATION::BOUNDS)
+			if (operation == ViewportOperation::Select)
 				ImGui::PushStyleColor(ImGuiCol_Button, oldButtonColor);
-			if (ImGui::Button(ICON_FK_MOUSE_POINTER) && operation != ImGuizmo::OPERATION::BOUNDS)
-				operation = ImGuizmo::OPERATION::BOUNDS;
-			else if (operation == ImGuizmo::OPERATION::BOUNDS)
+			if (ImGui::Button(ICON_FK_MOUSE_POINTER) && operation != ViewportOperation::Select)
+				operation = ViewportOperation::Select;
+			else if (operation == ViewportOperation::Select)
 				ImGui::PopStyleColor();
+
+			if (ImGui::IsItemHovered())
+				ImGui::SetTooltip("Select Tool (F1)\nLeft Click to Select.\nLeft Click + Space or Middle Mouse to Pan.");
 
 			ImGui::SameLine();
 
 
-			//TRANSLATE BUTTON
-			if (operation == ImGuizmo::OPERATION::TRANSLATE)
+			//MOVE BUTTON
+			if (operation == ViewportOperation::Move)
 				ImGui::PushStyleColor(ImGuiCol_Button, oldButtonColor);
-			if (ImGui::Button(ICON_FK_ARROWS) && operation != ImGuizmo::OPERATION::TRANSLATE) operation = ImGuizmo::OPERATION::TRANSLATE;
-			else if (operation == ImGuizmo::OPERATION::TRANSLATE)
+			if (ImGui::Button(ICON_FK_ARROWS) && operation != ViewportOperation::Move) operation = ViewportOperation::Move;
+			else if (operation == ViewportOperation::Move)
 				ImGui::PopStyleColor();
 
-			ImGui::SameLine();
-
-			//SCALE BUTTON
-			if (operation == ImGuizmo::OPERATION::SCALE)
-				ImGui::PushStyleColor(ImGuiCol_Button, oldButtonColor);
-			if (ImGui::Button(ICON_FK_ARROWS_ALT) && operation != ImGuizmo::OPERATION::SCALE) operation = ImGuizmo::OPERATION::SCALE;
-			else if (operation == ImGuizmo::OPERATION::SCALE)
-				ImGui::PopStyleColor();
-
-			ImGui::SameLine();
-
-			//ROTATE BUTTON
-			if (operation == ImGuizmo::OPERATION::ROTATE)
-				ImGui::PushStyleColor(ImGuiCol_Button, oldButtonColor);
-			if (ImGui::Button(ICON_FK_REPEAT) && operation != ImGuizmo::OPERATION::ROTATE) operation = ImGuizmo::OPERATION::ROTATE;
-			else if (operation == ImGuizmo::OPERATION::ROTATE)
-				ImGui::PopStyleColor();
+			if (ImGui::IsItemHovered())
+				ImGui::SetTooltip("Move Tool (F1)\nLeft Click to Select.\nDrag an entity to move.\nHold alt to move precisely.");
 
 
 			ImGui::PopStyleColor();
@@ -378,7 +391,7 @@ namespace Polychrome
 				Viewport::SnapToGrid = !Viewport::SnapToGrid;
 
 			if (ImGui::IsItemHovered())
-				ImGui::SetTooltip("Snap to Grid");
+				ImGui::SetTooltip("Snap to Grid.\nHold alt to move objects without snap.");
 
 			ImGui::PopStyleColor();
 
@@ -440,6 +453,13 @@ namespace Polychrome
 
 			ImGui::PopStyleColor();
 
+			if (PlayFocus)
+			{
+				ImGui::SetNextWindowFocus();
+				PlayFocus = false;
+			}
+				
+
 			ImGui::BeginChild("##viewport_frame_buffer");
 
 			ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
@@ -448,6 +468,7 @@ namespace Polychrome
 			if ((s_ViewportSize.x != viewportPanelSize.x || s_ViewportSize.y != viewportPanelSize.y) && viewportPanelSize.x > 0 && viewportPanelSize.y > 0)
 			{
 				frame_buffer->Resize((uint32_t)viewportPanelSize.x, (uint32_t)viewportPanelSize.y);
+				guizmo_framebuffer->Resize((uint32_t)viewportPanelSize.x, (uint32_t)viewportPanelSize.y);
 				s_ViewportSize = { viewportPanelSize.x , viewportPanelSize.y };
 				EditorApp::Camera.SetSize(s_ViewportSize);
 			}
@@ -458,6 +479,7 @@ namespace Polychrome
 
 			uint32_t textureID = frame_buffer->GetColorAttachmentRendererID();
 			ImGui::Image(reinterpret_cast<void*>(textureID), ImVec2{ s_ViewportSize.x, s_ViewportSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
+
 			auto pos = ImGui::GetCursorPos();
 			viewportFocused = ImGui::IsWindowFocused();
 			viewportHovered = ImGui::IsItemHovered();
@@ -473,7 +495,7 @@ namespace Polychrome
 			}
 
 			static Math::vec2 offset = { 0,0 };
-			if ((!EditorApp::SceneRunning || EditorApp::ScenePaused) && ImGui::IsItemHovered() && (ImGui::IsMouseClicked(ImGuiMouseButton_Left) || ImGui::IsMouseDragging(ImGuiMouseButton_Left)))
+			if ((!EditorApp::SceneRunning || EditorApp::ScenePaused) && ImGui::IsItemHovered() && !ImGui::IsKeyDown((int)Chroma::Input::Key::SPACE) && (ImGui::IsMouseClicked(ImGuiMouseButton_Left) || ImGui::IsMouseDragging(ImGuiMouseButton_Left)))
 			{
 				frame_buffer->Bind();
 				int pixelVal = frame_buffer->ReadPixel(1, flippedMousePos.x, flippedMousePos.y);
@@ -507,7 +529,7 @@ namespace Polychrome
 
 			
 
-			if (Hierarchy::SelectedEntity != Chroma::ENTITY_NULL && itemDrag && ImGui::IsMouseDragging(ImGuiMouseButton_Left) && (ImGui::IsKeyDown((int)Chroma::Input::Key::LEFT_CONTROL) || operation == ImGuizmo::OPERATION::TRANSLATE))
+			if (Hierarchy::SelectedEntity != Chroma::ENTITY_NULL && itemDrag && ImGui::IsMouseDragging(ImGuiMouseButton_Left) && (ImGui::IsKeyDown((int)Chroma::Input::Key::LEFT_CONTROL) || operation == ViewportOperation::Move))
 			{
 				Math::vec2 posToMove = ViewportPositionToWorld({ flippedMousePos.x, flippedMousePos.y }) - offset;
 				bool doSnap = SnapToGrid && !ImGui::IsKeyDown((int)Chroma::Input::Key::LEFT_ALT);
@@ -516,66 +538,71 @@ namespace Polychrome
 				else
 					EditorApp::CurrentScene->SetTransformAbsolutePosition(Hierarchy::SelectedEntity, posToMove);
 			}
-				
-			//ImGuizmo
+
+			ImGui::SetCursorScreenPos(fb_pos);
+			uint32_t gtextureID = guizmo_framebuffer->GetColorAttachmentRendererID();
+			ImGui::Image(reinterpret_cast<void*>(gtextureID), ImVec2{ s_ViewportSize.x, s_ViewportSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
+			
 
 			ComponentDebugGizmos::DrawIcons();
 			EditorCamera::ImGuiUpdate();
 
-			ImGui::SetCursorPos(pos);
-
-			if (Hierarchy::SelectedEntity != Chroma::ENTITY_NULL)
-			{
-				ImGuizmo::SetOrthographic(true);
-				ImGuizmo::SetDrawlist();
-				ImGuizmo::SetRect(fb_pos.x, fb_pos.y, s_ViewportSize.x, s_ViewportSize.y);
-				//auto& cam = dynamic_cast<EditorApp&>(EditorApp::Get()).GetCameraController();
-				auto& cam = EditorApp::CurrentScene->GetPrimaryCamera();
-				const Math::mat4& camView = cam.GetViewMatrix();
-				const Math::mat4& camProj = cam.GetProjectionMatrix();
-
-			
-
-				auto &transform = EditorApp::CurrentScene->GetComponent<Chroma::Transform>(Hierarchy::SelectedEntity);
-				glm::mat4 transformMat = transform.GetTransform();
-
-				glm::vec2 snap;
-				if (operation == ImGuizmo::OPERATION::SCALE)
-					snap = { 0.01f, 0.01f };
-				else
-					snap = { 1.f, 1.f };
-				//ImGuizmo::DrawGrid(glm::value_ptr(camView), glm::value_ptr(camProj), identityMatrix, 32.f);
-				ImGuizmo::Manipulate(glm::value_ptr(camView), glm::value_ptr(camProj),
-					operation, ImGuizmo::LOCAL, glm::value_ptr(transformMat), (float*)0, glm::value_ptr(snap));
-
-				if (ImGuizmo::IsUsing())
-				{
-
-					glm::vec3 translation = { transform.Position, 0 };
-					glm::vec3 rotation = { 0,0, transform.Rotation };
-					glm::vec3 scale = { transform.Scale, 0 };
-
-					if (Chroma::DecomposeTransform(transformMat, translation, rotation, scale))
-					{
-						//rotation.x = glm::degrees(rotation.x);
-						//rotation.y = glm::degrees(rotation.y);
-						//rotation.z = glm::degrees(rotation.z);
+			//ImGui::SetCursorPos(pos);
 
 
-						glm::vec3 deltaRotation = rotation - transform.Rotation;
-
-						//CHROMA_CORE_WARN("Position: [{},{},{}]", translation.x, translation.y, translation.z);
-						//CHROMA_CORE_WARN("Rotation: [{},{},{}]", rotation.x, rotation.y, rotation.z);
-						//CHROMA_CORE_WARN("Scale: [{},{},{}]", scale.x, scale.y, scale.z);
-
-						transform.Position = { translation.x, translation.y };
-						transform.Rotation += deltaRotation.z;
-						transform.Scale = { scale.x, scale.y };
-					}
-
-					
-				}
-			}
+			//ImGuizmo
+			//if (Hierarchy::SelectedEntity != Chroma::ENTITY_NULL)
+			//{
+			//	ImGuizmo::SetOrthographic(true);
+			//	ImGuizmo::SetDrawlist();
+			//	ImGuizmo::SetRect(fb_pos.x, fb_pos.y, s_ViewportSize.x, s_ViewportSize.y);
+			//	//auto& cam = dynamic_cast<EditorApp&>(EditorApp::Get()).GetCameraController();
+			//	auto& cam = EditorApp::CurrentScene->GetPrimaryCamera();
+			//	const Math::mat4& camView = cam.GetViewMatrix();
+			//	const Math::mat4& camProj = cam.GetProjectionMatrix();
+			//
+			//
+			//
+			//	auto &transform = EditorApp::CurrentScene->GetComponent<Chroma::Transform>(Hierarchy::SelectedEntity);
+			//	glm::mat4 transformMat = transform.GetTransform();
+			//
+			//	glm::vec2 snap;
+			//	if (operation == ImGuizmo::OPERATION::SCALE)
+			//		snap = { 0.01f, 0.01f };
+			//	else
+			//		snap = { 1.f, 1.f };
+			//	//ImGuizmo::DrawGrid(glm::value_ptr(camView), glm::value_ptr(camProj), identityMatrix, 32.f);
+			//	ImGuizmo::Manipulate(glm::value_ptr(camView), glm::value_ptr(camProj),
+			//		operation, ImGuizmo::LOCAL, glm::value_ptr(transformMat), (float*)0, glm::value_ptr(snap));
+			//
+			//	if (ImGuizmo::IsUsing())
+			//	{
+			//
+			//		glm::vec3 translation = { transform.Position, 0 };
+			//		glm::vec3 rotation = { 0,0, transform.Rotation };
+			//		glm::vec3 scale = { transform.Scale, 0 };
+			//
+			//		if (Chroma::DecomposeTransform(transformMat, translation, rotation, scale))
+			//		{
+			//			//rotation.x = glm::degrees(rotation.x);
+			//			//rotation.y = glm::degrees(rotation.y);
+			//			//rotation.z = glm::degrees(rotation.z);
+			//
+			//
+			//			glm::vec3 deltaRotation = rotation - transform.Rotation;
+			//
+			//			//CHROMA_CORE_WARN("Position: [{},{},{}]", translation.x, translation.y, translation.z);
+			//			//CHROMA_CORE_WARN("Rotation: [{},{},{}]", rotation.x, rotation.y, rotation.z);
+			//			//CHROMA_CORE_WARN("Scale: [{},{},{}]", scale.x, scale.y, scale.z);
+			//
+			//			transform.Position = { translation.x, translation.y };
+			//			transform.Rotation += deltaRotation.z;
+			//			transform.Scale = { scale.x, scale.y };
+			//		}
+			//
+			//		
+			//	}
+			//}
 
 			ImGui::PopStyleVar();
 			ImGui::EndChild();

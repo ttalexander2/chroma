@@ -1,6 +1,7 @@
 #include "EditorCamera.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include "Viewport.h"
+#include "../../Chroma/third_party/GLFW/include/GLFW/glfw3.h"
 
 namespace Polychrome
 {
@@ -35,25 +36,53 @@ namespace Polychrome
 	void EditorCamera::ImGuiUpdate()
 	{
 		static bool downInViewport = false;
+		static bool cursorSet = false;
+
+
+
 		if (Viewport::IsViewportFocused())
 		{
-			if (ImGui::IsMouseDragging(ImGuiMouseButton_Middle) && Viewport::IsViewportHovered())
+			static bool holding = false;
+			if (ImGui::IsKeyDown((int)Chroma::Input::Key::SPACE))
 			{
+				glfwSetCursor((GLFWwindow*)Chroma::Application::Get().GetWindow().GetNativeWindow(), glfwCreateStandardCursor(GLFW_HAND_CURSOR));
+				holding = true;
+			}
+			else
+			{
+				holding = false;
+			}
+
+			if ((ImGui::IsMouseDragging(ImGuiMouseButton_Middle) || (ImGui::IsKeyDown((int)Chroma::Input::Key::SPACE) && ImGui::IsMouseDragging(ImGuiMouseButton_Left))) && Viewport::IsViewportHovered())
+			{
+
+					glfwSetCursor((GLFWwindow*)Chroma::Application::Get().GetWindow().GetNativeWindow(), glfwCreateStandardCursor(GLFW_HAND_CURSOR));
+					cursorSet = true;
+				
+					
 				downInViewport = true;
 			}
 			static Math::vec2 dragAmt{0,0};
-			if (ImGui::IsMouseDragging(ImGuiMouseButton_Middle) && downInViewport)
+			if ((ImGui::IsMouseDragging(ImGuiMouseButton_Middle) || (ImGui::IsKeyDown((int)Chroma::Input::Key::SPACE) && ImGui::IsMouseDragging(ImGuiMouseButton_Left))) && downInViewport)
 			{
-				auto rawDelta = ImGui::GetMouseDragDelta(ImGuiMouseButton_Middle);
+				auto mouse = ImGuiMouseButton_Left;
+				if (ImGui::IsMouseDragging(ImGuiMouseButton_Middle))
+					mouse = ImGuiMouseButton_Middle;
+				auto rawDelta = ImGui::GetMouseDragDelta(mouse);
 				Math::vec2 delta = { rawDelta.x - dragAmt.x, rawDelta.y - dragAmt.y };
 				//delta = Viewport::ViewportPositionToWorld(delta);
 				position = {position.x - delta.x / zoom, position.y + delta.y / zoom };
 				RecalculateViewMatrix();
-				ImGui::ResetMouseDragDelta();
+				//ImGui::ResetMouseDragDelta();
 				dragAmt = { rawDelta.x, rawDelta.y };
 			}
 			else
 			{
+				if (!holding)
+					glfwSetCursor((GLFWwindow*)Chroma::Application::Get().GetWindow().GetNativeWindow(), glfwCreateStandardCursor(GLFW_ARROW_CURSOR));
+				cursorSet = false;
+				
+					
 				dragAmt = { 0,0 };
 				downInViewport = false;
 			}

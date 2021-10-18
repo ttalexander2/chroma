@@ -11,7 +11,7 @@ namespace Polychrome
 {
 	Math::uvec2 ComponentDebugGizmos::GridSize = {16.f, 16.f};
 	Math::uvec2 ComponentDebugGizmos::SnapSize = { 16.f, 16.f };
-	float ComponentDebugGizmos::GridOpacity = .08f;
+	float ComponentDebugGizmos::GridOpacity = .5f;
 
 	bool ComponentDebugGizmos::DrawAllGizmos = true;
 	bool ComponentDebugGizmos::DrawCameraGizmos = true;
@@ -90,25 +90,43 @@ namespace Polychrome
 		const Math::vec2& pos = EditorApp::Camera.GetPosition();
 		const float zoom = EditorApp::Camera.GetZoom();
 		const float zoomMultiplier = Math::pow(10.f, Math::floor(log10f(zoom)));
-		const float opacity = (zoom - zoomMultiplier) / zoom * GridOpacity;
+		float opacity = (zoom - zoomMultiplier) / zoom * GridOpacity;
 		const float line_width = 1.f / EditorApp::Camera.GetZoom();
-		const float x_mult = GridSize.x * 1 / zoomMultiplier;
-		const float y_mult = GridSize.y * 1 / zoomMultiplier;
+		float x_mult = GridSize.x * 1 / zoomMultiplier;
+		float y_mult = GridSize.y * 1 / zoomMultiplier;
 
 		
 		
 		//Draw Horizontal
 		float xPos = 0;
 		float yPos = 0;
-		const float xPosInitial = glm::round(pos.x / x_mult) * x_mult;
-		const float yPosInitial = glm::round(pos.y / y_mult) * y_mult;
-		const int xFactor = (int)glm::round(pos.x / x_mult) % 10;
-		const int yFactor = (int)glm::round(pos.y / y_mult) % 10;
+		float xPosInitial = glm::round(pos.x / x_mult) * x_mult;
+		float yPosInitial = glm::round(pos.y / y_mult) * y_mult;
+		int xFactor = (int)glm::round(pos.x / x_mult) % 10;
+		int yFactor = (int)glm::round(pos.y / y_mult) % 10;
 
-		//CHROMA_CORE_INFO("i: {}, {}", xFactor, yFactor);
 
 		const float hSize = size.x / zoom;
 		const float vSize = size.y / zoom;
+
+		int split_x = 10;
+		int split_y = 10;
+		if (zoomMultiplier >= 10)
+		{
+			x_mult = 1;
+			y_mult = 1;
+			split_x = glm::round(GridSize.x);
+			split_y = glm::round(GridSize.y);
+			xFactor = (int)glm::round(pos.x / x_mult) % split_x;
+			yFactor = (int)glm::round(pos.y / y_mult) % split_y;
+			xPosInitial = glm::round(pos.x / x_mult) * x_mult;
+			yPosInitial = glm::round(pos.y / y_mult) * y_mult;
+			if (zoomMultiplier >= 100)
+				opacity = GridOpacity;
+		}
+			
+
+		//CHROMA_CORE_INFO("Mult: {}, {}", x_mult, y_mult);
 
 		bool first = true;
 
@@ -116,8 +134,7 @@ namespace Polychrome
 		int j = xFactor;
 		while (xPos < hSize / 2.f)
 		{
-			//CHROMA_CORE_TRACE("xFactor: {}, i%10: {}", xFactor, i%10);
-			if (j % 10 == 0)
+			if (j % split_x == 0)
 			{
 				Chroma::Renderer2D::DrawLine({ xPosInitial - xPos, pos.y + vSize / 2.f }, { xPosInitial - xPos, pos.y - vSize / 2.f }, line_width, { 1.f, 1.f, 1.f, GridOpacity });
 			}
@@ -128,7 +145,7 @@ namespace Polychrome
 
 			if (!first)
 			{
-				if (i % 10 == 0)
+				if (i % split_x == 0)
 				{
 					Chroma::Renderer2D::DrawLine({ xPosInitial + xPos, pos.y + vSize / 2.f }, { xPosInitial + xPos, pos.y - vSize / 2.f }, line_width, { 1.f, 1.f, 1.f, GridOpacity });
 				}
@@ -150,7 +167,7 @@ namespace Polychrome
 		first = true;
 		while (yPos < vSize / 2.f)
 		{
-			if (j % 10 == 0)
+			if (j % split_y == 0)
 			{
 
 				Chroma::Renderer2D::DrawLine({ pos.x + hSize / 2.f, yPosInitial - yPos }, { pos.x - hSize / 2.f, yPosInitial - yPos }, line_width, { 1.f, 1.f, 1.f, GridOpacity });
@@ -162,7 +179,7 @@ namespace Polychrome
 			}
 			if (!first)
 			{
-				if (i % 10 == 0)
+				if (i % split_y == 0)
 				{
 					Chroma::Renderer2D::DrawLine({ pos.x + hSize / 2.f, yPosInitial + yPos }, { pos.x - hSize / 2.f, yPosInitial + yPos }, line_width, { 1.f, 1.f, 1.f, GridOpacity });
 				}

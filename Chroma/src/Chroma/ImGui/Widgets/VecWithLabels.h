@@ -235,6 +235,7 @@ namespace ImGui
 	/// @param reset_to_zero Whether clicking the reset should set to zero. False will reset to one.
 	static bool Vec2IntWithLabels(const char* hash, Math::vec2& val, bool reset_to_zero = true)
 	{
+		bool changed = false;
 		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 0, 0 });
 
 		float inputWidth = (ImGui::GetContentRegionAvailWidth() - ImGui::CalcTextSize("X").x * 2.0f - (4.0f * 6)) / 2;
@@ -244,10 +245,12 @@ namespace ImGui
 		{
 			if (reset_to_zero)
 			{
+				changed = true;
 				val.x = 0;
 			}
 			else
 			{
+				changed = true;
 				val.x = 1;
 			}
 		}
@@ -265,6 +268,7 @@ namespace ImGui
 		int pos = (int)val.x;
 		if (ImGui::DragInt(("##vec3_x" + std::string(hash)).c_str(), &pos))
 		{
+			changed = true;
 			val.x = pos;
 		}
 
@@ -275,10 +279,12 @@ namespace ImGui
 		{
 			if (reset_to_zero)
 			{
+				changed = true;
 				val.y = 0;
 			}
 			else
 			{
+				changed = true;
 				val.y = 1;
 			}
 		}
@@ -296,6 +302,7 @@ namespace ImGui
 		pos = val.y;
 		if (ImGui::DragInt(("##vec3_y" + std::string(hash)).c_str(), &pos))
 		{
+			changed = true;
 			val.y = pos;
 		}
 
@@ -303,7 +310,7 @@ namespace ImGui
 
 		ImGui::SameLine(0.0f, 6.0f);
 		ImGui::NewLine();
-		return true;
+		return changed;
 	}
 
 	/// @brief Displays 2 component vectors with component labels (x,y) and reset buttons.

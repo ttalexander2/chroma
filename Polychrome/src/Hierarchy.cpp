@@ -190,7 +190,7 @@ namespace Polychrome
 					ImGui::PushStyleColor(ImGuiCol_Header, ImVec4{ 0.2f, 0.8f, 0.3f, .7f });
 				flags |= ImGuiTreeNodeFlags_Selected;
 			}
-			else if (ImGui::IsMouseDragging(ImGuiMouseButton_Left))
+			else if (ImGui::IsMouseDragging(ImGuiMouseButton_Left) && ImGui::IsWindowFocused())
 			{
 				if (relationship.HasChildren())
 					ImGui::PushStyleColor(ImGuiCol_HeaderHovered, ImVec4{ 0,0,0,0 });
@@ -208,7 +208,7 @@ namespace Polychrome
 
 			ImGui::PopStyleVar();
 
-			if (hover_push || ImGui::IsMouseDragging(ImGuiMouseButton_Left))
+			if (hover_push || (ImGui::IsMouseDragging(ImGuiMouseButton_Left) && ImGui::IsWindowFocused()))
 				ImGui::PopStyleColor();
 
 			if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenBlockedByActiveItem))

@@ -26,6 +26,22 @@ namespace Chroma
 		{
 		}
 
+		enum class SpriteOrigin
+		{
+			Center = 0,
+			Left = 1,
+			Right = 2,
+			Top = 3,
+			Bottom = 4,
+			TopLeft = 5,
+			TopRight = 6,
+			BottomLeft = 7,
+			BottomRight = 8,
+			Custom = 9,
+
+			Default = Center
+		};
+
 		/// @brief Color to render the sprite. Default is White.
 		Math::vec4 Color { 1.0f, 1.0f, 1.0f, 1.0f };
 		/// @brief Offset to render the sprite.
@@ -76,6 +92,12 @@ namespace Chroma
 		/// @param Frame number to set.
 		void SetCurrentFrame(unsigned int);
 
+		void SetSpriteOrigin(SpriteOrigin origin);
+		void SetSpriteOrigin(const Math::vec2& custom_position);
+
+		SpriteOrigin GetSpriteOrigin();
+		const Math::vec2& GetSpriteOriginVector();
+
 		/// @brief Restart the animation.
 		/// 
 		/// WARNING: Not Implemented.
@@ -99,6 +121,10 @@ namespace Chroma
 	private:
 		unsigned int CurrentFrame = 0;
 		unsigned int Animation = 0;
+
+		/// @brief Origin of the sprite
+		SpriteOrigin Origin = SpriteOrigin::Default;
+		Math::vec2 OriginValue = { 0, 0 };
 
 
 		float time_till_next_frame = 0;

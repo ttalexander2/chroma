@@ -8,7 +8,7 @@ namespace Polychrome
 	{
 	public:
 		static bool Open;
-		static void Draw(Chroma::Time time, Chroma::Ref<Chroma::Framebuffer> frame_buffer);
+		static void Draw(Chroma::Time time, Chroma::Ref<Chroma::Framebuffer> frame_buffer, Chroma::Ref<Chroma::Framebuffer> guizmo_framebuffer);
 		static const Math::vec2 ViewportPositionToWorld(const Math::vec2& pos);
 		static const Math::vec2 WorldToViewportPosition(const Math::vec2& pos);
 

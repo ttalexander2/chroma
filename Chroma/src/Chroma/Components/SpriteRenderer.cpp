@@ -29,6 +29,17 @@ namespace Chroma
 		out << YAML::Key << "Animation";
 		out << YAML::Value << Animation;
 
+		if (Origin == SpriteOrigin::Custom)
+		{
+			out << YAML::Key << "CustomOrigin";
+			out << YAML::Value << OriginValue;
+		}
+		else
+		{
+			out << YAML::Key << "Origin";
+			out << YAML::Value << (int)Origin;
+		}
+
 
 	}
 	void SpriteRenderer::Deserialize(YAML::Node& node)
@@ -68,6 +79,17 @@ namespace Chroma
 		{
 			Animation = val.as<unsigned int>();
 		}
+		val = node["Origin"];
+		if (val)
+		{
+			Origin = (SpriteOrigin)Math::clamp(0, (int)SpriteOrigin::BottomRight, val.as<int>());
+		}
+		val = node["CustomOrigin"];
+		if (val)
+		{
+			Origin = SpriteOrigin::Custom;
+			OriginValue = val.as<Math::vec2>();
+		}
 
 	}
 
@@ -83,6 +105,7 @@ namespace Chroma
 			SpriteID = spriteID;
 			Animation = 0;
 			CurrentFrame = 0;
+			SetSpriteOrigin(SpriteOrigin::Default);
 		}
 			
 		else
@@ -190,6 +213,105 @@ namespace Chroma
 		}
 
 		
+	}
+
+
+	void SpriteRenderer::SetSpriteOrigin(SpriteOrigin origin)
+	{
+		Origin = origin;
+		if (AssetManager::HasSprite(SpriteID))
+		{
+			Ref<Sprite> s = AssetManager::GetSprite(SpriteID);
+			const Math::vec2 size = s->GetSize();
+			switch (origin)
+			{
+			case SpriteOrigin::Center:
+			{
+				OriginValue = { Math::floor(size.x / 2), Math::floor(size.y / 2) };
+				break;
+			}
+			case SpriteOrigin::Left:
+			{
+				OriginValue = { 0, Math::floor(size.y / 2) };
+				break;
+			}
+			case SpriteOrigin::Right:
+			{
+				OriginValue = { size.x, Math::floor(size.y / 2) };
+				break;
+			}
+			case SpriteOrigin::Top:
+			{
+				OriginValue = { Math::floor(size.x / 2), 0 };
+				break;
+			}
+			case SpriteOrigin::Bottom:
+			{
+				OriginValue = { Math::floor(size.x / 2), size.y };
+				break;
+			}
+			case SpriteOrigin::TopLeft:
+			{
+				OriginValue = { 0,0 };
+				break;
+			}
+			case SpriteOrigin::TopRight:
+			{
+				OriginValue = { size.x,0 };
+				break;
+			}
+			case SpriteOrigin::BottomLeft:
+			{
+				OriginValue = { 0,size.y };
+				break;
+			}
+			case SpriteOrigin::BottomRight:
+			{
+				OriginValue = { size.x,size.y };
+				break;
+			}
+			case SpriteOrigin::Custom:
+			{
+				OriginValue = { 0,0 };
+				CHROMA_CORE_WARN("Attempted to set sprite [{}] origin. Origin was set to 'custom' but no origin was provided.", SpriteID);
+				break;
+			}
+			default:
+				OriginValue = { Math::floor(size.x / 2), Math::floor(size.y / 2) };
+				Origin = SpriteOrigin::Center;
+				break;
+			}
+			
+		}
+		else
+		{
+			CHROMA_CORE_WARN("Attempted to set sprite origin. Sprite [{}] could not be found or is not loaded.", SpriteID);
+		}
+	}
+
+	void SpriteRenderer::SetSpriteOrigin(const Math::vec2& custom_position)
+	{
+		Origin = SpriteOrigin::Custom;
+		if (AssetManager::HasSprite(SpriteID))
+		{
+			Ref<Sprite> s = AssetManager::GetSprite(SpriteID);
+			const Math::vec2 size = s->GetSize();
+			OriginValue = { Math::clamp(0.f, size.x, custom_position.x), Math::clamp(0.f, size.y, custom_position.y) };
+		}
+		else
+		{
+			CHROMA_CORE_WARN("Attempted to set sprite origin. Sprite [{}] could not be found or is not loaded.", SpriteID);
+		}
+	}
+
+	SpriteRenderer::SpriteOrigin SpriteRenderer::GetSpriteOrigin()
+	{
+		return Origin;
+	}
+
+	const Math::vec2& SpriteRenderer::GetSpriteOriginVector()
+	{
+		return OriginValue;
 	}
 
 	void SpriteRenderer::RestartAnimation()

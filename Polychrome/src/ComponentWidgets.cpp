@@ -337,8 +337,33 @@ namespace Polychrome
 			DrawComponentValue(c, "Size");
 			ImGui::Text(("[" + std::to_string(s->Frames[spr->GetCurrentFrame()].Texture->GetWidth()) + ", " + std::to_string(s->Frames[spr->GetCurrentFrame()].Texture->GetHeight()) + "]").c_str());
 
+			DrawComponentValue(c, "Origin");
+			int selectedOrigin = (int)spr->GetSpriteOrigin();
+			const char* const originItems[] = { "Center", "Left", "Right", "Top", "Bottom", "Top Left", "Top Right", "Bottom Left", "Bottom Right", "Custom" };
+			if (ImGui::Combo("##origin_dropdown", &selectedOrigin, originItems, 10))
+			{
+				if (selectedOrigin == (int)Chroma::SpriteRenderer::SpriteOrigin::Custom)
+					spr->SetSpriteOrigin(spr->GetSpriteOriginVector());
+				else
+					spr->SetSpriteOrigin((Chroma::SpriteRenderer::SpriteOrigin)Math::clamp(0, 9, selectedOrigin));
+			}
+
+			if ((Chroma::SpriteRenderer::SpriteOrigin)selectedOrigin == Chroma::SpriteRenderer::SpriteOrigin::Custom)
+			{
+				DrawComponentValue(c, "");
+				Math::vec2 customOrigin = spr->GetSpriteOriginVector();
+				if (ImGui::Vec2IntWithLabels("##spriteRendererCustomOrigin", customOrigin))
+				{
+					spr->SetSpriteOrigin(customOrigin);
+				}
+			
+			}
+
 			if (s->Animated())
 			{
+				ImGui::Dummy({ 1,1 });
+				ImGui::Separator();
+				ImGui::Dummy({ 1,1 });
 				DrawComponentValue(c, "Animation");
 				std::string selectedStr;
 				if (spr->GetAnimation() > s->Animations.size())
