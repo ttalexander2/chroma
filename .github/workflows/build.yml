@@ -61,6 +61,7 @@ jobs:
         run: Compress-Archive -Path .\bin\Dist-windows-x86_64\Polychrome\* -DestinationPath .\Polychrome.zip
         
       - uses: paulhatch/semantic-version@v4.0.2
+        id: versioning
         with:
           # The prefix to use to identify tags
           tag_prefix: "v"
@@ -86,8 +87,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ version_tag }}
-          release_name: "Polychrome Editor ${version}"
+          tag_name: ${{ steps.versioning.outputs.version_tag }}
+          release_name: "Polychrome Editor ${steps.versioning.outputs.version}"
           draft: false
           prerelease: false
           
