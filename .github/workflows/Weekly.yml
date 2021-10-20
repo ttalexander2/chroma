@@ -27,16 +27,15 @@ jobs:
         with:
           args: install vulkan-sdk --version=1.2.182.0
 
-      - name: Verify Vulkan Installation
-        shell: pwsh
-        run: Setup.bat
-
         
           
       - name: Checkout Repository
         uses: actions/checkout@v2
         with:
           submodules: recursive
+          
+      - name: Verify Vulkan Installation
+        run: .\chroma\Setup.bat
           
       - name: Run bat script on PowerShell
         shell: pwsh
