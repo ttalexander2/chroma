@@ -27,6 +27,7 @@ IncludeDir["VulkanSDK"] = "%{VULKAN_SDK}/Include"
 LibraryDir = {}
 
 LibraryDir["VulkanSDK"] = "%{VULKAN_SDK}/Lib"
+LibraryDir["VulkanSDK_Bin"] = "%{VULKAN_SDK}/Bin"
 LibraryDir["VulkanSDK_Debug"] = "%{wks.location}/Chroma/third_party/VulkanSDK/Lib"
 LibraryDir["VulkanSDK_DebugDLL"] = "%{wks.location}/Chroma/third_party/VulkanSDK/Bin"
 

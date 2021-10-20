@@ -229,7 +229,7 @@ project "Polychrome"
         '{COPY} "../Chroma/third_party/mono/bin/mono-2.0-sgen.dll" "%{cfg.targetdir}"',
         "{ECHO} Copying imgui.ini to %{cfg.targetdir}",
         "{COPY} imgui.ini %{cfg.targetdir}",
-        "{COPY} Chroma.Mono.dll %{cfg.targetdir}"
+        "{COPY} Chroma.Mono.dll %{cfg.targetdir}",
     }
 
     defines
@@ -259,11 +259,25 @@ project "Polychrome"
         defines "CHROMA_RELEASE"
         runtime "Release"
         optimize "On"
+        postbuildcommands
+        {
+            "{ECHO} Copying Vulkan dlls...",
+            "{COPY} %{LibraryDir.VulkanSDK_Bin}/shaderc_shared.dll '%{cfg.targetdir}'",
+            "{COPY} %{LibraryDir.VulkanSDK_Bin}/spirv-cross-c-shared.dll '%{cfg.targetdir}'",
+            "{COPY} %{LibraryDir.VulkanSDK_Bin}/SPIRV-Tools-shared.dll '%{cfg.targetdir}'"
+        }
 
     filter "configurations:Dist"
         defines "CHROMA_DIST"
         runtime "Release"
         optimize "On"
+        postbuildcommands
+        {
+            "{ECHO} Copying Vulkan dlls...",
+            "{COPY} %{LibraryDir.VulkanSDK_Bin}/shaderc_shared.dll '%{cfg.targetdir}'",
+            "{COPY} %{LibraryDir.VulkanSDK_Bin}/spirv-cross-c-shared.dll '%{cfg.targetdir}'",
+            "{COPY} %{LibraryDir.VulkanSDK_Bin}/SPIRV-Tools-shared.dll '%{cfg.targetdir}'"
+        }
 
 
 
@@ -329,16 +343,34 @@ project "Runtime"
         runtime "Debug"
         symbols "On"
         optimize "Debug"
+        postbuildcommands
+		{
+			"{COPYDIR} \"%{LibraryDir.VulkanSDK_DebugDLL}\" \"%{cfg.targetdir}\""
+		}
 
     filter "configurations:Release"
         defines "CHROMA_RELEASE"
         runtime "Release"
         optimize "On"
+        postbuildcommands
+        {
+            "{ECHO} Copying Vulkan dlls...",
+            "{COPY} %{LibraryDir.VulkanSDK_Bin}/shaderc_shared.dll '%{cfg.targetdir}'",
+            "{COPY} %{LibraryDir.VulkanSDK_Bin}/spirv-cross-c-shared.dll '%{cfg.targetdir}'",
+            "{COPY} %{LibraryDir.VulkanSDK_Bin}/SPIRV-Tools-shared.dll '%{cfg.targetdir}'"
+        }
 
     filter "configurations:Dist"
         defines "CHROMA_DIST"
         runtime "Release"
         optimize "On"
+        postbuildcommands
+        {
+            "{ECHO} Copying Vulkan dlls...",
+            "{COPY} %{LibraryDir.VulkanSDK_Bin}/shaderc_shared.dll '%{cfg.targetdir}'",
+            "{COPY} %{LibraryDir.VulkanSDK_Bin}/spirv-cross-c-shared.dll '%{cfg.targetdir}'",
+            "{COPY} %{LibraryDir.VulkanSDK_Bin}/SPIRV-Tools-shared.dll '%{cfg.targetdir}'"
+        }
 
 
 

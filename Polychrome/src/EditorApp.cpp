@@ -365,7 +365,7 @@ namespace Polychrome
 					static std::vector<bool> hovered(recentProjects.size(), false);
 					static std::vector<bool> active(recentProjects.size(), false);
 
-					std::sort(recentProjects.begin(), recentProjects.end(), [](RecentProjectInfo a, RecentProjectInfo b) {
+					std::sort(recentProjects.begin(), recentProjects.end(), [](const RecentProjectInfo& a, const RecentProjectInfo& b) {
 						std::istringstream str1(a.TimeStamp);
 						std::istringstream str2(b.TimeStamp);
 
@@ -382,7 +382,7 @@ namespace Polychrome
 
 					});
 
-					std::sort(recentProjects.begin(), recentProjects.end(), [](RecentProjectInfo a, RecentProjectInfo b) {
+					std::sort(recentProjects.begin(), recentProjects.end(), [](const RecentProjectInfo& a, const RecentProjectInfo& b) {
 						return a.Pinned && !b.Pinned;
 					});
 
