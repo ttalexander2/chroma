@@ -9,7 +9,7 @@ from io import BytesIO
 from urllib.request import urlopen
 
 class VulkanConfiguration:
-    requiredVulkanVersion = "1.2.170.0"
+    requiredVulkanVersion = "1.2.182.0"
     vulkanDirectory = "./Chroma/third_party/VulkanSDK"
 
     @classmethod
