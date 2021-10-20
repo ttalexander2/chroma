@@ -82,7 +82,7 @@ namespace Polychrome
 		bool Pinned = false;
 	};
 
-	std::vector<RecentProjectInfo> recentProjects = std::vector<RecentProjectInfo>();
+	std::vector<RecentProjectInfo> recentProjects;
 
 	EditorApp::EditorApp()
 		: Application("Polychrome Editor", 800U, 400U)
@@ -145,7 +145,10 @@ namespace Polychrome
 							info.Pinned = project["Pinned"].as<bool>();
 						}
 						if (std::filesystem::exists(info.Path + "\\" + info.Name + ".polychrome"))
+						{
 							recentProjects.push_back(info);
+						}
+							
 					}
 				}
 			}
@@ -365,42 +368,46 @@ namespace Polychrome
 					static std::vector<bool> hovered(recentProjects.size(), false);
 					static std::vector<bool> active(recentProjects.size(), false);
 
-					std::sort(recentProjects.begin(), recentProjects.end(), [](const RecentProjectInfo& a, const RecentProjectInfo& b) {
-						std::istringstream str1(a.TimeStamp);
-						std::istringstream str2(b.TimeStamp);
+					//std::sort(recentProjects.begin(), recentProjects.end(), [](const RecentProjectInfo& a, const RecentProjectInfo& b) {
+					//	std::istringstream str1(a.TimeStamp);
+					//	std::istringstream str2(b.TimeStamp);
+					//
+					//	struct std::tm tm1;
+					//	struct std::tm tm2;
+					//
+					//	str1 >> std::get_time(&tm1, "%d/%m/%Y %H:%M");
+					//	str2 >> std::get_time(&tm2, "%d/%m/%Y %H:%M");
+					//
+					//	std::time_t time1 = mktime(&tm1);
+					//	std::time_t time2 = mktime(&tm2);
+					//
+					//	return difftime(time1, time2) > 0.0;
+					//
+					//});
 
-						struct std::tm tm1;
-						struct std::tm tm2;
 
-						str1 >> std::get_time(&tm1, "%d/%m/%Y %H:%M");
-						str2 >> std::get_time(&tm2, "%d/%m/%Y %H:%M");
+					// This caused memory errors in the Dist build for some reason :')
+					//std::sort(recentProjects.begin(), recentProjects.end(), [](const RecentProjectInfo& a, const RecentProjectInfo& b) {
+					//	return a.Pinned > b.Pinned;
+					//});
 
-						std::time_t time1 = mktime(&tm1);
-						std::time_t time2 = mktime(&tm2);
+					bool hasPinned = false;
+					for (auto& prj : recentProjects)
+					{
+						if (prj.Pinned)
+							hasPinned = true;
+					}
 
-						return difftime(time1, time2) > 0.0;
-
-					});
-
-					std::sort(recentProjects.begin(), recentProjects.end(), [](const RecentProjectInfo& a, const RecentProjectInfo& b) {
-						return a.Pinned && !b.Pinned;
-					});
-
-					bool is_pinned = false;
-					if (recentProjects.size() > 0 && recentProjects[0].Pinned)
+					if (recentProjects.size() > 0 && hasPinned)
 					{
 						ImGui::Text("Pinned:");
-						is_pinned = true;
 					}
 
 					int i = 0;
 					for (auto& prj : recentProjects)
 					{
-						if (is_pinned && !prj.Pinned)
-						{
-							is_pinned = false;
-							ImGui::Separator();
-						}
+						if (!prj.Pinned)
+							continue;
 
 						bool f = false;
 						auto col = ImGui::GetColorU32(ImGui::GetStyleColorVec4(ImGuiCol_ButtonActive));
@@ -465,6 +472,118 @@ namespace Polychrome
 								else
 									e << YAML::Key << "TimeStamp" << YAML::Value << proj.TimeStamp;
 								
+								e << YAML::Key << "Path" << YAML::Value << proj.Path;
+								e << YAML::Key << "Pinned" << YAML::Value << proj.Pinned;
+								e << YAML::EndMap;
+							}
+
+							e << YAML::EndSeq << YAML::EndMap;
+
+							std::ofstream stream(sago::getDataHome() + "/Polychrome/RecentProjects.yaml");
+							stream.write(e.c_str(), e.size());
+							stream.close();
+
+							Project::LoadProject(prj.Path + "\\" + prj.Name + ".polychrome");
+
+							EditorApp::CurrentScenePath = Chroma::AssetManager::AssetDirectory + Project::StartingScene;
+
+							glfwSetWindowSize((GLFWwindow*)this->Get().GetWindow().GetNativeWindow(), 1920, 1080);
+							glfwSetWindowCenter((GLFWwindow*)this->Get().GetWindow().GetNativeWindow());
+							glfwMaximizeWindow((GLFWwindow*)this->Get().GetWindow().GetNativeWindow());
+							glfwSetWindowAttrib((GLFWwindow*)this->Get().GetWindow().GetNativeWindow(), GLFW_DECORATED, GLFW_TRUE);
+							glfwSetWindowTitle((GLFWwindow*)this->Get().GetWindow().GetNativeWindow(), ("Polychrome Editor - " + prj.Name + " - " + std::filesystem::path(Project::StartingScene).filename().string()).c_str());
+
+							Polychrome::FileWatcherThread::SetWatch(Chroma::AssetManager::AssetDirectory);
+
+							ProjectLoaded = true;
+							ImGui::ResetStyle(ImGui::ImGuiStylePreset::Cherry, ImGui::GetStyle());
+							ImGui::CloseCurrentPopup();
+						}
+
+						ImGui::SameLine();
+						ImGui::PushID(&prj.Path);
+						ImGui::PushStyleColor(ImGuiCol_Button, { 0,0,0,0 });
+						if (ImGui::Button(ICON_FK_THUMB_TACK, { 30, 36 }))
+						{
+							prj.Pinned = !prj.Pinned;
+						}
+						ImGui::PopStyleColor();
+						ImGui::PopID();
+
+						i++;
+					}
+
+					if (hasPinned)
+						ImGui::Separator();
+
+					for (auto& prj : recentProjects)
+					{
+						if (prj.Pinned)
+							continue;
+
+						bool f = false;
+						auto col = ImGui::GetColorU32(ImGui::GetStyleColorVec4(ImGuiCol_ButtonActive));
+						if (active[i])
+							col = ImGui::GetColorU32(ImGui::GetStyleColorVec4(ImGuiCol_ButtonHovered));
+						if (hovered[i] || active[i])
+							ImGui::GetWindowDrawList()->AddRectFilled({ ImGui::GetCursorScreenPos().x - ImGui::GetStyle().ItemSpacing.x, ImGui::GetCursorScreenPos().y },
+								ImVec2(ImGui::GetContentRegionAvailWidth() + ImGui::GetCursorScreenPos().x + ImGui::GetStyle().ItemSpacing.x - 30,
+									ImGui::GetCursorScreenPos().y + ImGui::GetTextLineHeight() * 2 + ImGui::GetStyle().ItemSpacing.y * 2), col);
+
+						ImGui::BeginGroup();
+
+						float icon_size = ImGui::GetTextLineHeight() * 2 + ImGui::GetStyle().ItemSpacing.y * 2;
+
+						ImFont _font = *EditorApp::LargeIcons;
+						_font.Scale = icon_size / _font.FontSize;
+
+						ImGui::PushFont(&_font);
+						ImGui::PushStyleColor(ImGuiCol_Button, { 0,0,0,0 });
+						ImGui::PushStyleColor(ImGuiCol_ButtonActive, { 0,0,0,0 });
+						ImGui::PushStyleColor(ImGuiCol_ButtonHovered, { 0,0,0,0 });
+						ImGui::Text(ICON_FK_CSHARP);
+						ImGui::PopStyleColor(3);
+						ImGui::PopFont();
+
+						ImGui::SameLine();
+
+						ImGui::BeginGroup();
+						ImGui::Text(prj.Name.c_str());
+						ImGui::SameLine(ImGui::GetContentRegionAvailWidth() - ImGui::CalcTextSize(prj.TimeStamp.c_str()).x - 30);
+						ImGui::Text(prj.TimeStamp.c_str());
+						ImGui::TextColored(ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled), prj.Path.c_str());
+						ImGui::EndGroup();
+						ImGui::EndGroup();
+
+						if (ImGui::IsItemHovered())
+							hovered[i] = true;
+						else
+							hovered[i] = false;
+
+						if (ImGui::IsItemHovered() && ImGui::IsMouseDown(ImGuiMouseButton_Left))
+							active[i] = true;
+						else
+							active[i] = false;
+
+						if (ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left) && ImGui::IsItemHovered())
+						{
+							std::time_t t = std::time(nullptr);
+							char buffer[80];
+							strftime(buffer, sizeof(buffer), "%d/%m/%Y %H:%M", std::localtime(&t));
+
+							YAML::Emitter e;
+							e << YAML::BeginMap;
+							e << YAML::Key << "RecentProjects" << YAML::Value << YAML::BeginSeq;
+
+							for (auto& proj : recentProjects)
+							{
+								e << YAML::BeginMap;
+								e << YAML::Key << "Name" << YAML::Value << proj.Name;
+								if (proj.Name == prj.Name && proj.Path == prj.Path)
+									e << YAML::Key << "TimeStamp" << YAML::Value << std::string(buffer);
+								else
+									e << YAML::Key << "TimeStamp" << YAML::Value << proj.TimeStamp;
+
 								e << YAML::Key << "Path" << YAML::Value << proj.Path;
 								e << YAML::Key << "Pinned" << YAML::Value << proj.Pinned;
 								e << YAML::EndMap;
