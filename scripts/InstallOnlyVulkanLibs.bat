@@ -1,3 +1,3 @@
 @echo off
-python InstallVulkanLibs.py
+python scripts/InstallVulkanLibs.py
 PAUSE
