@@ -1,6 +1,7 @@
 ## Chroma
 
 [![Build](https://github.com/ttalexander2/chroma/actions/workflows/Weekly.yml/badge.svg)](https://github.com/ttalexander2/chroma/actions/workflows/Weekly.yml)
+
 [![Documentation](https://github.com/ttalexander2/chroma/actions/workflows/main.yml/badge.svg)](https://github.com/ttalexander2/chroma/actions/workflows/main.yml)
 
 A small 2D C++ Game Engine and Editor, designed in order to providing simple tools for creating games in 2D. It is designed to be lightweight, cross-platform, and easily modifiable.
