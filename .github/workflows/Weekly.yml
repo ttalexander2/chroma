@@ -35,7 +35,7 @@ jobs:
           submodules: recursive
           
       - name: Verify Vulkan Installation
-        run: .\Setup.bat
+        run: ECHO Y | \Setup.bat
           
       - name: Run bat script on PowerShell
         shell: pwsh
