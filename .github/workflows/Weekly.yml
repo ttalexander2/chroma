@@ -29,16 +29,13 @@ jobs:
         uses: crazy-max/ghaction-chocolatey@v1
         with:
           args: install vulkan-sdk --version=1.2.182.0
-
         
           
       - name: Checkout Repository
         uses: actions/checkout@v2
         with:
           submodules: recursive
-          
-      - name: Verify Vulkan Installation
-        run: ECHO Y | .\scripts\InstallOnlyVulkanLibs.bat
+        
           
       - name: Run bat script on PowerShell
         shell: pwsh
@@ -54,6 +51,6 @@ jobs:
         run: |
           $Env:VULKAN_SDK = "C:/VulkanSDK/1.2.182.0"
           $Env:Path += ";C:/VulkanSDK/1.2.182.0/Bin"
-          msbuild Polychrome/Polychrome.vcxproj -p:Configuration=Debug -p:Platform=x64
+          msbuild Polychrome/Polychrome.vcxproj -p:Configuration=Dist -p:Platform=x64
         
         
