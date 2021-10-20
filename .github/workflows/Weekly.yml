@@ -38,6 +38,6 @@ jobs:
         uses: microsoft/setup-msbuild@v1.0.3
         
       - name: Build Polychrome
-        run: msbuild Polychrome/Polychrome.vcxproj -p:Configuration=Debug
+        run: msbuild Polychrome/Polychrome.vcxproj -p:Configuration=Debug -p:Platform=x64
         
         
