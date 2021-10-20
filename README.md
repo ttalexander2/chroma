@@ -1,5 +1,6 @@
 ## Chroma
 
+[![Build](https://github.com/ttalexander2/chroma/actions/workflows/Weekly.yml/badge.svg)](https://github.com/ttalexander2/chroma/actions/workflows/Weekly.yml)
 [![Documentation](https://github.com/ttalexander2/chroma/actions/workflows/main.yml/badge.svg)](https://github.com/ttalexander2/chroma/actions/workflows/main.yml)
 
 A small 2D C++ Game Engine and Editor, designed in order to providing simple tools for creating games in 2D. It is designed to be lightweight, cross-platform, and easily modifiable.
@@ -10,12 +11,12 @@ A small 2D C++ Game Engine and Editor, designed in order to providing simple too
 
 #### Building
 ##### Windows
-- Requires C++20, Visual Studio 2019 and .NET Framework 4.6
+- Requires C++20, Visual Studio 2019, and VulkanSDK
 - Uses premake build system
 - All other dependencies are either included within the project, or provided as github submodules.
 - Instructions
     - `git clone --recurse-submodules -j8 https://github.com/ttalexander2/chroma.git`
-    - Execute `WindowsGenerateProjects.bat` to generate Visual Studio Solution.
+    - Execute `Setup.bat` to generate Visual Studio Solution.
     - Open Solution File.
     - Select Build > Build Solution.
      
