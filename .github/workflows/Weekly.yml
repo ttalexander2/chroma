@@ -25,7 +25,7 @@ jobs:
       - name: Setup Vulkan
         uses: crazy-max/ghaction-chocolatey@v1
         with:
-          args: install vulkan-sdk --version=1.2.170.0
+          args: install vulkan-sdk --version=1.2.182.0
 
         
           
@@ -37,8 +37,8 @@ jobs:
       - name: Run bat script on PowerShell
         shell: pwsh
         run: |
-          $Env:VULKAN_SDK = "C:/VulkanSDK/1.2.170.0"
-          $Env:Path += ";C:/VulkanSDK/1.2.170.0/Bin"
+          $Env:VULKAN_SDK = "C:/VulkanSDK/1.2.182.0"
+          $Env:Path += ";C:/VulkanSDK/1.2.182.0/Bin"
           ./third_party/premake-core/bin/release/premake5.exe vs2019
         
       - name: Add msbuild to PATH
@@ -46,8 +46,8 @@ jobs:
         
       - name: Build Polychrome
         run: |
-          $Env:VULKAN_SDK = "C:/VulkanSDK/1.2.170.0"
-          $Env:Path += ";C:/VulkanSDK/1.2.170.0/Bin"
+          $Env:VULKAN_SDK = "C:/VulkanSDK/1.2.182.0"
+          $Env:Path += ";C:/VulkanSDK/1.2.182.0/Bin"
           msbuild Polychrome/Polychrome.vcxproj -p:Configuration=Debug -p:Platform=x64
         
         
