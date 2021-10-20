@@ -21,13 +21,6 @@ jobs:
           architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified
           
           
-      - name: Cache Vulkan SDK
-        id: cache-vulkan-sdk
-        uses: actions/cache@v1
-        with:
-          path: "C:\\VulkanSDK\\1.2.170.0"
-          key: vulkan-sdk-1.2.170.0
-          
           
       - name: Setup Vulkan
         if: steps.cache-vulkan-sdk.outputs.cache-hit != 'true'
