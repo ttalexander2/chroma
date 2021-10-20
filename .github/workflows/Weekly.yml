@@ -24,7 +24,7 @@ jobs:
           
       - name: Setup Vulkan
         run: |
-          Invoke-WebRequest -Uri "https://sdk.lunarg.com/sdk/download/1.2.170.0/windows/VulkanSDK-1.2.170.0-Installer.exe"
+          Invoke-WebRequest -Uri "https://sdk.lunarg.com/sdk/download/1.2.170.0/windows/VulkanSDK-1.2.170.0-Installer.exe" -OutFile VulkanSDK-1.2.170.0-Installer.exe
           $installer = Start-Process -FilePath VulkanSDK-1.2.170.0-Installer.exe -Wait -PassThru -ArgumentList "/S"
           $installer.WaitForExit();
           
