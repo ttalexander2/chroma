@@ -250,10 +250,6 @@ project "Polychrome"
         runtime "Debug"
         symbols "On"
         optimize "Debug"
-        prebuildcommands {
-            "{ECHO} Building Chroma.Mono.dll with mcs...",
-            "%{prj.location}mono/bin/mono.exe %{prj.location}mono/lib/mono/4.5/mcs.exe -debug -target:library -nostdlib -out:%{wks.location}bin/" .. outputdir .. "/%{prj.name}/Chroma.Mono.dll -r:%{prj.location}mono/lib/mono/4.5/mscorlib.dll,%{prj.location}mono/lib/mono/4.5/System.dll,%{prj.location}mono/lib/mono/4.5/System.Core.dll -recurse:%{wks.location}Script-Core/Source/*.cs",
-        }
         postbuildcommands
 		{
 			"{COPYDIR} \"%{LibraryDir.VulkanSDK_DebugDLL}\" \"%{cfg.targetdir}\""
@@ -263,10 +259,6 @@ project "Polychrome"
         defines "CHROMA_RELEASE"
         runtime "Release"
         optimize "On"
-        prebuildcommands {
-            "{ECHO} Building Chroma.Mono.dll with mcs...",
-            "%{prj.location}mono/bin/mono.exe %{prj.location}mono/lib/mono/4.5/mcs.exe -target:library -nostdlib -optimize -out:%{wks.location}bin/" .. outputdir .. "/%{prj.name}/Chroma.Mono.dll -r:%{prj.location}mono/lib/mono/4.5/mscorlib.dll,%{prj.location}mono/lib/mono/4.5/System.dll,%{prj.location}mono/lib/mono/4.5/System.Core.dll -recurse:%{wks.location}Script-Core/Source/*.cs",
-        }
         postbuildcommands{
             "{ECHO} Copying Vulkan dlls...",
             "{ECHO} \"%{LibraryDir.VulkanSDK_Bin}/shaderc_shared.dll\" %{cfg.targetdir}",
@@ -281,11 +273,6 @@ project "Polychrome"
         defines "CHROMA_DIST"
         runtime "Release"
         optimize "On"
-        prebuildcommands {
-            "{ECHO} Building Chroma.Mono.dll with mcs...",
-            '{ECHO}"%{prj.location}mono/bin/mono.exe %{prj.location}mono/lib/mono/4.5/mcs.exe -target:library -nostdlib -optimize -out:%{wks.location}bin/" .. outputdir .. "/%{prj.name}/Chroma.Mono.dll -r:%{prj.location}mono/lib/mono/4.5/mscorlib.dll,%{prj.location}mono/lib/mono/4.5/System.dll,%{prj.location}mono/lib/mono/4.5/System.Core.dll -recurse:%{wks.location}Script-Core/Source/*.cs"',
-            "%{prj.location}mono/bin/mono.exe %{prj.location}mono/lib/mono/4.5/mcs.exe -target:library -nostdlib -optimize -out:%{wks.location}bin/" .. outputdir .. "/%{prj.name}/Chroma.Mono.dll -r:%{prj.location}mono/lib/mono/4.5/mscorlib.dll,%{prj.location}mono/lib/mono/4.5/System.dll,%{prj.location}mono/lib/mono/4.5/System.Core.dll -recurse:%{wks.location}Script-Core/Source/*.cs",
-        }
         postbuildcommands{
             "{ECHO} Copying Vulkan dlls...",
             "{ECHO} \"%{LibraryDir.VulkanSDK_Bin}/shaderc_shared.dll\" %{cfg.targetdir}",
@@ -389,17 +376,17 @@ project "Chroma.Mono"
     filter "configurations:Debug"
         buildcommands {
             "{ECHO} Building Chroma.Mono.dll with mcs...",
-            "%{prj.location}mono/bin/mono.exe %{prj.location}mono/lib/mono/4.5/mcs.exe -debug -target:library -nostdlib -out:%{wks.location}bin/" .. outputdir .. "/%{prj.name}/Chroma.Mono.dll -r:%{prj.location}mono/lib/mono/4.5/mscorlib.dll,%{prj.location}mono/lib/mono/4.5/System.dll,%{prj.location}mono/lib/mono/4.5/System.Core.dll -recurse:%{wks.location}Script-Core/Source/**.cs",
+            "%{prj.location}mono/bin/mono.exe %{prj.location}mono/lib/mono/4.5/mcs.exe -debug -target:library -nostdlib -out:%{wks.location}bin/" .. outputdir .. "/%{prj.name}/Chroma.Mono.dll -r:%{prj.location}mono/lib/mono/4.5/mscorlib.dll,%{prj.location}mono/lib/mono/4.5/System.dll,%{prj.location}mono/lib/mono/4.5/System.Core.dll -recurse:Source/**.cs",
         }
 
     filter "configurations:Release"
         buildcommands {
             "{ECHO} Building Chroma.Mono.dll with mcs...",
-            "%{prj.location}mono/bin/mono.exe %{prj.location}mono/lib/mono/4.5/mcs.exe -target:library -nostdlib -optimize -out:%{wks.location}bin/" .. outputdir .. "/%{prj.name}/Chroma.Mono.dll -r:%{prj.location}mono/lib/mono/4.5/mscorlib.dll,%{prj.location}mono/lib/mono/4.5/System.dll,%{prj.location}mono/lib/mono/4.5/System.Core.dll -recurse:%{wks.location}Script-Core/Source/**.cs",
+            "%{prj.location}mono/bin/mono.exe %{prj.location}mono/lib/mono/4.5/mcs.exe -target:library -nostdlib -optimize -out:%{wks.location}bin/" .. outputdir .. "/%{prj.name}/Chroma.Mono.dll -r:%{prj.location}mono/lib/mono/4.5/mscorlib.dll,%{prj.location}mono/lib/mono/4.5/System.dll,%{prj.location}mono/lib/mono/4.5/System.Core.dll -recurse:Source/**.cs",
         }
 
     filter "configurations:Dist"
         buildcommands {
             "{ECHO} Building Chroma.Mono.dll with mcs...",
-            "%{prj.location}mono/bin/mono.exe %{prj.location}mono/lib/mono/4.5/mcs.exe -target:library -nostdlib -optimize -out:%{wks.location}bin/" .. outputdir .. "/%{prj.name}/Chroma.Mono.dll -r:%{prj.location}mono/lib/mono/4.5/mscorlib.dll,%{prj.location}mono/lib/mono/4.5/System.dll,%{prj.location}mono/lib/mono/4.5/System.Core.dll -recurse:%{wks.location}Script-Core/Source/**.cs",
+            "%{prj.location}mono/bin/mono.exe %{prj.location}mono/lib/mono/4.5/mcs.exe -target:library -nostdlib -optimize -out:%{wks.location}bin/" .. outputdir .. "/%{prj.name}/Chroma.Mono.dll -r:%{prj.location}mono/lib/mono/4.5/mscorlib.dll,%{prj.location}mono/lib/mono/4.5/System.dll,%{prj.location}mono/lib/mono/4.5/System.Core.dll -recurse:Source/**.cs",
         }

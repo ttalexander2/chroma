@@ -4,8 +4,9 @@
 #include <Chroma/Components/SpriteRenderer.h>
 #include <Chroma/Components/LuaScript.h>
 #include <Chroma/Scripting/LuaScripting.h>
+#include <Chroma/Renderer/Renderer2D.h>
 
-
+using namespace Chroma;
 Scene* Runtime::CurrentScene = nullptr;
 
 
@@ -61,13 +62,13 @@ void Runtime::Update(Time delta)
 
 		Renderer2D::Clear();
 
-		Renderer2D::BeginScene(cameraController.GetCamera());
+		Renderer2D::Begin(cameraController.GetCamera());
 
 		CurrentScene->Draw(delta);
 
 		//Renderer2D::DrawQuad({ 0,0,0 }, { 2,2,2 }, { 1,1,1,1 });
 
-		Renderer2D::EndScene();
+		Renderer2D::End();
 	}
 
 
