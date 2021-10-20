@@ -54,7 +54,7 @@ jobs:
           msbuild Polychrome/Polychrome.vcxproj -p:Configuration=Dist -p:Platform=x64
           
       - name: Zip Build
-        run: Compress-Archive -Path \bin\Dist-windows-x86_64\Polychrome\* -DestinationPath .\Polychrome.zip 
+        run: Compress-Archive -Path .\bin\Dist-windows-x86_64\Polychrome\* -DestinationPath .\Polychrome.zip 
           
           
       - name: Create Release
