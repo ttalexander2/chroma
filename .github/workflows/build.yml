@@ -72,8 +72,6 @@ jobs:
           minor_pattern: "(MINOR)"
           # A string to determine the format of the version output
           format: "${major}.${minor}.${patch}-alpha"
-          # Named version, will be used as suffix for name version tag
-          namespace: Polychrome
           # Indicate whether short tags like 'v1' should be supported. If false only full
           # tags like 'v1.0.0' will be recognized.
           short_tags: false
