@@ -252,7 +252,7 @@ project "Polychrome"
         optimize "Debug"
         prebuildcommands {
             "{ECHO} Building Chroma.Mono.dll with mcs...",
-            "%{wks.location}Polychrome/mono/bin/mono.exe %{wks.location}Polychrome/mono/lib/mono/4.5/mcs.exe -debug -target:library -nostdlib -out:%{wks.location}bin/" .. outputdir .. "/%{prj.name}/Chroma.Mono.dll -r:%{wks.location}Polychrome/mono/lib/mono/4.5/mscorlib.dll,%{wks.location}Polychrome/mono/lib/mono/4.5/System.dll,%{wks.location}Polychrome/mono/lib/mono/4.5/System.Core.dll -recurse:%{wks.location}Script-Core/Source/**.cs",
+            "%{prj.location}/mono/bin/mono.exe %{prj.location}/mono/lib/mono/4.5/mcs.exe -debug -target:library -nostdlib -out:%{wks.location}bin/" .. outputdir .. "/%{prj.name}/Chroma.Mono.dll -r:%{prj.location}/mono/lib/mono/4.5/mscorlib.dll,%{prj.location}/mono/lib/mono/4.5/System.dll,%{prj.location}/mono/lib/mono/4.5/System.Core.dll -recurse:%{wks.location}Script-Core/Source/**.cs",
         }
         postbuildcommands
 		{
@@ -265,7 +265,7 @@ project "Polychrome"
         optimize "On"
         prebuildcommands {
             "{ECHO} Building Chroma.Mono.dll with mcs...",
-            "%{wks.location}Polychrome/mono/bin/mono.exe %{wks.location}Polychrome/mono/lib/mono/4.5/mcs.exe -target:library -nostdlib -optimize -out:%{wks.location}bin/" .. outputdir .. "/%{prj.name}/Chroma.Mono.dll -r:%{wks.location}Polychrome/mono/lib/mono/4.5/mscorlib.dll,%{wks.location}Polychrome/mono/lib/mono/4.5/System.dll,%{wks.location}Polychrome/mono/lib/mono/4.5/System.Core.dll -recurse:%{wks.location}Script-Core/Source/**.cs",
+            "%{prj.location}/mono/bin/mono.exe %{prj.location}/mono/lib/mono/4.5/mcs.exe -target:library -nostdlib -optimize -out:%{wks.location}bin/" .. outputdir .. "/%{prj.name}/Chroma.Mono.dll -r:%{prj.location}/mono/lib/mono/4.5/mscorlib.dll,%{prj.location}/mono/lib/mono/4.5/System.dll,%{prj.location}/mono/lib/mono/4.5/System.Core.dll -recurse:%{wks.location}Script-Core/Source/**.cs",
         }
         postbuildcommands{
             "{ECHO} Copying Vulkan dlls...",
@@ -283,7 +283,7 @@ project "Polychrome"
         optimize "On"
         prebuildcommands {
             "{ECHO} Building Chroma.Mono.dll with mcs...",
-            "%{wks.location}Polychrome/mono/bin/mono.exe %{wks.location}Polychrome/mono/lib/mono/4.5/mcs.exe -target:library -nostdlib -optimize -out:%{wks.location}bin/" .. outputdir .. "/%{prj.name}/Chroma.Mono.dll -r:%{wks.location}Polychrome/mono/lib/mono/4.5/mscorlib.dll,%{wks.location}Polychrome/mono/lib/mono/4.5/System.dll,%{wks.location}Polychrome/mono/lib/mono/4.5/System.Core.dll -recurse:%{wks.location}Script-Core/Source/**.cs",
+            "%{prj.location}/mono/bin/mono.exe %{prj.location}/mono/lib/mono/4.5/mcs.exe -target:library -nostdlib -optimize -out:%{wks.location}bin/" .. outputdir .. "/%{prj.name}/Chroma.Mono.dll -r:%{prj.location}/mono/lib/mono/4.5/mscorlib.dll,%{prj.location}/mono/lib/mono/4.5/System.dll,%{prj.location}/mono/lib/mono/4.5/System.Core.dll -recurse:%{wks.location}Script-Core/Source/**.cs",
         }
         postbuildcommands{
             "{ECHO} Copying Vulkan dlls...",
@@ -388,17 +388,17 @@ project "Chroma.Mono"
     filter "configurations:Debug"
         buildcommands {
             "{ECHO} Building Chroma.Mono.dll with mcs...",
-            "%{wks.location}Polychrome/mono/bin/mono.exe %{wks.location}Polychrome/mono/lib/mono/4.5/mcs.exe -debug -target:library -nostdlib -out:%{wks.location}bin/" .. outputdir .. "/%{prj.name}/Chroma.Mono.dll -r:%{wks.location}Polychrome/mono/lib/mono/4.5/mscorlib.dll,%{wks.location}Polychrome/mono/lib/mono/4.5/System.dll,%{wks.location}Polychrome/mono/lib/mono/4.5/System.Core.dll -recurse:%{wks.location}Script-Core/Source/**.cs",
+            "%{prj.location}/mono/bin/mono.exe %{prj.location}/mono/lib/mono/4.5/mcs.exe -debug -target:library -nostdlib -out:%{wks.location}bin/" .. outputdir .. "/%{prj.name}/Chroma.Mono.dll -r:%{prj.location}/mono/lib/mono/4.5/mscorlib.dll,%{prj.location}/mono/lib/mono/4.5/System.dll,%{prj.location}/mono/lib/mono/4.5/System.Core.dll -recurse:%{wks.location}Script-Core/Source/**.cs",
         }
 
     filter "configurations:Release"
         buildcommands {
             "{ECHO} Building Chroma.Mono.dll with mcs...",
-            "%{wks.location}Polychrome/mono/bin/mono.exe %{wks.location}Polychrome/mono/lib/mono/4.5/mcs.exe -target:library -nostdlib -optimize -out:%{wks.location}bin/" .. outputdir .. "/%{prj.name}/Chroma.Mono.dll -r:%{wks.location}Polychrome/mono/lib/mono/4.5/mscorlib.dll,%{wks.location}Polychrome/mono/lib/mono/4.5/System.dll,%{wks.location}Polychrome/mono/lib/mono/4.5/System.Core.dll -recurse:%{wks.location}Script-Core/Source/**.cs",
+            "%{prj.location}/mono/bin/mono.exe %{prj.location}/mono/lib/mono/4.5/mcs.exe -target:library -nostdlib -optimize -out:%{wks.location}bin/" .. outputdir .. "/%{prj.name}/Chroma.Mono.dll -r:%{prj.location}/mono/lib/mono/4.5/mscorlib.dll,%{prj.location}/mono/lib/mono/4.5/System.dll,%{prj.location}/mono/lib/mono/4.5/System.Core.dll -recurse:%{wks.location}Script-Core/Source/**.cs",
         }
 
     filter "configurations:Dist"
         buildcommands {
             "{ECHO} Building Chroma.Mono.dll with mcs...",
-            "%{wks.location}Polychrome/mono/bin/mono.exe %{wks.location}Polychrome/mono/lib/mono/4.5/mcs.exe -target:library -nostdlib -optimize -out:%{wks.location}bin/" .. outputdir .. "/%{prj.name}/Chroma.Mono.dll -r:%{wks.location}Polychrome/mono/lib/mono/4.5/mscorlib.dll,%{wks.location}Polychrome/mono/lib/mono/4.5/System.dll,%{wks.location}Polychrome/mono/lib/mono/4.5/System.Core.dll -recurse:%{wks.location}Script-Core/Source/**.cs",
+            "%{prj.location}/mono/bin/mono.exe %{prj.location}/mono/lib/mono/4.5/mcs.exe -target:library -nostdlib -optimize -out:%{wks.location}bin/" .. outputdir .. "/%{prj.name}/Chroma.Mono.dll -r:%{prj.location}/mono/lib/mono/4.5/mscorlib.dll,%{prj.location}/mono/lib/mono/4.5/System.dll,%{prj.location}/mono/lib/mono/4.5/System.Core.dll -recurse:%{wks.location}Script-Core/Source/**.cs",
         }
