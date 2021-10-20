@@ -29,7 +29,7 @@ jobs:
 
       - name: Verify Vulkan Installation
         shell: pwsh
-        run: ./Setup.bat
+        run: Setup.bat
 
         
           
