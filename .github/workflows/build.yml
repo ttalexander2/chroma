@@ -3,7 +3,10 @@
 name: Build
 
 # Controls when the workflow will run
-on: [workflow_dispatch]
+on:
+  push:
+      branches:
+        - master
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -35,6 +38,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           submodules: recursive
+          fetch-depth: 0
         
           
       - name: Run bat script on PowerShell
@@ -54,7 +58,26 @@ jobs:
           msbuild .\Chroma.sln -p:Configuration=Dist -p:Platform=x64
           
       - name: Zip Build
-        run: Compress-Archive -Path .\bin\Dist-windows-x86_64\Polychrome\* -DestinationPath .\Polychrome.zip 
+        run: Compress-Archive -Path .\bin\Dist-windows-x86_64\Polychrome\* -DestinationPath .\Polychrome.zip
+        
+      - uses: paulhatch/semantic-version@v4.0.2
+        with:
+          # The prefix to use to identify tags
+          tag_prefix: "v"
+          # A string which, if present in a git commit, indicates that a change represents a
+          # major (breaking) change, supports regular expressions wrapped with '/'
+          major_pattern: "(MAJOR)"
+          # Same as above except indicating a minor change, supports regular expressions wrapped with '/'
+          minor_pattern: "(MINOR)"
+          # A string to determine the format of the version output
+          format: "${major}.${minor}.${patch}-alpha"
+          # Named version, will be used as suffix for name version tag
+          namespace: Polychrome
+          # Indicate whether short tags like 'v1' should be supported. If false only full
+          # tags like 'v1.0.0' will be recognized.
+          short_tags: false
+          # If this is set to true, *every* commit will be treated as a new version.
+          bump_each_commit: true
           
           
       - name: Create Release
