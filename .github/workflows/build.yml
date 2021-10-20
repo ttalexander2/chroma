@@ -86,8 +86,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Polychrome Editor
+          tag_name: ${{ version_tag }}
+          release_name: "Polychrome Editor ${version}"
           draft: false
           prerelease: false
           
