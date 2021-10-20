@@ -23,10 +23,11 @@ jobs:
           
           
       - name: Setup Vulkan
-        run: |
-          Invoke-WebRequest -Uri "https://sdk.lunarg.com/sdk/download/1.2.170.0/windows/VulkanSDK-1.2.170.0-Installer.exe" -OutFile VulkanSDK.exe
-          $installer = Start-Process -FilePath VulkanSDK.exe -Wait -PassThru -ArgumentList "/S"
-          $installer.WaitForExit();
+        uses: crazy-max/ghaction-chocolatey@v1
+        with:
+          args: install vulkan-sdk --version=1.2.170.0
+
+        
           
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -36,8 +37,8 @@ jobs:
       - name: Run bat script on PowerShell
         shell: pwsh
         run: |
-          $Env:VULKAN_SDK = "C:/VulkanSDK/1.2.176.1"
-          $Env:Path += ";C:/VulkanSDK/1.2.176.1/Bin"
+          $Env:VULKAN_SDK = "C:/VulkanSDK/1.2.170.0"
+          $Env:Path += ";C:/VulkanSDK/1.2.170.0/Bin"
           ./third_party/premake-core/bin/release/premake5.exe vs2019
         
       - name: Add msbuild to PATH
@@ -45,8 +46,8 @@ jobs:
         
       - name: Build Polychrome
         run: |
-          $Env:VULKAN_SDK = "C:/VulkanSDK/1.2.176.1"
-          $Env:Path += ";C:/VulkanSDK/1.2.176.1/Bin"
+          $Env:VULKAN_SDK = "C:/VulkanSDK/1.2.170.0"
+          $Env:Path += ";C:/VulkanSDK/1.2.170.0/Bin"
           msbuild Polychrome/Polychrome.vcxproj -p:Configuration=Debug -p:Platform=x64
         
         
