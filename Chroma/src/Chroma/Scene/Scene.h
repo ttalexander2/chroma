@@ -12,6 +12,7 @@
 #include "Chroma/Core/Log.h"
 #include "Chroma/Profiler/Instrumentor.h"
 #include <Chroma/Components/Camera.h>
+#include "World.h"
 
 namespace Polychrome
 {
@@ -185,10 +186,12 @@ namespace Chroma
 
 		Camera& GetPrimaryCamera();
 		EntityID GetPrimaryCameraEntity() { return PrimaryCameraEntity; }
-		void SetPrimaryCamera(EntityID entity);
+		bool SetPrimaryCamera(EntityID entity);
 
 #pragma endregion
 		entt::registry Registry;
+
+		std::vector<Layer> Layers;
 
 	private:
 		std::vector<System*> Systems;

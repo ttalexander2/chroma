@@ -10,6 +10,7 @@
 #include <imgui_internal.h>
 #include <Chroma/ImGui/ImGuiHelper.h>
 #include <Chroma/Utilities/ContainerHelpers.h>
+#include <unordered_map>
 
 namespace ImGui
 {

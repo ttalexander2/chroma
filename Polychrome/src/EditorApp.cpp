@@ -42,6 +42,7 @@
 #include "ComponentDebugGizmos.h"
 #include "ErrorWindow.h"
 #include "Build.h"
+#include "GameSettings.h"
 
 #define CHROMA_DEBUG_LOG
 #include <Chroma/Core/Log.h>
@@ -476,6 +477,7 @@ namespace Polychrome
 							stream.close();
 
 							Project::LoadProject(prj.Path + "\\" + prj.Name + ".polychrome");
+
 							EditorApp::CurrentScenePath = Chroma::AssetManager::AssetDirectory + Project::StartingScene;
 
 							glfwSetWindowSize((GLFWwindow*)this->Get().GetWindow().GetNativeWindow(), 1920, 1080);
@@ -687,10 +689,18 @@ namespace Polychrome
 				OpenScene();
 
 			if (ImGui::MenuItem("Save##MAIN_MENU_BAR", "Ctrl+S"))
+			{
 				SaveScene();
+				Project::SaveCurrentProject();
+			}
+				
 
 			if (ImGui::MenuItem("Save As...##MAIN_MENU_BAR", "Ctrl+Shift+S"))
+			{
 				SaveSceneAs();
+				Project::SaveCurrentProject();
+			}
+				
 			
 			ImGui::MenuItem("Close##MAIN_MENU_BAR", "Alt + F4");
 
@@ -735,7 +745,7 @@ namespace Polychrome
 			ImGui::EndMenu();
 		}
 
-		static bool SettingsWindowOpen = false;
+		static bool PreferencesWindowOpen = false;
 
 		if (ImGui::BeginMenu("Window##MAIN_MENU_BAR"))
 		{
@@ -744,7 +754,8 @@ namespace Polychrome
 			ImGui::MenuItem("Viewport##MAIN_MENU_BAR", "", &Viewport::Open);
 			ImGui::MenuItem("Log##MAIN_MENU_BAR", "", &LogWindow::Open);
 			ImGui::MenuItem("Errors##MAIN_MENU_BAR", "", &ErrorWindow::Open);
-			ImGui::MenuItem("Settings##MAIN_MENU_BAR", "", &SettingsWindowOpen);
+			ImGui::MenuItem("Game Settings##MAIN_MENU_BAR", "", &GameSettings::Open);
+			ImGui::MenuItem("Preferences##MAIN_MENU_BAR", "", &PreferencesWindowOpen);
 
 
 			ImGui::EndMenu();
@@ -764,6 +775,7 @@ namespace Polychrome
 		LogWindow::Draw();
 		ErrorWindow::Draw();
 		AssetBrowser::Draw();
+		GameSettings::Draw();
 
 
 
@@ -807,9 +819,9 @@ namespace Polychrome
 			CHROMA_INFO("Test");
 		//Chroma::ImGuiDebugMenu::Draw();
 
-		if (SettingsWindowOpen)
+		if (PreferencesWindowOpen)
 		{
-			if (ImGui::Begin("Settings", &SettingsWindowOpen))
+			if (ImGui::Begin("Preferences", &PreferencesWindowOpen))
 			{
 				static int selected_style = Config.Style;
 				ImGui::SelectStyleCombo("Style", &selected_style, ImGui::ImGuiStyle_Count, nullptr);

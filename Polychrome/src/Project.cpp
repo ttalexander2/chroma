@@ -21,6 +21,10 @@ namespace Polychrome
 		auto final_dir = directory + "\\" + name;
 		std::filesystem::create_directories(final_dir);
 
+		Path = final_dir;
+		Name = name;
+		StartingScene = starting_scene;
+
 		YAML::Emitter e;
 		e << YAML::BeginMap;
 		e << YAML::Key << "Project" << YAML::Value << YAML::BeginMap;
@@ -28,6 +32,7 @@ namespace Polychrome
 		e << YAML::Key << "AssetDirectory" << YAML::Value << "Assets";
 		e << YAML::Key << "ScriptModules" << YAML::Value << "Modules";
 		e << YAML::Key << "StartingScene" << YAML::Value << starting_scene + ".chroma";
+		Chroma::World::Serialize(e);
 		e << YAML::EndMap << YAML::EndMap;
 
 		std::string path = final_dir + "/" + name + ".polychrome";
@@ -47,26 +52,6 @@ namespace Polychrome
 		stream.write("obj\nbin", sizeof("obj\nbin")/sizeof(char));
 		stream.close();
 
-		std::string proj = R"(
-<Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <TargetFramework>net4.7</TargetFramework>
-  </PropertyGroup>
-
-  <ItemGroup>
-	<Reference Include = "Chroma.Mono">
-		<HintPath>)" + std::filesystem::current_path().string() + "/Chroma.Mono.dll" + R"(</HintPath>
-	</Reference>
-  </ItemGroup>
-
-</Project>
-)";
-
-		stream = std::ofstream(final_dir + "/" + name + ".csproj");
-		stream.write(proj.c_str(), proj.length());
-		stream.close();
-
 		LoadProject(path);
 
 		//this is sus
@@ -79,7 +64,26 @@ namespace Polychrome
 
 	bool Project::SaveCurrentProject()
 	{
-		return false;
+
+		YAML::Emitter e;
+		e << YAML::BeginMap;
+		e << YAML::Key << "Project" << YAML::Value << YAML::BeginMap;
+		e << YAML::Key << "Name" << YAML::Value << Name;
+		e << YAML::Key << "AssetDirectory" << YAML::Value << "Assets";
+		e << YAML::Key << "ScriptModules" << YAML::Value << "Modules";
+		e << YAML::Key << "StartingScene" << YAML::Value << StartingScene;
+		Chroma::World::Serialize(e);
+		e << YAML::EndMap << YAML::EndMap;
+
+		auto final_dir = Path + "\\" + Name;
+		std::string path = final_dir + ".polychrome";
+		//CHROMA_CORE_TRACE("Path: {}", path);
+		std::ofstream stream(path, std::ofstream::out);
+		if (!stream.good())
+			return false;
+		stream.write(e.c_str(), e.size());
+		stream.close();
+		return true;
 	}
 
 	bool Project::LoadProject(const std::string& path)
@@ -106,6 +110,10 @@ namespace Polychrome
 				{
 					StartingScene = project["StartingScene"].as<std::string>();
 				}
+				if (project["Layers"])
+				{
+					Chroma::World::Deserialize(project);
+				}
 
 			}
 		}
@@ -114,6 +122,8 @@ namespace Polychrome
 			return false;
 		}
 		stream.close();
+
+		Path = std::filesystem::path(path).parent_path().string();
 
 		if (!StartingScene.empty() && std::filesystem::exists(Chroma::AssetManager::AssetDirectory + "\\" + StartingScene))
 		{
@@ -129,6 +139,27 @@ namespace Polychrome
 		{
 			EditorApp::CurrentScene = new Chroma::Scene();
 		}
+
+		std::string proj = R"(<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net4.7</TargetFramework>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Reference Include = "Chroma.Mono">
+			<HintPath>)" + std::filesystem::current_path().string() + "\\Chroma.Mono.dll" + R"(</HintPath>
+		</Reference>
+	</ItemGroup>
+
+</Project>
+		)";
+
+		auto outStream = std::ofstream(Path + "/" + Name + ".csproj");
+		outStream.write(proj.c_str(), proj.length());
+		outStream.close();
+
+		//SaveCurrentProject();
 
 
 		return true;

@@ -219,6 +219,16 @@ namespace Chroma
 
 		out << YAML::EndSeq;
 
+		out << YAML::Key << "Layers" << YAML::Value << YAML::BeginSeq;
+		for (auto& layer : Layers)
+		{
+			//CHROMA_CORE_TRACE("layer: {}", layer.Name);
+			out << YAML::BeginMap;
+			layer.Serialize(out);
+			out << YAML::EndMap;
+		}
+		out << YAML::EndSeq;
+
 		out << YAML::EndMap;
 
 		std::string result = out.c_str();
@@ -300,7 +310,7 @@ namespace Chroma
 			if (view.size() == 0)
 			{
 				auto newCam = out->NewEntity();
-				&out->AddComponent<Camera>(newCam.GetID());
+				out->AddComponent<Camera>(newCam.GetID());
 				out->PrimaryCameraEntity = newCam.GetID();
 				out->GetComponent<Tag>(newCam.GetID()).EntityName = "Camera";
 			}
@@ -312,6 +322,18 @@ namespace Chroma
 			for (auto id : order)
 			{
 				out->EntityOrder.push_back((EntityID)id.as<uint32_t>());
+			}
+		}
+
+		out->Layers.clear();
+		auto layers = data["Layers"];
+		if (layers)
+		{
+			for (auto layer : layers)
+			{
+				Layer l = Layer("", 0);
+				l.Deserialize(layer);
+				out->Layers.push_back(l);
 			}
 		}
 
@@ -467,12 +489,17 @@ namespace Chroma
 		return Registry.get_or_emplace<Camera>(PrimaryCameraEntity);
 	}
 
-	void Scene::SetPrimaryCamera(EntityID entity)
+	bool Scene::SetPrimaryCamera(EntityID entity)
 	{
 		if (!Registry.valid(entity))
-			return;
+		{
+			CHROMA_CORE_ERROR("Invalid entity '{}'", entity);
+			return false;
+		}
+
 		PrimaryCameraEntity = entity;
 		Registry.get_or_emplace<Camera>(PrimaryCameraEntity);
+		return true;
 	}
 
 }

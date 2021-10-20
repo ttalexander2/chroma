@@ -17,6 +17,14 @@
 #include "EditorApp.h"
 #include "Hierarchy.h"
 
+namespace ImGui
+{
+	bool Combo(const char* label, int* current_item, const std::vector<std::string>& items, int items_count, int height_in_items = -1)
+	{
+		return Combo(label, current_item, [](void* data, int idx, const char** out_text) { *out_text = (*((const std::vector<std::string>*)data))[idx].c_str(); return true; }, (void*)&items, items_count, height_in_items);
+	}
+}
+
 namespace Polychrome
 {
 	bool ComponentWidgets::show_context = false;
@@ -356,8 +364,8 @@ namespace Polychrome
 				{
 					spr->SetSpriteOrigin(customOrigin);
 				}
-			
 			}
+
 
 			if (s->Animated())
 			{

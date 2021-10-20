@@ -4,6 +4,7 @@
 #include "Chroma/Math/Vec4.h";
 #include "Chroma/Renderer/Texture.h"
 #include "Chroma/Assets/Sprite.h"
+#include "Chroma/Scene/World.h"
 
 namespace Chroma
 {
@@ -46,8 +47,10 @@ namespace Chroma
 		Math::vec4 Color { 1.0f, 1.0f, 1.0f, 1.0f };
 		/// @brief Offset to render the sprite.
 		Math::vec2 Offset { 0.0f, 0.0f};
-		/// @brief Name of the layer to render the sprite.
-		std::string Layer = "Default";
+		/// @brief Layer to render the sprite.
+		GUID Layer = GUID::Zero();
+
+		float SortingPoint = 0;
 		/// @brief Whether to play the sprite on start.
 		bool PlayOnStart = true;
 		/// @brief Whether the sprite is playing.

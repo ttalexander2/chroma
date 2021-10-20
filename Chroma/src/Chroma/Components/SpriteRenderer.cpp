@@ -15,7 +15,7 @@ namespace Chroma
 		out << YAML::Value << Offset;
 
 		out << YAML::Key << "Layer";
-		out << YAML::Value << Layer;
+		out << YAML::Value << Layer.ToString();
 
 		out << YAML::Key << "PlayOnStart";
 		out << YAML::Value << PlayOnStart;
@@ -57,7 +57,7 @@ namespace Chroma
 		val = node["Layer"];
 		if (val)
 		{
-			Layer = val.as<std::string>();
+			Layer = GUID::Parse(val.as<std::string>());
 		}
 		val = node["PlayOnStart"];
 		if (val)
@@ -106,6 +106,7 @@ namespace Chroma
 			Animation = 0;
 			CurrentFrame = 0;
 			SetSpriteOrigin(SpriteOrigin::Default);
+			SortingPoint = AssetManager::GetSprite(SpriteID)->GetSize().y;
 		}
 			
 		else
