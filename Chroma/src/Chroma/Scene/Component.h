@@ -28,9 +28,14 @@ namespace Chroma
 	/// By default, a component will show in the editor, to prevent an entry, override EditorVisible().
 	struct Component
 	{
-
+		friend class Polychrome::ComponentWidgets;
 		friend class Scene;
 		friend class ECS;
+		friend class Polychrome::Inspector;
+		friend struct Tag;
+		friend struct Transform;
+		friend struct Relationship;
+
 		Component() = default;
 		Component(const Component&) = default;
 		/// @brief Function to serialize the scene to YAML.
@@ -135,12 +140,6 @@ namespace Chroma
 
 		/// @brief Counter for component IDs.
 		static unsigned int component_counter;
-
-		friend class Polychrome::Inspector;
-		friend struct Tag;
-		friend struct Transform;
-		friend struct Relationship;
-		friend class Polychrome::ComponentWidgets;
 	};
 				
 }

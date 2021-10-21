@@ -16,6 +16,7 @@ namespace Polychrome
 	bool ComponentDebugGizmos::DrawAllGizmos = true;
 	bool ComponentDebugGizmos::DrawCameraGizmos = true;
 	bool ComponentDebugGizmos::DrawBoxCollider = false;
+	bool ComponentDebugGizmos::DrawSpriteBoundries = false;
 
 	bool ComponentDebugGizmos::DrawAllEntities = false;
 
@@ -37,6 +38,7 @@ namespace Polychrome
 		if (!DrawAllEntities && Hierarchy::SelectedEntity != Chroma::ENTITY_NULL)
 		{
 			DrawBoxColliderGizmos(Hierarchy::SelectedEntity);
+			DrawSpriteBoundryGizmos(Hierarchy::SelectedEntity);
 		}
 		else if (DrawAllEntities)
 		{
@@ -44,16 +46,83 @@ namespace Polychrome
 			{
 				DrawBoxColliderGizmos(entity);
 			}
+
+			for (auto entity : EditorApp::CurrentScene->Registry.view<Chroma::SpriteRenderer>())
+			{
+				DrawSpriteBoundryGizmos(entity);
+			}
 		}
 	}
 
 	void ComponentDebugGizmos::DrawBoxColliderGizmos(Chroma::EntityID entity)
 	{
-		if (DrawBoxCollider)
+		if (DrawBoxCollider && EditorApp::CurrentScene->HasComponent<Chroma::BoxCollider>(entity))
 		{
 			auto& collider = EditorApp::CurrentScene->GetComponent<Chroma::BoxCollider>(entity);
 			const Math::vec2 absolutePos = EditorApp::CurrentScene->GetTransformAbsolutePosition(entity);
 			Chroma::Renderer2D::DrawRect(absolutePos + collider.Offset, collider.Bounds, 1.f / EditorApp::Camera.GetZoom(), { 0.2f, 0.9f , 0.3f , 1.f });
+		}
+	}
+
+	void ComponentDebugGizmos::DrawSpriteBoundryGizmos(Chroma::EntityID entity)
+	{
+		if (DrawSpriteBoundries && EditorApp::CurrentScene->HasComponent<Chroma::SpriteRenderer>(entity))
+		{
+			Chroma::Transform& transform = EditorApp::CurrentScene->Registry.get<Chroma::Transform>(entity);
+			Chroma::SpriteRenderer& spriteRenderer = EditorApp::CurrentScene->Registry.get<Chroma::SpriteRenderer>(entity);
+			Chroma::Relationship& relationship = EditorApp::CurrentScene->Registry.get<Chroma::Relationship>(entity);
+
+			const Math::vec2& origin = spriteRenderer.GetSpriteOriginVector();
+
+			if (Chroma::AssetManager::HasSprite(spriteRenderer.GetSpriteID()))
+			{
+				Chroma::Ref<Chroma::Sprite> s = Chroma::AssetManager::GetSprite(spriteRenderer.GetSpriteID());
+				int w = s->Frames[spriteRenderer.GetCurrentFrame()].Texture->GetWidth();
+				int h = s->Frames[spriteRenderer.GetCurrentFrame()].Texture->GetHeight();
+				if (!relationship.IsChild())
+				{
+					Math::vec2 size = transform.Scale * Math::vec2((float)w, (float)h);
+					Math::vec2 originAdjustment = { Math::abs(size.x) / 2.f - origin.x, -Math::abs(size.y) / 2.f + origin.y };
+
+					Math::vec2 center = transform.Position + spriteRenderer.Offset + originAdjustment;
+					Math::vec2 sortPointPosition = {center.x, center.y + spriteRenderer.SortingPoint};
+
+					Chroma::Renderer2D::DrawRect(transform.Position + spriteRenderer.Offset + originAdjustment, transform.Scale * Math::vec2((float)w, (float)h), 1.f / EditorApp::Camera.GetZoom(), { 0.95f, 0.0f , 0.5f , 1.f });
+					Chroma::Renderer2D::DrawLine({ center.x - size.x / 2.f, center.y + spriteRenderer.SortingPoint }, { center.x + size.x / 2.f, center.y + spriteRenderer.SortingPoint }, 1.f / EditorApp::Camera.GetZoom(), { 0.95f, 0.0f , 0.5f , 1.f });
+				}
+				else
+				{
+					Math::vec2 pos = transform.Position;
+					Math::vec2 scale = transform.Scale;
+					Math::vec2 parentPos{ 0,0 };
+					float parentRot = 0;
+					float rotation = transform.Rotation;
+					Chroma::EntityID parent = relationship.Parent;
+					while (parent != Chroma::ENTITY_NULL)
+					{
+						Chroma::Transform& parentTransform = EditorApp::CurrentScene->GetComponent<Chroma::Transform>(parent);
+						parentPos += parentTransform.Position;
+						scale *= parentTransform.Scale;
+						parentRot += parentTransform.Rotation;
+						parent = EditorApp::CurrentScene->GetComponent<Chroma::Relationship>(parent).Parent;
+					}
+
+					Math::vec2 adjusted = { pos.x * Math::cos(parentRot) - pos.y * Math::sin(parentRot), pos.x * Math::sin(parentRot) + pos.y * Math::cos(parentRot) };
+					//CHROMA_CORE_TRACE("Adjusted: [{}, {}]; ParentPos: [{}, {}]; ParentRot: {}", adjusted.x, adjusted.y, parentPos.x, parentPos.y, parentRot);
+					Math::vec2 size = scale * Math::vec2((float)w, (float)h);
+					Math::vec2 originAdjustment = { Math::abs(size.x) / 2.f - origin.x, -Math::abs(size.y) / 2.f + origin.y };
+
+					Math::vec2 center = parentPos + adjusted + spriteRenderer.Offset + originAdjustment;
+					Math::vec2 sortPointPosition = { center.x, center.y + spriteRenderer.SortingPoint };
+
+
+					Chroma::Renderer2D::DrawRect(parentPos + adjusted + spriteRenderer.Offset + originAdjustment, scale * Math::vec2((float)w, (float)h), 1.f / EditorApp::Camera.GetZoom(), { 0.95f, 0.0f , 0.5f , 1.f });
+					Chroma::Renderer2D::DrawLine({ center.x - size.x / 2.f, center.y + spriteRenderer.SortingPoint }, { center.x + size.x / 2.f, center.y + spriteRenderer.SortingPoint }, 1.f / EditorApp::Camera.GetZoom(), { 0.95f, 0.0f , 0.5f , 1.f });
+				}
+
+			}
+
+			
 		}
 	}
 

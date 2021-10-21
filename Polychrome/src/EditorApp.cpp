@@ -43,6 +43,7 @@
 #include "ErrorWindow.h"
 #include "Build.h"
 #include "GameSettings.h"
+#include "UndoRedo.h"
 
 #define CHROMA_DEBUG_LOG
 #include <Chroma/Core/Log.h>
@@ -828,17 +829,27 @@ namespace Polychrome
 
 		if (ImGui::BeginMenu("Edit##MAIN_MENU_BAR"))
 		{
-			if (ImGui::MenuItem("Undo##MAIN_MENU_BAR", "Ctrl+Z"))
+			if (ImGui::MenuItem("Undo##MAIN_MENU_BAR", "Ctrl+Z", false, UndoRedo::CanUndo()))
 			{
 				//UNDO
+				UndoRedo::Undo();
 			}
-			if (ImGui::MenuItem("Redo##MAIN_MENU_BAR", "Ctrl+Y"))
+			if (ImGui::MenuItem("Redo##MAIN_MENU_BAR", "Ctrl+Y", false, UndoRedo::CanRedo()))
 			{
 				//REDO
+				UndoRedo::Redo();
 			}
 
 			ImGui::EndMenu();
 		}
+
+
+		if ((ImGui::IsKeyDown((int)Chroma::Input::Key::LEFT_CONTROL) || ImGui::IsKeyDown((int)Chroma::Input::Key::RIGHT_CONTROL)) && ImGui::IsKeyPressed((int)Chroma::Input::Key::Z, false) && UndoRedo::CanUndo())
+			UndoRedo::Undo();
+
+		if ((ImGui::IsKeyDown((int)Chroma::Input::Key::LEFT_CONTROL) || ImGui::IsKeyDown((int)Chroma::Input::Key::RIGHT_CONTROL)) && ImGui::IsKeyPressed((int)Chroma::Input::Key::Y, false) && UndoRedo::CanRedo())
+			UndoRedo::Redo();
+
 
 		if (ImGui::BeginMenu("Object##MAIN_MENU_BAR"))
 		{
@@ -933,9 +944,6 @@ namespace Polychrome
 		ImGui::Text(fmt::format("DPAD_RIGHT:	{}", (bool)Chroma::Input::GetGamepadButtonState(Chroma::Input::GamepadButton::DPAD_RIGHT)).c_str());
 
 		ImGui::End();
-
-		if (ImGui::IsKeyPressed((int)CHROMA_KEY_MINUS))
-			CHROMA_INFO("Test");
 		//Chroma::ImGuiDebugMenu::Draw();
 
 		if (PreferencesWindowOpen)
@@ -944,6 +952,7 @@ namespace Polychrome
 			{
 				static int selected_style = Config.Style;
 				ImGui::SelectStyleCombo("Style", &selected_style, ImGui::ImGuiStyle_Count, nullptr);
+
 			}
 			ImGui::End();
 		}

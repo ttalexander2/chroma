@@ -113,11 +113,11 @@ namespace Chroma
 		std::map<float, std::vector<EntityID>> sprites;
 		for (EntityID e : m_Scene->Registry.view<SpriteRenderer>())
 		{
-			Transform t = m_Scene->Registry.get<Transform>(e);
 			SpriteRenderer s = m_Scene->Registry.get<SpriteRenderer>(e);
+			Math::vec2 absPos = m_Scene->GetTransformAbsolutePosition(e);
 			if (!AssetManager::HasSprite(s.SpriteID))
 				continue;
-			float y = -1.f*(t.Position.y + s.Offset.y - AssetManager::GetSprite(s.SpriteID)->GetSize().y/2.f);
+			float y = -1.f*(absPos.y + s.Offset.y + s.SortingPoint);
 			if (sprites.find(y) == sprites.end())
 				sprites[y] = std::vector<EntityID>();
 			sprites[y].push_back(e);

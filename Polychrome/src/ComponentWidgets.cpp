@@ -5,7 +5,7 @@
 #include <Chroma/Components/AudioSource.h>
 #include <Chroma/Audio/Audio.h>
 #include <Chroma/Components/Transform.h>
-#include <Chroma/ImGui/Widgets/VecWithLabels.h>
+#include "Utilities/VecWithLabels.h"
 #include <Chroma/Components/CSharpScript.h>
 #include <Chroma/Scripting/ScriptModuleField.h>
 #include <Chroma/Components/BoxCollider.h>
@@ -13,9 +13,10 @@
 #include <Chroma/Components/LuaScript.h>
 #include <Chroma/Scripting/LuaScripting.h>
 #include <Chroma/Scripting/MonoScripting.h>
-#include <Chroma/Components/SpriteRenderer.h>
+
 #include "EditorApp.h"
 #include "Hierarchy.h"
+#include "UndoRedo.h"
 
 namespace ImGui
 {
@@ -24,6 +25,8 @@ namespace ImGui
 		return Combo(label, current_item, [](void* data, int idx, const char** out_text) { *out_text = (*((const std::vector<std::string>*)data))[idx].c_str(); return true; }, (void*)&items, items_count, height_in_items);
 	}
 }
+
+#include <Chroma/Components/SpriteRenderer.h>
 
 namespace Polychrome
 {
@@ -49,11 +52,18 @@ namespace Polychrome
 		DrawComponentValue(t, "Position");
 		ImGui::Vec2IntWithLabels(("##transform_position" + std::to_string(t->GetUniqueID())).c_str(), t->Position);
 
+		float oldRot = t->Rotation;
+
 		DrawComponentValue(t, "Rotation");
 		float rot = glm::degrees(t->Rotation);
 		ImGui::SetNextItemWidth(ImGui::GetColumnWidth(2) - 2);
-		ImGui::SliderFloat(("##transform_rotation" + std::to_string(t->GetUniqueID())).c_str(), &rot, 0.f, 360.f);
-		t->Rotation = glm::radians(rot);
+		if (ImGui::SliderFloat(("##transform_rotation" + std::to_string(t->GetUniqueID())).c_str(), &rot, 0.f, 360.f))
+		{
+			t->Rotation = glm::radians(rot);
+		}
+
+		Polychrome::UndoRedo::ImGuiRegister<float>(&t->Rotation, oldRot, "Modify Transform Rotation");
+		
 
 		DrawComponentValue(t, "Scale");
 		ImGui::Vec2FloatWithLabels(("##transform_scale" + std::to_string(t->GetUniqueID())).c_str(), t->Scale, false);
@@ -154,23 +164,23 @@ namespace Polychrome
 		//	GUID = Audio::GetEventGuid(Event);
 		//}
 
+		std::string evnt = a->GetEvent();
 		if (ImGui::InputText("##AUDIO_SOURCE_COMPONENT_" + a->GetUniqueID(), buf, IM_ARRAYSIZE(buf)))
 		{
-			a->Event = std::string(buf);
-			a->GUID = Chroma::Audio::GetEventGuid(a->Event);
+			a->SetEvent(std::string(buf));
 		}
 
-
-		if (ImGui::Checkbox("##AUDIO_SOURCE_Mute", &a->Mute))
-		{
-
-		}
+		Polychrome::UndoRedo::ImGuiRegister<std::string>(&a->Event, evnt, "Modify AudioSource Event");
 
 
-		if (ImGui::Checkbox("##AUDIO_SOURCE_Play on Init", &a->PlayOnInit))
-		{
+		bool mute = a->Mute;
+		ImGui::Checkbox("##AUDIO_SOURCE_Mute", &a->Mute);
+		Polychrome::UndoRedo::ImGuiRegister<bool>(&a->Mute, mute, "Modify AudioSource Mute");
 
-		}
+
+		bool pon = a->PlayOnInit;
+		ImGui::Checkbox("##AUDIO_SOURCE_Play on Init", &a->PlayOnInit);
+		Polychrome::UndoRedo::ImGuiRegister<bool>(&a->Mute, pon, "Modify AudioSource PlayOnInit");
 
 		ImGui::PopItemWidth();
 	}
@@ -183,6 +193,7 @@ namespace Polychrome
 
 		DrawComponentValue(c, "Offset");
 		ImGui::Vec2IntWithLabels("##box_collider_2d_offset", b->Offset);
+		
 	}
 
 	void ComponentWidgets::DrawCircleCollider(Chroma::Component* c)
@@ -326,6 +337,13 @@ namespace Polychrome
 					spr->SetCurrentFrame(0);
 				}
 
+				UndoRedo::ImGuiRegister<std::string>(&spr->SpriteID, selectedSprite, "Modify Selected Sprite", [](std::string* ptr, std::string val, void* user_data)
+					{
+						Chroma::SpriteRenderer* userData = reinterpret_cast<Chroma::SpriteRenderer*>(user_data);
+						userData->SetSprite(val);
+					},
+					(void*)spr);
+
 				if (selected)
 				{
 					ImGui::SetItemDefaultFocus();
@@ -335,6 +353,8 @@ namespace Polychrome
 			}
 			ImGui::EndCombo();
 		}
+
+
 
 
 
@@ -365,6 +385,11 @@ namespace Polychrome
 					spr->SetSpriteOrigin(customOrigin);
 				}
 			}
+			
+			float oldSortingPoint = spr->SortingPoint;
+			DrawComponentValue(c, "Sorting Point");
+			ImGui::DragFloat("##sorting_point_sprite", &spr->SortingPoint);
+			UndoRedo::ImGuiRegister<float>(&spr->SortingPoint, oldSortingPoint, "Modify Sprite Sorting Point");
 
 
 			if (s->Animated())
@@ -378,6 +403,8 @@ namespace Polychrome
 					selectedStr = s->Animations[0].Tag;
 				else
 					selectedStr = s->Animations[spr->GetAnimation()].Tag;
+
+				unsigned int oldAnimation = spr->GetAnimation();
 
 				if (ImGui::BeginCombo("##animation", selectedStr.c_str()))
 				{
@@ -396,6 +423,8 @@ namespace Polychrome
 					}
 					ImGui::EndCombo();
 				}
+
+				UndoRedo::ImGuiRegister<unsigned int>(&spr->Animation, oldAnimation, "Modify Sprite Animation");
 
 				if (spr->GetAnimation() >= 0 && spr->GetAnimation() < s->Animations.size())
 				{
@@ -419,10 +448,11 @@ namespace Polychrome
 			if (s->Frames.size() > 1)
 			{
 				DrawComponentValue(c, "Frame");
-
+				//unsigned int oldFrame = spr->CurrentFrame;
 				int curr = (int)spr->GetCurrentFrame() + 1;
 				ImGui::SliderInt("##frame", &curr, 1, s->Frames.size());
 				spr->SetCurrentFrame((unsigned int)curr - 1);
+				//UndoRedo::ImGuiRegister<unsigned int>(&spr->CurrentFrame, oldFrame, "Modify Sprite Frame");
 
 
 				ImGui::SameLine();
@@ -432,14 +462,20 @@ namespace Polychrome
 
 			if (s->Animated())
 			{
+				bool oldLoop = spr->Loop;
 				DrawComponentValue(c, "Loop");
 				ImGui::Checkbox("##loop", &spr->Loop);
+				UndoRedo::ImGuiRegister<bool>(&spr->Loop, oldLoop, "Modify Sprite Loop");
 
+				bool oldpos = spr->PlayOnStart;
 				DrawComponentValue(c, "Play On Start");
 				ImGui::Checkbox("##play_on_start", &spr->PlayOnStart);
+				UndoRedo::ImGuiRegister<bool>(&spr->PlayOnStart, oldpos, "Modify Sprite PlayOnStart");
 
+				bool oldPlaying = spr->Playing;
 				DrawComponentValue(c, "Playing");
 				ImGui::Checkbox("##playing", &spr->Playing);
+				UndoRedo::ImGuiRegister<bool>(&spr->Playing, oldPlaying, "Modify Sprite Playing");
 			}
 
 
@@ -456,11 +492,15 @@ namespace Polychrome
 		DrawComponentValue(c, "Color");
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
 
+		Math::vec4 oldColor = spr->Color;
+
 		float col[4]{ spr->Color.r, spr->Color.b, spr->Color.g, spr->Color.a };
 		if (ImGui::ColorEdit4("##Color", col))
 		{
 			spr->Color = { col[0], col[1], col[2], col[3] };
 		}
+
+		UndoRedo::ImGuiRegister<Math::vec4>(&spr->Color, oldColor, "Modify Sprite Color");
 
 
 		DrawComponentValue(c, "Offset");
