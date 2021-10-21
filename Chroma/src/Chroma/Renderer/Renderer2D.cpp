@@ -571,12 +571,12 @@ namespace Chroma
 		DrawQuad(midpoint, { length, line_width }, color, rotation);
 	}
 
-	void Renderer2D::DrawRect(const Math::vec2& position, const Math::vec2& size, float line_width, const Math::vec4& color)
+	void Renderer2D::DrawRect(const Math::vec2& position, const Math::vec2& size, float line_width, const Math::vec4& color, float rotation)
 	{
-		DrawQuad({position.x, position.y - size.y/2.f }, { size.x + line_width, line_width }, color); //h
-		DrawQuad({position.x + size.x/2.f, position.y }, { line_width, size.y - line_width }, color); //v
-		DrawQuad({ position.x, position.y + size.y / 2.f }, { size.x + line_width, line_width }, color); //h
-		DrawQuad({ position.x - size.x / 2.f, position.y }, { line_width, size.y - line_width }, color); //v
+		DrawQuad({position.x, position.y - size.y/2.f }, { size.x + line_width, line_width }, color, rotation); //h
+		DrawQuad({position.x + size.x/2.f, position.y }, { line_width, size.y - line_width }, color, rotation); //v
+		DrawQuad({ position.x, position.y + size.y / 2.f }, { size.x + line_width, line_width }, color, rotation); //h
+		DrawQuad({ position.x - size.x / 2.f, position.y }, { line_width, size.y - line_width }, color, rotation); //v
 
 		//DrawQuad({ position.x, position.y }, { 1,1 }, { 0.8f, 0.2f, 0.3f, 1.0f });
 		//DrawQuad({ position.x, position.y - size.y / 2.f + line_width }, { 1,1 }, { 0.8f, 0.2f, 0.3f, 1.0f }); //h

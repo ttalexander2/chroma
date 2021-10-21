@@ -3,6 +3,7 @@
 #include "Chroma/Math/Vec3.h"
 #include "Chroma/Math/Vec2.h"
 #include <string>
+#include "../UndoRedo.h"
 
 namespace ImGui
 {
@@ -19,6 +20,8 @@ namespace ImGui
 
 		float inputWidth = (ImGui::GetContentRegionAvailWidth() - ImGui::CalcTextSize("X").x * 3.0f - (6.0f * 6)) / 3;
 
+		Math::vec3 oldVal = val;
+
 		ImGui::PushStyleColor(ImGuiCol_Button, { 0.8f, 0.1f, 0.1f, 0.8f });
 		if (ImGui::Button(("X##vec3_x_label" + std::string(hash)).c_str()))
 		{
@@ -31,6 +34,9 @@ namespace ImGui
 				val.x = 1;
 			}
 		}
+
+		Polychrome::UndoRedo::ImGuiRegister<Math::vec3>(&val, oldVal, "Reset Vec3.X");
+
 		ImGui::PopStyleColor();
 		if (ImGui::IsItemHovered())
 		{
@@ -48,6 +54,8 @@ namespace ImGui
 			val.x = pos;
 		}
 
+		Polychrome::UndoRedo::ImGuiRegister<Math::vec3>(&val, oldVal, "Modify Vec3.X");
+
 		ImGui::SameLine(0.0f, 6.0f);
 
 		ImGui::PushStyleColor(ImGuiCol_Button, { 0.1f, 0.8f, 0.1f, 0.8f });
@@ -62,6 +70,10 @@ namespace ImGui
 				val.y = 1;
 			}
 		}
+
+
+		Polychrome::UndoRedo::ImGuiRegister<Math::vec3>(&val, oldVal, "Reset Vec3.Y");
+
 		ImGui::PopStyleColor();
 		if (ImGui::IsItemHovered())
 		{
@@ -79,6 +91,8 @@ namespace ImGui
 			val.y = pos;
 		}
 
+		Polychrome::UndoRedo::ImGuiRegister<Math::vec3>(&val, oldVal, "Modify Vec3.Y");
+
 		ImGui::SameLine(0.0f, 6.0f);
 
 		ImGui::PushStyleColor(ImGuiCol_Button, { 0.1f, 0.1f, 0.8f, 0.8f });
@@ -93,6 +107,9 @@ namespace ImGui
 				val.z = 1;
 			}
 		}
+
+		Polychrome::UndoRedo::ImGuiRegister<Math::vec3>(&val, oldVal, "Reset Vec3.Z");
+
 		ImGui::PopStyleColor();
 		if (ImGui::IsItemHovered())
 		{
@@ -109,6 +126,8 @@ namespace ImGui
 		{
 			val.z = pos;
 		}
+
+		Polychrome::UndoRedo::ImGuiRegister<Math::vec3>(&val, oldVal, "Modify Vec3.Z");
 
 		ImGui::PopStyleVar();
 
@@ -129,6 +148,8 @@ namespace ImGui
 
 		ImGui::PushStyleColor(ImGuiCol_Button, { 0.8f, 0.1f, 0.1f, 0.8f });
 
+		Math::vec3 oldVal = val;
+
 		if (ImGui::Button(("X##vec3_x_label" + std::string(hash)).c_str()))
 		{
 			if (reset_to_zero)
@@ -140,6 +161,8 @@ namespace ImGui
 				val.x = 1;
 			}
 		}
+
+		Polychrome::UndoRedo::ImGuiRegister<Math::vec3>(&val, oldVal, "Reset Vec3.X");
 
 		ImGui::PopStyleColor();
 		if (ImGui::IsItemHovered())
@@ -159,6 +182,8 @@ namespace ImGui
 			val.x = pos;
 		}
 
+		Polychrome::UndoRedo::ImGuiRegister<Math::vec3>(&val, oldVal, "Modify Vec3.X");
+
 		ImGui::SameLine(0.0f, 6.0f);
 
 		ImGui::PushStyleColor(ImGuiCol_Button, { 0.1f, 0.8f, 0.1f, 0.8f });
@@ -173,6 +198,9 @@ namespace ImGui
 				val.y = 1;
 			}
 		}
+
+		Polychrome::UndoRedo::ImGuiRegister<Math::vec3>(&val, oldVal, "Reset Vec3.Y");
+
 		ImGui::PopStyleColor();
 		if (ImGui::IsItemHovered())
 		{
@@ -190,6 +218,8 @@ namespace ImGui
 			val.y = pos;
 		}
 
+		Polychrome::UndoRedo::ImGuiRegister<Math::vec3>(&val, oldVal, "Modify Vec3.Y");
+
 		ImGui::SameLine(0.0f, 6.0f);
 
 		ImGui::PushStyleColor(ImGuiCol_Button, { 0.1f, 0.1f, 0.8f, 0.8f });
@@ -204,6 +234,9 @@ namespace ImGui
 				val.z = 1;
 			}
 		}
+
+		Polychrome::UndoRedo::ImGuiRegister<Math::vec3>(&val, oldVal, "Reset Vec3.Z");
+
 		ImGui::PopStyleColor();
 		if (ImGui::IsItemHovered())
 		{
@@ -220,6 +253,8 @@ namespace ImGui
 		{
 			val.z = pos;
 		}
+
+		Polychrome::UndoRedo::ImGuiRegister<Math::vec3>(&val, oldVal, "Modify Vec3.Z");
 
 		ImGui::PopStyleVar();
 
@@ -240,6 +275,8 @@ namespace ImGui
 
 		float inputWidth = (ImGui::GetContentRegionAvailWidth() - ImGui::CalcTextSize("X").x * 2.0f - (4.0f * 6)) / 2;
 
+		Math::vec2 oldVal = val;
+
 		ImGui::PushStyleColor(ImGuiCol_Button, { 0.8f, 0.1f, 0.1f, 0.8f });
 		if (ImGui::Button(("X##vec3_x_label" + std::string(hash)).c_str()))
 		{
@@ -254,6 +291,9 @@ namespace ImGui
 				val.x = 1;
 			}
 		}
+
+		Polychrome::UndoRedo::ImGuiRegister<Math::vec2>(&val, oldVal, "Reset Vec2.X");
+		
 		ImGui::PopStyleColor();
 		if (ImGui::IsItemHovered())
 		{
@@ -272,6 +312,8 @@ namespace ImGui
 			val.x = pos;
 		}
 
+		Polychrome::UndoRedo::ImGuiRegister<Math::vec2>(&val, oldVal, "Modify Vec2.X");
+
 		ImGui::SameLine(0.0f, 6.0f);
 
 		ImGui::PushStyleColor(ImGuiCol_Button, { 0.1f, 0.8f, 0.1f, 0.8f });
@@ -288,6 +330,9 @@ namespace ImGui
 				val.y = 1;
 			}
 		}
+
+		Polychrome::UndoRedo::ImGuiRegister<Math::vec2>(&val, oldVal, "Reset Vec2.Y");
+
 		ImGui::PopStyleColor();
 		if (ImGui::IsItemHovered())
 		{
@@ -306,6 +351,8 @@ namespace ImGui
 			val.y = pos;
 		}
 
+		Polychrome::UndoRedo::ImGuiRegister<Math::vec2>(&val, oldVal, "Modify Vec2.Y");
+
 		ImGui::PopStyleVar();
 
 		ImGui::SameLine(0.0f, 6.0f);
@@ -323,6 +370,8 @@ namespace ImGui
 		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 0, 0 });
 
 		float inputWidth = (ImGui::GetContentRegionAvailWidth() - ImGui::CalcTextSize("X").x * 2.0f - (4.0f * 6)) / 2;
+
+		Math::uvec2 oldVal = val;
 
 		ImGui::PushStyleColor(ImGuiCol_Button, { 0.8f, 0.1f, 0.1f, 0.8f });
 		ImGui::Button(("X##vec3_x_label" + std::string(hash)).c_str());
@@ -343,6 +392,8 @@ namespace ImGui
 		{
 			val.x = pos;
 		}
+
+		Polychrome::UndoRedo::ImGuiRegister<Math::uvec2>(&val, oldVal, "Modify Vec2.X");
 
 		ImGui::SameLine(0.0f, 6.0f);
 
@@ -366,6 +417,8 @@ namespace ImGui
 			val.y = pos;
 		}
 
+		Polychrome::UndoRedo::ImGuiRegister<Math::uvec2>(&val, oldVal, "Modify Vec2.Y");
+
 		ImGui::PopStyleVar();
 
 		ImGui::SameLine(0.0f, 6.0f);
@@ -383,6 +436,8 @@ namespace ImGui
 
 		float inputWidth = (ImGui::GetContentRegionAvailWidth() - ImGui::CalcTextSize("X").x * 2.0f - (4.0f * 6)) / 2;
 
+		Math::vec2 oldVal = val;
+
 		ImGui::PushStyleColor(ImGuiCol_Button, { 0.8f, 0.1f, 0.1f, 0.8f });
 
 		if (ImGui::Button(("X##vec3_x_label" + std::string(hash)).c_str()))
@@ -396,6 +451,8 @@ namespace ImGui
 				val.x = 1;
 			}
 		}
+
+		Polychrome::UndoRedo::ImGuiRegister<Math::vec2>(&val, oldVal, "Reset Vec2.X");
 
 		ImGui::PopStyleColor();
 		if (ImGui::IsItemHovered())
@@ -415,6 +472,8 @@ namespace ImGui
 			val.x = pos;
 		}
 
+		Polychrome::UndoRedo::ImGuiRegister<Math::vec2>(&val, oldVal, "Modify Vec2.X");
+
 		ImGui::SameLine(0.0f, 6.0f);
 
 		ImGui::PushStyleColor(ImGuiCol_Button, { 0.1f, 0.8f, 0.1f, 0.8f });
@@ -429,6 +488,9 @@ namespace ImGui
 				val.y = 1;
 			}
 		}
+
+		Polychrome::UndoRedo::ImGuiRegister<Math::vec2>(&val, oldVal, "Reset Vec2.Y");
+
 		ImGui::PopStyleColor();
 		if (ImGui::IsItemHovered())
 		{
@@ -445,6 +507,8 @@ namespace ImGui
 		{
 			val.y = pos;
 		}
+
+		Polychrome::UndoRedo::ImGuiRegister<Math::vec2>(&val, oldVal, "Modify Vec2.Y");
 
 		ImGui::PopStyleVar();
 

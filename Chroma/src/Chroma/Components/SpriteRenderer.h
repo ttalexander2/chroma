@@ -6,6 +6,12 @@
 #include "Chroma/Assets/Sprite.h"
 #include "Chroma/Scene/World.h"
 
+namespace Polychrome
+{
+	class ComponentWidgets;
+}
+
+
 namespace Chroma
 {
 	class SpriteRendererSystem;
@@ -15,6 +21,8 @@ namespace Chroma
 	/// @see Aseprite
 	struct SpriteRenderer : Component
 	{
+		friend class Polychrome::ComponentWidgets;
+
 		/// @brief Constructs an empty SpriteRenderer.
 		SpriteRenderer() = default;
 		/// @brief Constructs a SpriteRenderer from an existing SpriteRenderer.
@@ -62,7 +70,7 @@ namespace Chroma
 
 		/// @brief Gets the sprite ID/Path
 		/// @return Relative path/name of the sprite.
-		const std::string GetSpriteID() const { return SpriteID; }
+		const std::string& GetSpriteID() const { return SpriteID; }
 		/// @brief Set the sprite to render.
 		/// 
 		/// Sprite must already be loaded.

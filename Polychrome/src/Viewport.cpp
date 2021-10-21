@@ -15,6 +15,7 @@
 #include <Chroma/Scripting/MonoScripting.h>
 #include "ComponentDebugGizmos.h"
 #include "../../Chroma/third_party/GLFW/include/GLFW/glfw3.h"
+#include "UndoRedo.h"
 
 namespace Polychrome
 {
@@ -229,6 +230,145 @@ namespace Polychrome
 			ImGui::PopItemFlag();
 			ImGui::PopStyleColor();
 
+			ImGui::SameLine();
+			ImGui::SeparatorEx(ImGuiSeparatorFlags_Vertical);
+			ImGui::SameLine();
+
+			ImGui::PushItemFlag(ImGuiItemFlags_Disabled, EditorApp::SceneRunning || UndoRedo::UndoStack.size() <= 0);
+			if (EditorApp::SceneRunning || !UndoRedo::CanUndo())
+				ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled)); //GRAY
+			else
+				ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_Text)); // RED
+
+			ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 0, 4 });
+			if (ImGui::Button(ICON_FK_REPLY "##UNDO_VP"))
+				UndoRedo::Undo();
+
+			if (ImGui::IsItemHovered())
+				ImGui::SetTooltip("Undo (Ctrl + Z)");
+			
+			ImGui::SameLine();
+			if (ImGui::Button(ICON_FK_CARET_DOWN "##UNDO_CARET"))
+				ImGui::OpenPopup("##UNDO_STACK_CONTEXT");
+			ImGui::PopStyleVar();
+
+			if (ImGui::BeginPopupContextWindow("##UNDO_STACK_CONTEXT"))
+			{
+				int selected = -1;
+				static int selected_i = -1;
+				int num = 0;
+				bool anyHovered = false;
+				ImGui::BeginListBox("##undo_stack_list");
+				for (std::list<ICommand*>::reverse_iterator i = UndoRedo::UndoStack.rbegin(); i != UndoRedo::UndoStack.rend(); ++i)
+				{
+					std::string undoName = (*i)->GetName() + "##undo_stack_context_" + std::to_string(num);
+					bool isSelected = selected_i >= num;
+					if (ImGui::Selectable(undoName.c_str(), &isSelected))
+					{
+						selected = num;
+					}
+
+					if (ImGui::IsItemHovered())
+					{
+						selected_i = num;
+						anyHovered = true;
+					}
+						
+
+					num++;
+				}
+
+				ImGui::EndListBox();
+
+				ImGui::Text(("Undo " + std::to_string(selected_i + 1) + " Items").c_str());
+
+				if (selected != -1)
+				{
+					for (int i = 0; i < selected_i + 1; i++)
+					{
+						UndoRedo::Undo();
+					}
+					ImGui::CloseCurrentPopup();
+				}
+
+				if (!anyHovered)
+					selected_i = -1;
+
+
+				ImGui::EndPopup();
+			}
+
+			ImGui::PopItemFlag();
+			ImGui::PopStyleColor();
+			ImGui::PushItemFlag(ImGuiItemFlags_Disabled, EditorApp::SceneRunning || UndoRedo::RedoStack.size() <= 0);
+			if (EditorApp::SceneRunning || !UndoRedo::CanRedo())
+				ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled)); //GRAY
+			else
+				ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_Text)); // RED
+			
+			ImGui::SameLine();
+			ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 0, 4 });
+			if (ImGui::Button(ICON_FK_SHARE "##REDO_VP"))
+				UndoRedo::Redo();
+
+			if (ImGui::IsItemHovered())
+				ImGui::SetTooltip("Redo (Ctrl + Y)");
+
+			ImGui::SameLine();
+
+			if (ImGui::Button(ICON_FK_CARET_DOWN "##REDO_CARET"))
+				ImGui::OpenPopup("##REDO_STACK_CONTEXT");
+			ImGui::PopStyleVar();
+
+
+			if (ImGui::BeginPopupContextWindow("##REDO_STACK_CONTEXT"))
+			{
+				int selected = -1;
+				static int selected_i = -1;
+				int num = 0;
+				bool anyHovered = false;
+				ImGui::BeginListBox("##REDO_stack_list");
+				for (std::list<ICommand*>::reverse_iterator i = UndoRedo::RedoStack.rbegin(); i != UndoRedo::RedoStack.rend(); ++i)
+				{
+					std::string undoName = (*i)->GetName() + "##REDO_stack_context_" + std::to_string(num);
+					bool isSelected = selected_i >= num;
+					if (ImGui::Selectable(undoName.c_str(), &isSelected))
+					{
+						selected = num;
+					}
+
+					if (ImGui::IsItemHovered())
+					{
+						selected_i = num;
+						anyHovered = true;
+					}
+
+
+					num++;
+				}
+
+				ImGui::EndListBox();
+
+				ImGui::Text(("Redo " + std::to_string(selected_i + 1) + " Items").c_str());
+
+				if (selected != -1)
+				{
+					for (int i = 0; i < selected_i + 1; i++)
+					{
+						UndoRedo::Redo();
+					}
+					ImGui::CloseCurrentPopup();
+				}
+
+				if (!anyHovered)
+					selected_i = -1;
+
+
+				ImGui::EndPopup();
+			}
+
+			ImGui::PopItemFlag();
+			ImGui::PopStyleColor();
 
 			ImGui::SameLine();
 			ImGui::SeparatorEx(ImGuiSeparatorFlags_Vertical);
@@ -421,6 +561,7 @@ namespace Polychrome
 				ImGui::Text("Gizmos Settings:");
 				ImGui::Checkbox("Camera##gizmos_settings", &ComponentDebugGizmos::DrawCameraGizmos);
 				ImGui::Checkbox("Box Collider##gizmos_settings", &ComponentDebugGizmos::DrawBoxCollider);
+				ImGui::Checkbox("Sprite Bounds##gizmos_settings", &ComponentDebugGizmos::DrawSpriteBoundries);
 				
 				ImGui::EndPopup();
 			}
@@ -480,6 +621,8 @@ namespace Polychrome
 			uint32_t textureID = frame_buffer->GetColorAttachmentRendererID();
 			ImGui::Image(reinterpret_cast<void*>(textureID), ImVec2{ s_ViewportSize.x, s_ViewportSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
 
+			static bool awaitingEndDrag = false;
+
 			auto pos = ImGui::GetCursorPos();
 			viewportFocused = ImGui::IsWindowFocused();
 			viewportHovered = ImGui::IsItemHovered();
@@ -501,6 +644,25 @@ namespace Polychrome
 				int pixelVal = frame_buffer->ReadPixel(1, flippedMousePos.x, flippedMousePos.y);
 				frame_buffer->Unbind();
 				//CHROMA_CORE_INFO("Selected Entity: {}", pixelVal);
+
+				if (pixelVal > -1 && ImGui::IsMouseClicked(0) && EditorApp::CurrentScene->Registry.valid((Chroma::EntityID)pixelVal))
+				{
+					//CHROMA_CORE_TRACE("Begin drag");
+					Hierarchy::SelectedEntity = (Chroma::EntityID)pixelVal;
+					awaitingEndDrag = true;
+					Math::vec2 ptr = EditorApp::CurrentScene->GetTransformAbsolutePosition(Hierarchy::SelectedEntity);
+					UndoRedo::BeginCommand<Math::vec2>(&EditorApp::CurrentScene->GetComponent<Chroma::Transform>(Hierarchy::SelectedEntity).Position, ptr, "Move Entity", [](Math::vec2* pointer, Math::vec2 val, void* user_data)
+						{
+							if (user_data == nullptr)
+								return;
+							Chroma::EntityID id = *reinterpret_cast<Chroma::EntityID*>(user_data);
+							if (!EditorApp::CurrentScene->Registry.valid(id))
+								return;
+							EditorApp::CurrentScene->SetTransformAbsolutePosition(id, val);
+						},
+						(void*)&Hierarchy::SelectedEntity, true, sizeof(Chroma::EntityID));
+				}
+
 				if (pixelVal > -1 && !ImGui::IsMouseDragging(ImGuiMouseButton_Left))
 				{
 					if (EditorApp::CurrentScene->Registry.valid((Chroma::EntityID)pixelVal))
@@ -518,7 +680,7 @@ namespace Polychrome
 				}
 			}
 
-			if (!ImGui::IsMouseDown(ImGuiMouseButton_Left))
+			//if (!ImGui::IsMouseDown(ImGuiMouseButton_Left))
 
 			if (!ImGui::IsMouseDown(ImGuiMouseButton_Left))
 			{
@@ -526,17 +688,24 @@ namespace Polychrome
 				offset = { 0,0 };
 			}
 				
-
 			
+			if (awaitingEndDrag && ImGui::IsMouseReleased(0) && Hierarchy::SelectedEntity != Chroma::ENTITY_NULL)
+			{
+				//CHROMA_CORE_TRACE("End drag");
+				Math::vec2 ptr = EditorApp::CurrentScene->GetTransformAbsolutePosition(Hierarchy::SelectedEntity);
+				UndoRedo::EndCommand<Math::vec2>(&EditorApp::CurrentScene->GetComponent<Chroma::Transform>(Hierarchy::SelectedEntity).Position, ptr);
+				awaitingEndDrag = false;
+			}
 
 			if (Hierarchy::SelectedEntity != Chroma::ENTITY_NULL && itemDrag && ImGui::IsMouseDragging(ImGuiMouseButton_Left) && (ImGui::IsKeyDown((int)Chroma::Input::Key::LEFT_CONTROL) || operation == ViewportOperation::Move))
 			{
+				Math::vec2 prevTransformPosition = EditorApp::CurrentScene->GetTransformAbsolutePosition(Hierarchy::SelectedEntity);
 				Math::vec2 posToMove = ViewportPositionToWorld({ flippedMousePos.x, flippedMousePos.y }) - offset;
 				bool doSnap = SnapToGrid && !ImGui::IsKeyDown((int)Chroma::Input::Key::LEFT_ALT);
 				if (doSnap)
-					EditorApp::CurrentScene->SetTransformAbsolutePosition(Hierarchy::SelectedEntity, { snapf(posToMove.x, ComponentDebugGizmos::SnapSize.x, 1), snapf(posToMove.y, ComponentDebugGizmos::SnapSize.y, 1)});
-				else
-					EditorApp::CurrentScene->SetTransformAbsolutePosition(Hierarchy::SelectedEntity, posToMove);
+					posToMove = { snapf(posToMove.x, ComponentDebugGizmos::SnapSize.x, 1), snapf(posToMove.y, ComponentDebugGizmos::SnapSize.y, 1) };
+				EditorApp::CurrentScene->SetTransformAbsolutePosition(Hierarchy::SelectedEntity, posToMove);
+				
 			}
 
 			ImGui::SetCursorScreenPos(fb_pos);

@@ -40,6 +40,9 @@ namespace Chroma
 			out << YAML::Value << (int)Origin;
 		}
 
+		out << YAML::Key << "SortingPoint";
+		out << YAML::Value << SortingPoint;
+
 
 	}
 	void SpriteRenderer::Deserialize(YAML::Node& node)
@@ -90,6 +93,18 @@ namespace Chroma
 			Origin = SpriteOrigin::Custom;
 			OriginValue = val.as<Math::vec2>();
 		}
+		val = node["SortingPoint"];
+		if (val)
+		{
+			SortingPoint = val.as<float>();
+		}
+		else
+		{
+			if (AssetManager::HasSprite(SpriteID))
+			{
+				SortingPoint = AssetManager::GetSprite(SpriteID)->GetSize().y;
+			}
+		}
 
 	}
 
@@ -102,6 +117,7 @@ namespace Chroma
 	{
 		if (AssetManager::HasSprite(spriteID))
 		{
+			//CHROMA_CORE_INFO("SET SPRITE: {}", spriteID);
 			SpriteID = spriteID;
 			Animation = 0;
 			CurrentFrame = 0;

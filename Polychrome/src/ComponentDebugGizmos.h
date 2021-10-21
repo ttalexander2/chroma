@@ -18,9 +18,11 @@ namespace Polychrome
 		static bool DrawCameraGizmos;
 		static bool DrawBoxCollider;
 		static bool DrawAllEntities;
+		static bool DrawSpriteBoundries;
 
 	private:
 		static void DrawBoxColliderGizmos(Chroma::EntityID entity);
+		static void DrawSpriteBoundryGizmos(Chroma::EntityID entity);
 
 	};
 }

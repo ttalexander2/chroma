@@ -11,10 +11,6 @@ namespace Chroma
 	/// This component plays an audio event. Spacial controlling is not yet supported.
 	struct AudioSource : Component
 	{
-		/// @brief Path/Name of FMOD event.
-		std::string Event;
-		/// @brief GUID of event.
-		FMOD_GUID GUID;
 		/// @brief Whether the event is currently muted.
 		bool Mute = false;
 		/// @brief Whether to play the event once the Scene is initialized.
@@ -35,6 +31,14 @@ namespace Chroma
 		{
 		}
 
+		/// @brief Path/Name of FMOD event.
+		std::string Event;
+		/// @brief GUID of event.
+		FMOD_GUID GUID;
+
+		const std::string& GetEvent() { return Event; }
+		void SetEvent(const std::string& _event) { Event = _event; GUID = Chroma::Audio::GetEventGuid(Event);}
+
 		/// @brief Gets the Component Name.
 		/// @return Name of the Component
 		const std::string Name() const override
@@ -50,6 +54,9 @@ namespace Chroma
 		void Serialize(YAML::Emitter& out) override;
 
 		void Deserialize(YAML::Node& node) override;
+
+	private:
+
 
 	};
 }
