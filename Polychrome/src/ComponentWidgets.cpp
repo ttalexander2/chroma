@@ -11,6 +11,7 @@
 #include <Chroma/Components/BoxCollider.h>
 #include <Chroma/Components/CircleCollider.h>
 #include <Chroma/Scripting/MonoScripting.h>
+#include <Chroma/Components/SpriteRenderer.h>
 
 #include "EditorApp.h"
 #include "Hierarchy.h"
@@ -24,7 +25,7 @@ namespace ImGui
 	}
 }
 
-#include <Chroma/Components/SpriteRenderer.h>
+
 
 namespace Polychrome
 {
