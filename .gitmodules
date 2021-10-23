@@ -14,9 +14,6 @@
 [submodule "third_party/premake-core"]
 	path = third_party/premake-core
 	url = https://github.com/ttalexander2/premake-core.git
-[submodule "Chroma/third_party/lua"]
-	path = Chroma/third_party/lua
-	url = https://github.com/ttalexander2/lua.git
 [submodule "Chroma/third_party/yaml-cpp"]
 	path = Chroma/third_party/yaml-cpp
 	url = https://github.com/ttalexander2/yaml-cpp.git
