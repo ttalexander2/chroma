@@ -22,7 +22,6 @@ namespace Polychrome
 		virtual inline const std::string GetName() = 0;
 
 		virtual inline void* GetPtr() = 0;
-
 	};
 
 	template <class T>
