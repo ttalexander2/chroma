@@ -31,10 +31,8 @@
 #include "readerwriterqueue.h"
 #include <Chroma/Components/SpriteRenderer.h>
 #include <Chroma/Assets/AssetManager.h>
-#include <Chroma/Components/LuaScript.h>
 #include <Chroma/Systems/SpriteRendererSystem.h>
 #include "AssetBrowser.h"
-#include <Chroma/Scripting/LuaScripting.h>
 #include <Chroma/Scripting/MonoScripting.h>
 #include "LogWindow.h"	
 #include "Project.h"

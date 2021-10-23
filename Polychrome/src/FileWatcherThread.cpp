@@ -1,8 +1,6 @@
 #include "FileWatcherThread.h"
 #include <filesystem>
 #include <Chroma/Assets/AssetManager.h>
-#include <Chroma/Scripting/LuaScripting.h>
-#include <Chroma/Components/LuaScript.h>
 #include <Chroma/Utilities/FileWatcher.h>
 #include "EditorApp.h"
 #include <readerwriterqueue.h>
@@ -40,10 +38,6 @@ namespace Polychrome
 				{
 					Chroma::AssetManager::LoadSprite(file.path().lexically_relative(asset_dir).string());
 					CHROMA_CORE_INFO("fie: {}", file.path().string());
-				}
-				else if (extension == ".lua")
-				{
-					Chroma::LuaScripting::Scripts.push_back(file.path().lexically_relative(asset_dir).string());
 				}
 			}
 		}
@@ -99,10 +93,6 @@ namespace Polychrome
 						{
 							Chroma::AssetManager::LoadSprite(relative);
 						}
-						else if (extension == ".lua")
-						{
-							Chroma::LuaScripting::Scripts.push_back(relative);
-						}
 						else if (extension == ".cs")
 						{
 							auto result = Build::BuildMonoAssembly(root, Project::Name);
@@ -136,19 +126,6 @@ namespace Polychrome
 								Chroma::AssetManager::LoadSprite(relative);
 							}
 						}
-						else if (extension == ".lua")
-						{
-							for (auto entity : EditorApp::CurrentScene->Registry.view<Chroma::LuaScript>())
-							{
-								auto& script = EditorApp::CurrentScene->GetComponent<Chroma::LuaScript>(entity);
-								if (std::filesystem::equivalent(script.Path, relative))
-								{
-									script.ReloadState();
-									script.Success = Chroma::LuaScripting::LoadScriptFromFile(script.Path, script.Environment);
-									script.ReloadCoroutines();
-								}
-							}
-						}
 						else if (extension == ".cs")
 						{
 							auto result = Build::BuildMonoAssembly(root, Project::Name);
@@ -174,11 +151,6 @@ namespace Polychrome
 						if (extension == ".ase" || extension == ".png" || extension == ".jpg")
 						{
 
-						}
-						else if (extension == ".lua")
-						{
-							auto it = std::find(Chroma::LuaScripting::Scripts.begin(), Chroma::LuaScripting::Scripts.end(), relative);
-							Chroma::LuaScripting::Scripts.erase(it);
 						}
 						else if (extension == ".cs")
 						{

@@ -9,8 +9,6 @@
 #include <glm/gtx/matrix_decompose.hpp>
 
 #include <Chroma/Math/Decompose.h>
-#include <Chroma/Components/LuaScript.h>
-#include <Chroma/Scripting/LuaScripting.h>
 #include <Chroma/Scripting/ScriptEngineRegistry.h>
 #include <Chroma/Scripting/MonoScripting.h>
 #include "ComponentDebugGizmos.h"

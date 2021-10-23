@@ -23,7 +23,6 @@ namespace Polychrome
 		static void DrawAudioSource(Chroma::Component* c);
 		static void DrawBoxCollider(Chroma::Component* c);
 		static void DrawCircleCollider(Chroma::Component* c);
-		static void DrawLuaScript(Chroma::Component* c);
 		static void DrawSpriteRenderer(Chroma::Component* c);
 		static void DrawCameraComponent(Chroma::Component* c);
 	};
