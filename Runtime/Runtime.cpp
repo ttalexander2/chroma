@@ -2,8 +2,6 @@
 #include "Chroma/Utilities/FileDialogs.h"
 #include <Chroma/Core/EntryPoint.h>
 #include <Chroma/Components/SpriteRenderer.h>
-#include <Chroma/Components/LuaScript.h>
-#include <Chroma/Scripting/LuaScripting.h>
 #include <Chroma/Renderer/Renderer2D.h>
 
 using namespace Chroma;
@@ -18,9 +16,6 @@ Runtime::Runtime() :
 	auto& sprite = entity.AddComponent<SpriteRenderer>();
 	AssetManager::LoadSprite("../Polychrome/assets/textures/avi.ase");
 	sprite.SetSprite("../Polychrome/assets/textures/avi.ase");
-	auto& script = entity.AddComponent<Chroma::LuaScript>();
-	script.Path = "../Polychrome/assets/scripts/Test.lua";
-	script.ScriptName = "Test.lua";
 
 
 	CurrentScene->Load();
