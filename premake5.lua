@@ -23,7 +23,6 @@ group "Dependencies"
     include "Chroma/third_party/Glad"
     include "Chroma/third_party/imgui"
     include "Chroma/third_party/glm"
-    include "Chroma/third_party/lua"
 group "" -- end of dependencies
 
 
@@ -76,13 +75,11 @@ project "Chroma"
         "%{IncludeDir.stb_image}",
         "%{IncludeDir.stb_truetype}",
         "%{IncludeDir.FMOD}",
-        "%{IncludeDir.lua}",
         "%{IncludeDir.yaml}",
         "%{IncludeDir.cute_headers}",
         "%{IncludeDir.concurrentqueue}",
         "%{IncludeDir.readerwriterqueue}",
         "%{IncludeDir.ImGuizmo}",
-        "%{IncludeDir.Sol2}",
         "%{IncludeDir.fmt}",
         "%{IncludeDir.entt}",
         "%{IncludeDir.mono}",
@@ -96,7 +93,6 @@ project "Chroma"
         "Glad",
         "ImGui",
         "opengl32.lib",
-        "lua",
         "%{Library.mono}"
     }
 
@@ -209,8 +205,6 @@ project "Polychrome"
         "%{IncludeDir.concurrentqueue}",
         "%{IncludeDir.readerwriterqueue}",
         "%{IncludeDir.ImGuizmo}",
-        "%{IncludeDir.Sol2}",
-        "%{IncludeDir.lua}",
         "%{IncludeDir.mono}"
     }
 
@@ -309,8 +303,6 @@ project "Runtime"
         "%{IncludeDir.ImGui}",
         "%{IncludeDir.FMOD}",
         "%{IncludeDir.yaml}",
-        "%{IncludeDir.Sol2}",
-        "%{IncludeDir.lua}",
         "%{IncludeDir.entt}"
 
     }

@@ -1,11 +1,11 @@
 #pragma once
 
-#include "ScriptComponent.h"
+#include "Chroma/Scene/Component.h"
 #include "Chroma/Scripting/ScriptModuleField.h"
 
 namespace Chroma
 {
-	class CSharpScript : public ScriptComponent
+	class CSharpScript : public Component
 	{
 	public:
 		CSharpScript();

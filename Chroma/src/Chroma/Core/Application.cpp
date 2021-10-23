@@ -11,7 +11,7 @@
 #include "Chroma/Audio/Audio.h"
 #include <GLFW/glfw3.h>
 #include <imgui.h>
-#include <Chroma/Scripting/LuaScripting.h>
+
 #include "Chroma/Scene/ECS.h"
 #include "Chroma/Components/Tag.h"
 #include "Chroma/Components/Transform.h"
@@ -22,7 +22,6 @@
 #include <Chroma/Components/Relationship.h>
 #include <Chroma/Scripting/MonoScripting.h>
 #include <Chroma/Scripting/ScriptEngineRegistry.h>
-#include <Chroma/Components/LuaScript.h>
 #include <Chroma/Components/CSharpScript.h>
 #include <Chroma/Components/Camera.h>
 
@@ -50,7 +49,6 @@ namespace Chroma
 
 		Audio::Init();
 
-		LuaScripting::Init();
 		MonoScripting::Init("Chroma.Mono.dll");
 		ScriptEngineRegistry::RegisterAll();
 
@@ -62,7 +60,6 @@ namespace Chroma
 		ECS::RegisterComponent<BoxCollider>();
 		ECS::RegisterComponent<CircleCollider>();
 		ECS::RegisterComponent<Relationship>();
-		ECS::RegisterComponent<LuaScript>();
 		ECS::RegisterComponent<Camera>();
 
 

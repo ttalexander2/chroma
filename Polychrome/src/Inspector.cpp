@@ -12,7 +12,6 @@
 #include "EditorApp.h"
 #include "ComponentWidgets.h"
 #include "Chroma/Scene/ECS.h"
-#include <Chroma/Components/LuaScript.h>
 #include <Chroma/Components/Tag.h>
 
 namespace Polychrome
@@ -138,18 +137,6 @@ namespace Polychrome
 
 			bool selected = true;
 			std::string comp_name(c->Name());
-			if (comp_name == Chroma::LuaScript::StaticName())
-			{
-				try
-				{
-					Chroma::LuaScript* a = reinterpret_cast<Chroma::LuaScript*>(c);
-					comp_name = std::string(a->ScriptName);
-				}
-				catch (const std::exception& e) 
-				{
-					CHROMA_CORE_WARN("{}", e.what());
-				}
-			}
 			if (comp_name == Chroma::CSharpScript::StaticName())
 			{
 				try

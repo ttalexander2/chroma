@@ -10,8 +10,6 @@
 #include <Chroma/Scripting/ScriptModuleField.h>
 #include <Chroma/Components/BoxCollider.h>
 #include <Chroma/Components/CircleCollider.h>
-#include <Chroma/Components/LuaScript.h>
-#include <Chroma/Scripting/LuaScripting.h>
 #include <Chroma/Scripting/MonoScripting.h>
 
 #include "EditorApp.h"
@@ -41,7 +39,6 @@ namespace Polychrome
 		else if (Chroma::ECS::IsType<Chroma::AudioSource>(c)) DrawAudioSource(c);
 		else if (Chroma::ECS::IsType<Chroma::BoxCollider>(c)) DrawBoxCollider(c);
 		else if (Chroma::ECS::IsType<Chroma::CircleCollider>(c)) DrawCircleCollider(c);
-		else if (Chroma::ECS::IsType<Chroma::LuaScript>(c)) DrawLuaScript(c);
 		else if (Chroma::ECS::IsType<Chroma::SpriteRenderer>(c)) DrawSpriteRenderer(c);
 		else if (Chroma::ECS::IsType<Chroma::Camera>(c)) DrawCameraComponent(c);
 	}
@@ -206,93 +203,6 @@ namespace Polychrome
 		ImGui::Vec2IntWithLabels("##transform_rotation", b->Offset);
 
 
-	}
-
-	void ComponentWidgets::DrawLuaScript(Chroma::Component* c)
-	{
-		Chroma::LuaScript* script = reinterpret_cast<Chroma::LuaScript*>(c);
-		DrawComponentValue(c, "Script");
-		const char* preview = script->Path.c_str();
-		if (script->Path.empty())
-			preview = "[Select a script]";
-
-		if (ImGui::BeginCombo("##script_compbo", preview))
-		{
-			for (auto& name : Chroma::LuaScripting::Scripts)
-			{
-				bool selected = name == script->Path;
-				if (ImGui::Selectable(name.c_str(), &selected))
-				{
-					script->ScriptName = std::filesystem::path(name).filename().string();
-					script->Path = name;
-					script->Success = Chroma::LuaScripting::LoadScriptFromFile(script->Path, script->Environment);
-					break;
-				}
-
-				if (selected)
-					ImGui::SetItemDefaultFocus();
-			}
-			ImGui::EndCombo();
-		}
-
-
-		if (script->Success)
-		{
-
-			script->Environment.for_each([&](const sol::object& key, const sol::object& value) {
-				if (!value.is<sol::function>())
-				{
-					std::string name = key.as<std::string>();
-					if (name == "entity" || name == "time")
-						return;
-					std::string hash = fmt::format("##{}", name);
-
-					DrawComponentValue(c, name);
-					if (value.is<bool>())
-					{
-						bool val = script->Environment[name];
-						ImGui::Checkbox(hash.c_str(), &val);
-						script->Environment[name] = val;
-					}
-					else if (value.is<int>())
-					{
-						int val = script->Environment[name];
-						ImGui::InputInt(hash.c_str(), &val);
-						script->Environment[name] = val;
-					}
-					else if (value.is<float>())
-					{
-						float val = script->Environment[name];
-						ImGui::InputFloat(hash.c_str(), &val);
-						script->Environment[name] = val;
-					}
-					else if (value.is<double>())
-					{
-						double val = script->Environment[name];
-						ImGui::InputDouble(hash.c_str(), &val);
-						script->Environment[name] = val;
-					}
-					else if (value.is<std::string>())
-					{
-						std::string val = script->Environment[name];
-						ImGui::InputText(hash.c_str(), &val);
-						script->Environment[name] = val;
-					}
-					else if (value.is<Math::vec2>())
-					{
-						Math::vec2 val = script->Environment[name];
-						ImGui::Vec2FloatWithLabels(hash.c_str(), val, true);
-						script->Environment[name] = val;
-					}
-					else if (value.is<Math::vec3>())
-					{
-						Math::vec3 val = script->Environment[name];
-						ImGui::Vec3FloatWithLabels(hash.c_str(), val, true);
-						script->Environment[name] = val;
-					}
-				}
-				});
-		}
 	}
 
 	void ComponentWidgets::DrawCameraComponent(Chroma::Component* c)
