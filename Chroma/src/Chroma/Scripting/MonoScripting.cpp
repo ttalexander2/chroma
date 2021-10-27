@@ -490,7 +490,6 @@ namespace Chroma
 		if (!method)
 			return std::vector<std::string>();
 		
-		CHROMA_CORE_INFO("Entity Types:");
 		MonoArray* arr = (MonoArray*)mono_runtime_invoke(method, nullptr, nullptr, nullptr);
 		uintptr_t length = mono_array_length(arr);
 		std::vector<std::string> vec = std::vector<std::string>();
@@ -938,6 +937,7 @@ namespace Chroma
 		if (IsReadOnly)
 			return;
 
+
 		if (Type == FieldType::ClassReference)
 		{
 
@@ -1106,7 +1106,7 @@ namespace Chroma
 
 	void PublicField::GetRuntimeValue_Internal(EntityInstance& entityInstance, void* outValue) const
 	{
-		CHROMA_CORE_ASSERT(entityInstance.GetInstance(), "");
+		CHROMA_CORE_ASSERT(entityInstance.GetInstance(), "No entity instance!");
 
 		if (Type == FieldType::Entity)
 		{
@@ -1147,10 +1147,6 @@ namespace Chroma
 
 		outValue = mono_string_to_utf8(monoString);
 	}
-
-
-	
-
 
 }
 

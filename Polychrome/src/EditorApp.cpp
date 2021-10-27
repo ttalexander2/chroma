@@ -48,6 +48,8 @@
 #include "thid_party/platform_folders.h"
 #include <chrono>
 #include "Utilities/GLFWHelpers.h"
+#include <Chroma/Components/Tag.h>
+#include <mono/metadata/mono-gc.h>
 
 namespace Polychrome
 {
@@ -101,7 +103,7 @@ namespace Polychrome
 		//glfwMakeContextCurrent((GLFWwindow*)this->Get().GetWindow().GetNativeWindow());
 		glfwSetWindowCenter((GLFWwindow*)this->Get().GetWindow().GetNativeWindow());
 		glfwSetWindowAttrib((GLFWwindow*)this->Get().GetWindow().GetNativeWindow(), GLFW_DECORATED, GLFW_FALSE);
-		this->GetWindow().SetVSync(true);
+		//this->GetWindow().SetVSync(true);
 		
 
 		std::filesystem::path appData(sago::getDataHome() + "/Polychrome");
@@ -699,7 +701,9 @@ namespace Polychrome
 						Project::CreateProject(creating_name, creating_path, "\\Scenes\\" + creating_starting);
 						Chroma::AssetManager::AssetDirectory = creating_path + "\\" + creating_name + "\\Assets";
 						this->CurrentScene = new Chroma::Scene();
-						this->CurrentScene->NewEntity();
+						auto camera = this->CurrentScene->NewEntity();
+						this->CurrentScene->SetPrimaryCamera(camera.GetID());
+						this->CurrentScene->GetComponent<Chroma::Tag>(camera.GetID()).EntityName = "Camera";
 						this->CurrentScene->Name = creating_starting;
 						EditorApp::CurrentScenePath = Chroma::AssetManager::AssetDirectory + "\\Scenes\\" + creating_starting + ".chroma";
 						SaveScene();
@@ -870,6 +874,31 @@ namespace Polychrome
 				}
 				ImGui::EndMenu();
 			}
+			ImGui::Separator();
+			if (ImGui::BeginMenu("Add a script", Hierarchy::SelectedEntity != Chroma::ENTITY_NULL))
+			{
+				for (auto& mod : Chroma::MonoScripting::GetModules())
+				{
+					if (ImGui::MenuItem(mod.c_str()))
+					{
+						if (CurrentScene->HasComponent<Chroma::CSharpScript>(Hierarchy::SelectedEntity))
+						{
+							auto child = CurrentScene->NewChild(Hierarchy::SelectedEntity);
+							child.GetComponent<Chroma::Tag>().EntityName = mod + " Entity";
+							Chroma::CSharpScript& script = child.AddComponent<Chroma::CSharpScript>();
+							script.ModuleName = mod;
+							Chroma::MonoScripting::InitScriptEntity(child);
+						}
+						else
+						{
+							Chroma::CSharpScript& script = CurrentScene->AddComponent<Chroma::CSharpScript>(Hierarchy::SelectedEntity);
+							script.ModuleName = mod;
+							Chroma::MonoScripting::InitScriptEntity(Chroma::Entity(Hierarchy::SelectedEntity, CurrentScene));
+						}
+					}
+				}
+				ImGui::EndMenu();
+			}
 			ImGui::EndMenu();
 		}
 
@@ -904,6 +933,60 @@ namespace Polychrome
 		ErrorWindow::Draw();
 		AssetBrowser::Draw();
 		GameSettings::Draw();
+
+
+		if (ImGui::Begin("Script Engine Debug"))
+		{
+			float heap = (float)mono_gc_get_heap_size();
+			float usage = (float)mono_gc_get_used_size();
+
+			ImGui::Text("GC Heap: %.2fkb / %.2fkb", usage, heap);
+			ImGui::Separator();
+
+			for (auto& [scene, entityMap] : Chroma::MonoScripting::GetEntityInstanceMap())
+			{
+				ImGui::PushID(scene.ToString().c_str());
+				if (ImGui::TreeNode(("Scene " + scene.ToString()).c_str()))
+				{
+					for (auto& [entityID, entityInstanceData] : entityMap)
+					{
+						Chroma::Entity entity = Chroma::Entity(entityID, CurrentScene);
+						std::string entityName = "Unnamed Entity";
+						if (entity.HasComponent<Chroma::Tag>())
+							entityName = entity.GetComponent<Chroma::Tag>().EntityName;
+
+						ImGui::PushID(entityName.c_str());
+						if (ImGui::TreeNode(entityName.c_str()))
+						{
+							auto& script = entity.GetComponent<Chroma::CSharpScript>();
+							for (auto& [moduleName, fieldMap] : script.ModuleFieldMap)
+							{
+								ImGui::PushID(moduleName.c_str());
+								if (ImGui::TreeNode(moduleName.c_str()))
+								{
+									for (auto& [fieldName, field] : fieldMap)
+									{
+										ImGui::PushID(fieldName.c_str());
+										if (ImGui::TreeNodeEx(fieldName.c_str(), ImGuiTreeNodeFlags_Leaf))
+										{
+											ImGui::TreePop();
+										}
+										ImGui::PopID();
+									}
+									ImGui::TreePop();
+								}
+								ImGui::PopID();
+							}
+							ImGui::TreePop();
+						}
+						ImGui::PopID();
+					}
+					ImGui::TreePop();
+				}
+				ImGui::PopID();
+			}
+		}
+		ImGui::End();
 
 
 

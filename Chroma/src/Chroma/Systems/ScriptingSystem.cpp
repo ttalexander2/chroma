@@ -18,8 +18,17 @@ namespace Chroma
 			{
 				auto& script = view.get<CSharpScript>(entity);
 				auto entityObj = Chroma::Entity(entity, m_Scene);
-				MonoScripting::InitScriptEntity(entityObj);
+				//MonoScripting::InitScriptEntity(entityObj);
 				MonoScripting::InstantiateEntityClass(entityObj);
+
+				auto& entityInstanceData = Chroma::MonoScripting::GetEntityInstanceData(m_Scene->GetID(), entity);
+
+				CHROMA_CORE_TRACE("Loaded [{}] fields from '{}'", script.ModuleFieldMap[script.ModuleName].size(), script.ModuleName);
+
+				for (auto& [name, field] : script.ModuleFieldMap[script.ModuleName])
+				{
+					field.CopyStoredValueToRuntime(entityInstanceData.Instance);
+				}
 			}
 
 		}

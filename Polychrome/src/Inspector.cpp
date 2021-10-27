@@ -52,7 +52,7 @@ namespace Polychrome
 				{
 					if (EditorApp::SceneRunning && !EditorApp::ScenePaused)
 					{
-						ImGui::PushItemFlag(ImGuiItemFlags_Disabled, EditorApp::SceneRunning && !EditorApp::ScenePaused);
+						//ImGui::PushItemFlag(ImGuiItemFlags_Disabled, EditorApp::SceneRunning && !EditorApp::ScenePaused);
 					}
 					if (EditorApp::ScenePaused || EditorApp::SceneRunning)
 					{
@@ -77,7 +77,7 @@ namespace Polychrome
 					DrawEntity();
 					if (EditorApp::SceneRunning && !EditorApp::ScenePaused)
 					{
-						ImGui::PopItemFlag();
+						//ImGui::PopItemFlag();
 					}
 					if (EditorApp::ScenePaused || EditorApp::SceneRunning)
 					{

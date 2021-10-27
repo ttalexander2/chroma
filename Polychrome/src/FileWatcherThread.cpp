@@ -37,7 +37,7 @@ namespace Polychrome
 				if (extension == ".ase" || extension == ".aseprite" || extension == ".png" || extension == ".jpg")
 				{
 					Chroma::AssetManager::LoadSprite(file.path().lexically_relative(asset_dir).string());
-					CHROMA_CORE_INFO("fie: {}", file.path().string());
+					CHROMA_CORE_INFO("file: {}", file.path().string());
 				}
 			}
 		}
@@ -53,11 +53,6 @@ namespace Polychrome
 			auto& script = view.get<Chroma::CSharpScript>(entity);
 			auto entityObj = Chroma::Entity(entity, EditorApp::CurrentScene);
 			Chroma::MonoScripting::InitScriptEntity(entityObj);
-		}
-
-		for (auto& m : Chroma::MonoScripting::GetModules())
-		{
-			CHROMA_CORE_INFO("Module: {}", m);
 		}
 
 		auto spriteView = EditorApp::CurrentScene->Registry.view<Chroma::SpriteRenderer>();

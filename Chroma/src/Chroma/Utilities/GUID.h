@@ -15,7 +15,7 @@ namespace Chroma
 		const static GUID Parse(const std::string& guid);
 		const static GUID Zero();
 
-		std::string ToString();
+		std::string ToString() const;
 
 		bool operator==(const GUID& other) const;
 		bool operator< (GUID& other) const;

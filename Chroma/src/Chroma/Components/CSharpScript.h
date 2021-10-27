@@ -12,6 +12,9 @@ namespace Chroma
 		~CSharpScript();
 		CSharpScript(const CSharpScript& other) = default;
 
+		void Serialize(YAML::Emitter& out) override;
+		void Deserialize(YAML::Node& node) override;
+
 		const std::string Name() const override 
 		{ 
 			return StaticName();
@@ -22,7 +25,7 @@ namespace Chroma
 			return "CSharp Script";
 		}
 
-		std::string ModuleName = "Test.TestScript";
+		std::string ModuleName;
 		ScriptModuleFieldMap ModuleFieldMap;
 	};
 }

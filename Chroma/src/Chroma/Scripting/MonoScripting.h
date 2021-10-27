@@ -74,6 +74,7 @@ namespace Chroma
 
 		static void SetDeltaTime(double dtime, float ftime);
 
+
 		static void PreInit(Entity entity);
 		static void Init(Entity entity);
 		static void PostInit(Entity entity);

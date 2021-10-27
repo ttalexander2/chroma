@@ -75,7 +75,7 @@ namespace Chroma
 		return GUID{};
 	}
 
-	std::string GUID::ToString()
+	std::string GUID::ToString() const
 	{
 		std::string result;
 		std::ostringstream stream;

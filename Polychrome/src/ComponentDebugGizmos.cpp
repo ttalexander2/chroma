@@ -28,8 +28,12 @@ namespace Polychrome
 		if (DrawCameraGizmos)
 		{
 			auto camEntity = EditorApp::CurrentScene->GetPrimaryCameraEntity();
-			auto& camPos = EditorApp::CurrentScene->GetTransformAbsolutePosition(camEntity);
-			Chroma::Renderer2D::DrawRect(camPos, EditorApp::CurrentScene->GetPrimaryCamera().GetSize(), 1.f / EditorApp::Camera.GetZoom(), { 0.2f, 0.3f , 0.8f , 1.f });
+			if (EditorApp::CurrentScene->Registry.valid(camEntity))
+			{
+				auto& camPos = EditorApp::CurrentScene->GetTransformAbsolutePosition(camEntity);
+				Chroma::Renderer2D::DrawRect(camPos, EditorApp::CurrentScene->GetPrimaryCamera().GetSize(), 1.f / EditorApp::Camera.GetZoom(), { 0.2f, 0.3f , 0.8f , 1.f });
+			}
+
 		}
 
 
@@ -136,15 +140,19 @@ namespace Polychrome
 			float y = ImGui::GetCursorPosY();
 			//CAMERA
 			auto camEntity = EditorApp::CurrentScene->GetPrimaryCameraEntity();
-			auto& camPos = EditorApp::CurrentScene->GetTransformAbsolutePosition(camEntity);
-			auto& camSize = EditorApp::CurrentScene->GetPrimaryCamera().GetSize();
-			Math::vec2 pos = { camPos.x - 10.f / EditorApp::Camera.GetZoom() , camPos.y + 10.f / EditorApp::Camera.GetZoom() + camSize.y / 2.f };
-			Math::vec2 screen = Viewport::WorldToViewportPosition(pos);
-			if (y - screen.y < ImGui::GetWindowContentRegionMax().y - 15.f)
+			if (EditorApp::CurrentScene->Registry.valid(camEntity))
 			{
-				ImGui::SetCursorPos({ screen.x, y - screen.y });
-				ImGui::Text(ICON_FK_CAMERA);
+				auto& camPos = EditorApp::CurrentScene->GetTransformAbsolutePosition(camEntity);
+				auto& camSize = EditorApp::CurrentScene->GetPrimaryCamera().GetSize();
+				Math::vec2 pos = { camPos.x - 10.f / EditorApp::Camera.GetZoom() , camPos.y + 10.f / EditorApp::Camera.GetZoom() + camSize.y / 2.f };
+				Math::vec2 screen = Viewport::WorldToViewportPosition(pos);
+				if (y - screen.y < ImGui::GetWindowContentRegionMax().y - 15.f)
+				{
+					ImGui::SetCursorPos({ screen.x, y - screen.y });
+					ImGui::Text(ICON_FK_CAMERA);
+				}
 			}
+
 		}
 
 
