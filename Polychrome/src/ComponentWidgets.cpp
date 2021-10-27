@@ -90,19 +90,19 @@ namespace Polychrome
 				{
 					float val = field.GetRuntimeValue<float>(entityInstanceData.Instance);
 					ImGui::InputFloat(hash, &val);
-					field.SetStoredValue<float>(val);
+					field.SetRuntimeValue<float>(entityInstanceData.Instance, val);
 				}
 				else if (field.Type == Chroma::FieldType::Int)
 				{
 					int val = field.GetRuntimeValue<int>(entityInstanceData.Instance);
 					ImGui::InputInt(hash, &val);
-					field.SetStoredValue<int>(val);
+					field.SetRuntimeValue<int>(entityInstanceData.Instance, val);
 				}
 				else if (field.Type == Chroma::FieldType::String)
 				{
 					std::string val = field.GetRuntimeValue<std::string>(entityInstanceData.Instance);
 					ImGui::InputText(hash, &val);
-					field.SetStoredValue(val);
+					field.SetRuntimeValue(entityInstanceData.Instance, val);
 				}
 			}
 		}
