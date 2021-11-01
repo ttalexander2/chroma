@@ -9,6 +9,9 @@
 
 namespace Polychrome
 {
+
+	static const unsigned int STACK_LIMIT = 1000;
+
 	struct ICommand
 	{
 		virtual inline const void SetOld(void* old_value) = 0;
@@ -211,8 +214,6 @@ namespace Polychrome
 				return UndoRedo::EndCommand<T>(ptr, *ptr);
 			return false;
 		}
-
-		static const unsigned int STACK_LIMIT = 1000;
 
 	//private:
 		static std::list<ICommand*> UndoStack;

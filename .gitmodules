@@ -38,3 +38,6 @@
 [submodule "third_party/CppSharp"]
 	path = third_party/CppSharp
 	url = https://github.com/ttalexander2/CppSharp.git
+[submodule "Chroma/third_party/physfs"]
+	path = Chroma/third_party/physfs
+	url = https://github.com/ttalexander2/physfs.git

@@ -12,7 +12,6 @@ namespace Chroma
 	{
 		friend class AssetManager;
 
-		const std::string Name;
 		const std::string GetPath() const { return Path; }
 		virtual bool Load() = 0;
 		virtual bool Unload() = 0;

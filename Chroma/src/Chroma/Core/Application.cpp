@@ -24,6 +24,7 @@
 #include <Chroma/Scripting/ScriptEngineRegistry.h>
 #include <Chroma/Components/CSharpScript.h>
 #include <Chroma/Components/Camera.h>
+#include <physfs/src/physfs.h>
 
 namespace Chroma
 {
@@ -42,7 +43,7 @@ namespace Chroma
 		m_Window = Scope<Window>(Window::Create(props));
 		m_Window->SetEventCallback(CHROMA_BIND_EVENT_FN(Application::ProcessEvents));
 		Input::Init();
-
+		PHYSFS_init(NULL);
 		Renderer::Init();
 
 		m_ImGuiLayer = new ImGuiLayer();
@@ -141,6 +142,7 @@ namespace Chroma
 
 		m_ImGuiLayer->OnDetach();
 		Audio::Shutdown();
+		PHYSFS_deinit();
 	}
 
 }

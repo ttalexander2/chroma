@@ -8,6 +8,7 @@
 #include "Project.h"
 #include <Chroma/Scripting/ScriptEngineRegistry.h>
 #include "Build.h"
+#include <Chroma/IO/FileSystem.h>
 
 
 namespace Polychrome
@@ -62,6 +63,19 @@ namespace Polychrome
 			spriteRenderer.SetSpriteOrigin(spriteRenderer.GetSpriteOrigin());
 		}
 
+		CHROMA_CORE_WARN("Mounted: {}", asset_dir);
+		//CHROMA_CORE_WARN("Mounted: {}", std::filesystem::path(asset_dir).parent_path().string() + "\\TestArchive.7z");
+		CHROMA_CORE_WARN("");
+
+		try
+		{
+			Chroma::FileSystem::Mount(asset_dir);
+			
+		}
+		catch (Chroma::FileSystem::FileSystemException e)
+		{
+			CHROMA_CORE_ERROR("{}", e.what());
+		}
 
 
 		file_watcher_thread_running.store(true);

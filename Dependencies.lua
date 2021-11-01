@@ -5,6 +5,7 @@ IncludeDir = {}
 IncludeDir["GLFW"] = "Chroma/third_party/GLFW/include"
 IncludeDir["Glad"] = "Chroma/third_party/Glad/include"
 IncludeDir["ImGui"] = "Chroma/third_party/imgui"
+IncludeDir["PhysicsFS"] = "Chroma/third_party/physfs/src"
 IncludeDir["glm"] = "Chroma/third_party/glm"
 IncludeDir["stb_image"] = "Chroma/third_party/stb_image"
 IncludeDir["stb_truetype"] = "Chroma/third_party/stb_truetype"

@@ -1,9 +1,11 @@
-## Chroma
+## Chroma & Polychrome Editor
 
-[![Build](https://github.com/ttalexander2/chroma/actions/workflows/Weekly.yml/badge.svg)](https://github.com/ttalexander2/chroma/actions/workflows/Weekly.yml)
+[![Build](https://github.com/ttalexander2/chroma/actions/workflows/build.yml/badge.svg)](https://github.com/ttalexander2/chroma/actions/workflows/build.yml)
 [![Documentation](https://github.com/ttalexander2/chroma/actions/workflows/main.yml/badge.svg)](https://github.com/ttalexander2/chroma/actions/workflows/main.yml)
 
 A small 2D C++ Game Engine and Editor, designed in order to providing simple tools for creating games in 2D. It is designed to be lightweight, cross-platform, and easily modifiable.
+
+At the moment, only Windows building is supported. The **Polychrome Editor** currently uses features from the WIN32 api. A cross platform replacement will be implemented at a later date.
 
 **This project is a working progress, and will likely see breaking changes! Use at your own risk!**
 
@@ -11,12 +13,12 @@ A small 2D C++ Game Engine and Editor, designed in order to providing simple too
 
 #### Building
 ##### Windows
-- Requires C++20, Visual Studio 2019, and VulkanSDK
-- Uses premake build system
+- Requires C++20, Visual Studio 2019, Python 3.3+, and Mono
 - All other dependencies are either included within the project, or provided as github submodules.
 - Instructions
     - `git clone --recurse-submodules -j8 https://github.com/ttalexander2/chroma.git`
-    - Execute `Setup.bat` to generate Visual Studio Solution.
+    - Execute `Setup.bat` to install prerequisites and build the VS Solution. This will check for python versions, as well as install the VulkanSDK.
+    - Follow instructions to install prerequisits and verify requirements.
     - Open Solution File.
     - Select Build > Build Solution.
      
@@ -26,13 +28,13 @@ A small 2D C++ Game Engine and Editor, designed in order to providing simple too
 ----
 #### Notes
 - Currently single threaded, plans for a multi-threaded renderer in the future.
-- Audio is implemented using FMOD Studio, plans for a non-fmod audio backend may be implemted in the future.
+- Audio is implemented using FMOD Studio, plans for a non-fmod audio backend will be implemted in the future.
 - Only OpenGL renderer is implemented, plans for DirectX and Vulkan renderer are in the works.
 
 ---
-#### Usage
+#### Engine API Usage
 
-Here is a quite simple application to draw a single square on the screen:
+Here is a quite simple Chroma application to draw a single square on the screen:
 ```cpp
 
 #include "Chroma.h"
@@ -52,11 +54,11 @@ public:
 		Chroma::RenderCommand::Clear();
 
         static Chroma::OrthographicCameraController cameraController(1920.0f / 1080.0f);
-        Chroma::Renderer2D::BeginScene(cameraController.GetCamera());
+        Chroma::Renderer2D::Begin(cameraController.GetCamera());
 
 		Chroma::Renderer2D::DrawQuad({ 0.5, 0.5 }, { 0.9, 0.9 }, {1,1,1,1});
 
-		Chroma::Renderer2D::EndScene();
+		Chroma::Renderer2D::End();
     }
 
     // This provides the engine with your application as the entry point 
@@ -74,4 +76,4 @@ The engine provides scene data structures which interface with the editor which 
 ---
 #### Documentation
 
-Please see our [Documentation Page](https://ttalexander2.github.io/chroma/) for more information and resources.
+Please see the [Documentation Page](https://ttalexander2.github.io/chroma/) for more information and resources.
