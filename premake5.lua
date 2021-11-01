@@ -23,6 +23,7 @@ group "Dependencies"
     include "Chroma/third_party/Glad"
     include "Chroma/third_party/imgui"
     include "Chroma/third_party/glm"
+    include "Chroma/third_party/physfs"
 group "" -- end of dependencies
 
 
@@ -83,7 +84,8 @@ project "Chroma"
         "%{IncludeDir.fmt}",
         "%{IncludeDir.entt}",
         "%{IncludeDir.mono}",
-        "%{IncludeDir.VulkanSDK}"
+        "%{IncludeDir.VulkanSDK}",
+        "%{IncludeDir.PhysicsFS}"
 
     }
 
@@ -93,7 +95,8 @@ project "Chroma"
         "Glad",
         "ImGui",
         "opengl32.lib",
-        "%{Library.mono}"
+        "%{Library.mono}",
+        "PhysicsFS"
     }
 
     filter "files:Chroma/third_party/ImGuizmo/**.cpp or files:Chroma/third_party/yaml-cpp/src/**.cpp"

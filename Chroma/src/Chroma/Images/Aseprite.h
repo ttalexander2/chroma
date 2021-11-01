@@ -4,57 +4,13 @@
 #include <Chroma/Math/Vec2.h>
 #include <Chroma/Images/Color.h>
 #include <Chroma/Images/Image.h>
+#include <Chroma/IO/Endian.h>
 
 #include <fstream>
 
 namespace Chroma
 {
 	// Adapted from https://github.com/NoelFB/blah/
-
-	/// @brief Class for bit order Endian
-	/// See <a href="https://en.wikipedia.org/wiki/Endianness">this article</a> for more info. 
-	enum class Endian
-	{
-		Little,
-		Big
-	};
-
-	/// @brief Function to swap endianness of bytes.
-	/// @tparam T Type of data.
-	/// @param value Value to swap.
-	template<class T>
-	inline void swap_endian(T* value)
-	{
-		for (int i = 0; i < sizeof(T) / 2; i++)
-		{
-			char* _ptr = (char*)&value;
-			char _temp = *(_ptr + i);
-			*(_ptr + i) = *(_ptr + sizeof(T) - i - 1);
-			*(_ptr + sizeof(T) - i - 1) = _temp;
-		}
-	}
-
-	/// @brief Checks if system uses big endianness.
-	inline bool is_big_endian()
-	{
-		return (*((short*)"AB") == 0x4243);
-	}
-
-	/// @brief Checks if system uses little endianness.
-	inline bool is_little_endian()
-	{
-		return (*((short*)"AB") != 0x4243);
-	}
-
-	/// @brief Checks if system is endianess.
-	/// @param endian Big or little endian to check.
-	/// @return Returns true if endianess matches system.
-	inline bool is_endian(const Endian& endian)
-	{
-		return
-			(endian == Endian::Little && is_little_endian()) ||
-			(endian == Endian::Big && is_big_endian());
-	}
 
 	/// @brief Helper function to read data from stream.
 	/// @tparam T Type of data to read from stream. T must be arithmetic.
@@ -68,8 +24,8 @@ namespace Chroma
 	{
 		T result;
 		stream.read((char*)&result, sizeof(T));
-		if (!is_endian(endian))
-			swap_endian(&result);
+		if (!Chroma::SystemIsEndian(endian))
+			Chroma::SwapEndian(&result);
 		return result;
 	}
 
