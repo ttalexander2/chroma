@@ -50,7 +50,7 @@ namespace Polychrome
 						ImGui::PushID(&msg);
 						ImGui::Selectable("##select", &is_selected, ImGuiSelectableFlags_SpanAllColumns);
 						if (is_selected && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left) && ImGui::IsItemHovered())
-							AssetBrowser::HandleOpen(msg.Filename, TextEditor::Coordinates(msg.Line, 0));
+							AssetBrowser::HandleOpen(msg.Filename);
 						ImGui::SameLine();
 						ImGui::PopID();
 						ImGui::Text(ToString(msg.Level).c_str());

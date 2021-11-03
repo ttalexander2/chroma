@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Chroma/Assets/AssetManager.h>
+#include "Chroma/Utilities/GUID.h"
 
 namespace Chroma
 {
@@ -13,12 +14,14 @@ namespace Chroma
 		friend class AssetManager;
 
 		const std::string GetPath() const { return Path; }
+		const GUID GetID() const { return ID; }
 		virtual bool Load() = 0;
 		virtual bool Unload() = 0;
 		virtual bool Reload() = 0;
 
 	protected:
 		std::string Path;
+		GUID ID;
 	private:
 		bool Loaded = true;
 

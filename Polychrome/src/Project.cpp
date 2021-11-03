@@ -54,10 +54,6 @@ namespace Polychrome
 
 		LoadProject(path);
 
-		//this is sus
-		//system(("dotnet new classlib --output " + directory + " --name " + name).c_str());
-		//system(("dotnet add " + directory + "/" + name + ".csproj" + " reference Chroma.Mono.LINK.csproj").c_str());
-
 		return true;
 
 	}
