@@ -70,11 +70,17 @@ namespace Polychrome
 		try
 		{
 			Chroma::FileSystem::Mount(asset_dir);
+			//Chroma::FileSystem::Mount(std::filesystem::path(asset_dir).parent_path().string() + "\\TestArchive.7z");
 			
 		}
 		catch (Chroma::FileSystem::FileSystemException e)
 		{
 			CHROMA_CORE_ERROR("{}", e.what());
+		}
+
+		for (auto& path : Chroma::FileSystem::GetFileListRecursive(""))
+		{
+			CHROMA_CORE_WARN("{}", path);
 		}
 
 

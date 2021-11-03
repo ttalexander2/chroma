@@ -8,7 +8,6 @@
 #include <Chroma/Assets/AssetManager.h>
 #include "EditorApp.h"
 #include "FuzzyFileSearch.h"
-#include "CodeEditor.h"
 #if _WIN32
 #include <shellapi.h>
 #include <shlobj.h>
@@ -33,7 +32,7 @@ namespace Polychrome
 	float icon_size = 80;
 	std::string last_search;
 
-	void AssetBrowser::HandleOpen(std::filesystem::path path, TextEditor::Coordinates cursor_pos)
+	void AssetBrowser::HandleOpen(std::filesystem::path path)
 	{
 		if (!std::filesystem::exists(path) || !std::filesystem::is_regular_file(path))
 			return;
