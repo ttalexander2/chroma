@@ -5,25 +5,25 @@ namespace Chroma
 
 	void BoxCollider::Serialize(YAML::Emitter& out)
 	{
-		out << YAML::Key << "Bounds";
-		out << YAML::Value << Bounds;
+		out << YAML::Key << "Min";
+		out << YAML::Value << Min;
 
-		out << YAML::Key << "Offset";
-		out << YAML::Value << Offset;
+		out << YAML::Key << "Max";
+		out << YAML::Value << Max;
 	}
 	void BoxCollider::Deserialize(YAML::Node& node)
 	{
 
-		auto val = node["Bounds"];
+		auto val = node["Min"];
 		if (val)
 		{
-			Bounds = val.as<Math::vec2>();
+			Min = val.as<Math::vec2>();
 		}
 
-		val = node["Offset"];
+		val = node["Max"];
 		if (val)
 		{
-			Offset = val.as<Math::vec2>();
+			Max = val.as<Math::vec2>();
 		}
 
 	}

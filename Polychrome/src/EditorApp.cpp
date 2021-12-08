@@ -42,6 +42,8 @@
 #include "Build.h"
 #include "GameSettings.h"
 #include "UndoRedo.h"
+#include <Chroma/Components/ParticleEmitter.h>
+#include <Chroma/Systems/ParticleSystem.h>
 
 #define CHROMA_DEBUG_LOG
 #include <Chroma/Core/Log.h>
@@ -50,6 +52,7 @@
 #include "Utilities/GLFWHelpers.h"
 #include <Chroma/Components/Tag.h>
 #include <mono/metadata/mono-gc.h>
+
 
 namespace Polychrome
 {
@@ -66,11 +69,15 @@ namespace Polychrome
 	bool EditorApp::PreviewSprites = true;
 
 	ImFont* EditorApp::LargeIcons = nullptr;
+	ImFont* EditorApp::SmallIcons = nullptr;
 	ImFont* EditorApp::LargeFont = nullptr;
 
 	GLFWwindow* temp;
 
-	bool ProjectLoaded = false;
+	static bool ProjectLoaded = false;
+
+	static bool clearParticles = false;
+	static Chroma::EntityID lastParticles;
 
 	std::string EditorApp::InfoMessage;
 	EditorApp::MessageSeverity EditorApp::InfoSeverity = EditorApp::MessageSeverity::Info;
@@ -188,6 +195,8 @@ namespace Polychrome
 		ImFont* font = io.Fonts->AddFontFromFileTTF("assets/fonts/forkawesome-webfont.ttf", 14.f, &config, icon_ranges);
 		io.FontDefault = font;
 		LargeIcons = io.Fonts->AddFontFromFileTTF("assets/fonts/forkawesome-webfont.ttf", 128.0f, nullptr, icon_ranges);
+		SmallIcons = io.Fonts->AddFontFromFileTTF("assets/fonts/forkawesome-webfont.ttf", 20.f, nullptr, icon_ranges);
+
 
 		LargeFont = io.Fonts->AddFontFromMemoryCompressedTTF(Roboto_compressed_data, Roboto_compressed_size, 64.f);
 
@@ -218,17 +227,41 @@ namespace Polychrome
 		{
 			sprite_system.m_Scene = EditorApp::CurrentScene;
 			sprite_system.LateUpdate(time);
+
+			//CHROMA_CORE_TRACE("Selected: {}, Last: {}, Clear?: {}", Hierarchy::SelectedEntity, lastParticles, clearParticles);
+
+			if (clearParticles && lastParticles != Hierarchy::SelectedEntity && lastParticles != Chroma::ENTITY_NULL)
+			{
+				auto& emitter = CurrentScene->GetComponent<Chroma::ParticleEmitter>(lastParticles);
+				for (Chroma::Particle& p : emitter.Particles)
+				{
+					p.Active = false;
+				}
+				clearParticles = false;
+			}
+
+			if (Hierarchy::SelectedEntity != Chroma::ENTITY_NULL && CurrentScene->HasComponent<Chroma::ParticleEmitter>(Hierarchy::SelectedEntity))
+			{
+				auto& emitter = CurrentScene->GetComponent<Chroma::ParticleEmitter>(Hierarchy::SelectedEntity);
+				Chroma::ParticleSystem::UpdateEmitter(emitter, CurrentScene->GetTransformAbsolutePosition(Hierarchy::SelectedEntity), time);
+				lastParticles = Hierarchy::SelectedEntity;
+				clearParticles = true;
+			}
+
+
 		}
 
-
-
-
-		CHROMA_PROFILE_FUNCTION();
-		// Update
+		if (Chroma::Input::IsKeyPressed(Chroma::Input::Key::LEFT_BRACKET))
 		{
-			CHROMA_PROFILE_SCOPE("CameraController OnUpdate");
-			//m_CameraController.OnUpdate(time);
+			Camera.viewMatrix = glm::rotate(Camera.viewMatrix, .01f, { 1, 0, 0 });
+			Camera.viewProjectionMatrix = Camera.projectionMatrix * Camera.viewMatrix;
 		}
+		if (Chroma::Input::IsKeyPressed(Chroma::Input::Key::RIGHT_BRACKET))
+		{
+			Camera.viewMatrix = glm::rotate(Camera.viewMatrix, -.01f, { 1, 0, 0 });
+			Camera.viewProjectionMatrix = Camera.projectionMatrix * Camera.viewMatrix;
+		}
+		
 
 		std::function<void()> func;
 		bool success;
@@ -263,7 +296,16 @@ namespace Polychrome
 
 		m_Framebuffer->ClearAttachment(1, -1);
 
-		Chroma::Renderer2D::Begin(Camera.GetViewProjectionMatrix());
+		//if (EditorApp::SceneRunning)
+		//{
+		//	Chroma::Renderer2D::Begin(CurrentScene->GetPrimaryCamera());
+		//}
+		//else
+		//{
+			Chroma::Renderer2D::Begin(Camera.GetViewProjectionMatrix());
+		//}
+
+		
 
 		EditorApp::CurrentScene->Draw(time);
 
@@ -456,6 +498,7 @@ namespace Polychrome
 
 						if (ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left) && ImGui::IsItemHovered())
 						{
+
 							std::time_t t = std::time(nullptr);
 							char buffer[80];
 							strftime(buffer, sizeof(buffer), "%d/%m/%Y %H:%M", std::localtime(&t));
@@ -472,7 +515,7 @@ namespace Polychrome
 									e << YAML::Key << "TimeStamp" << YAML::Value << std::string(buffer);
 								else
 									e << YAML::Key << "TimeStamp" << YAML::Value << proj.TimeStamp;
-								
+
 								e << YAML::Key << "Path" << YAML::Value << proj.Path;
 								e << YAML::Key << "Pinned" << YAML::Value << proj.Pinned;
 								e << YAML::EndMap;
@@ -484,19 +527,19 @@ namespace Polychrome
 							stream.write(e.c_str(), e.size());
 							stream.close();
 
-							Project::LoadProject(prj.Path + "\\" + prj.Name + ".polychrome");
-
-							EditorApp::CurrentScenePath = Chroma::AssetManager::AssetDirectory + Project::StartingScene;
-
 							glfwSetWindowSize((GLFWwindow*)this->Get().GetWindow().GetNativeWindow(), 1920, 1080);
 							glfwSetWindowCenter((GLFWwindow*)this->Get().GetWindow().GetNativeWindow());
 							glfwMaximizeWindow((GLFWwindow*)this->Get().GetWindow().GetNativeWindow());
 							glfwSetWindowAttrib((GLFWwindow*)this->Get().GetWindow().GetNativeWindow(), GLFW_DECORATED, GLFW_TRUE);
-							glfwSetWindowTitle((GLFWwindow*)this->Get().GetWindow().GetNativeWindow(), ("Polychrome Editor - " + prj.Name + " - " + std::filesystem::path(Project::StartingScene).filename().string()).c_str());
+							glfwSetWindowTitle((GLFWwindow*)this->Get().GetWindow().GetNativeWindow(), ("Polychrome Editor - " + prj.Name + " - " + Project::StartingScene).c_str());
+
+							Project::LoadProject(prj.Path + "\\" + prj.Name + ".polychrome");
+
+							EditorApp::CurrentScenePath = Chroma::AssetManager::AssetDirectory + Project::StartingScene;
 
 							Polychrome::FileWatcherThread::SetWatch(Chroma::AssetManager::AssetDirectory);
-
 							ProjectLoaded = true;
+
 							ImGui::ResetStyle(ImGui::ImGuiStylePreset::Cherry, ImGui::GetStyle());
 							ImGui::CloseCurrentPopup();
 						}
@@ -604,7 +647,7 @@ namespace Polychrome
 							glfwSetWindowCenter((GLFWwindow*)this->Get().GetWindow().GetNativeWindow());
 							glfwMaximizeWindow((GLFWwindow*)this->Get().GetWindow().GetNativeWindow());
 							glfwSetWindowAttrib((GLFWwindow*)this->Get().GetWindow().GetNativeWindow(), GLFW_DECORATED, GLFW_TRUE);
-							glfwSetWindowTitle((GLFWwindow*)this->Get().GetWindow().GetNativeWindow(), ("Polychrome Editor - " + prj.Name + " - " + std::filesystem::path(Project::StartingScene).filename().string()).c_str());
+							glfwSetWindowTitle((GLFWwindow*)this->Get().GetWindow().GetNativeWindow(), ("Polychrome Editor - " + prj.Name + " - " + Project::StartingScene).c_str());
 
 							Polychrome::FileWatcherThread::SetWatch(Chroma::AssetManager::AssetDirectory);
 
@@ -935,6 +978,7 @@ namespace Polychrome
 		GameSettings::Draw();
 
 
+
 		if (ImGui::Begin("Script Engine Debug"))
 		{
 			float heap = (float)mono_gc_get_heap_size();
@@ -942,6 +986,34 @@ namespace Polychrome
 
 			ImGui::Text("GC Heap: %.2fkb / %.2fkb", usage, heap);
 			ImGui::Separator();
+			
+
+			if (ImGui::TreeNode("Hierarchy Raw "))
+			{
+				for (auto& mod : Chroma::MonoScripting::GetModuleHierarchy())
+				{
+					ImGui::TreeNodeEx(mod.c_str(), ImGuiTreeNodeFlags_Leaf);
+					ImGui::TreePop();
+				}
+				ImGui::TreePop();
+			}
+
+			ImGui::Separator();
+
+			if (ImGui::TreeNode("Modules "))
+			{
+				for (auto& mod : Chroma::MonoScripting::GetModules())
+				{
+					ImGui::TreeNodeEx(mod.c_str(), ImGuiTreeNodeFlags_Leaf);
+					ImGui::TreePop();
+				}
+				ImGui::TreePop();
+			}
+
+
+
+			ImGui::Separator();
+
 
 			for (auto& [scene, entityMap] : Chroma::MonoScripting::GetEntityInstanceMap())
 			{

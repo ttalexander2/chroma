@@ -6,6 +6,7 @@
 #include "Viewport.h"
 #include <math.h>
 #include <Chroma/Components/BoxCollider.h>
+#include <Chroma/Components/ParticleEmitter.h>
 
 namespace Polychrome
 {
@@ -17,6 +18,7 @@ namespace Polychrome
 	bool ComponentDebugGizmos::DrawCameraGizmos = true;
 	bool ComponentDebugGizmos::DrawBoxCollider = false;
 	bool ComponentDebugGizmos::DrawSpriteBoundries = false;
+	bool ComponentDebugGizmos::DrawParticleEmtiters = true;
 
 	bool ComponentDebugGizmos::DrawAllEntities = false;
 
@@ -64,9 +66,18 @@ namespace Polychrome
 		{
 			auto& collider = EditorApp::CurrentScene->GetComponent<Chroma::BoxCollider>(entity);
 			const Math::vec2 absolutePos = EditorApp::CurrentScene->GetTransformAbsolutePosition(entity);
-			Chroma::Renderer2D::DrawRect(absolutePos + collider.Offset, collider.Bounds, 1.f / EditorApp::Camera.GetZoom(), { 0.2f, 0.9f , 0.3f , 1.f });
+
+			glm::vec2 offset = { (collider.Max.x + collider.Min.x) / 2.f, (collider.Max.y + collider.Min.y) / 2.f };
+			glm::vec2 size = collider.Max - collider.Min;
+
+			if (collider.IsColliding())
+				Chroma::Renderer2D::DrawRect(absolutePos + offset, size, 1.f / EditorApp::Camera.GetZoom(), { 0.9f,  0.2f , 0.2f , 1.f });
+			else
+				Chroma::Renderer2D::DrawRect(absolutePos + offset, size, 1.f / EditorApp::Camera.GetZoom(), { 0.2f, 0.9f , 0.3f , 1.f });
 		}
 	}
+
+
 
 	void ComponentDebugGizmos::DrawSpriteBoundryGizmos(Chroma::EntityID entity)
 	{
@@ -132,12 +143,10 @@ namespace Polychrome
 
 	void ComponentDebugGizmos::DrawIcons()
 	{
-		if (!DrawAllGizmos)
-			return;
+		float y = ImGui::GetCursorPosY();
 
 		if (DrawCameraGizmos)
 		{
-			float y = ImGui::GetCursorPosY();
 			//CAMERA
 			auto camEntity = EditorApp::CurrentScene->GetPrimaryCameraEntity();
 			if (EditorApp::CurrentScene->Registry.valid(camEntity))
@@ -158,6 +167,39 @@ namespace Polychrome
 
 
 		//COMPONENTS
+
+		if (DrawParticleEmtiters)
+		{
+			if (!DrawAllEntities && Hierarchy::SelectedEntity != Chroma::ENTITY_NULL && EditorApp::CurrentScene->HasComponent<Chroma::ParticleEmitter>(Hierarchy::SelectedEntity))
+			{
+				Math::vec2 pos = EditorApp::CurrentScene->GetTransformAbsolutePosition(Hierarchy::SelectedEntity);
+				Math::vec2 screen = Viewport::WorldToViewportPosition(pos);
+				if (y - screen.y < ImGui::GetWindowContentRegionMax().y - 15.f)
+				{
+					ImGui::SetCursorPos({ screen.x - 6.f, y - screen.y - 6.f });
+					ImGui::PushFont(EditorApp::SmallIcons);
+					ImGui::Text(ICON_FK_MAGIC);
+					ImGui::PopFont();
+				}
+			}
+			else if (DrawAllEntities)
+			{
+				for (auto& e : EditorApp::CurrentScene->Registry.view<Chroma::ParticleEmitter>())
+				{
+					Math::vec2 pos = EditorApp::CurrentScene->GetTransformAbsolutePosition(e);
+					Math::vec2 screen = Viewport::WorldToViewportPosition(pos);
+					if (y - screen.y < ImGui::GetWindowContentRegionMax().y - 15.f)
+					{
+						ImGui::SetCursorPos({ screen.x - 6.f, y - screen.y - 6.f });
+						ImGui::PushFont(EditorApp::SmallIcons);
+						ImGui::Text(ICON_FK_MAGIC);
+						ImGui::PopFont();
+					}
+				}
+			}
+
+
+		}
 	}
 
 	void ComponentDebugGizmos::DrawGrid()

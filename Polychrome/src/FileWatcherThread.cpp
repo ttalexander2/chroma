@@ -28,60 +28,7 @@ namespace Polychrome
 		//CHROMA_CORE_INFO("{}", asset_dir);
 		std::string watch_dir = std::filesystem::path(asset_dir).parent_path().string();
 		//CHROMA_CORE_INFO("{}", watch_dir);
-		// This needs to be replaced
-		for (auto& file : std::filesystem::recursive_directory_iterator(watch_dir))
-		{
-			if (file.is_regular_file())
-			{
-				//CHROMA_CORE_INFO("{}", file.path().string());
-				std::string extension = file.path().extension().string();
-				if (extension == ".ase" || extension == ".aseprite" || extension == ".png" || extension == ".jpg")
-				{
-					Chroma::AssetManager::LoadSprite(file.path().lexically_relative(asset_dir).string());
-					CHROMA_CORE_INFO("file: {}", file.path().string());
-				}
-			}
-		}
 
-		auto result = Build::BuildMonoAssembly(watch_dir, Project::Name);
-		Chroma::ScriptEngineRegistry::RegisterAll();
-		Chroma::MonoScripting::SetDeltaTime(0.f, 0.f);
-		Chroma::MonoScripting::SetSceneContext(EditorApp::CurrentScene);
-		auto view = EditorApp::CurrentScene->Registry.view<Chroma::CSharpScript>();
-
-		for (Chroma::EntityID entity : view)
-		{
-			auto& script = view.get<Chroma::CSharpScript>(entity);
-			auto entityObj = Chroma::Entity(entity, EditorApp::CurrentScene);
-			Chroma::MonoScripting::InitScriptEntity(entityObj);
-		}
-
-		auto spriteView = EditorApp::CurrentScene->Registry.view<Chroma::SpriteRenderer>();
-		for (Chroma::EntityID e : spriteView)
-		{
-			auto& spriteRenderer = spriteView.get<Chroma::SpriteRenderer>(e);
-			spriteRenderer.SetSpriteOrigin(spriteRenderer.GetSpriteOrigin());
-		}
-
-		CHROMA_CORE_WARN("Mounted: {}", asset_dir);
-		//CHROMA_CORE_WARN("Mounted: {}", std::filesystem::path(asset_dir).parent_path().string() + "\\TestArchive.7z");
-		CHROMA_CORE_WARN("");
-
-		try
-		{
-			Chroma::FileSystem::Mount(asset_dir);
-			//Chroma::FileSystem::Mount(std::filesystem::path(asset_dir).parent_path().string() + "\\TestArchive.7z");
-			
-		}
-		catch (Chroma::FileSystem::FileSystemException e)
-		{
-			CHROMA_CORE_ERROR("{}", e.what());
-		}
-
-		for (auto& path : Chroma::FileSystem::GetFileListRecursive(""))
-		{
-			CHROMA_CORE_WARN("{}", path);
-		}
 
 
 		file_watcher_thread_running.store(true);
@@ -121,7 +68,6 @@ namespace Polychrome
 								auto entityObj = Chroma::Entity(entity, EditorApp::CurrentScene);
 								Chroma::MonoScripting::InitScriptEntity(entityObj);
 							}
-
 						}
 						});
 					break;

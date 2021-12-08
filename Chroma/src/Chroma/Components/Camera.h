@@ -15,6 +15,9 @@ namespace Chroma
 		Camera(const Camera&) = default;
 		Camera(float width, float height);
 
+		const Math::vec2& GetPosition() const { return position; }
+		void SetPosition(const Math::vec2& pos) { if (position != pos) dirty = true; position = pos; }
+
 		const Math::uvec2& GetSize() const { return size; }
 		void SetSize(const Math::uvec2& size) { this->size = size; dirty = true; }
 		void SetSize(uint32_t x, uint32_t y) { size = { x, y, }; dirty = true; }
@@ -42,12 +45,13 @@ namespace Chroma
 
 
 	private:
-		void RecalculateViewMatrix(const Math::vec2& position);
+		void RecalculateViewMatrix();
 
 		Math::mat4 projectionMatrix;
 		Math::mat4 viewMatrix;
 		Math::mat4 viewProjectionMatrix;
 		glm::uvec2 size = { 1920, 1080 };
+		Math::vec2 position = { 0,0 };
 		bool dirty = true;
 
 

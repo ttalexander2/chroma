@@ -6,7 +6,7 @@ namespace Polychrome
 {
 	class EditorCamera
 	{
-	private:
+	public:
 		static void RecalculateViewMatrix();
 	public:
 		static const Math::vec2& GetPosition() { return EditorCamera::position; }
@@ -26,7 +26,7 @@ namespace Polychrome
 
 
 		static void ImGuiUpdate();
-	private:
+	//private:
 		static Math::mat4 projectionMatrix;
 		static Math::mat4 viewMatrix;
 		static Math::mat4 viewProjectionMatrix;

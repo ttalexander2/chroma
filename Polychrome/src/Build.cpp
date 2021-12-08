@@ -35,7 +35,6 @@ namespace Polychrome
 		}
 
 		std::string logFile = path + "\\bin\\" + "build.log";
-
 		int success = system((".\\mono\\bin\\mono.exe mono\\lib\\mono\\4.5\\mcs.exe -debug -target:library -nostdlib -out:\"" + std::filesystem::absolute(path).string() + "\\bin\\" + name + ".dll\" -r:Chroma.Mono.dll" + monoLibStr + " -recurse:\"" + std::filesystem::absolute(path).string() + "\\**.cs\" 2> " + logFile + " 1>&2").c_str());
 
 		std::ifstream stream = std::ifstream(logFile);

@@ -13,11 +13,14 @@ namespace Chroma
 	class Entity : public Inspectable
 	{
 	public:
+		Entity() = default;
 		Entity(EntityID id);
 		Entity(EntityID id, Scene* scene);
 		Entity(const Entity& other) = default;
 
 		inline EntityID GetID() const { return m_EntityID; }
+
+		const bool Valid() const;
 
 		std::string ToPrefab();
 

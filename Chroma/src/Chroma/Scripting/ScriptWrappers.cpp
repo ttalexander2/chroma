@@ -33,6 +33,18 @@ namespace Chroma
 		hasComponentFuncs[monoType](e);
 	}
 
+	uint32_t Script::Entity_FindEntityByName(MonoString* name)
+	{
+		char* str_name = mono_string_to_utf8(name);
+
+		Scene* scene = MonoScripting::GetCurrentSceneContext();
+		Entity entity = scene->FindEntityByName(str_name);
+		if (!entity.Valid())
+			return (uint32_t)Chroma::ENTITY_NULL;
+		return (uint32_t)entity.GetID();
+		
+	}
+
 	void Script::Log_Message(Log::LogLevel level, MonoString* message)
 	{
 		char* msg = mono_string_to_utf8(message);

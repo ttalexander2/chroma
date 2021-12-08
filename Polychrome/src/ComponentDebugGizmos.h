@@ -15,10 +15,12 @@ namespace Polychrome
 		static Math::uvec2 SnapSize;
 		static float GridOpacity;
 		static bool DrawAllGizmos;
+		static bool DrawAllEntities;
+
 		static bool DrawCameraGizmos;
 		static bool DrawBoxCollider;
-		static bool DrawAllEntities;
 		static bool DrawSpriteBoundries;
+		static bool DrawParticleEmtiters;
 
 	private:
 		static void DrawBoxColliderGizmos(Chroma::EntityID entity);

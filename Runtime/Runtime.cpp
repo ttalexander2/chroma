@@ -3,25 +3,21 @@
 #include <Chroma/Core/EntryPoint.h>
 #include <Chroma/Components/SpriteRenderer.h>
 #include <Chroma/Renderer/Renderer2D.h>
+#include <Chroma/IO/FileSystem.h>
 
 using namespace Chroma;
 Scene* Runtime::CurrentScene = nullptr;
 
 
 Runtime::Runtime() :
-	Application("Chroma Runtime Loader", 1920U, 1080U)
+	Application("Chroma Runtime", 1920U, 1080U)
 {
-	CurrentScene = new Scene();
-	auto entity = CurrentScene->NewEntity();
-	auto& sprite = entity.AddComponent<SpriteRenderer>();
-	AssetManager::LoadSprite("../Polychrome/assets/textures/avi.ase");
-	sprite.SetSprite("../Polychrome/assets/textures/avi.ase");
 
+}
 
-	CurrentScene->Load();
-	CurrentScene->Init();
-
-
+Runtime::~Runtime()
+{
+	delete CurrentScene;
 }
 
 void Runtime::Update(Time delta)
@@ -45,6 +41,10 @@ void Runtime::Update(Time delta)
 			{
 				delete out;
 			}
+		}
+		else
+		{
+			this->Stop();
 		}
 	}
 	else

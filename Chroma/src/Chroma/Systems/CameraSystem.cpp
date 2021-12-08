@@ -11,9 +11,10 @@ namespace Chroma
 		{
 			auto& cam = view.get<Camera>(e);
 			auto& transform = view.get<Transform>(e);
+			cam.SetPosition(transform.Position);
 			if (cam.dirty)
 			{
-				cam.RecalculateViewMatrix(transform.Position);
+				cam.RecalculateViewMatrix();
 				cam.dirty = false;
 			}
 		}
@@ -26,9 +27,10 @@ namespace Chroma
 		{
 			auto& cam = view.get<Camera>(e);
 			auto& transform = view.get<Transform>(e);
+			cam.SetPosition(transform.Position);
 			if (cam.dirty)
 			{
-				cam.RecalculateViewMatrix(transform.Position);
+				cam.RecalculateViewMatrix();
 				cam.dirty = false;
 			}
 		}

@@ -12,6 +12,7 @@
 #include "Chroma/Components/Transform.h"
 #include "Chroma/Components/Tag.h"
 #include "Chroma/Components/Camera.h"
+#include "Chroma/Components/ParticleEmitter.h"
 #include <Chroma/Scripting/ScriptWrappers.h>
 
 #include "MonoScripting.cpp"
@@ -42,6 +43,7 @@ namespace Chroma
 		Component_RegisterType(SpriteRenderer);
 		Component_RegisterType(Tag);
 		Component_RegisterType(Camera);
+		Component_RegisterType(ParticleEmitter);
 	}
 
 	void ScriptEngineRegistry::RegisterAll()
@@ -51,6 +53,7 @@ namespace Chroma
 		//Entity
 		mono_add_internal_call("Chroma.Entity::CreateComponent_Native", Chroma::Script::Entity_CreateComponent);
 		mono_add_internal_call("Chroma.Entity::HasComponent_Native", Chroma::Script::Entity_HasComponent);
+		mono_add_internal_call("Chroma.Entity::FindEntityByName_Native", Chroma::Script::Entity_FindEntityByName);
 
 		//Log
 		mono_add_internal_call("Chroma.Log::LogMessage_Native", Chroma::Script::Log_Message);

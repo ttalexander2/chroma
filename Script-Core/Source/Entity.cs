@@ -61,9 +61,9 @@ namespace Chroma
             return null;
         }
 
-        public Entity FindEntityByTag(string tag)
+        public Entity FindEntityByName(string name)
         {
-            return this;
+            return new Entity(FindEntityByName_Native(name));
         }
 
         public virtual void PreInit() { }
@@ -92,6 +92,9 @@ namespace Chroma
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool HasComponent_Native(ulong entityID, Type type);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern ulong FindEntityByName_Native(string name);
 
     }
 }

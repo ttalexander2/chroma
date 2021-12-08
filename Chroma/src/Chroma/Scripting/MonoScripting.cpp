@@ -504,6 +504,33 @@ namespace Chroma
 		
 	}
 
+	std::vector<std::string> MonoScripting::GetModuleHierarchy()
+	{
+		if (!coreAssemblyImage)
+			return std::vector<std::string>();
+
+		if (!appAssemblyImage)
+			return std::vector<std::string>();
+
+		MonoMethod* method = GetMethod(coreAssemblyImage, "Chroma.ReflectionHelper:GetEntityTypeHierarchy");
+
+		if (!method)
+			return std::vector<std::string>();
+
+		MonoArray* arr = (MonoArray*)mono_runtime_invoke(method, nullptr, nullptr, nullptr);
+		uintptr_t length = mono_array_length(arr);
+		std::vector<std::string> vec = std::vector<std::string>();
+		vec.reserve(length);
+		for (int i = 0; i < length; i++)
+		{
+			MonoString* type = mono_array_get(arr, MonoString*, i);
+			vec.push_back(mono_string_to_utf8(type));
+		}
+		return vec;
+
+
+	}
+
 	bool MonoScripting::ModuleExists(const std::string& moduleName)
 	{
 		if (!appAssemblyImage) // No assembly loaded
@@ -744,6 +771,48 @@ namespace Chroma
 		CallMethod(entityInstance.GetInstance(), entityInstance.ScriptClass->Constructor, param);
 
 		//Set public fields
+		//ScriptModuleFieldMap& moduleFieldMap = scriptComponent.ModuleFieldMap;
+		//if (moduleFieldMap.find(moduleName) != moduleFieldMap.end())
+		//{
+		//	auto& publicFields = moduleFieldMap.at(moduleName);
+		//	for (auto& [name, field] : publicFields)
+		//		field.CopyStoredValueFromRuntime(entityInstance);
+		//}
+	}
+
+	void MonoScripting::CopyFieldsFromStored(Entity entity)
+	{
+		Scene& scene = entity.GetScene();
+		EntityID id = entity.GetID();
+
+		CSharpScript& scriptComponent = entity.GetComponent<CSharpScript>();
+		auto& moduleName = scriptComponent.ModuleName;
+
+		EntityInstanceData& entityInstanceData = GetEntityInstanceData(scene.GetID(), id);
+		EntityInstance& entityInstance = entityInstanceData.Instance;
+
+		//Set public fields
+		ScriptModuleFieldMap& moduleFieldMap = scriptComponent.ModuleFieldMap;
+		if (moduleFieldMap.find(moduleName) != moduleFieldMap.end())
+		{
+			auto& publicFields = moduleFieldMap.at(moduleName);
+			for (auto& [name, field] : publicFields)
+				field.CopyStoredValueToRuntime(entityInstance);
+		}
+	}
+
+	void MonoScripting::CopyFieldsFromRuntime(Entity entity)
+	{
+		Scene& scene = entity.GetScene();
+		EntityID id = entity.GetID();
+
+		CSharpScript& scriptComponent = entity.GetComponent<CSharpScript>();
+		auto& moduleName = scriptComponent.ModuleName;
+
+		EntityInstanceData& entityInstanceData = GetEntityInstanceData(scene.GetID(), id);
+		EntityInstance& entityInstance = entityInstanceData.Instance;
+
+		//Set public fields
 		ScriptModuleFieldMap& moduleFieldMap = scriptComponent.ModuleFieldMap;
 		if (moduleFieldMap.find(moduleName) != moduleFieldMap.end())
 		{
@@ -752,6 +821,7 @@ namespace Chroma
 				field.CopyStoredValueFromRuntime(entityInstance);
 		}
 	}
+
 
 	void MonoScripting::SetDeltaTime(double dtime, float ftime)
 	{
