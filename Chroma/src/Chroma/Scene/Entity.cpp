@@ -16,6 +16,13 @@ namespace Chroma
 	{
 	}
 
+	const bool Entity::Valid() const
+	{
+		if (m_Scene == nullptr)
+			return false;
+		return m_Scene->Registry.valid(m_EntityID);
+	}
+
 	std::string Entity::ToPrefab()
 	{
 		YAML::Emitter out;

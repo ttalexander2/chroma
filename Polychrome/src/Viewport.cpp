@@ -560,6 +560,7 @@ namespace Polychrome
 				ImGui::Checkbox("Camera##gizmos_settings", &ComponentDebugGizmos::DrawCameraGizmos);
 				ImGui::Checkbox("Box Collider##gizmos_settings", &ComponentDebugGizmos::DrawBoxCollider);
 				ImGui::Checkbox("Sprite Bounds##gizmos_settings", &ComponentDebugGizmos::DrawSpriteBoundries);
+				ImGui::Checkbox("Particle Emitter##gizmos_settings", &ComponentDebugGizmos::DrawParticleEmtiters);
 				
 				ImGui::EndPopup();
 			}

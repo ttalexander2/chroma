@@ -6,6 +6,10 @@
 #include <Chroma/Scene/Scene.h>
 #include "EditorApp.h"
 #include "FileWatcherThread.h"
+#include "Build.h"
+#include <Chroma/Scripting/ScriptEngineRegistry.h>
+#include <Chroma/Scripting/MonoScripting.h>
+#include <Chroma/IO/FileSystem.h>
 
 namespace Polychrome
 {
@@ -156,6 +160,61 @@ namespace Polychrome
 		outStream.close();
 
 		//SaveCurrentProject();
+
+		for (auto& file : std::filesystem::recursive_directory_iterator(Chroma::AssetManager::AssetDirectory))
+		{
+			if (file.is_regular_file())
+			{
+				//CHROMA_CORE_INFO("{}", file.path().string());
+				std::string extension = file.path().extension().string();
+				if (extension == ".ase" || extension == ".aseprite" || extension == ".png" || extension == ".jpg")
+				{
+					Chroma::AssetManager::LoadSprite(file.path().lexically_relative(Chroma::AssetManager::AssetDirectory).string());
+					CHROMA_CORE_INFO("file: {}", file.path().string());
+				}
+			}
+		}
+
+		auto result = Build::BuildMonoAssembly(std::filesystem::path(Chroma::AssetManager::AssetDirectory).parent_path().string(), Project::Name);
+		Chroma::ScriptEngineRegistry::RegisterAll();
+		Chroma::MonoScripting::SetDeltaTime(0.f, 0.f);
+		Chroma::MonoScripting::SetSceneContext(EditorApp::CurrentScene);
+		auto view = EditorApp::CurrentScene->Registry.view<Chroma::CSharpScript>();
+
+		for (Chroma::EntityID entity : view)
+		{
+			auto& script = view.get<Chroma::CSharpScript>(entity);
+			auto entityObj = Chroma::Entity(entity, EditorApp::CurrentScene);
+			Chroma::MonoScripting::InitScriptEntity(entityObj);
+		}
+
+		auto spriteView = EditorApp::CurrentScene->Registry.view<Chroma::SpriteRenderer>();
+		for (Chroma::EntityID e : spriteView)
+		{
+			auto& spriteRenderer = spriteView.get<Chroma::SpriteRenderer>(e);
+			spriteRenderer.SetSpriteOrigin(spriteRenderer.GetSpriteOrigin());
+		}
+
+		CHROMA_CORE_WARN("Mounted: {}", Chroma::AssetManager::AssetDirectory);
+		//CHROMA_CORE_WARN("Mounted: {}", std::filesystem::path(Chroma::AssetManager::AssetDirectory).parent_path().string() + "\\TestArchive.7z");
+		CHROMA_CORE_WARN("");
+
+		try
+		{
+			Chroma::FileSystem::UnmountAll();
+			Chroma::FileSystem::Mount(Chroma::AssetManager::AssetDirectory);
+			//Chroma::FileSystem::Mount(std::filesystem::path(Chroma::AssetManager::AssetDirectory).parent_path().string() + "\\TestArchive.7z");
+
+		}
+		catch (Chroma::FileSystem::FileSystemException e)
+		{
+			CHROMA_CORE_ERROR("{}", e.what());
+		}
+
+		for (auto& path : Chroma::FileSystem::GetFileListRecursive(""))
+		{
+			CHROMA_CORE_WARN("{}", path);
+		}
 
 
 		return true;

@@ -19,8 +19,8 @@ IncludeDir["ImGuizmo"] = "Chroma/third_party/ImGuizmo"
 IncludeDir["fmt"] = "Chroma/third_party/fmt/include"
 IncludeDir["mono"] = "Chroma/third_party/mono/include"
 IncludeDir["nfd"] = "Chroma/third_party/nativefiledialog-extended/src/include"
-IncludeDir["shaderc"] = "%{wks.location}/Hazel/vendor/shaderc/include"
-IncludeDir["SPIRV_Cross"] = "%{wks.location}/Hazel/vendor/SPIRV-Cross"
+IncludeDir["shaderc"] = "%{wks.location}/Chroma/third_party/shaderc/include"
+IncludeDir["SPIRV_Cross"] = "%{wks.location}/Chroma/third_party/SPIRV-Cross"
 IncludeDir["VulkanSDK"] = "%{VULKAN_SDK}/Include"
 
 LibraryDir = {}

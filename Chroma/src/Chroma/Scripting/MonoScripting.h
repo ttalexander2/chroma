@@ -72,6 +72,9 @@ namespace Chroma
 		static void ShutdownScriptEntity(Entity entity, const std::string& moduleName);
 		static void InstantiateEntityClass(Entity entity);
 
+		static void CopyFieldsFromStored(Entity entity);
+		static void CopyFieldsFromRuntime(Entity entity);
+
 		static void SetDeltaTime(double dtime, float ftime);
 
 
@@ -95,6 +98,7 @@ namespace Chroma
 		static std::string StripNamespace(const std::string& nameSpace, const std::string& moduleName);
 
 		static std::vector<std::string> GetModules();
+		static std::vector<std::string> GetModuleHierarchy();
 
 
 		static EntityInstanceMap& GetEntityInstanceMap();

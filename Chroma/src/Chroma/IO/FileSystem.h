@@ -111,6 +111,8 @@ namespace Chroma
 
 
 		static void Mount(const std::string& path);
+        static void Unmount(const std::string& path);
+        static void UnmountAll();
 
 		static Error GetLastErrorCode();
 		static std::string GetLastError();
@@ -135,6 +137,9 @@ namespace Chroma
         static Chroma::File Open(const std::string& filePath, FileMode mode = FileMode::Read);
 	
         static void SetWriteDirectory(const std::string& directory);
+
+    private:
+        static std::vector<std::string> _mounted;
     };
 }
 

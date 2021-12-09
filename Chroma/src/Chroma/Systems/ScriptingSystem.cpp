@@ -23,7 +23,7 @@ namespace Chroma
 
 				auto& entityInstanceData = Chroma::MonoScripting::GetEntityInstanceData(m_Scene->GetID(), entity);
 
-				CHROMA_CORE_TRACE("Loaded [{}] fields from '{}'", script.ModuleFieldMap[script.ModuleName].size(), script.ModuleName);
+				//CHROMA_CORE_TRACE("Loaded [{}] fields from '{}'", script.ModuleFieldMap[script.ModuleName].size(), script.ModuleName);
 
 				for (auto& [name, field] : script.ModuleFieldMap[script.ModuleName])
 				{

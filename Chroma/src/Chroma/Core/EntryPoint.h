@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Chroma.h"
 #include "Chroma/Profiler/Instrumentor.h"
 
 #ifdef CHROMA_PLATFORM_WINDOWS
@@ -9,21 +10,8 @@
 /// @return Returns a new instance of the application.
 extern Chroma::Application* Chroma::CreateApplication();
 
+void InitFilesystem();
+void DeinitFilesystem();
 
-/// @brief Application entry point.
-int main(int argc, char** argv)
-{
-	Chroma::Log::Init();
-	CHROMA_PROFILE_BEGIN_SESSION("Startup", "ChromaProfile-Startup.json");
-	auto app = Chroma::CreateApplication();
-	CHROMA_PROFILE_END_SESSION();
-	CHROMA_PROFILE_BEGIN_SESSION("Runtime", "ChromaProfile-Runtime.json");
-	app->Run();
-	CHROMA_PROFILE_END_SESSION();
-	CHROMA_PROFILE_BEGIN_SESSION("Shutdown", "ChromaProfile-Shutdown.json");
-	delete app;
-	CHROMA_PROFILE_END_SESSION();
-
-}
 
 #endif

@@ -13,6 +13,7 @@ namespace Chroma
 		//Entity
 		void Entity_CreateComponent(EntityID id, void* type);
 		bool Entity_HasComponent(EntityID id, void* type);
+		uint32_t Entity_FindEntityByName(MonoString* name);
 
 		//Log
 		void Log_Message(Log::LogLevel level, MonoString* message);

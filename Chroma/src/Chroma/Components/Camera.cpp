@@ -12,7 +12,7 @@ namespace Chroma
 		viewProjectionMatrix = projectionMatrix * viewMatrix;
 	}
 
-	void Camera::RecalculateViewMatrix(const Math::vec2& position)
+	void Camera::RecalculateViewMatrix()
 	{
 		float aspectRatio = (float)size.x / (float)size.y;
 		float left = -(float)size.y * aspectRatio * .5f;

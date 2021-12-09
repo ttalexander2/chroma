@@ -3,16 +3,18 @@
 #include "Chroma/Scene/Component.h"
 #include "Chroma/Math/vec2.h"
 
+#include "Chroma/Systems/CollisionSystem.h"
+
 namespace Chroma
 {
 
 	/// @brief 2D Box collider. Bounds are calculated based on Transorm position and offset.
 	struct BoxCollider : Component
 	{
-		/// @brief 2D Bounds of the Box Collider.
-		Math::vec2 Bounds{ 1.0f, 1.0f };
-		/// @brief 2D Offset of the Box Collider.
-		Math::vec2 Offset{ 0.0f, 0.0f };
+		/// @brief 2D Min of the Box Collider.
+		Math::vec2 Min{ 0.0f, 0.0f };
+
+		Math::vec2 Max{ 20.0f, 20.0f };
 
 		/// @brief Constructs an empty Box Collider.
 		BoxCollider() = default;
@@ -22,8 +24,8 @@ namespace Chroma
 		/// @brief Constructs a new Box Collider.
 		/// @param bounds 2D bounds of the box collider.
 		/// @param offset 2D offset of the box collider.
-		BoxCollider(const Math::vec2& bounds, const Math::vec2& offset)
-			: Bounds(bounds), Offset(offset)
+		BoxCollider(const Math::vec2& min, const Math::vec2& max)
+			: Min(min), Max(max)
 		{
 		}
 
@@ -40,6 +42,13 @@ namespace Chroma
 		void Serialize(YAML::Emitter& out) override;
 
 		void Deserialize(YAML::Node& node) override;
+
+		bool IsColliding() const { return m_Colliding; }
+
+	private:
+		bool m_Colliding = false;
+
+		friend class CollisionSystem;
 
 	};
 }

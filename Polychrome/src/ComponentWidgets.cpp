@@ -13,6 +13,7 @@
 #include <Chroma/Components/CircleCollider.h>
 #include <Chroma/Scripting/MonoScripting.h>
 #include <Chroma/Components/SpriteRenderer.h>
+#include <Chroma/Components/ParticleEmitter.h>
 
 #include "EditorApp.h"
 #include "Hierarchy.h"
@@ -43,6 +44,7 @@ namespace Polychrome
 		else if (Chroma::ECS::IsType<Chroma::CircleCollider>(c)) DrawCircleCollider(c);
 		else if (Chroma::ECS::IsType<Chroma::SpriteRenderer>(c)) DrawSpriteRenderer(c);
 		else if (Chroma::ECS::IsType<Chroma::Camera>(c)) DrawCameraComponent(c);
+		else if (Chroma::ECS::IsType<Chroma::ParticleEmitter>(c)) DrawParticleEmitter(c);
 	}
 
 	void ComponentWidgets::DrawTransform(Chroma::Component* c)
@@ -104,6 +106,15 @@ namespace Polychrome
 					ImGui::InputText(hash, &val);
 					field.SetRuntimeValue(entityInstanceData.Instance, val);
 				}
+				else if (field.Type == Chroma::FieldType::Entity)
+				{
+					//Chroma::Entity entity = field.GetRuntimeValue<Chroma::Entity>(entityInstanceData.Instance);
+					//int id = (int)entity.GetID();
+					//ImGui::InputInt(hash, &id, 1, 100);
+					//if (EditorApp::CurrentScene->Registry.valid((Chroma::EntityID)id))
+					//	field.SetRuntimeValue<Chroma::Entity>(entityInstanceData.Instance, Chroma::Entity((Chroma::EntityID)id, EditorApp::CurrentScene));
+
+				}
 			}
 		}
 		else
@@ -129,6 +140,15 @@ namespace Polychrome
 					std::string val = field.GetStoredValue<const std::string&>();
 					ImGui::InputText(hash, &val);
 					field.SetStoredValue<const std::string&>(val);
+				}
+				else if (field.Type == Chroma::FieldType::Entity)
+				{
+					//Chroma::Entity entity = field.GetStoredValue<Chroma::Entity>();
+					//int id = (int)entity.GetID();
+					//ImGui::InputInt(hash, &id, 1, 100);
+					//if (EditorApp::CurrentScene->Registry.valid((Chroma::EntityID)id))
+					//	field.SetStoredValue<Chroma::Entity>(Chroma::Entity((Chroma::EntityID)id, EditorApp::CurrentScene));
+
 				}
 			}
 		}
@@ -187,11 +207,172 @@ namespace Polychrome
 	void ComponentWidgets::DrawBoxCollider(Chroma::Component* c)
 	{
 		Chroma::BoxCollider* b = reinterpret_cast<Chroma::BoxCollider*>(c);
-		DrawComponentValue(c, "Bounds");
-		ImGui::Vec2IntWithLabels("##box_collider_2d_bound", b->Bounds);
 
-		DrawComponentValue(c, "Offset");
-		ImGui::Vec2IntWithLabels("##box_collider_2d_offset", b->Offset);
+		DrawComponentValue(c, "Min");
+		{
+			std::string hash = "box_collider_min";
+
+			bool changed = false;
+			ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 0, 0 });
+
+			float inputWidth = (ImGui::GetContentRegionAvailWidth() - ImGui::CalcTextSize("X").x * 2.0f - (4.0f * 6)) / 2;
+
+			Math::vec2& val = b->Min;
+
+			Math::vec2 oldVal = val;
+
+			ImGui::PushStyleColor(ImGuiCol_Button, { 0.8f, 0.1f, 0.1f, 0.8f });
+			if (ImGui::Button(("X##vec3_x_label" + std::string(hash)).c_str()))
+			{
+				changed = true;
+				val.x = 1;
+			}
+
+			Polychrome::UndoRedo::ImGuiRegister<Math::vec2>(&val, oldVal, "Reset Vec2.X");
+
+			ImGui::PopStyleColor();
+			if (ImGui::IsItemHovered())
+			{
+				ImGui::BeginTooltip();
+				ImGui::Text("Click to reset value.");
+				ImGui::EndTooltip();
+			}
+			ImGui::SameLine();
+
+			ImGui::SetNextItemWidth(inputWidth);
+
+			int pos = (int)val.x;
+			if (ImGui::DragInt(("##vec3_x" + std::string(hash)).c_str(), &pos))
+			{
+				changed = true;
+				val.x = pos;
+			}
+
+			Polychrome::UndoRedo::ImGuiRegister<Math::vec2>(&val, oldVal, "Modify Vec2.X");
+
+			ImGui::SameLine(0.0f, 6.0f);
+
+			ImGui::PushStyleColor(ImGuiCol_Button, { 0.1f, 0.8f, 0.1f, 0.8f });
+			if (ImGui::Button(("Y##vec3_y_label" + std::string(hash)).c_str()))
+			{
+				changed = true;
+				val.y = 1;
+			}
+
+			Polychrome::UndoRedo::ImGuiRegister<Math::vec2>(&val, oldVal, "Reset Vec2.Y");
+
+			ImGui::PopStyleColor();
+			if (ImGui::IsItemHovered())
+			{
+				ImGui::BeginTooltip();
+				ImGui::Text("Click to reset value.");
+				ImGui::EndTooltip();
+			}
+			ImGui::SameLine();
+
+			ImGui::SetNextItemWidth(inputWidth);
+
+			pos = val.y;
+			if (ImGui::DragInt(("##vec3_y" + std::string(hash)).c_str(), &pos))
+			{
+				changed = true;
+				val.y = pos;
+			}
+
+			Polychrome::UndoRedo::ImGuiRegister<Math::vec2>(&val, oldVal, "Modify Vec2.Y");
+
+			ImGui::PopStyleVar();
+
+			ImGui::SameLine(0.0f, 6.0f);
+			ImGui::NewLine();
+		}
+
+		
+
+
+		//MAX
+
+		DrawComponentValue(c, "Max");
+
+		{
+			std::string hash = "box_collider_max";
+
+			bool changed = false;
+			ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 0, 0 });
+
+			float inputWidth = (ImGui::GetContentRegionAvailWidth() - ImGui::CalcTextSize("X").x * 2.0f - (4.0f * 6)) / 2;
+
+			Math::vec2& val = b->Max;
+
+			Math::vec2 oldVal = val;
+
+			ImGui::PushStyleColor(ImGuiCol_Button, { 0.8f, 0.1f, 0.1f, 0.8f });
+			if (ImGui::Button(("X##vec3_x_label" + std::string(hash)).c_str()))
+			{
+				changed = true;
+				val.x = 1;
+			}
+
+			Polychrome::UndoRedo::ImGuiRegister<Math::vec2>(&val, oldVal, "Reset Vec2.X");
+
+			ImGui::PopStyleColor();
+			if (ImGui::IsItemHovered())
+			{
+				ImGui::BeginTooltip();
+				ImGui::Text("Click to reset value.");
+				ImGui::EndTooltip();
+			}
+			ImGui::SameLine();
+
+			ImGui::SetNextItemWidth(inputWidth);
+
+			int pos = (int)val.x;
+			if (ImGui::DragInt(("##vec3_x" + std::string(hash)).c_str(), &pos))
+			{
+				changed = true;
+				val.x = pos;
+			}
+
+			Polychrome::UndoRedo::ImGuiRegister<Math::vec2>(&val, oldVal, "Modify Vec2.X");
+
+			ImGui::SameLine(0.0f, 6.0f);
+
+			ImGui::PushStyleColor(ImGuiCol_Button, { 0.1f, 0.8f, 0.1f, 0.8f });
+			if (ImGui::Button(("Y##vec3_y_label" + std::string(hash)).c_str()))
+			{
+				changed = true;
+				val.y = 1;
+			}
+
+			Polychrome::UndoRedo::ImGuiRegister<Math::vec2>(&val, oldVal, "Reset Vec2.Y");
+
+			ImGui::PopStyleColor();
+			if (ImGui::IsItemHovered())
+			{
+				ImGui::BeginTooltip();
+				ImGui::Text("Click to reset value.");
+				ImGui::EndTooltip();
+			}
+			ImGui::SameLine();
+
+			ImGui::SetNextItemWidth(inputWidth);
+
+			pos = val.y;
+			if (ImGui::DragInt(("##vec3_y" + std::string(hash)).c_str(), &pos))
+			{
+				changed = true;
+				val.y = pos;
+			}
+
+			Polychrome::UndoRedo::ImGuiRegister<Math::vec2>(&val, oldVal, "Modify Vec2.Y");
+
+			ImGui::PopStyleVar();
+
+			ImGui::SameLine(0.0f, 6.0f);
+			ImGui::NewLine();
+		}
+
+		
 		
 	}
 
@@ -226,6 +407,145 @@ namespace Polychrome
 		{
 			if (primary)
 				EditorApp::CurrentScene->SetPrimaryCamera(Hierarchy::SelectedEntity);
+		}
+
+	}
+
+	void ComponentWidgets::DrawParticleEmitter(Chroma::Component* c)
+	{
+		Chroma::ParticleEmitter* emitter = reinterpret_cast<Chroma::ParticleEmitter*>(c);
+
+		{
+			DrawComponentValue(c, "Count");
+			int count = emitter->GetCount();
+			if (ImGui::DragInt("##pecounttt", &count, 1.f, 0.f, std::numeric_limits<float>::max(), "%.3f", ImGuiSliderFlags_AlwaysClamp))
+			{
+				emitter->SetCount((size_t)count);
+			}
+
+		}
+
+		DrawComponentValue(c, "Position Variance");
+		Math::vec2 oldPosVar = emitter->PositionVariance;
+		ImGui::Vec2IntWithLabels("##peposvar", emitter->PositionVariance);
+		//UndoRedo::ImGuiRegister<Math::vec2>(&emitter->PositionVariance, oldPosVar, "Modify Particle Emitter Position Variance");
+
+		DrawComponentValue(c, "Start Color");
+		
+		//ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
+
+		Math::vec4 oldColor = emitter->StartColor;
+		float col[4]{ emitter->StartColor.r, emitter->StartColor.g, emitter->StartColor.b, emitter->StartColor.a };
+		if (ImGui::ColorEdit4("##Color", col))
+		{
+			emitter->StartColor = { col[0], col[1], col[2], col[3] };
+		}
+		UndoRedo::ImGuiRegister<Math::vec4>(&emitter->StartColor, oldColor, "Modify Particle Emitter Start Color");
+
+		DrawComponentValue(c, "End Color");
+
+		//ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
+
+		oldColor = emitter->EndColor;
+		float col2[4]{ emitter->EndColor.r, emitter->EndColor.g, emitter->EndColor.b, emitter->EndColor.a };
+		if (ImGui::ColorEdit4("##Color1", col2))
+		{
+			emitter->EndColor = { col2[0], col2[1], col2[2], col2[3] };
+		}
+		UndoRedo::ImGuiRegister<Math::vec4>(&emitter->EndColor, oldColor, "Modify Particle Emitter End Color");
+
+		DrawComponentValue(c, "Life");
+		float oldLife = emitter->Life;
+		ImGui::DragFloat("##pelife", &emitter->Life, 1.f, 0.f, std::numeric_limits<float>::max(), "%.3f", ImGuiSliderFlags_AlwaysClamp);
+	
+		UndoRedo::ImGuiRegister<float>(&emitter->Life, oldLife, "Modify Particle Emitter Life");
+
+		{
+			DrawComponentValue(c, "Life Variance");
+			float oldLifevar = emitter->LifeVariance;
+			ImGui::DragFloat("##pelifevar", &emitter->LifeVariance, 1.f, 0.f, std::numeric_limits<float>::max(), "%.3f", ImGuiSliderFlags_AlwaysClamp);
+
+			UndoRedo::ImGuiRegister<float>(&emitter->LifeVariance, oldLifevar, "Modify Particle Emitter Life Variance");
+		}
+
+		{
+			DrawComponentValue(c, "Angle");
+			float oldAngle = emitter->Angle;
+			ImGui::DragFloat("##pelifeAngle", &emitter->Angle, 1.f, 0.f, std::numeric_limits<float>::max(), "%.3f", ImGuiSliderFlags_AlwaysClamp);
+
+			UndoRedo::ImGuiRegister<float>(&emitter->Angle, oldAngle, "Modify Particle Emitter Angle");
+		}
+
+		{
+			DrawComponentValue(c, "Angle Variance");
+			float oldAngleVariance = emitter->AngleVariance;
+			ImGui::DragFloat("##pelifeAngleVariance", &emitter->AngleVariance, 1.f, 0.f, std::numeric_limits<float>::max(), "%.3f", ImGuiSliderFlags_AlwaysClamp);
+
+			UndoRedo::ImGuiRegister<float>(&emitter->AngleVariance, oldAngleVariance, "Modify Particle Emitter Angle Variance");
+		}
+
+		{
+			DrawComponentValue(c, "Speed");
+			float oldSpeed = emitter->Speed;
+			ImGui::DragFloat("##pelifeSpeed", &emitter->Speed, 1.f, 0.f, std::numeric_limits<float>::max(), "%.3f", ImGuiSliderFlags_AlwaysClamp);
+
+			UndoRedo::ImGuiRegister<float>(&emitter->Speed, oldSpeed, "Modify Particle Emitter Speed");
+		}
+
+		{
+			DrawComponentValue(c, "Speed Variance");
+			float oldSpeedVariance = emitter->SpeedVariance;
+			ImGui::DragFloat("##pelifeSpeedVar", &emitter->SpeedVariance, 1.f, 0.f, std::numeric_limits<float>::max(), "%.3f", ImGuiSliderFlags_AlwaysClamp);
+
+			UndoRedo::ImGuiRegister<float>(&emitter->SpeedVariance, oldSpeedVariance, "Modify Particle Emitter Speed Variance");
+		}
+
+		{
+			DrawComponentValue(c, "Gravity");
+			float oldGravity = emitter->Gravity;
+			ImGui::DragFloat("##pelifeSGravity", &emitter->Gravity, 1.f, std::numeric_limits<float>::min(), std::numeric_limits<float>::max());
+
+			UndoRedo::ImGuiRegister<float>(&emitter->Gravity, oldGravity, "Modify Particle Emitter Gravity");
+		}
+
+		{
+			DrawComponentValue(c, "Gravity Variance");
+			float oldGravityVariance = emitter->GravityVariance;
+			ImGui::DragFloat("##pelifeSGravityVar", &emitter->GravityVariance, 1.f, std::numeric_limits<float>::min(), std::numeric_limits<float>::max());
+
+			UndoRedo::ImGuiRegister<float>(&emitter->GravityVariance, oldGravityVariance, "Modify Particle Emitter Gravity Variance");
+		}
+
+		{
+			DrawComponentValue(c, "Continuous");
+			bool oldContinuous = emitter->Continuous;
+			ImGui::Checkbox("##pelifeContinuous", &emitter->Continuous);
+
+			UndoRedo::ImGuiRegister<bool>(&emitter->Continuous, oldContinuous, "Modify Particle Emitter Settings");
+		}
+
+		{
+			DrawComponentValue(c, "Emission Rate");
+			float oldEmissionRate = emitter->EmissionRate;
+			ImGui::DragFloat("##pelifeEmissionRate", &emitter->EmissionRate, 1.f, 0.f, std::numeric_limits<float>::max(), "%.3f", ImGuiSliderFlags_AlwaysClamp);
+
+			UndoRedo::ImGuiRegister<float>(&emitter->EmissionRate, oldEmissionRate, "Modify Particle Emitter Emission Rate");
+		}
+
+		{
+			DrawComponentValue(c, "Pre-warm");
+			bool oldPreWarm = emitter->PreWarm;
+			ImGui::Checkbox("##pelifePreWarms", &emitter->PreWarm);
+
+			UndoRedo::ImGuiRegister<bool>(&emitter->PreWarm, oldPreWarm, "Modify Particle Emitter Settings");
+		}
+
+		{
+			DrawComponentValue(c, "Pre-warm Seconds");
+			float oldPreWarmSeconds = emitter->PreWarmSeconds;
+			ImGui::DragFloat("##pelifePreWarmSeconds", &emitter->PreWarmSeconds, 1.f, 0.f, std::numeric_limits<float>::max(), "%.3f", ImGuiSliderFlags_AlwaysClamp);
+
+			UndoRedo::ImGuiRegister<float>(&emitter->PreWarmSeconds, oldPreWarmSeconds, "Modify Particle Emitter Settings");
 		}
 
 	}
@@ -406,7 +726,7 @@ namespace Polychrome
 
 		Math::vec4 oldColor = spr->Color;
 
-		float col[4]{ spr->Color.r, spr->Color.b, spr->Color.g, spr->Color.a };
+		float col[4]{ spr->Color.r, spr->Color.g, spr->Color.b, spr->Color.a };
 		if (ImGui::ColorEdit4("##Color", col))
 		{
 			spr->Color = { col[0], col[1], col[2], col[3] };

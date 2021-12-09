@@ -19,17 +19,21 @@
 #include <Chroma/Components/Relationship.h>
 #include <Chroma/Utilities/ContainerHelpers.h>
 #include <Chroma/Systems/CameraSystem.h>
+#include <Chroma/Systems/ParticleSystem.h>
 
 
 
 namespace Chroma
 {
+
 	Scene::Scene()
 		: ID(GUID::CreateGUID())
 	{
 		RegisterSystem<ScriptingSystem>();
 		RegisterSystem<AudioSystem>();
 		RegisterSystem<SpriteRendererSystem>();
+		RegisterSystem<ParticleSystem>();
+		RegisterSystem<CollisionSystem>();
 		RegisterSystem<CameraSystem>();
 	}
 
@@ -147,6 +151,18 @@ namespace Chroma
 			desc.insert(desc.end(), results.begin(), results.end());
 		}
 		return desc;
+	}
+
+	Entity Scene::FindEntityByName(const std::string& name)
+	{
+		for (auto entity : Registry.view<Chroma::Tag>())
+		{
+			Chroma::Tag& tag = Registry.get<Chroma::Tag>(entity);
+			if (name == tag.EntityName)
+			{
+				return Entity(entity, this);
+			}
+		}
 	}
 
 	std::string Scene::Serialize()

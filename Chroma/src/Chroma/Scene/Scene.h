@@ -55,6 +55,8 @@ namespace Chroma
 		bool IsRoot(EntityID entity);
 		EntityID GetRootEntity(EntityID child);
 		std::vector<EntityID> FindAllDescendants(EntityID entity);
+
+		Entity FindEntityByName(const std::string& name);
 		
 
 

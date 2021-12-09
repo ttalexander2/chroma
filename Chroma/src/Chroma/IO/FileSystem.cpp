@@ -6,10 +6,36 @@
 
 namespace Chroma
 {
+
+    std::vector<std::string> FileSystem::_mounted;
+
     void FileSystem::Mount(const std::string& path)
     {
         int result = PHYSFS_mount(path.c_str(), NULL, 1);
         if (result == 0)
+            throw FileSystemException(GetLastError());
+        else
+            _mounted.push_back(path);
+    }
+
+    void FileSystem::Unmount(const std::string& path)
+    {
+        int result = PHYSFS_unmount(path.c_str());
+        if (result == 0)
+            throw FileSystemException(GetLastError());
+    }
+
+    void FileSystem::UnmountAll()
+    {
+        bool success = true;
+        for (auto& path : _mounted)
+        {
+            int result = PHYSFS_unmount(path.c_str());
+            if (result == 0)
+                success = false;
+        }
+
+        if (!success)
             throw FileSystemException(GetLastError());
     }
 

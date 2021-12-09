@@ -19,12 +19,14 @@
 #include "Chroma/Components/AudioSource.h"
 #include "Chroma/Components/BoxCollider.h"
 #include "Chroma/Components/CircleCollider.h"
-#include <Chroma/Components/Relationship.h>
-#include <Chroma/Scripting/MonoScripting.h>
-#include <Chroma/Scripting/ScriptEngineRegistry.h>
-#include <Chroma/Components/CSharpScript.h>
-#include <Chroma/Components/Camera.h>
-#include <physfs/src/physfs.h>
+#include "Chroma/Components/Relationship.h"
+#include "Chroma/Scripting/MonoScripting.h"
+#include "Chroma/Scripting/ScriptEngineRegistry.h"
+#include "Chroma/Components/CSharpScript.h"
+#include "Chroma/Components/Camera.h"
+#include "Chroma/Components/ParticleEmitter.h"
+
+
 
 namespace Chroma
 {
@@ -43,7 +45,6 @@ namespace Chroma
 		m_Window = Scope<Window>(Window::Create(props));
 		m_Window->SetEventCallback(CHROMA_BIND_EVENT_FN(Application::ProcessEvents));
 		Input::Init();
-		PHYSFS_init(NULL);
 		Renderer::Init();
 
 		m_ImGuiLayer = new ImGuiLayer();
@@ -62,6 +63,7 @@ namespace Chroma
 		ECS::RegisterComponent<CircleCollider>();
 		ECS::RegisterComponent<Relationship>();
 		ECS::RegisterComponent<Camera>();
+		ECS::RegisterComponent<ParticleEmitter>();
 
 
 	}
@@ -142,7 +144,6 @@ namespace Chroma
 
 		m_ImGuiLayer->OnDetach();
 		Audio::Shutdown();
-		PHYSFS_deinit();
 	}
 
 }
