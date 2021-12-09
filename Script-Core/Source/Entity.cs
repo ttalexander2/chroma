@@ -76,7 +76,8 @@ namespace Chroma
         public virtual void Update() { }
         public virtual void LateUpdate() { }
 
-        public void InternalUpdate()
+        //This was public before so it might break something
+        internal void InternalUpdate()
         {
            foreach (Coroutine c in _coroutines)
            {
