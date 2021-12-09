@@ -6,7 +6,9 @@ using System.Runtime.CompilerServices;
 
 namespace Chroma
 {
-
+    /// <summary>
+    /// Main class for game entities.
+    /// </summary>
     public class Entity
     {
         public ulong ID { get; private set; }
