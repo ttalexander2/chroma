@@ -143,7 +143,7 @@ namespace Chroma
 					if (!relationship.IsChild())
 					{
 						Math::vec2 size = transform.Scale * Math::vec2((float)w, (float)h);
-						Math::vec2 originAdjustment = { Math::abs(size.x) / 2.f - origin.x, -Math::abs(size.y) / 2.f + origin.y };
+						Math::vec2 originAdjustment = { Math::abs(size.x) / 2.f - origin.x, -Math::abs(size.y) / 2.f + origin.y};
 
 						Chroma::Renderer2D::DrawSprite((int)e, transform.Position + spriteRenderer.Offset + originAdjustment, size, s->Frames[spriteRenderer.CurrentFrame].Texture, spriteRenderer.Color, transform.Rotation);
 					}
@@ -169,7 +169,7 @@ namespace Chroma
 						//CHROMA_CORE_TRACE("Adjusted: [{}, {}]; ParentPos: [{}, {}]; ParentRot: {}, FINAL: [{},{}]", adjusted.x, adjusted.y, parentPos.x, parentPos.y, parentRot, finalPos.x, finalPos.y);
 
 						Math::vec2 size = scale * Math::vec2((float)w, (float)h);
-						Math::vec2 originAdjustment = { Math::abs(size.x) / 2.f - origin.x, -Math::abs(size.y) / 2.f + origin.y };
+						Math::vec2 originAdjustment = { Math::abs(size.x) / 2.f - origin.x, -Math::abs(size.y) / 2.f + origin.y};
 
 						Chroma::Renderer2D::DrawSprite((int)e, parentPos + adjusted + spriteRenderer.Offset + originAdjustment, size, s->Frames[spriteRenderer.CurrentFrame].Texture, spriteRenderer.Color, rotation + parentRot);
 					}

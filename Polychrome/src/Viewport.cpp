@@ -14,6 +14,7 @@
 #include "ComponentDebugGizmos.h"
 #include "../../Chroma/third_party/GLFW/include/GLFW/glfw3.h"
 #include "UndoRedo.h"
+#include "Build.h"
 
 namespace Polychrome
 {
@@ -104,11 +105,11 @@ namespace Polychrome
 			static bool PlayFocus = false;
 
 			// PLAY BUTTON
-			if (EditorApp::SceneRunning && !EditorApp::ScenePaused)
+			if (Build::Errors > 0 || (EditorApp::SceneRunning && !EditorApp::ScenePaused))
 				ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled)); //GRAY
 			else
 				ImGui::PushStyleColor(ImGuiCol_Text, { 0.1f, 0.8f, 0.2f, 1.0f }); // GREEN
-			ImGui::PushItemFlag(ImGuiItemFlags_Disabled, EditorApp::SceneRunning && !EditorApp::ScenePaused);
+			ImGui::PushItemFlag(ImGuiItemFlags_Disabled, Build::Errors > 0 || (EditorApp::SceneRunning && !EditorApp::ScenePaused));
 			if (ImGui::Button(ICON_FK_PLAY))
 			{
 				if (!EditorApp::ScenePaused)
@@ -123,6 +124,15 @@ namespace Polychrome
 			}
 			ImGui::PopItemFlag();
 			ImGui::PopStyleColor();
+
+			if (ImGui::IsItemHovered())
+			{
+				if (Build::Errors > 0)
+					ImGui::SetTooltip("Fix errors to launch.");
+				else
+					ImGui::SetTooltip("Play!");
+			}
+				
 
 			ImGui::SameLine();
 
