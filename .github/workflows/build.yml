@@ -55,10 +55,10 @@ jobs:
         run: |
           $Env:VULKAN_SDK = "C:/VulkanSDK/1.2.182.0"
           $Env:Path += ";C:/VulkanSDK/1.2.182.0/Bin"
-          msbuild .\Chroma.sln -p:Configuration=Debug -p:Platform=x64
+          msbuild .\Chroma.sln -p:Configuration=Dist -p:Platform=x64
           
       - name: Zip Build
-        run: Compress-Archive -Path .\bin\Debug-windows-x86_64\Polychrome\* -DestinationPath .\Polychrome.zip
+        run: Compress-Archive -Path .\bin\Dist-windows-x86_64\Polychrome\* -DestinationPath .\Polychrome.zip
         
       - uses: paulhatch/semantic-version@v4.0.2
         id: versioning
