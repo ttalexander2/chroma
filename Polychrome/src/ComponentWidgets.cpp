@@ -686,6 +686,19 @@ namespace Polychrome
 				spr->SetCurrentFrame((unsigned int)curr - 1);
 				//UndoRedo::ImGuiRegister<unsigned int>(&spr->CurrentFrame, oldFrame, "Modify Sprite Frame");
 
+				ImGui::SameLine();
+
+				if (ImGui::Button("<"))
+				{
+					spr->SetCurrentFrame(((unsigned int)curr - 2) % s->Frames.size());
+				}
+
+				ImGui::SameLine();
+				if (ImGui::Button(">"))
+				{
+					spr->SetCurrentFrame(((unsigned int)curr) % s->Frames.size());
+				}
+
 
 				ImGui::SameLine();
 				ImGui::Text((std::to_string(s->Frames[spr->GetCurrentFrame()].Durration) + " ms").c_str());

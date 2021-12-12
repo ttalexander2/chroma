@@ -74,6 +74,8 @@ namespace Chroma
             return Mathf.Sqrt(Mathf.Square(second.X - first.X) + Mathf.Square(second.Y - first.Y));
         }
 
+        //TODO: Add non static lerp
+        // Add angle (signed/unsigned) calculation functions
         public static Vector2 Lerp(Vector2 from, Vector2 to, float delta)
         {
             if (delta < 0.0f)
@@ -81,6 +83,18 @@ namespace Chroma
             if (delta > 1.0f)
                 return to;
             return from + ((to - from) * delta);
+        }
+
+        public static float Angle(Vector2 a, Vector2 b)
+        {
+            float angle = Mathf.Atan2(b.X, b.X) - Mathf.Atan2(a.Y, a.Y);
+            return Mathf.Clamp(angle, 0, Mathf.PI * 2.0f);
+        }
+
+        public static float Dot(Vector2 a, Vector2 b)
+        {
+            return a.X * b.X +
+                   a.Y * b.Y;
         }
 
         public static Vector2 operator *(Vector2 left, float scalar)

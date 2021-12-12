@@ -289,7 +289,6 @@ namespace Chroma
 			}
 			case SpriteOrigin::Custom:
 			{
-				OriginValue = { 0,0 };
 				CHROMA_CORE_WARN("Attempted to set sprite [{}] origin. Origin was set to 'custom' but no origin was provided.", SpriteID);
 				break;
 			}

@@ -104,7 +104,7 @@ namespace Chroma
 		return Joystick::_NULL;
 	}
 
-	std::vector<float>Input::GetGamepadAxis(Input::Gamepad gamepad)
+	std::vector<float> Input::GetGamepadAxis(Input::Gamepad gamepad)
 	{
 		std::vector<float> ret;
 		int count;

@@ -56,9 +56,6 @@
 
 namespace Polychrome
 {
-
-	
-
 	Chroma::Scene* EditorApp::CurrentScene = nullptr;
 	std::string EditorApp::CurrentScenePath;
 
@@ -71,6 +68,7 @@ namespace Polychrome
 	ImFont* EditorApp::LargeIcons = nullptr;
 	ImFont* EditorApp::SmallIcons = nullptr;
 	ImFont* EditorApp::LargeFont = nullptr;
+	ImFont* EditorApp::HeaderFont = nullptr;
 
 	GLFWwindow* temp;
 
@@ -199,6 +197,8 @@ namespace Polychrome
 
 
 		LargeFont = io.Fonts->AddFontFromMemoryCompressedTTF(Roboto_compressed_data, Roboto_compressed_size, 64.f);
+
+		HeaderFont = io.Fonts->AddFontFromMemoryCompressedTTF(Roboto_compressed_data, Roboto_compressed_size, 20.f);
 
 
 		ImGui::GetStyle().FrameRounding = 1;
@@ -676,7 +676,7 @@ namespace Polychrome
 					{
 						creating_new = true;
 						creating_name = "NewProject";
-						creating_path = sago::getDocumentsFolder() + "\\ChromaProjects\\";
+						creating_path = sago::getDocumentsFolder() + "\\Chroma Projects\\";
 						creating_starting = "New Scene";
 					}
 					ImGui::SameLine();
@@ -946,6 +946,18 @@ namespace Polychrome
 		}
 
 		static bool PreferencesWindowOpen = false;
+		bool OpenBuildWindow = false;
+
+		if (ImGui::BeginMenu("Build##MAIN_MENU_BAR"))
+		{
+			if (ImGui::MenuItem("Build Game##MAIN_MENU_BAR"))
+			{
+				OpenBuildWindow = true;
+			}
+			ImGui::MenuItem("Package Assets##MAIN_MENU_BAR");
+
+			ImGui::EndMenu();
+		}
 
 		if (ImGui::BeginMenu("Window##MAIN_MENU_BAR"))
 		{
@@ -976,6 +988,13 @@ namespace Polychrome
 		ErrorWindow::Draw();
 		AssetBrowser::Draw();
 		GameSettings::Draw();
+
+		if (OpenBuildWindow)
+		{
+			ImGui::OpenPopup("Build##BUILD_WINDOW");
+			OpenBuildWindow = false;
+		}
+		Build::DrawBuildWindow();
 
 
 

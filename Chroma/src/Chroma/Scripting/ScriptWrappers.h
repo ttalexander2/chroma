@@ -14,6 +14,16 @@ namespace Chroma
 		void Entity_CreateComponent(EntityID id, void* type);
 		bool Entity_HasComponent(EntityID id, void* type);
 		uint32_t Entity_FindEntityByName(MonoString* name);
+		MonoArray* Entity_GetChildrenNative(EntityID id);
+		uint32_t Entity_GetChildByNameNative(EntityID id, MonoString* name);
+		uint32_t Entity_GetFirstChildNative(EntityID id);
+		bool Entity_HasChildrenNative(EntityID id);
+		unsigned int Entity_NumChildrenNative(EntityID id);
+		void Entity_GetAbsolutePositionNative(EntityID id, Math::vec2* out);
+		void Entity_SetAbsolutePositionNative(EntityID id, Math::vec2* vector);
+
+
+
 
 		//Log
 		void Log_Message(Log::LogLevel level, MonoString* message);
@@ -32,8 +42,8 @@ namespace Chroma
 
 		//Input
 		void Input_GetMousePosition(Math::vec2* out);
-		void Input_GetAllConnectedControllers(MonoArray* out);
-		void Input_GetGamepadAxis(Input::Gamepad gamepad, MonoArray* out);
+		MonoArray* Input_GetAllConnectedControllers();
+		MonoArray* Input_GetGamepadAxis(Input::Gamepad gamepad);
 		bool Input_GetGamepadButtonState(Input::Gamepad gamepad, Input::GamepadButton button);
 
 		//Sprite Renderer
@@ -61,10 +71,14 @@ namespace Chroma
 		MonoString* SpriteRenderer_GetAnimationTag(EntityID id, unsigned int val);
         void SpriteRenderer_SetAnimationByTag(EntityID id, MonoString* val);
         void SpriteRenderer_RestartAnimation(EntityID id);
-		
 
-
-
+		//Audio
+		void Audio_PlayEvent(MonoString* event_name);
+		void Audio_PlayEventIfStopped(MonoString* event_name);
+		void Audio_StopEvent(MonoString* event_name, bool immediate);
+		float Audio_GetEventParameter(MonoString* event_name, MonoString* parameter);
+		void Audio_SetEventParameter(MonoString* event_name, MonoString* parameter, float value);
+		bool Audio_IsEventPlaying(MonoString* event_name);
 
 
 

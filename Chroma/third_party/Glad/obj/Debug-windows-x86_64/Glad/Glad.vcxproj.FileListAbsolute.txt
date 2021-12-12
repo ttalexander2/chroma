@@ -1,2 +1,0 @@
-C:\Users\Thomas\source\repos\chroma\Chroma\third_party\Glad\bin\Debug-windows-x86_64\Glad\Glad.lib.lastcodeanalysissucceeded
-C:\Users\Thomas\source\repos\chroma\Chroma\third_party\Glad\obj\Debug-windows-x86_64\Glad\NativeCodeAnalysis.read.1.tlog

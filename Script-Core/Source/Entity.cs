@@ -68,6 +68,51 @@ namespace Chroma
             return new Entity(FindEntityByName_Native(name));
         }
 
+        public List<Entity> GetChildren()
+        {
+            List<ulong> ids = GetChildren_Native(ID);
+            List<Entity> entities = new List<Entity>();
+            foreach (ulong id in ids)
+            {
+                entities.Add(new Entity(id));
+            }
+            return entities;
+        }
+
+        public Entity GetChildByName(string name)
+        {
+            ulong id = GetChildByName_Native(ID, name);
+            return new Entity(id);
+        }
+
+        public Entity GetFirstChild()
+        {
+            ulong id = GetFirstChild_Native(ID);
+            return new Entity(id);
+        }
+
+        public bool HasChildren()
+        {
+            return HasChildren_Native(ID);
+        }
+
+        public uint NumberChildren()
+        {
+            return NumChildren_Native(ID);
+        }
+
+        public Vector2 GetAbsolutePosition()
+        {
+            Vector2 pos = new Vector2();
+            GetAbsolutePosition_Native(ID, out pos);
+            return pos;
+        }
+        public void SetAbsolutePosition(Vector2 position)
+        {
+            SetAbsolutePosition_Native(ID, position);
+        }
+
+
         public virtual void PreInit() { }
         public virtual void Init() { }
         public virtual void PostInit() { }
@@ -98,6 +143,31 @@ namespace Chroma
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern ulong FindEntityByName_Native(string name);
+
+
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern List<ulong> GetChildren_Native(ulong entityID);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern ulong GetChildByName_Native(ulong entityID, string name);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern ulong GetFirstChild_Native(ulong entityID);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool HasChildren_Native(ulong entityID);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern uint NumChildren_Native(ulong entityID);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void GetAbsolutePosition_Native(ulong entityID, out Vector2 result);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void SetAbsolutePosition_Native(ulong entityID, Vector2 position);
+
+
 
     }
 }

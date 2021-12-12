@@ -28,7 +28,9 @@ namespace Polychrome
 		};
 
 		static void ParseErrors(std::ifstream& stream);
-		static bool BuildMonoAssembly(const std::string& path, const std::string& name);
+		static bool BuildMonoAssembly(const std::string& path, const std::string& name, bool debug = true, bool load_assembly = true);
+
+		static void DrawBuildWindow();
 
 		static std::vector<BuildMessage> BuildMessages;
 		static size_t Errors;
@@ -36,5 +38,8 @@ namespace Polychrome
 		static size_t Messages;
 		
 		static bool Success();
+
+	private:
+		static void ExecuteGameBuild(bool debug, bool copy_mdb, bool pack_assets, const std::string& project_name, const std::string& location);
 	};
 }

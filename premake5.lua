@@ -24,6 +24,7 @@ group "Dependencies"
     include "Chroma/third_party/imgui"
     include "Chroma/third_party/glm"
     include "Chroma/third_party/physfs"
+    include "Chroma/third_party/box2d"
 group "" -- end of dependencies
 
 
@@ -85,7 +86,9 @@ project "Chroma"
         "%{IncludeDir.entt}",
         "%{IncludeDir.mono}",
         "%{IncludeDir.VulkanSDK}",
-        "%{IncludeDir.PhysicsFS}"
+        "%{IncludeDir.PhysicsFS}",
+        "%{IncludeDir.miniz}",
+        "%{IncludeDir.box2d}"
 
     }
 
@@ -96,7 +99,8 @@ project "Chroma"
         "ImGui",
         "opengl32.lib",
         "%{Library.mono}",
-        "PhysicsFS"
+        "PhysicsFS",
+        "box2d"
     }
 
     filter "files:Chroma/third_party/ImGuizmo/**.cpp or files:Chroma/third_party/yaml-cpp/src/**.cpp"
@@ -210,6 +214,8 @@ project "Polychrome"
         "%{IncludeDir.ImGuizmo}",
         "%{IncludeDir.mono}",
         "%{IncludeDir.cute_headers}",
+        "%{IncludeDir.miniz}",
+        "%{IncludeDir.box2d}"
     }
 
 
@@ -373,16 +379,19 @@ project "Chroma.Mono"
         buildcommands {
             "{ECHO} Building Chroma.Mono.dll with mcs...",
             "%{wks.location}Polychrome/mono/bin/mono.exe %{wks.location}Polychrome/mono/lib/mono/4.5/mcs.exe -debug -target:library -nostdlib -out:%{wks.location}bin/" .. outputdir .. "/%{prj.name}/Chroma.Mono.dll -r:%{wks.location}Polychrome/mono/lib/mono/4.5/mscorlib.dll,%{wks.location}Polychrome/mono/lib/mono/4.5/System.dll,%{wks.location}Polychrome/mono/lib/mono/4.5/System.Core.dll -recurse:Source/**.cs",
+            "{COPYFILE} %{wks.location}bin/" .. outputdir .. "/%{prj.name}/Chroma.Mono.dll %{wks.location}Polychrome"
         }
 
     filter "configurations:Release"
         buildcommands {
             "{ECHO} Building Chroma.Mono.dll with mcs...",
             "%{wks.location}Polychrome/mono/bin/mono.exe %{wks.location}Polychrome/mono/lib/mono/4.5/mcs.exe -target:library -nostdlib -optimize -out:%{wks.location}bin/" .. outputdir .. "/%{prj.name}/Chroma.Mono.dll -r:%{wks.location}Polychrome/mono/lib/mono/4.5/mscorlib.dll,%{wks.location}Polychrome/mono/lib/mono/4.5/System.dll,%{wks.location}Polychrome/mono/lib/mono/4.5/System.Core.dll -recurse:Source/**.cs",
+            "{COPYFILE} %{wks.location}bin/" .. outputdir .. "/%{prj.name}/Chroma.Mono.dll %{wks.location}Polychrome"
         }
 
     filter "configurations:Dist"
         buildcommands {
             "{ECHO} Building Chroma.Mono.dll with mcs...",
             "%{wks.location}Polychrome/mono/bin/mono.exe %{wks.location}Polychrome/mono/lib/mono/4.5/mcs.exe -target:library -nostdlib -optimize -out:%{wks.location}bin/" .. outputdir .. "/%{prj.name}/Chroma.Mono.dll -r:%{wks.location}Polychrome/mono/lib/mono/4.5/mscorlib.dll,%{wks.location}Polychrome/mono/lib/mono/4.5/System.dll,%{wks.location}Polychrome/mono/lib/mono/4.5/System.Core.dll -recurse:Source/**.cs",
+            "{COPYFILE} %{wks.location}bin/" .. outputdir .. "/%{prj.name}/Chroma.Mono.dll %{wks.location}Polychrome"
         }

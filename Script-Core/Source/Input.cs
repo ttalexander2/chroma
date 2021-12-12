@@ -291,9 +291,7 @@ namespace Chroma
 
 		public static List<Gamepad> GetAllConnectedControllers()
 		{
-			List<Gamepad> res = new List<Gamepad>();
-			GetAllConnectedControllers(out res);
-			return res;
+			return GetAllConnectedControllers();
 		}
 
 		public static Gamepad SetPrimaryGamepad()
@@ -308,9 +306,7 @@ namespace Chroma
 
 		public static List<float> GetGamepadAxis(Gamepad gamepad)
 		{
-			List<float> res = new List<float>();
-			GetGamepadAxis_Native(gamepad, out res);
-			return res;
+			return GetGamepadAxis_Native(gamepad);
 		}
 
 		public static ConnectionState GetGamepadConnectionState()
@@ -359,13 +355,13 @@ namespace Chroma
 		private static extern Gamepad GetFirstConnectedGamepad_Native();
 
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void GetAllConnectedControllers(out List<Gamepad> gamepads);
+		private static extern List<Gamepad> GetAllConnectedControllers_Native();
 
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern Gamepad SetPrimaryGamepad_Native();
 
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void GetGamepadAxis_Native(Gamepad gamepad, out List<float> result);
+		private static extern List<float> GetGamepadAxis_Native(Gamepad gamepad);
 
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern bool GetGamepadButtonPressed_Native(Gamepad gamepad, GamepadButton button);

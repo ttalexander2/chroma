@@ -55,6 +55,9 @@ namespace Chroma
 		static void InitMono();
 		static void ShutdownMono();
 
+		static MonoDomain* GetCurrentDomain();
+
+
 		static bool LoadChromaRuntimeAssembly(const std::string& path);
 		static bool LoadAppAssembly(const std::string& path);
 		static bool ReloadAssembly(const std::string& path);

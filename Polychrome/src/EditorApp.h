@@ -48,6 +48,7 @@ namespace Polychrome
 
 		static ImFont* LargeIcons;
 		static ImFont* LargeFont;
+		static ImFont* HeaderFont;
 		static ImFont* SmallIcons;
 
 		enum class MessageSeverity

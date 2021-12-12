@@ -51,6 +51,8 @@ namespace Chroma
 		static std::string GetEventName(FMOD_GUID guid);
 		static FMOD_GUID GetEventGuid(const std::string& name);
 
+		static void UnloadAllBanks();
+
 	private:
 		static void Init();
 		static void Update();

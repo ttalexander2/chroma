@@ -326,7 +326,11 @@ namespace Polychrome
 				ImGui::Separator();
 
 				ImGui::MenuItem("Duplicate##HIERARCHY_CONTEXT_MENU");
-				ImGui::MenuItem("Create Prefab##HIERARCHY_CONTEXT_MENU");
+				if (ImGui::MenuItem("Create Prefab##HIERARCHY_CONTEXT_MENU"))
+				{
+					//Hierarchy::SelectedEntity
+				}
+
 				ImGui::Separator();
 				if (ImGui::MenuItem("Delete##HIERARCHY_CONTEXT_MENU"))
 				{
