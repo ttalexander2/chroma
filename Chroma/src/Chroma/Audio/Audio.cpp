@@ -373,6 +373,12 @@ namespace Chroma
 		return guid;
 	}
 
+	void Audio::UnloadAllBanks()
+	{
+		delete s_FMOD;
+		s_FMOD = new ChromaFMOD();
+	}
+
 	/// @brief Function to check an FMOD_RESULT for errors and report it to the console.
 	/// @param result FMOD funciton result.
 	void Audio::ErrorCheck(FMOD_RESULT result)

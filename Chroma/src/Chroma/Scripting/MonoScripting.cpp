@@ -122,6 +122,11 @@ namespace Chroma
 		//mono_jit_cleanup(domain);
 	}
 
+	MonoDomain* MonoScripting::GetCurrentDomain()
+	{
+		return currentMonoDomain;
+	}
+
 	MonoAssembly* MonoScripting::LoadAssemblyFromFile(const std::string& path)
 	{
 		if (path.empty() || !std::filesystem::exists(std::filesystem::path(path)))
@@ -323,6 +328,8 @@ namespace Chroma
 		return 0;
 	}
 
+	
+
 
 	static bool postLoadCleanup = false;
 
@@ -447,6 +454,7 @@ namespace Chroma
 
 	static FieldType GetChromaFieldType(MonoType* monoType)
 	{
+		//CHROMA_CORE_INFO("TypeName: {}", mono_type_get_name(monoType));
 		int type = mono_type_get_type(monoType);
 		switch (type)
 		{
@@ -643,7 +651,24 @@ namespace Chroma
 					continue;
 
 				MonoType* fieldType = mono_field_get_type(iter);
-				FieldType hazelFieldType = GetChromaFieldType(fieldType);
+				int intType = mono_type_get_type(fieldType);
+				
+				//if (intType == MONO_TYPE_CLASS | MONO_TYPE_ENUM)
+				//{
+				//	//bool class_is_enum = mono_class(mono_class_from_mono_type(fieldType));
+				//	//if (class_is_enum)
+				//	{
+				//		CHROMA_CORE_INFO("YEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEET");
+				//		fieldType = mono_class_enum_basetype(mono_class_from_mono_type(fieldType));
+				//		if (fieldType == nullptr)
+				//		{
+				//
+				//		}
+				//	}
+				//
+				//}
+
+				FieldType chromaFieldType = GetChromaFieldType(fieldType);
 
 				char* typeName = mono_type_get_name(fieldType);
 
@@ -656,13 +681,14 @@ namespace Chroma
 					continue;
 				}
 
-				if (hazelFieldType == FieldType::ClassReference)
+				if (chromaFieldType == FieldType::ClassReference)
 					continue;
 
 				// TODO: Attributes
 				MonoCustomAttrInfo* attr = mono_custom_attrs_from_field(scriptClass.Class, iter);
+				
+				PublicField field = { name, typeName, chromaFieldType };
 
-				PublicField field = { name, typeName, hazelFieldType };
 				field.m_MonoClassField = iter;
 				field.CopyStoredValueFromRuntime(entityInstance);
 				fieldMap.emplace(name, std::move(field));

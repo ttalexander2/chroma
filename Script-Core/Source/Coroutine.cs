@@ -32,6 +32,9 @@ namespace Chroma
 
         internal void Update()
         {
+            if (!Active || Finished)
+                return;
+
             _ended = false;
             if (_waitTimer > 0)
             {
@@ -106,7 +109,6 @@ namespace Chroma
             Finished = true;
             _waitTimer = 0;
             _enumerators.Clear();
-
             _ended = true;
         }
 

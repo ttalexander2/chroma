@@ -67,6 +67,15 @@ namespace Chroma
 		
 	}
 
+	std::string Scene::CreatePrefab(EntityID entity)
+	{
+		return std::string();
+	}
+
+	void Scene::MakeUnique(EntityID entity)
+	{
+	}
+
 	const Math::vec2 Scene::GetTransformAbsolutePosition(EntityID entity)
 	{
 		Transform& transform = Registry.get<Transform>(entity);
@@ -151,6 +160,87 @@ namespace Chroma
 			desc.insert(desc.end(), results.begin(), results.end());
 		}
 		return desc;
+	}
+
+	std::vector<EntityID> Scene::GetChildren(EntityID entity)
+	{
+		std::vector<EntityID> result;
+
+		if (!Registry.valid(entity))
+		{
+			CHROMA_CORE_ERROR("Entity [{}] not valid!", entity);
+			return result;
+		}
+
+		auto& rel = Registry.get<Relationship>(entity);
+		for (auto child : rel.Children)
+		{
+			result.push_back(child);
+		}
+
+		return result;
+	}
+
+	EntityID Scene::FindChildByName(EntityID entity, const std::string& child_name)
+	{
+
+		if (!Registry.valid(entity))
+		{
+			CHROMA_CORE_ERROR("Entity [{}] not valid!", entity);
+			return Chroma::ENTITY_NULL;
+		}
+
+		auto& rel = Registry.get<Relationship>(entity);
+		for (auto child : rel.Children)
+		{
+			auto& tag = Registry.get<Tag>(entity);
+			if (tag.EntityName == child_name)
+				return child;
+		}
+
+		return Chroma::ENTITY_NULL;
+	}
+
+	EntityID Scene::GetFirstChild(EntityID entity)
+	{
+		if (!Registry.valid(entity))
+		{
+			CHROMA_CORE_ERROR("Entity [{}] not valid!", entity);
+			return Chroma::ENTITY_NULL;
+		}
+
+		auto& rel = Registry.get<Relationship>(entity);
+		if (!rel.HasChildren() || rel.Children.size() <= 0)
+		{
+			CHROMA_CORE_ERROR("Entity [{}] does not have children!", entity);
+			return Chroma::ENTITY_NULL;
+		}
+
+		return rel.Children[0];
+	}
+
+	bool Scene::HasChildren(EntityID entity)
+	{
+		if (!Registry.valid(entity))
+		{
+			CHROMA_CORE_ERROR("Entity [{}] not valid!", entity);
+			return false;
+		}
+
+		auto& rel = Registry.get<Relationship>(entity);
+		return rel.HasChildren();
+	}
+
+	size_t Scene::NumChildren(EntityID entity)
+	{
+		if (!Registry.valid(entity))
+		{
+			CHROMA_CORE_ERROR("Entity [{}] not valid!", entity);
+			return 0;
+		}
+
+		auto& rel = Registry.get<Relationship>(entity);
+		return rel.Children.size();
 	}
 
 	Entity Scene::FindEntityByName(const std::string& name)

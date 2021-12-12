@@ -192,7 +192,8 @@ namespace Polychrome
 		for (Chroma::EntityID e : spriteView)
 		{
 			auto& spriteRenderer = spriteView.get<Chroma::SpriteRenderer>(e);
-			spriteRenderer.SetSpriteOrigin(spriteRenderer.GetSpriteOrigin());
+			if (spriteRenderer.GetSpriteOrigin() != Chroma::SpriteRenderer::SpriteOrigin::Custom)
+				spriteRenderer.SetSpriteOrigin(spriteRenderer.GetSpriteOrigin());
 		}
 
 		CHROMA_CORE_WARN("Mounted: {}", Chroma::AssetManager::AssetDirectory);

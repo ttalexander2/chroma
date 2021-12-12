@@ -47,6 +47,8 @@ namespace Chroma
 
 	private:
 		bool m_Colliding = false;
+		int m_Proxy = 0;
+		EntityID m_ID;
 
 		friend class CollisionSystem;
 

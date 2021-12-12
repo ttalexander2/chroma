@@ -43,6 +43,9 @@ namespace Chroma
 		Entity NewEntity();
 		Entity NewChild(Entity id);
 
+		std::string CreatePrefab(EntityID entity);
+		void MakeUnique(EntityID entity);
+
 		const Math::vec2 GetTransformAbsolutePosition(EntityID entity);
 		void SetTransformAbsolutePosition(EntityID entity, const Math::vec2& position);
 
@@ -55,6 +58,12 @@ namespace Chroma
 		bool IsRoot(EntityID entity);
 		EntityID GetRootEntity(EntityID child);
 		std::vector<EntityID> FindAllDescendants(EntityID entity);
+
+		std::vector<EntityID> GetChildren(EntityID entity);
+		EntityID FindChildByName(EntityID entity, const std::string& child_name);
+		EntityID GetFirstChild(EntityID entity);
+		bool HasChildren(EntityID entity);
+		size_t NumChildren(EntityID entity);
 
 		Entity FindEntityByName(const std::string& name);
 		

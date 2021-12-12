@@ -8,6 +8,7 @@
 #include <Chroma/Components/Tag.h>
 #include <Chroma/Components/Transform.h>
 #include <Chroma/Components/SpriteRenderer.h>
+#include <Chroma/Audio/Audio.h>
 
 
 namespace Chroma
@@ -43,6 +44,59 @@ namespace Chroma
 			return (uint32_t)Chroma::ENTITY_NULL;
 		return (uint32_t)entity.GetID();
 		
+	}
+
+	MonoArray* Script::Entity_GetChildrenNative(EntityID id)
+	{
+		Scene* scene = MonoScripting::GetCurrentSceneContext();
+		std::vector<EntityID> children = scene->GetChildren(id);
+		MonoArray* result = mono_array_new(mono_domain_get(), mono_get_int64_class(), children.size());
+		int i = 0;
+		for (auto child : children)
+		{
+			mono_array_set(result, uint64_t, i++, (uint64_t)child);
+		}
+		return result;
+	}
+
+	uint32_t Script::Entity_GetChildByNameNative(EntityID id, MonoString* name)
+	{
+		char* str_name = mono_string_to_utf8(name);
+
+		Scene* scene = MonoScripting::GetCurrentSceneContext();
+		return (uint32_t)scene->FindChildByName(id, str_name);
+	}
+
+	uint32_t Script::Entity_GetFirstChildNative(EntityID id)
+	{
+		Scene* scene = MonoScripting::GetCurrentSceneContext();
+		return (uint32_t)scene->GetFirstChild(id);
+	}
+
+	bool Script::Entity_HasChildrenNative(EntityID id)
+	{
+		Scene* scene = MonoScripting::GetCurrentSceneContext();
+		return scene->HasChildren(id);
+
+	}
+
+	unsigned int Script::Entity_NumChildrenNative(EntityID id)
+	{
+		Scene* scene = MonoScripting::GetCurrentSceneContext();
+		return (unsigned int)scene->NumChildren(id);
+	}
+
+	void Script::Entity_GetAbsolutePositionNative(EntityID id, Math::vec2* out)
+	{
+		Scene* scene = MonoScripting::GetCurrentSceneContext();
+		Math::vec2 pos = scene->GetTransformAbsolutePosition(id);
+		*out = pos;
+	}
+
+	void Script::Entity_SetAbsolutePositionNative(EntityID id, Math::vec2* vector)
+	{
+		Scene* scene = MonoScripting::GetCurrentSceneContext();
+		scene->SetTransformAbsolutePosition(id, *vector);
 	}
 
 	void Script::Log_Message(Log::LogLevel level, MonoString* message)
@@ -159,23 +213,28 @@ namespace Chroma
 		out->x = pair.first;
 		out->y = pair.second;
 	}
-	void Script::Input_GetAllConnectedControllers(MonoArray* out)
+	MonoArray* Script::Input_GetAllConnectedControllers()
 	{
 		auto vec = Input::GetAllConnectedControllers();
+		MonoArray* result = mono_array_new(mono_domain_get(), mono_get_int32_class(), vec.size());
 		int i = 0;
 		for (auto val : vec)
 		{
-			mono_array_set(out, Chroma::Input::Gamepad, i++, val);
+			mono_array_set(result, Chroma::Input::Gamepad, i++, val);
 		}
+		return result;
 	}
-	void Script::Input_GetGamepadAxis(Input::Gamepad gamepad, MonoArray* out)
+	MonoArray* Script::Input_GetGamepadAxis(Input::Gamepad gamepad)
 	{
 		auto vec = Chroma::Input::GetGamepadAxis(gamepad);
+		MonoArray* result = mono_array_new(mono_domain_get(), mono_get_single_class(), vec.size());
 		int i = 0;
 		for (auto val : vec)
 		{
-			mono_array_set(out, float, i++, val);
+			mono_array_set(result, float, i++, val);
 		}
+
+		return result;
 	}
 
 	bool Script::Input_GetGamepadButtonState(Input::Gamepad gamepad, Input::GamepadButton button)
@@ -421,6 +480,32 @@ namespace Chroma
 		{
 			sr->RestartAnimation();
 		}
+	}
+	void Script::Audio_PlayEvent(MonoString* event_name)
+	{
+		Chroma::Audio::PlayEvent(mono_string_to_utf8(event_name));
+	}
+	void Script::Audio_PlayEventIfStopped(MonoString* event_name)
+	{
+		Chroma::Audio::PlayEventIfStopped(mono_string_to_utf8(event_name));
+	}
+	void Script::Audio_StopEvent(MonoString* event_name, bool immediate)
+	{
+		Chroma::Audio::StopEvent(mono_string_to_utf8(event_name), immediate);
+	}
+	float Script::Audio_GetEventParameter(MonoString* event_name, MonoString* parameter)
+	{
+		float val;
+		Chroma::Audio::GetEventParameter(mono_string_to_utf8(event_name), mono_string_to_utf8(parameter),&val);
+		return val;
+	}
+	void Script::Audio_SetEventParameter(MonoString* event_name, MonoString* parameter, float value)
+	{
+		Chroma::Audio::SetEventParameter(mono_string_to_utf8(event_name), mono_string_to_utf8(parameter), value);
+	}
+	bool Script::Audio_IsEventPlaying(MonoString* event_name)
+	{
+		return Chroma::Audio::IsEventPlaying(mono_string_to_utf8(event_name));
 	}
 }
 

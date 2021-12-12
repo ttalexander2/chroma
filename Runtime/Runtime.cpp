@@ -52,16 +52,11 @@ void Runtime::Update(Time delta)
 
 		CurrentScene->Update(delta);
 
-
-		static OrthographicCameraController cameraController(1920.0f / 1080.0f);
-
 		Renderer2D::Clear();
 
-		Renderer2D::Begin(cameraController.GetCamera());
+		Renderer2D::Begin(CurrentScene->GetPrimaryCamera());
 
 		CurrentScene->Draw(delta);
-
-		//Renderer2D::DrawQuad({ 0,0,0 }, { 2,2,2 }, { 1,1,1,1 });
 
 		Renderer2D::End();
 	}

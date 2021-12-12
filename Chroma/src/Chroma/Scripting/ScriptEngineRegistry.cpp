@@ -54,6 +54,14 @@ namespace Chroma
 		mono_add_internal_call("Chroma.Entity::CreateComponent_Native", Chroma::Script::Entity_CreateComponent);
 		mono_add_internal_call("Chroma.Entity::HasComponent_Native", Chroma::Script::Entity_HasComponent);
 		mono_add_internal_call("Chroma.Entity::FindEntityByName_Native", Chroma::Script::Entity_FindEntityByName);
+		mono_add_internal_call("Chroma.Entity::GetChildren_Native", Chroma::Script::Entity_GetChildrenNative);
+		mono_add_internal_call("Chroma.Entity::GetChildByName_Native", Chroma::Script::Entity_GetChildByNameNative);
+		mono_add_internal_call("Chroma.Entity::GetFirstChild_Native", Chroma::Script::Entity_GetFirstChildNative);
+		mono_add_internal_call("Chroma.Entity::HasChildren_Native", Chroma::Script::Entity_HasChildrenNative);
+		mono_add_internal_call("Chroma.Entity::NumChildren_Native", Chroma::Script::Entity_NumChildrenNative);
+		mono_add_internal_call("Chroma.Entity::GetAbsolutePosition_Native", Chroma::Script::Entity_GetAbsolutePositionNative);
+		mono_add_internal_call("Chroma.Entity::SetAbsolutePosition_Native", Chroma::Script::Entity_SetAbsolutePositionNative);
+
 
 		//Log
 		mono_add_internal_call("Chroma.Log::LogMessage_Native", Chroma::Script::Log_Message);
@@ -107,6 +115,15 @@ namespace Chroma
 		mono_add_internal_call("Chroma.SpriteRenderer::GetAnimationTag_Native", Chroma::Script::SpriteRenderer_GetAnimationTag);
 		mono_add_internal_call("Chroma.SpriteRenderer::SetAnimationByTag_Native", Chroma::Script::SpriteRenderer_SetAnimationByTag);
 		mono_add_internal_call("Chroma.SpriteRenderer::RestartAnimation_Native", Chroma::Script::SpriteRenderer_RestartAnimation);
+
+
+		//Audio
+		mono_add_internal_call("Chroma.Audio::PlayEvent_Native", Chroma::Script::Audio_PlayEvent);
+		mono_add_internal_call("Chroma.Audio::PlayEventIfStopped_Native", Chroma::Script::Audio_PlayEventIfStopped);
+		mono_add_internal_call("Chroma.Audio::StopEvent_Native", Chroma::Script::Audio_StopEvent);
+		mono_add_internal_call("Chroma.Audio::GetEventParameter_Native", Chroma::Script::Audio_GetEventParameter);
+		mono_add_internal_call("Chroma.Audio::SetEventParameter_Native", Chroma::Script::Audio_SetEventParameter);
+		mono_add_internal_call("Chroma.Audio::IsEventPlaying_Native", Chroma::Script::Audio_IsEventPlaying);
 
 	}
 

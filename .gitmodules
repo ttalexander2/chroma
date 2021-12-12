@@ -41,3 +41,6 @@
 [submodule "Chroma/third_party/physfs"]
 	path = Chroma/third_party/physfs
 	url = https://github.com/ttalexander2/physfs.git
+[submodule "Chroma/third_party/box2d"]
+	path = Chroma/third_party/box2d
+	url = https://github.com/ttalexander2/box2d.git
