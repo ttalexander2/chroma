@@ -15,6 +15,7 @@ namespace Chroma
 {
 	extern std::unordered_map<MonoType*, std::function<bool(Entity&)>> hasComponentFuncs;
 	extern std::unordered_map<MonoType*, std::function<void(Entity&)>> createComponentFuncs;
+	extern std::unordered_map<MonoType*, std::function<Component*(Entity&)>> getComponentFuncs;
 
 	void Script::Entity_CreateComponent(EntityID id, void* type)
 	{
@@ -97,6 +98,26 @@ namespace Chroma
 	{
 		Scene* scene = MonoScripting::GetCurrentSceneContext();
 		scene->SetTransformAbsolutePosition(id, *vector);
+	}
+
+	bool Script::Component_GetEnabled(EntityID id, void* type)
+	{
+		Scene* scene = MonoScripting::GetCurrentSceneContext();
+		CHROMA_CORE_ASSERT(scene->Registry.valid(id), "Invalid entity ID!");
+		Entity e = Entity(id, scene);
+		MonoType* monoType = mono_reflection_type_get_type((MonoReflectionType*)type);
+		Component* comp = getComponentFuncs[monoType](e);
+		return comp->IsEnabled();
+	}
+
+	void Script::Component_SetEnabled(EntityID id, void* type, bool value)
+	{
+		Scene* scene = MonoScripting::GetCurrentSceneContext();
+		CHROMA_CORE_ASSERT(scene->Registry.valid(id), "Invalid entity ID!");
+		Entity e = Entity(id, scene);
+		MonoType* monoType = mono_reflection_type_get_type((MonoReflectionType*)type);
+		Component* comp = getComponentFuncs[monoType](e);
+		comp->SetEnabled(value);
 	}
 
 	void Script::Log_Message(Log::LogLevel level, MonoString* message)

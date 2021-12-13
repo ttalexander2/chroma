@@ -1,10 +1,10 @@
 #include "chromapch.h"
 #include "Component.h"
-#include "Chroma/Scene/ECS.h"
 
 namespace Chroma
 {
-	unsigned int Component::component_counter = 1;
+
+	unsigned int Component::comparison_counter = 0;
 
 	/// @brief Function to begin the serialization process for the component.
 	/// 
@@ -12,7 +12,7 @@ namespace Chroma
 	/// @param out YAML emitter to write to
 	void Component::BeginSerialize(YAML::Emitter& out)
 	{
-		out << YAML::Key << Name();
+		out << YAML::Key << GetTypeInfo()->GetTypeName();
 		out << YAML::Value << YAML::BeginMap;
 	}
 
@@ -23,6 +23,16 @@ namespace Chroma
 	void Component::EndSerialize(YAML::Emitter& out)
 	{
 		out << YAML::EndMap;
+	}
+
+	bool Component::IsTypeOf(const TypeInfo* pTypeInfo) const
+	{
+		return GetTypeInfo()->IsTypeOf(pTypeInfo);
+	}
+
+	bool Component::IsTypeOf(StringHash type) const
+	{
+		return GetTypeInfo()->IsTypeOf(type);
 	}
 
 	void Component::DoSerialize(YAML::Emitter& out)

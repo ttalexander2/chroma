@@ -7,6 +7,7 @@
 #include <math.h>
 #include <Chroma/Components/BoxCollider.h>
 #include <Chroma/Components/ParticleEmitter.h>
+#include <imgui.h>
 
 namespace Polychrome
 {

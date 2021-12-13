@@ -20,21 +20,10 @@ namespace Chroma
 	};
 
 
-	class ParticleEmitter : public Component
+	struct ParticleEmitter : public Component
 	{
-	public:
-		ParticleEmitter() = default;
-		ParticleEmitter(const ParticleEmitter&) = default;
+		CHROMA_COMPONENT(ParticleEmitter, Component);
 
-		const std::string Name() const override
-		{
-			return StaticName();
-		}
-
-		const static std::string StaticName()
-		{
-			return "Particle Emitter";
-		}
 
 		void Serialize(YAML::Emitter& out) override;
 		void Deserialize(YAML::Node& node) override;

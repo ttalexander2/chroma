@@ -1,13 +1,14 @@
 #pragma once
 
 #include "Chroma/Scene/Component.h"
-#include "Chroma/Scene/ECS.h"
 
 
 namespace Chroma
 {
 	struct Relationship : public Component
 	{
+		CHROMA_COMPONENT(Relationship, Component);
+
 		std::vector<EntityID> Children;
 		EntityID Parent{ ENTITY_NULL };
 
@@ -16,17 +17,7 @@ namespace Chroma
 
 		const bool HasChild(EntityID child) const { return std::find(Children.begin(), Children.end(), child) != Children.end(); }
 
-		const bool AllowMultiple() const override { return false; }
-
-
-		const std::string Name() const override { return StaticName(); }
-
-		const static std::string StaticName()
-		{
-			return "Relationship";
-		}
-
-		const bool EditorVisible() const override { return false; }
+		const inline void SetEnabled(bool enabled) override { m_Enabled = true; }
 
 		void Serialize(YAML::Emitter& out) override;
 		void Deserialize(YAML::Node& node) override;

@@ -1,7 +1,10 @@
 #pragma once
-#include "Chroma/Scene/ECS.h"
+
+#include "Chroma/Math/Math.h"
+
 #include "Chroma/Core/Log.h"
 #include "Chroma/Core/Input.h"
+#include "Chroma/Scene/EntityID.h"
 
 #include <mono/jit/jit.h>
 
@@ -21,6 +24,10 @@ namespace Chroma
 		unsigned int Entity_NumChildrenNative(EntityID id);
 		void Entity_GetAbsolutePositionNative(EntityID id, Math::vec2* out);
 		void Entity_SetAbsolutePositionNative(EntityID id, Math::vec2* vector);
+
+		//Component
+		bool Component_GetEnabled(EntityID id, void* type);
+		void Component_SetEnabled(EntityID id, void* type, bool value);
 
 
 

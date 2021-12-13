@@ -1,6 +1,7 @@
 #pragma once
 #include <glm/glm.hpp>
 #include <Chroma.h>
+#include "imgui.h"
 
 namespace Polychrome
 {

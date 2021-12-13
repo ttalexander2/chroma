@@ -1,7 +1,6 @@
 #pragma once
 
 #include <Chroma/Scene/Entity.h>
-#include <Chroma/Scene/ECS.h>
 
 namespace Polychrome
 {

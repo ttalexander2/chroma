@@ -6,12 +6,6 @@
 namespace Chroma
 {
 
-	Camera::Camera(float width, float height)
-		 : size(width, height),projectionMatrix(glm::ortho(-1 * width/ height * width, width / height * width, -height, height, -1.0f, 1.0f)), viewMatrix(1.0f)
-	{
-		viewProjectionMatrix = projectionMatrix * viewMatrix;
-	}
-
 	void Camera::RecalculateViewMatrix()
 	{
 		float aspectRatio = (float)size.x / (float)size.y;

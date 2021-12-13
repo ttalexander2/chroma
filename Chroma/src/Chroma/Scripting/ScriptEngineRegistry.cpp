@@ -21,14 +21,16 @@ namespace Chroma
 {
 	std::unordered_map<MonoType*, std::function<bool(Entity&)>> hasComponentFuncs;
 	std::unordered_map<MonoType*, std::function<void(Entity&)>> createComponentFuncs;
+	std::unordered_map<MonoType*, std::function<Component*(Entity&)>> getComponentFuncs;
 
 #define Component_RegisterType(Type) \
 	{\
 		MonoType* type = mono_reflection_type_from_name((char*)"Chroma." #Type, coreAssemblyImage);\
 		if (type) {\
 			uint32_t id = mono_type_get_type(type);\
-			hasComponentFuncs[type] = [](Entity& entity) { return entity.HasComponent<Type>();  };\
-			createComponentFuncs[type] = [](Entity& entity) { return entity.AddComponent<Type>(); };\
+			hasComponentFuncs[type] = [](Entity& entity) { return entity.HasComponent<Type>();  }; \
+			createComponentFuncs[type] = [](Entity& entity) { return entity.AddComponent<Type>(); }; \
+			getComponentFuncs[type] = [](Entity& entity) { return entity.GetScene().Registry.try_get<Type>(entity.GetID());  };\
 		} else {\
 			CHROMA_CORE_ERROR("No C# component class found for " #Type "!");\
 		}\
@@ -62,6 +64,9 @@ namespace Chroma
 		mono_add_internal_call("Chroma.Entity::GetAbsolutePosition_Native", Chroma::Script::Entity_GetAbsolutePositionNative);
 		mono_add_internal_call("Chroma.Entity::SetAbsolutePosition_Native", Chroma::Script::Entity_SetAbsolutePositionNative);
 
+		//Component
+		mono_add_internal_call("Chroma.Component::GetEnabled_Native", Chroma::Script::Component_GetEnabled);
+		mono_add_internal_call("Chroma.Component::SetEnabled_Native", Chroma::Script::Component_SetEnabled);
 
 		//Log
 		mono_add_internal_call("Chroma.Log::LogMessage_Native", Chroma::Script::Log_Message);

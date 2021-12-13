@@ -52,6 +52,7 @@
 #include "Utilities/GLFWHelpers.h"
 #include <Chroma/Components/Tag.h>
 #include <mono/metadata/mono-gc.h>
+#include <Chroma/Components/CSharpScript.h>
 
 
 namespace Polychrome
@@ -904,15 +905,15 @@ namespace Polychrome
 			}
 			if (ImGui::BeginMenu("New Entity...##MAIN_MENU_BAR"))
 			{
-				for (auto& component : Chroma::ECS::GetComponentNames())
+				for (auto& component : Chroma::Scene::GetComponentTypes())
 				{
-					if (component == "Transform" || component == "Relationship" || component == "Tag")
+					if (component->IsTypeOf<Chroma::Transform>() || component->IsTypeOf<Chroma::Relationship>() || component->IsTypeOf<Chroma::Tag>())
 						continue;
 
-					if (ImGui::MenuItem(component.c_str()))
+					if (ImGui::MenuItem(component->GetTypeName().c_str()))
 					{
 						Chroma::Entity ent = CurrentScene->NewEntity();
-						ent.AddComponent(component);
+						ent.AddComponent(component->GetTypeName());
 					}
 				}
 				ImGui::EndMenu();

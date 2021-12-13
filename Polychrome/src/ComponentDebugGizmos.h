@@ -1,6 +1,6 @@
 #pragma once
 #include "Chroma/Math/Math.h"
-#include "Chroma/Scene/ECS.h"
+#include "Chroma/Scene/EntityID.h"
 
 namespace Polychrome
 {

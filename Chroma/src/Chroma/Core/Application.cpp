@@ -12,7 +12,6 @@
 #include <GLFW/glfw3.h>
 #include <imgui.h>
 
-#include "Chroma/Scene/ECS.h"
 #include "Chroma/Components/Tag.h"
 #include "Chroma/Components/Transform.h"
 #include "Chroma/Components/SpriteRenderer.h"
@@ -54,16 +53,16 @@ namespace Chroma
 		MonoScripting::Init("Chroma.Mono.dll");
 		ScriptEngineRegistry::RegisterAll();
 
-		ECS::RegisterComponent<CSharpScript>();
-		ECS::RegisterComponent<Tag>();
-		ECS::RegisterComponent<Transform>();
-		ECS::RegisterComponent<AudioSource>();
-		ECS::RegisterComponent<SpriteRenderer>();
-		ECS::RegisterComponent<BoxCollider>();
-		ECS::RegisterComponent<CircleCollider>();
-		ECS::RegisterComponent<Relationship>();
-		ECS::RegisterComponent<Camera>();
-		ECS::RegisterComponent<ParticleEmitter>();
+		Scene::RegisterComponent<AudioSource>();
+		Scene::RegisterComponent<BoxCollider>();
+		Scene::RegisterComponent<Camera>();
+		Scene::RegisterComponent<CircleCollider>();
+		Scene::RegisterComponent<CSharpScript>();
+		Scene::RegisterComponent<ParticleEmitter>();
+		Scene::RegisterComponent<Relationship>();
+		Scene::RegisterComponent<SpriteRenderer>();
+		Scene::RegisterComponent<Tag>();
+		Scene::RegisterComponent<Transform>();
 
 
 	}

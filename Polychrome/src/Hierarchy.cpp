@@ -7,7 +7,6 @@
 #include <Chroma/Utilities/StringHelper.h>
 #include <Chroma/Components/Tag.h>
 #include <Chroma/Scene/Component.h>
-#include <Chroma/Scene/ECS.h>
 #include "Inspector.h"
 #include "imgui_stdlib.h"
 #include <Chroma/Components/Relationship.h>
@@ -292,6 +291,7 @@ namespace Polychrome
 					scene->NewChild(e);
 				if (ImGui::BeginMenu("New Entity...##HIERARCHY_CONTEXT_MENU"))
 				{
+					/*
 					for (auto& component : Chroma::ECS::GetComponentNames())
 					{
 						if (component == "Transform" || component == "Relationship" || component == "Tag")
@@ -303,11 +303,13 @@ namespace Polychrome
 							ent.AddComponent(component);
 						}
 					}
+					*/
 					ImGui::EndMenu();
 				}
 					
 				if (ImGui::BeginMenu("New Child...##HIERARCHY_CONTEXT_MENU"))
 				{
+					/*
 					for (auto& component : Chroma::ECS::GetComponentNames())
 					{
 						if (component == "Transform" || component == "Relationship" || component == "Tag")
@@ -319,6 +321,7 @@ namespace Polychrome
 							ent.AddComponent(component);
 						}
 					}
+					*/
 					ImGui::EndMenu();
 					
 				}

@@ -43,6 +43,8 @@ namespace Chroma
 		for (EntityID e : view)
 		{
 			auto& spriteRenderer = view.get<SpriteRenderer>(e);
+			if (!spriteRenderer.IsEnabled())
+				continue;
 
 			if (AssetManager::HasSprite(spriteRenderer.SpriteID))
 				{
@@ -114,6 +116,9 @@ namespace Chroma
 		for (EntityID e : m_Scene->Registry.view<SpriteRenderer>())
 		{
 			SpriteRenderer s = m_Scene->Registry.get<SpriteRenderer>(e);
+			if (!s.IsEnabled())
+				continue;
+
 			Math::vec2 absPos = m_Scene->GetTransformAbsolutePosition(e);
 			if (!AssetManager::HasSprite(s.SpriteID))
 				continue;
@@ -131,6 +136,8 @@ namespace Chroma
 			{
 				Transform& transform = m_Scene->Registry.get<Transform>(e);
 				SpriteRenderer& spriteRenderer = m_Scene->Registry.get<SpriteRenderer>(e);
+				if (!spriteRenderer.IsEnabled())
+					continue;
 				Relationship& relationship = m_Scene->Registry.get<Relationship>(e);
 
 				const Math::vec2& origin = spriteRenderer.GetSpriteOriginVector();

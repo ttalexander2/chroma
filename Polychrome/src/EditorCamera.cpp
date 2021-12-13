@@ -2,6 +2,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "Viewport.h"
 #include "../../Chroma/third_party/GLFW/include/GLFW/glfw3.h"
+#include <imgui.h>
 
 namespace Polychrome
 {
