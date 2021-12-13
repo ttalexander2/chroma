@@ -7,13 +7,9 @@ namespace Chroma
 	class Scene;
 	class CameraSystem;
 
-    class Camera : public Component
+    struct Camera : public Component
     {
-    public:
-		
-		Camera() = default;
-		Camera(const Camera&) = default;
-		Camera(float width, float height);
+		CHROMA_COMPONENT(Camera, Component);
 
 		const Math::vec2& GetPosition() const { return position; }
 		void SetPosition(const Math::vec2& pos) { if (position != pos) dirty = true; position = pos; }
@@ -27,16 +23,6 @@ namespace Chroma
 		const Math::mat4& GetViewMatrix() const { return viewMatrix; }
 		const Math::mat4& GetViewProjectionMatrix() const { return viewProjectionMatrix; }
 
-
-		const std::string Name() const override
-		{
-			return StaticName();
-		}
-
-		const static std::string StaticName()
-		{
-			return "Camera";
-		}
 
 		void Serialize(YAML::Emitter& out) override;
 

@@ -21,19 +21,9 @@ namespace Chroma
 	/// @see Aseprite
 	struct SpriteRenderer : Component
 	{
-		friend class Polychrome::ComponentWidgets;
+		CHROMA_COMPONENT(SpriteRenderer, Component);
 
-		/// @brief Constructs an empty SpriteRenderer.
-		SpriteRenderer() = default;
-		/// @brief Constructs a SpriteRenderer from an existing SpriteRenderer.
-		/// @param  SpriteRenderer to copy.
-		SpriteRenderer(const SpriteRenderer&) = default;
-		/// @brief Constructs a new SpriteRenderer.
-		/// @param color Color of the SpriteRenderer.
-		SpriteRenderer(const Math::vec4 color)
-			: Color(color)
-		{
-		}
+		friend class Polychrome::ComponentWidgets;
 
 		enum class SpriteOrigin
 		{
@@ -114,16 +104,6 @@ namespace Chroma
 		/// WARNING: Not Implemented.
 		void RestartAnimation();
 
-
-		const std::string Name() const override
-		{
-			return StaticName();
-		}
-
-		const static std::string StaticName()
-		{
-			return "Sprite Renderer";
-		}
 
 		void Serialize(YAML::Emitter& out) override;
 

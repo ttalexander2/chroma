@@ -1,5 +1,8 @@
 #include "chromapch.h"
+
+
 #include "CameraSystem.h"
+#include "Chroma/Components/Transform.h"
 
 
 namespace Chroma
@@ -26,6 +29,10 @@ namespace Chroma
 		for (EntityID e : view)
 		{
 			auto& cam = view.get<Camera>(e);
+
+			if (!cam.IsEnabled())
+				continue;
+
 			auto& transform = view.get<Transform>(e);
 			cam.SetPosition(transform.Position);
 			if (cam.dirty)

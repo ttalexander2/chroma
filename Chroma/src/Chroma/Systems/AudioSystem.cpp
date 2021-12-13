@@ -13,7 +13,7 @@ namespace Chroma
 		{
 			AudioSource& audio = view.get<AudioSource>(e);
 			Audio::LoadEvent(audio.Event);
-			if (audio.PlayOnInit)
+			if (audio.PlayOnInit && audio.IsEnabled())
 				Audio::PlayEvent(audio.Event);
 		}
 	}
@@ -25,6 +25,8 @@ namespace Chroma
 		for (EntityID e : view)
 		{
 			AudioSource& audio = view.get<AudioSource>(e);
+			if (!audio.IsEnabled())
+				continue;
 		}
 	}
 }

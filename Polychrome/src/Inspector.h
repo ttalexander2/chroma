@@ -1,6 +1,6 @@
 #pragma once
-#include <Chroma/Scene/Inspectable.h>
-#include <Chroma/Scene/ECS.h>
+
+
 
 namespace Polychrome
 {

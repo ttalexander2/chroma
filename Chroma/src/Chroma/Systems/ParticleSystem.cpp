@@ -36,6 +36,10 @@ namespace Chroma
 		for (auto& e : m_Scene->Registry.view<ParticleEmitter>())
 		{
 			auto& emitter = m_Scene->GetComponent<ParticleEmitter>(e);
+			if (!emitter.IsEnabled())
+				continue;
+
+
 			auto& position = m_Scene->GetTransformAbsolutePosition(e);
 			UpdateEmitter(emitter, position, delta);
 		}
@@ -74,6 +78,8 @@ namespace Chroma
 		for (auto& e : m_Scene->Registry.view<ParticleEmitter>())
 		{
 			auto& emitter = m_Scene->GetComponent<ParticleEmitter>(e);
+			if (!emitter.IsEnabled())
+				continue;
 			Math::vec2 pos = m_Scene->GetTransformAbsolutePosition(e);
 
 			for (Particle& p : emitter.Particles)

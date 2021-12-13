@@ -3,15 +3,7 @@
 
 namespace Chroma
 {
-	CSharpScript::CSharpScript()
-	{
 
-	}
-
-	CSharpScript::~CSharpScript()
-	{
-
-	}
 	void CSharpScript::Serialize(YAML::Emitter& out)
 	{
 		out << YAML::Key << "Module";

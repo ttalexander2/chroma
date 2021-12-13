@@ -37,14 +37,14 @@ namespace Polychrome
 
 	void ComponentWidgets::Draw(Chroma::Component* c)
 	{
-		if (Chroma::ECS::IsType<Chroma::Transform>(c)) DrawTransform(c);
-		else if (Chroma::ECS::IsType<Chroma::CSharpScript>(c)) DrawCSharpScript(c);
-		else if (Chroma::ECS::IsType<Chroma::AudioSource>(c)) DrawAudioSource(c);
-		else if (Chroma::ECS::IsType<Chroma::BoxCollider>(c)) DrawBoxCollider(c);
-		else if (Chroma::ECS::IsType<Chroma::CircleCollider>(c)) DrawCircleCollider(c);
-		else if (Chroma::ECS::IsType<Chroma::SpriteRenderer>(c)) DrawSpriteRenderer(c);
-		else if (Chroma::ECS::IsType<Chroma::Camera>(c)) DrawCameraComponent(c);
-		else if (Chroma::ECS::IsType<Chroma::ParticleEmitter>(c)) DrawParticleEmitter(c);
+		if (c->IsTypeOf<Chroma::Transform>()) DrawTransform(c);
+		else if (c->IsTypeOf<Chroma::CSharpScript>()) DrawCSharpScript(c);
+		else if (c->IsTypeOf<Chroma::AudioSource>()) DrawAudioSource(c);
+		else if (c->IsTypeOf<Chroma::BoxCollider>()) DrawBoxCollider(c);
+		else if (c->IsTypeOf<Chroma::CircleCollider>()) DrawCircleCollider(c);
+		else if (c->IsTypeOf<Chroma::SpriteRenderer>()) DrawSpriteRenderer(c);
+		else if (c->IsTypeOf<Chroma::Camera>()) DrawCameraComponent(c);
+		else if (c->IsTypeOf<Chroma::ParticleEmitter>()) DrawParticleEmitter(c);
 	}
 
 	void ComponentWidgets::DrawTransform(Chroma::Component* c)
@@ -87,23 +87,23 @@ namespace Polychrome
 			for (auto& [name, field] : script->ModuleFieldMap[script->ModuleName])
 			{
 				DrawComponentValue(script, name);
-				const char* hash = ("##" + name).c_str();
+				std::string hash = "##" + script->ModuleName + name;
 				if (field.Type == Chroma::FieldType::Float)
 				{
 					float val = field.GetRuntimeValue<float>(entityInstanceData.Instance);
-					ImGui::InputFloat(hash, &val);
+					ImGui::InputFloat(hash.c_str(), &val);
 					field.SetRuntimeValue<float>(entityInstanceData.Instance, val);
 				}
 				else if (field.Type == Chroma::FieldType::Int)
 				{
 					int val = field.GetRuntimeValue<int>(entityInstanceData.Instance);
-					ImGui::InputInt(hash, &val);
+					ImGui::InputInt(hash.c_str(), &val);
 					field.SetRuntimeValue<int>(entityInstanceData.Instance, val);
 				}
 				else if (field.Type == Chroma::FieldType::String)
 				{
 					std::string val = field.GetRuntimeValue<std::string>(entityInstanceData.Instance);
-					ImGui::InputText(hash, &val);
+					ImGui::InputText(hash.c_str(), &val);
 					field.SetRuntimeValue(entityInstanceData.Instance, val);
 				}
 				else if (field.Type == Chroma::FieldType::Entity)
@@ -113,7 +113,6 @@ namespace Polychrome
 					//ImGui::InputInt(hash, &id, 1, 100);
 					//if (EditorApp::CurrentScene->Registry.valid((Chroma::EntityID)id))
 					//	field.SetRuntimeValue<Chroma::Entity>(entityInstanceData.Instance, Chroma::Entity((Chroma::EntityID)id, EditorApp::CurrentScene));
-
 				}
 			}
 		}
@@ -122,23 +121,23 @@ namespace Polychrome
 			for (auto& [name, field] : script->ModuleFieldMap[script->ModuleName])
 			{
 				DrawComponentValue(script, name);
-				const char* hash = ("##" + name).c_str();
+				std::string hash = "##" + script->ModuleName + name;
 				if (field.Type == Chroma::FieldType::Float)
 				{
 					float val = field.GetStoredValue<float>();
-					ImGui::InputFloat(hash, &val);
+					ImGui::InputFloat(hash.c_str(), &val);
 					field.SetStoredValue<float>(val);
 				}
 				else if (field.Type == Chroma::FieldType::Int)
 				{
 					int val = field.GetStoredValue<int>();
-					ImGui::InputInt(hash, &val);
+					ImGui::InputInt(hash.c_str(), &val);
 					field.SetStoredValue<int>(val);
 				}
 				else if (field.Type == Chroma::FieldType::String)
 				{
 					std::string val = field.GetStoredValue<const std::string&>();
-					ImGui::InputText(hash, &val);
+					ImGui::InputText(hash.c_str(), &val);
 					field.SetStoredValue<const std::string&>(val);
 				}
 				else if (field.Type == Chroma::FieldType::Entity)

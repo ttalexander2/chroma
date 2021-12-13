@@ -20,11 +20,20 @@
 #include <Chroma/Utilities/ContainerHelpers.h>
 #include <Chroma/Systems/CameraSystem.h>
 #include <Chroma/Systems/ParticleSystem.h>
+#include <Chroma/Components/CSharpScript.h>
 
 
 
 namespace Chroma
 {
+
+	std::unordered_map<StringHash, std::function<Component* (EntityID, entt::registry*)>> Scene::s_ComponentAdd;
+	std::unordered_map<StringHash, std::function<Component* (EntityID, entt::registry*)>> Scene::s_ComponentGet;
+	std::unordered_map<StringHash, std::function<bool(EntityID, entt::registry*)>> Scene::s_ComponentHas;
+	std::unordered_map<StringHash, std::function<void(EntityID, entt::registry*)>> Scene::s_ComponentRemove;
+	std::unordered_map<StringHash, std::function<void(EntityID, entt::registry*, entt::registry*)>> Scene::s_CopyComponent;
+
+	std::list<const TypeInfo*> Scene::s_Types;
 
 	Scene::Scene()
 		: ID(GUID::CreateGUID())
@@ -35,17 +44,36 @@ namespace Chroma
 		RegisterSystem<ParticleSystem>();
 		RegisterSystem<CollisionSystem>();
 		RegisterSystem<CameraSystem>();
+
 	}
 
 	const GUID Scene::GetID() { return ID; }
+
+	Scene* Scene::Copy()
+	{
+		Scene* out = new Scene();
+		out->EntityOrder = std::vector<Chroma::EntityID>(EntityOrder);
+		out->ID = ID;
+		out->Layers = std::vector<Chroma::Layer>(Layers);
+		out->PrimaryCameraEntity = PrimaryCameraEntity;
+		for (auto oldEntity : Registry.view<Chroma::Transform>())
+		{
+			auto newEntity = out->Registry.create(oldEntity);
+			for (Component* c : GetAllComponents(oldEntity))
+			{
+				s_CopyComponent[c->GetType()](newEntity, &out->Registry, &Registry);
+			}
+		}
+		return out;
+	}
 
 	Entity Scene::NewEntity()
 	{
 		auto entity = Registry.create();
 		Entity e = { entity, this };
-		Registry.emplace<Tag>(entity).EntityName = fmt::format("Entity_{}", entity);
-		Registry.emplace<Transform>(entity);
-		Registry.emplace<Relationship>(entity);
+		Registry.emplace<Tag>(entity, entity).EntityName = fmt::format("Entity_{}", entity);
+		Registry.emplace<Transform>(entity, entity);
+		Registry.emplace<Relationship>(entity, entity);
 
 		EntityOrder.push_back(entity);
 		return e;
@@ -55,9 +83,9 @@ namespace Chroma
 	{
 		auto entity = Registry.create();
 		Entity e = { entity, this };
-		Registry.emplace<Tag>(entity).EntityName = fmt::format("Entity_{}", entity);
-		Registry.emplace<Transform>(entity);
-		Registry.emplace<Relationship>(entity);
+		Registry.emplace<Tag>(entity, entity).EntityName = fmt::format("Entity_{}", entity);
+		Registry.emplace<Transform>(entity, entity);
+		Registry.emplace<Relationship>(entity, entity);
 
 		auto& child_r = e.GetComponent<Relationship>();
 		auto& parent_r = GetComponent<Relationship>((EntityID)parent);
@@ -255,6 +283,11 @@ namespace Chroma
 		}
 	}
 
+	std::list<const TypeInfo*> Scene::GetComponentTypes()
+	{
+		return Scene::s_Types;
+	}
+
 	std::string Scene::Serialize()
 	{
 		YAML::Emitter out;
@@ -280,18 +313,18 @@ namespace Chroma
 
 			for (Component* comp : components)
 			{
-				if (ECS::IsType<Relationship>(comp))
+				if (comp->IsTypeOf<Relationship>())
 				{
 					Relationship* rel = reinterpret_cast<Relationship*>(comp);
 					if (rel->HasChildren() || rel->IsChild())
 						comp->DoSerialize(out);
 					
 				}
-				else if (ECS::IsType<Tag>(comp))
+				else if (comp->IsTypeOf<Tag>())
 				{
 					continue;
 				}
-				else if (ECS::IsType<Camera>(comp))
+				else if (comp->IsTypeOf<Camera>())
 				{
 					comp->BeginSerialize(out);
 					comp->Serialize(out);
@@ -386,16 +419,21 @@ namespace Chroma
 					for (auto component : components)
 					{
 						std::string key = component.first.as<std::string>();
-						auto created = ECS::AddComponent(key, newEntity, &out->Registry);
+
+						if (!Scene::IsComponentRegistered(key))
+						{
+							CHROMA_CORE_ERROR("Unable to construct component of type [{}]. No registered component found!", key);
+							continue;
+						}
+
+						auto created = out->AddComponent(key, newEntity);
 						if (key == "Transform" || key == "Relationship")
 							created->order_id = 0;
 						else
 							created->order_id = i;
-						if (key == "LuaScript")
-							created->Deserialize(component.second, newEntity, out);
-						else
-							created->Deserialize(component.second);
-						if (key == Camera::StaticName())
+
+						created->Deserialize(component.second);
+						if (key == Camera::GetTypeNameStatic())
 						{
 							auto val = component.second["Primary"];
 							if (val)
@@ -409,7 +447,7 @@ namespace Chroma
 						i++;
 					}
 
-					out->Registry.get_or_emplace<Relationship>(newEntity);
+					out->Registry.get_or_emplace<Relationship>(newEntity, newEntity);
 				}
 			}
 			auto view = out->Registry.view<Camera>();
@@ -502,12 +540,11 @@ namespace Chroma
 	std::vector<Component*> Scene::GetAllComponents(EntityID entity)
 	{
 		std::vector<Component*> retval;
-		for (std::string type : ECS::GetComponentNames())
+		for (auto& [type, func] : s_ComponentGet)
 		{
-			if (ECS::HasComponent(type, entity, &Registry))
-			{
-				retval.push_back(ECS::GetComponent(type, entity, &Registry));
-			}
+			Component* comp = func(entity, &Registry);
+			if (comp != nullptr)
+				retval.push_back(comp);
 		}
 
 		return retval;
@@ -592,7 +629,7 @@ namespace Chroma
 			auto ent = NewEntity();
 			return ent.AddComponent<Camera>();
 		}
-		return Registry.get_or_emplace<Camera>(PrimaryCameraEntity);
+		return Registry.get_or_emplace<Camera>(PrimaryCameraEntity, PrimaryCameraEntity);
 	}
 
 	bool Scene::SetPrimaryCamera(EntityID entity)
@@ -604,7 +641,7 @@ namespace Chroma
 		}
 
 		PrimaryCameraEntity = entity;
-		Registry.get_or_emplace<Camera>(PrimaryCameraEntity);
+		Registry.get_or_emplace<Camera>(PrimaryCameraEntity, PrimaryCameraEntity);
 		return true;
 	}
 

@@ -15,6 +15,7 @@
 #include "../../Chroma/third_party/GLFW/include/GLFW/glfw3.h"
 #include "UndoRedo.h"
 #include "Build.h"
+#include <Chroma/Components/CSharpScript.h>
 
 namespace Polychrome
 {
@@ -100,7 +101,7 @@ namespace Polychrome
 			ImGui::Dummy({ 5, 0 });
 			ImGui::SameLine();
 
-			static std::string clone;
+			static Chroma::Scene* clone;
 
 			static bool PlayFocus = false;
 
@@ -114,7 +115,7 @@ namespace Polychrome
 			{
 				if (!EditorApp::ScenePaused)
 				{
-					clone = EditorApp::CurrentScene->Serialize();
+					clone = EditorApp::CurrentScene->Copy();
 					EditorApp::CurrentScene->Load();
 					EditorApp::CurrentScene->Init();
 				}
@@ -154,35 +155,29 @@ namespace Polychrome
 			ImGui::PushItemFlag(ImGuiItemFlags_Disabled, !EditorApp::SceneRunning);
 			if (ImGui::Button(ICON_FK_STOP)) 
 			{
-				Chroma::Scene* out = new Chroma::Scene();
-				if (Chroma::Scene::Deserialize(out, clone))
-				{
-					delete EditorApp::CurrentScene;
-					clone.clear();
-					EditorApp::CurrentScene = out;
-					if (!EditorApp::CurrentScene->Registry.valid(Hierarchy::SelectedEntity))
-						Hierarchy::SelectedEntity = Chroma::ENTITY_NULL;
-					Chroma::ScriptEngineRegistry::RegisterAll();
-					Chroma::MonoScripting::SetDeltaTime(0.f, 0.f);
-					Chroma::MonoScripting::SetSceneContext(EditorApp::CurrentScene);
-					auto view = EditorApp::CurrentScene->Registry.view<Chroma::CSharpScript>();
-					for (Chroma::EntityID entity : view)
-					{
-						auto& script = view.get<Chroma::CSharpScript>(entity);
-						auto entityObj = Chroma::Entity(entity, EditorApp::CurrentScene);
-						Chroma::MonoScripting::InitScriptEntity(entityObj);
-					}
-					auto spriteView = EditorApp::CurrentScene->Registry.view<Chroma::SpriteRenderer>();
-					for (Chroma::EntityID e : spriteView)
-					{
-						auto& spriteRenderer = spriteView.get<Chroma::SpriteRenderer>(e);
-						spriteRenderer.SetSpriteOrigin(spriteRenderer.GetSpriteOrigin());
-					}
-				}
-				else
-				{
-					delete out;
-				}
+				delete EditorApp::CurrentScene;
+				EditorApp::CurrentScene = clone;
+
+				if (!EditorApp::CurrentScene->Registry.valid(Hierarchy::SelectedEntity))
+					Hierarchy::SelectedEntity = Chroma::ENTITY_NULL;
+
+				//Chroma::ScriptEngineRegistry::RegisterAll();
+				Chroma::MonoScripting::SetDeltaTime(0.f, 0.f);
+				Chroma::MonoScripting::SetSceneContext(EditorApp::CurrentScene);
+				//auto view = EditorApp::CurrentScene->Registry.view<Chroma::CSharpScript>();
+				//for (Chroma::EntityID entity : view)
+				//{
+				//	auto& script = view.get<Chroma::CSharpScript>(entity);
+				//	auto entityObj = Chroma::Entity(entity, EditorApp::CurrentScene);
+				//	Chroma::MonoScripting::InitScriptEntity(entityObj);
+				//}
+				//auto spriteView = EditorApp::CurrentScene->Registry.view<Chroma::SpriteRenderer>();
+				//for (Chroma::EntityID e : spriteView)
+				//{
+				//	auto& spriteRenderer = spriteView.get<Chroma::SpriteRenderer>(e);
+				//	spriteRenderer.SetSpriteOrigin(spriteRenderer.GetSpriteOrigin());
+				//}
+
 				EditorApp::SceneRunning = false;
 				EditorApp::ScenePaused = false;
 					
@@ -199,36 +194,30 @@ namespace Polychrome
 			ImGui::PushItemFlag(ImGuiItemFlags_Disabled, !EditorApp::SceneRunning);
 			if (ImGui::Button(ICON_FK_UNDO))
 			{
-				Chroma::Scene* out = new Chroma::Scene();
-				if (Chroma::Scene::Deserialize(out, clone))
-				{
-					delete EditorApp::CurrentScene;
-					clone.clear();
-					EditorApp::CurrentScene = out;
-					if (!EditorApp::CurrentScene->Registry.valid(Hierarchy::SelectedEntity))
-						Hierarchy::SelectedEntity = Chroma::ENTITY_NULL;
-					Chroma::ScriptEngineRegistry::RegisterAll();
-					Chroma::MonoScripting::SetDeltaTime(0.f, 0.f);
-					Chroma::MonoScripting::SetSceneContext(EditorApp::CurrentScene);
-					auto view = EditorApp::CurrentScene->Registry.view<Chroma::CSharpScript>();
-					for (Chroma::EntityID entity : view)
-					{
-						auto& script = view.get<Chroma::CSharpScript>(entity);
-						auto entityObj = Chroma::Entity(entity, EditorApp::CurrentScene);
-						Chroma::MonoScripting::InitScriptEntity(entityObj);
-					}
-					auto spriteView = EditorApp::CurrentScene->Registry.view<Chroma::SpriteRenderer>();
-					for (Chroma::EntityID e : spriteView)
-					{
-						auto& spriteRenderer = spriteView.get<Chroma::SpriteRenderer>(e);
-						spriteRenderer.SetSpriteOrigin(spriteRenderer.GetSpriteOrigin());
-					}
-				}
-				else
-				{
-					delete out;
-				}
-				clone = EditorApp::CurrentScene->Serialize();
+				delete EditorApp::CurrentScene;
+				EditorApp::CurrentScene = clone;
+
+				if (!EditorApp::CurrentScene->Registry.valid(Hierarchy::SelectedEntity))
+					Hierarchy::SelectedEntity = Chroma::ENTITY_NULL;
+
+				//Chroma::ScriptEngineRegistry::RegisterAll();
+				Chroma::MonoScripting::SetDeltaTime(0.f, 0.f);
+				Chroma::MonoScripting::SetSceneContext(EditorApp::CurrentScene);
+				//auto view = EditorApp::CurrentScene->Registry.view<Chroma::CSharpScript>();
+				//for (Chroma::EntityID entity : view)
+				//{
+				//	auto& script = view.get<Chroma::CSharpScript>(entity);
+				//	auto entityObj = Chroma::Entity(entity, EditorApp::CurrentScene);
+				//	Chroma::MonoScripting::InitScriptEntity(entityObj);
+				//}
+				//auto spriteView = EditorApp::CurrentScene->Registry.view<Chroma::SpriteRenderer>();
+				//for (Chroma::EntityID e : spriteView)
+				//{
+				//	auto& spriteRenderer = spriteView.get<Chroma::SpriteRenderer>(e);
+				//	spriteRenderer.SetSpriteOrigin(spriteRenderer.GetSpriteOrigin());
+				//}
+
+				clone = EditorApp::CurrentScene->Copy();
 				EditorApp::CurrentScene->Load();
 				EditorApp::CurrentScene->Init();
 
@@ -811,6 +800,7 @@ namespace Polychrome
 	{
 		return viewportHovered;
 	}
+
 	ImVec2 Viewport::GetViewportMousePos()
 	{
 		return viewportMousePos;

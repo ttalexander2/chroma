@@ -9,6 +9,7 @@
 #include <Chroma/Renderer/UniformBuffer.h>
 #include <Chroma/Systems/SpriteRendererSystem.h>
 #include "EditorCamera.h"
+#include <imgui.h>
 
 
 #define CHROMA_EDITOR

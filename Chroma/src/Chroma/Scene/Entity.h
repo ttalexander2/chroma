@@ -1,6 +1,5 @@
 #pragma once
 
-#include "ECS.h"
 #include "Scene.h"
 #include "spdlog/fmt/ostr.h"
 #include "Inspectable.h"
@@ -10,7 +9,7 @@ namespace Chroma
 
 	class Bindings;
 
-	class Entity : public Inspectable
+	class Entity
 	{
 	public:
 		Entity() = default;
@@ -23,8 +22,6 @@ namespace Chroma
 		const bool Valid() const;
 
 		std::string ToPrefab();
-
-		const std::string ClassName() const override { return "Entity"; }
 
 		std::string GetName();
 

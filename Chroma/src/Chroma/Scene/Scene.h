@@ -5,7 +5,6 @@
 #include <string>
 
 #include "Chroma/Core/Core.h"
-#include "ECS.h"
 #include "Chroma/Core/Time.h"
 #include "Component.h"
 
@@ -30,7 +29,6 @@ namespace Chroma
 	//This entire class is a template-caused mess
 	class Scene
 	{
-		friend class ECS;
 	public:
 		std::string Name = "Scene";
 
@@ -39,6 +37,8 @@ namespace Chroma
 		Scene();
 		Scene(const Scene&) {}
 		~Scene() = default;
+
+		Scene* Copy();
 
 		Entity NewEntity();
 		Entity NewChild(Entity id);
@@ -84,54 +84,90 @@ namespace Chroma
 			Systems.push_back(system);
 		}
 
+		template <ComponentType T>
+		static void RegisterComponent()
+		{
+			StringHash hash = T::GetTypeInfoStatic()->GetType();
+			if (s_ComponentAdd.find(hash) != s_ComponentAdd.end())
+			{
+				CHROMA_CORE_WARN("Component [{}] already registered!", T::GetTypeNameStatic());
+				return;
+			}
+			const TypeInfo* type = T::GetTypeInfoStatic();
+			s_Types.push_back(type);
+
+			s_ComponentAdd[hash] = [](EntityID id, entt::registry* registry)
+			{
+				registry->emplace<T>(id, id);
+				return registry->try_get<T>(id);
+			};
+
+			s_ComponentHas[hash] = [](EntityID id, entt::registry* registry)
+			{
+				return registry->try_get<T>(id) != nullptr;
+			};
+
+			s_ComponentGet[hash] = [](EntityID id, entt::registry* registry)
+			{
+				return registry->try_get<T>(id);
+			};
+
+			s_ComponentRemove[hash] = [](EntityID id, entt::registry* registry)
+			{
+				registry->erase<T>(id);
+			};
+
+			s_CopyComponent[hash] = [](EntityID id, entt::registry* dst, entt::registry* src)
+			{
+				dst->emplace<T>(id, src->get<T>(id));
+			};
+		}
+
+		template <ComponentType T>
+		static bool IsComponentRegistered()
+		{
+			StringHash hash = T::GetTypeInfoStatic()->GetType();
+			return s_ComponentAdd.find(hash) != s_ComponentAdd.end();
+		}
+
+		static bool IsComponentRegistered(const std::string& component_name)
+		{
+			StringHash hash = StringHash::Hash(component_name.c_str());
+			return s_ComponentAdd.contains(hash);
+
+		}
+
+		static std::list<const TypeInfo*> GetComponentTypes();
+
 
 		template<ComponentType T>
 		T& AddComponent(EntityID id)
 		{
-			if (!ECS::IsComponentRegistered<T>())
-			{
-				ECS::RegisterComponent<T>();
-			}
-			
-			auto& comp = Registry.emplace<T>(id);
+			auto& comp = Registry.emplace<T>(id, id);
 			return comp;
 		}
 
 		Component* AddComponent(const std::string& component, EntityID entity)
 		{
-			return ECS::AddComponent(component, entity, &Registry);
+			StringHash hash = StringHash::Hash(component.c_str());
+			if (!s_ComponentAdd.contains(hash))
+				return nullptr;
+			return s_ComponentAdd[hash](entity, &Registry);
 		}
 
 		template<ComponentType T>
 		T& GetComponent(EntityID id)
 		{
-			return Registry.get_or_emplace<T>(id);
+			return Registry.get_or_emplace<T>(id, id);
 		}
 
 		Component* GetComponent(const std::string& component, EntityID entity)
 		{
-			return ECS::GetComponent(component, entity, &Registry);
+			StringHash hash = StringHash::Hash(component.c_str());
+			if (!s_ComponentGet.contains(hash))
+				return nullptr;
+			return s_ComponentGet[hash](entity, &Registry);
 		}
-
-		int GetComponentCount(EntityID entity)
-		{
-			ECS::GetComponentCount(entity, &Registry);
-		}
-
-		/*
-		template<ComponentType T>
-		std::vector<ComponentRef<T>> GetComponents(EntityID id)
-		{
-
-		}
-
-		template<ComponentType T>
-		std::vector<ComponentRef<T>> GetComponents(Entity id)
-		{
-			return GetComponents<T>((EntityID)id);
-		}
-
-		*/
 
 		template<ComponentType T>
 		bool HasComponent(EntityID id)
@@ -141,7 +177,10 @@ namespace Chroma
 
 		bool HasComponent(const std::string& component, EntityID entity)
 		{
-			return ECS::HasComponent(component, entity, &Registry);
+			StringHash hash = StringHash::Hash(component.c_str());
+			if (!s_ComponentHas.contains(hash))
+				return false;
+			return s_ComponentHas[hash](entity, &Registry);
 		}
 
 		/*
@@ -166,7 +205,11 @@ namespace Chroma
 
 		size_t RemoveComponent(const std::string& component, EntityID entity)
 		{
-			return ECS::RemoveComponent(component, entity, &Registry);
+			StringHash hash = StringHash::Hash(component.c_str());
+			if (!s_ComponentHas.contains(hash))
+				return false;
+			s_ComponentRemove[hash](entity, &Registry);
+			return true;
 		}
 
 		std::vector<Component*> GetAllComponents(EntityID entity);
@@ -208,6 +251,14 @@ namespace Chroma
 		std::vector<System*> Systems;
 		std::vector<EntityID> EntityOrder;
 		EntityID PrimaryCameraEntity = ENTITY_NULL;
+
+		static std::unordered_map<StringHash, std::function<Component* (EntityID, entt::registry*)>> s_ComponentAdd;
+		static std::unordered_map<StringHash, std::function<Component* (EntityID, entt::registry*)>> s_ComponentGet;
+		static std::unordered_map<StringHash, std::function<bool(EntityID, entt::registry*)>> s_ComponentHas;
+		static std::unordered_map<StringHash, std::function<void(EntityID, entt::registry*)>> s_ComponentRemove;
+		static std::unordered_map<StringHash, std::function<void(EntityID, entt::registry*, entt::registry*)>> s_CopyComponent;
+
+		static std::list<const TypeInfo*> s_Types;
 
 		GUID ID;
 

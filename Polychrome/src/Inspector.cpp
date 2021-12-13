@@ -8,11 +8,10 @@
 #include "Fonts/IconsForkAwesome.h"
 #include <Chroma/ImGui/ImGuiDebugMenu.h>
 #include <Chroma/ImGui/ImGuiHelper.h>
-#include <Chroma/Scene/Inspectable.h>
 #include "EditorApp.h"
 #include "ComponentWidgets.h"
-#include "Chroma/Scene/ECS.h"
 #include <Chroma/Components/Tag.h>
+#include <Chroma/Components/CSharpScript.h>
 
 namespace Polychrome
 {
@@ -115,7 +114,7 @@ namespace Polychrome
 
 		for (Chroma::Component* c : comps)
 		{
-			if (!c->EditorVisible())
+			if (c->IsTypeOf<Chroma::Relationship>() || c->IsTypeOf<Chroma::Tag>())
 			{
 				i++;
 				continue;
@@ -136,8 +135,8 @@ namespace Polychrome
 				icon = ICON_FK_CARET_DOWN;
 
 			bool selected = true;
-			std::string comp_name(c->Name());
-			if (comp_name == Chroma::CSharpScript::StaticName())
+			std::string comp_name(c->GetTypeName());
+			if (comp_name == Chroma::CSharpScript::GetTypeNameStatic())
 			{
 				try
 				{
@@ -155,12 +154,12 @@ namespace Polychrome
 				c->editor_inspector_open = !c->editor_inspector_open;
 			}
 
-			if (comp_name != Chroma::Transform::StaticName() && ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
+			if (comp_name != Chroma::Transform::GetTypeNameStatic() && ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
 			{
 				ImGui::SetDragDropPayload("COMPONENT_REORDER", &i, sizeof(int));
 				ImGui::EndDragDropSource();
 			}
-			if (comp_name != Chroma::Transform::StaticName() && ImGui::BeginDragDropTarget())
+			if (comp_name != Chroma::Transform::GetTypeNameStatic() && ImGui::BeginDragDropTarget())
 			{
 				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("COMPONENT_REORDER"))
 				{
@@ -193,7 +192,20 @@ namespace Polychrome
 			//	c->editor_visible = !c->editor_visible;
 			//}
 
-			ImGui::SameLine(ImGui::GetWindowWidth() - 28);
+			
+
+			if (!c->IsTypeOf<Chroma::Transform>())
+			{
+				ImGui::SameLine(ImGui::GetWindowWidth() - 50);
+				bool enabled = c->IsEnabled();
+				ImGui::Checkbox(("##MENU_BAR_INSPECTOR_CHECKBOX_COMP" + std::to_string(unique)).c_str(), &enabled);
+				if (c->IsEnabled() != enabled)
+					c->SetEnabled(enabled);
+			}
+
+
+
+			ImGui::SameLine(ImGui::GetWindowWidth() - 30);
 
 
 			if (ImGui::Button((ICON_FK_COG "##MENU_BAR_INSPECTOR_BUTTON_" + std::to_string(unique)).c_str()))
@@ -205,11 +217,11 @@ namespace Polychrome
 
 			if (ImGui::BeginPopup(("##MENU_BAR_INSPECTOR_" + std::to_string(unique)).c_str()))
 			{
-				if (!c->IsTransform())
+				if (!c->IsTypeOf<Chroma::Transform>())
 				{
 					if (ImGui::MenuItem(("Delete##MENU_BAR_INSPECTOR_" + std::to_string(unique)).c_str()))
 					{
-						scene->RemoveComponent(c->Name(), Hierarchy::SelectedEntity);
+						scene->RemoveComponent(c->GetTypeName(), Hierarchy::SelectedEntity);
 					}
 				}
 
@@ -253,19 +265,17 @@ namespace Polychrome
 
 		if (ImGui::BeginPopup("##ENTITY_ADD_COMPONENT"))
 		{
-			auto names = Chroma::ECS::GetComponentNames();
-
-			for (auto& name : names)
+			for (auto name : Chroma::Scene::GetComponentTypes())
 			{
-				if (name == Chroma::Transform::StaticName() || name == Chroma::Tag::StaticName() || name == Chroma::Relationship::StaticName())
+				if (name->IsTypeOf<Chroma::Transform>() || name->IsTypeOf<Chroma::Tag>() || name->IsTypeOf<Chroma::Relationship>())
 					continue;
 				bool enabled = true;
-				if (scene->HasComponent(name, Hierarchy::SelectedEntity))
+				if (scene->HasComponent(name->GetTypeName(), Hierarchy::SelectedEntity))
 					enabled = false;
 
-				if (ImGui::MenuItem((name + "##ENTITY_ADD_COMPONENT").c_str(), "", false, enabled))
+				if (ImGui::MenuItem((name->GetTypeName() + "##ENTITY_ADD_COMPONENT").c_str(), "", false, enabled))
 				{
-					scene->AddComponent(name, Hierarchy::SelectedEntity);
+					scene->AddComponent(name->GetTypeName(), Hierarchy::SelectedEntity);
 				}
 			}
 			ImGui::EndPopup();

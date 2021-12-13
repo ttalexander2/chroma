@@ -9,6 +9,7 @@
 #include <Chroma/Scripting/ScriptEngineRegistry.h>
 #include "Build.h"
 #include <Chroma/IO/FileSystem.h>
+#include <Chroma/Components/CSharpScript.h>
 
 
 namespace Polychrome
