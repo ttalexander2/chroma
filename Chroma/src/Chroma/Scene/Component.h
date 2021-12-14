@@ -68,6 +68,9 @@ namespace Chroma
 		template<typename T>
 		inline bool IsTypeOf() const { return IsTypeOf(T::GetTypeInfoStatic()); }
 
+		template<typename T>
+		static bool IsOfTypeStatic() { return GetTypeStatic() == T::GetTypeStatic(); }
+
 		const inline bool Valid() const { return m_EntityID != ENTITY_NULL; }
 
 		const inline EntityID GetEntityID() const { return m_EntityID; }

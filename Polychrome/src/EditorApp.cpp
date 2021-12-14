@@ -231,7 +231,7 @@ namespace Polychrome
 
 			//CHROMA_CORE_TRACE("Selected: {}, Last: {}, Clear?: {}", Hierarchy::SelectedEntity, lastParticles, clearParticles);
 
-			if (clearParticles && lastParticles != Hierarchy::SelectedEntity && lastParticles != Chroma::ENTITY_NULL)
+			if (CurrentScene->Registry.valid(lastParticles) && CurrentScene->HasComponent<Chroma::ParticleEmitter>(lastParticles) && clearParticles && lastParticles != Hierarchy::SelectedEntity && lastParticles != Chroma::ENTITY_NULL)
 			{
 				auto& emitter = CurrentScene->GetComponent<Chroma::ParticleEmitter>(lastParticles);
 				for (Chroma::Particle& p : emitter.Particles)

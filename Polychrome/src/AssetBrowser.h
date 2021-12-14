@@ -13,10 +13,11 @@ namespace Polychrome
 		static void Draw();
 		static void HandleOpen(std::filesystem::path path);
 	private:
-		static void ParseFolder(std::filesystem::path path);
+		static bool ParseFolder(std::filesystem::path path);
 		static void FileClickPopup();
 		static void FolderClickPopup();
 		static void LoadFileIcon(std::filesystem::path path);
+		static void AssetBrowserCreatePopup();
 		//static std::map<std::filesystem::path, Chroma::Ref<Chroma::Texture2D>> Icons;
 	};
 }

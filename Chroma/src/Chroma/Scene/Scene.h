@@ -12,6 +12,7 @@
 #include "Chroma/Profiler/Instrumentor.h"
 #include <Chroma/Components/Camera.h>
 #include "World.h"
+#include "Chroma/Components/ParticleEmitter.h">
 
 namespace Polychrome
 {
@@ -98,6 +99,10 @@ namespace Chroma
 
 			s_ComponentAdd[hash] = [](EntityID id, entt::registry* registry)
 			{
+				if (T::GetTypeNameStatic() == "ParticleEmitter")
+				{
+					CHROMA_CORE_INFO("added particle emitter");
+				}
 				registry->emplace<T>(id, id);
 				return registry->try_get<T>(id);
 			};
@@ -158,7 +163,7 @@ namespace Chroma
 		template<ComponentType T>
 		T& GetComponent(EntityID id)
 		{
-			return Registry.get_or_emplace<T>(id, id);
+			return Registry.get<T>(id);
 		}
 
 		Component* GetComponent(const std::string& component, EntityID entity)
