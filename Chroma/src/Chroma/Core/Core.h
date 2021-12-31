@@ -47,8 +47,8 @@
 	#define CHROMA_ASSERT(check, ...) if(!(check)) { CHROMA_ERROR(__VA_ARGS__); CHROMA_DEBUGBREAK(); }
 	#define CHROMA_CORE_ASSERT(check, ...) if(!(check)) { CHROMA_CORE_ERROR(__VA_ARGS__); CHROMA_DEBUGBREAK(); }
 #else
-	#define CHROMA_ASSERT(...)
-	#define CHROMA_CORE_ASSERT(...)
+	#define CHROMA_ASSERT(check, ...) if(!(check)) { CHROMA_ERROR(__VA_ARGS__); }
+	#define CHROMA_CORE_ASSERT(check, ...)  if(!(check)) { CHROMA_CORE_ERROR(__VA_ARGS__); }
 #endif
 
 #define CHROMA_BIND_EVENT_FN(event_function) std::bind(&event_function, this, std::placeholders::_1)

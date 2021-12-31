@@ -32,11 +32,16 @@ namespace Chroma
 	
 	Application* Application::s_Instance = nullptr;
 
-	Application::Application(const std::string& title, unsigned int width, unsigned int height)
+	Application::Application(const std::string& title, unsigned int width, unsigned int height, bool child)
 	{
-		CHROMA_CORE_INFO("Chroma Engine v0.1");
-		CHROMA_CORE_ASSERT(!s_Instance, "Application already exists!");
-		s_Instance = this;
+
+		if (!child)
+		{
+			CHROMA_CORE_INFO("Chroma Engine v0.1");
+			CHROMA_CORE_ASSERT(!s_Instance, "Application already exists!");
+			s_Instance = this;
+		}
+
 		WindowProps props;
 		props.Title = title;
 		props.Width = width;
@@ -49,20 +54,23 @@ namespace Chroma
 		m_ImGuiLayer = new ImGuiLayer();
 
 		Audio::Init();
+		if (!child)
+		{
+			MonoScripting::Init("Chroma.Mono.dll");
+			ScriptEngineRegistry::RegisterAll();
 
-		MonoScripting::Init("Chroma.Mono.dll");
-		ScriptEngineRegistry::RegisterAll();
+			Scene::RegisterComponent<AudioSource>();
+			Scene::RegisterComponent<BoxCollider>();
+			Scene::RegisterComponent<Camera>();
+			Scene::RegisterComponent<CircleCollider>();
+			Scene::RegisterComponent<CSharpScript>();
+			Scene::RegisterComponent<ParticleEmitter>();
+			Scene::RegisterComponent<Relationship>();
+			Scene::RegisterComponent<SpriteRenderer>();
+			Scene::RegisterComponent<Tag>();
+			Scene::RegisterComponent<Transform>();
+		}
 
-		Scene::RegisterComponent<AudioSource>();
-		Scene::RegisterComponent<BoxCollider>();
-		Scene::RegisterComponent<Camera>();
-		Scene::RegisterComponent<CircleCollider>();
-		Scene::RegisterComponent<CSharpScript>();
-		Scene::RegisterComponent<ParticleEmitter>();
-		Scene::RegisterComponent<Relationship>();
-		Scene::RegisterComponent<SpriteRenderer>();
-		Scene::RegisterComponent<Tag>();
-		Scene::RegisterComponent<Transform>();
 
 
 	}
@@ -140,6 +148,8 @@ namespace Chroma
 
 			Audio::Update();
 		}
+
+		this->OnDestroy();
 
 		m_ImGuiLayer->OnDetach();
 		Audio::Shutdown();

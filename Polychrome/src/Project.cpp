@@ -171,7 +171,7 @@ namespace Polychrome
 				if (extension == ".ase" || extension == ".aseprite" || extension == ".png" || extension == ".jpg")
 				{
 					Chroma::AssetManager::LoadSprite(file.path().lexically_relative(Chroma::AssetManager::AssetDirectory).string());
-					CHROMA_CORE_INFO("file: {}", file.path().string());
+					//CHROMA_CORE_INFO("file: {}", file.path().string());
 				}
 			}
 		}
@@ -197,9 +197,9 @@ namespace Polychrome
 				spriteRenderer.SetSpriteOrigin(spriteRenderer.GetSpriteOrigin());
 		}
 
-		CHROMA_CORE_WARN("Mounted: {}", Chroma::AssetManager::AssetDirectory);
+		//CHROMA_CORE_WARN("Mounted: {}", Chroma::AssetManager::AssetDirectory);
 		//CHROMA_CORE_WARN("Mounted: {}", std::filesystem::path(Chroma::AssetManager::AssetDirectory).parent_path().string() + "\\TestArchive.7z");
-		CHROMA_CORE_WARN("");
+		//CHROMA_CORE_WARN("");
 
 		try
 		{
@@ -213,10 +213,10 @@ namespace Polychrome
 			CHROMA_CORE_ERROR("{}", e.what());
 		}
 
-		for (auto& path : Chroma::FileSystem::GetFileListRecursive(""))
-		{
-			CHROMA_CORE_WARN("{}", path);
-		}
+		//for (auto& path : Chroma::FileSystem::GetFileListRecursive(""))
+		//{
+		//	CHROMA_CORE_WARN("{}", path);
+		//}
 
 
 		return true;

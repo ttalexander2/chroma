@@ -32,6 +32,7 @@ namespace Chroma
 
 		for (auto entity : m_Scene->Registry.view<Chroma::Transform, Chroma::BoxCollider>())
 		{
+
 			auto collider = m_Scene->Registry.try_get<Chroma::BoxCollider>(entity);
 			if (!collider->IsEnabled())
 				continue;

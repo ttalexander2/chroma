@@ -41,6 +41,22 @@ namespace Chroma
 			virtual void NOTYPEINFO() override {} \
 		public: \
 
+#define CHROMA_ABSTRACT_COMPONENT(typeName, baseTypeName) \
+			using ClassName = typeName; \
+			using BaseClass = baseTypeName; \
+			typeName() = default; \
+			typeName(EntityID id) : baseTypeName(id) {} \
+			typeName(const typeName&) = default; \
+			virtual StringHash GetType() const override { return GetTypeInfoStatic()->GetType(); } \
+			virtual const std::string& GetTypeName() const override { return GetTypeInfoStatic()->GetTypeName(); } \
+			virtual const TypeInfo* GetTypeInfo() const override { return GetTypeInfoStatic(); } \
+			virtual const size_t GetTypeSize() const override { return GetTypeSizeStatic(); } \
+			static StringHash GetTypeStatic() { return GetTypeInfoStatic()->GetType(); } \
+			static const std::string& GetTypeNameStatic() { return GetTypeInfoStatic()->GetTypeName(); } \
+			static const TypeInfo* GetTypeInfoStatic () { static const TypeInfo typeInfoStatic(#typeName, baseTypeName::GetTypeInfoStatic()); return &typeInfoStatic; } \
+			static const size_t GetTypeSizeStatic() { return sizeof(#typeName); } \
+		public: \
+
 
 	struct Component
 	{
@@ -67,6 +83,9 @@ namespace Chroma
 		bool IsTypeOf(StringHash type) const;
 		template<typename T>
 		inline bool IsTypeOf() const { return IsTypeOf(T::GetTypeInfoStatic()); }
+
+		template<typename T>
+		static bool IsOfTypeStatic() { return GetTypeStatic() == T::GetTypeStatic(); }
 
 		const inline bool Valid() const { return m_EntityID != ENTITY_NULL; }
 
@@ -98,7 +117,7 @@ namespace Chroma
 
 
 		EntityID m_EntityID;
-		bool m_Enabled;
+		bool m_Enabled = true;
 
 
 		/// @brief Whether the component is open in the editor inspector.

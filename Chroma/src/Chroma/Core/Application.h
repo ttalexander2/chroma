@@ -14,6 +14,7 @@
 #include "Chroma/Renderer/VertexArray.h"
 #include "Chroma/Scene/Scene.h"
 
+
 namespace Chroma
 {
 	/// @brief Main class for a Game in the Chroma Engine.
@@ -36,7 +37,7 @@ namespace Chroma
 		/// @param title Window Title.
 		/// @param width Width of the window.
 		/// @param height Height of the window.
-		Application(const std::string& title = "Chroma Engine", unsigned int width = 1920, unsigned int height = 1080);
+		Application(const std::string& title = "Chroma Engine", unsigned int width = 1920, unsigned int height = 1080, bool child = false);
 		virtual ~Application();
 
 		virtual void BindScripts() {};
@@ -85,6 +86,8 @@ namespace Chroma
 		/// @param e Current event.
 		virtual void OnEvent(Event& e) {};
 
+		virtual void OnDestroy() {};
+
 		/// @brief Get the current window.
 		Window& GetWindow() { return *m_Window; }
 
@@ -99,10 +102,13 @@ namespace Chroma
 		/// Alternatively Time can be accessed statically.
 		Time GetTime() { return m_Time; }
 
+		inline const bool IsRunning() const { return m_Running; }
+
 		void Stop();
 		
 
 	private:
+
 
 		static Application* s_Instance;
 
