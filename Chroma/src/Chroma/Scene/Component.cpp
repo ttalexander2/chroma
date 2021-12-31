@@ -14,6 +14,7 @@ namespace Chroma
 	{
 		out << YAML::Key << GetTypeInfo()->GetTypeName();
 		out << YAML::Value << YAML::BeginMap;
+		out << YAML::Key << "Enabled" << YAML::Value << m_Enabled;
 	}
 
 	/// @brief Function to end the serialization process for the component.

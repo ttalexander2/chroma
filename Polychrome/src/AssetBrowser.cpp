@@ -27,7 +27,7 @@ namespace Polychrome
 	std::filesystem::path active_dir;
 	std::filesystem::path AssetBrowser::Selected;
 	std::filesystem::path context_item;
-	static std::map<std::filesystem::path, Chroma::Ref<Chroma::Texture2D>> Icons;
+	std::map<std::filesystem::path, Chroma::Ref<Chroma::Texture2D>> AssetBrowser::Icons;
 	bool asset_folder_open = true;
 	float icon_size = 80;
 	std::string last_search;

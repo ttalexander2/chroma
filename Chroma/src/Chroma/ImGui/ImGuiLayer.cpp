@@ -26,7 +26,8 @@ namespace Chroma
 	void ImGuiLayer::OnAttach()
 	{
 		IMGUI_CHECKVERSION();
-		ImGui::CreateContext();
+		ImGuiContext* ctx = ImGui::CreateContext();
+		ImGui::SetCurrentContext(ctx);
 		
 		ImGuiIO& io = ImGui::GetIO(); (void)io;
 		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;   //Enable keyboard controls

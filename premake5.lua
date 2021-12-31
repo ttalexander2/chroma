@@ -204,6 +204,7 @@ project "Polychrome"
         "Chroma/src",
         "Chroma/third_party/spdlog/include",
         "%{IncludeDir.glm}",
+        "%{IncludeDir.Glad}",
         "%{IncludeDir.ImGui}",
         "%{IncludeDir.ImGui}/misc/cpp",
         "%{IncludeDir.entt}",

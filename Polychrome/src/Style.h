@@ -87,12 +87,12 @@ namespace ImGui
                                                           "PurpleInverse",
                                                           "LightGreenInverse",
                                                           "DesignInverse" };
-    const char** GetDefaultStyleNames()
+    static const char** GetDefaultStyleNames()
     {
         return &DefaultStyleNames[0];
     }
 
-    void ChangeStyleColors(ImGuiStyle& style, float satThresholdForInvertingLuminance, float shiftHue)
+    static void ChangeStyleColors(ImGuiStyle& style, float satThresholdForInvertingLuminance, float shiftHue)
     {
         if (satThresholdForInvertingLuminance >= 1.f && shiftHue == 0.f)
             return;

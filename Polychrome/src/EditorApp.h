@@ -10,6 +10,7 @@
 #include <Chroma/Systems/SpriteRendererSystem.h>
 #include "EditorCamera.h"
 #include <imgui.h>
+#include <Chroma/Events/Event.h>
 
 
 #define CHROMA_EDITOR
@@ -29,6 +30,8 @@ namespace Polychrome
 		void Draw(Chroma::Time time) override;
 		void ImGuiDraw(Chroma::Time time) override;
 
+		void OnDestroy() override;
+
 		bool OnMouseScrolled(Chroma::MouseScrolledEvent& e);
 
 		void NewScene();
@@ -37,6 +40,8 @@ namespace Polychrome
 		void SaveScene();
 
 		static void DrawSelectionMask(Chroma::Time time);
+
+		static EditorApp* GetEditorApp() { return (EditorApp*)&Get(); }
 
 		static EditorCamera Camera;
 
@@ -85,6 +90,20 @@ namespace Polychrome
 		Chroma::Ref<Chroma::Shader> m_HighlightShader;
 
 		Chroma::SpriteRendererSystem sprite_system;
+
+		using EventCallbackFn = std::function<void(Chroma::Event&)>;
+
+		struct WindowData
+		{
+			/// @brief Window titlebar title.
+			std::string Title;
+			/// @brief Size of the window.
+			unsigned int Width, Height;
+			/// @brief Whether the window has VSync
+			bool VSync;
+			/// @brief Callback function for window events.
+			EventCallbackFn EventCallback;
+		};
 	};
 }
 
