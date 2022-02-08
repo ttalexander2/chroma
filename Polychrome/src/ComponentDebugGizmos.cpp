@@ -7,6 +7,7 @@
 #include <math.h>
 #include <Chroma/Components/BoxCollider.h>
 #include <Chroma/Components/ParticleEmitter.h>
+#include <Chroma/Assets/AssetManager.h>
 #include <imgui.h>
 
 namespace Polychrome
@@ -90,9 +91,9 @@ namespace Polychrome
 
 			const Math::vec2& origin = spriteRenderer.GetSpriteOriginVector();
 
-			if (Chroma::AssetManager::HasSprite(spriteRenderer.GetSpriteID()))
+			if (Chroma::AssetManager::Exists(spriteRenderer.GetSpriteID()))
 			{
-				Chroma::Ref<Chroma::Sprite> s = Chroma::AssetManager::GetSprite(spriteRenderer.GetSpriteID());
+				Chroma::Ref<Chroma::Sprite> s = Chroma::AssetManager::Get<Chroma::Sprite>(spriteRenderer.GetSpriteID());
 				int w = s->Frames[spriteRenderer.GetCurrentFrame()].Texture->GetWidth();
 				int h = s->Frames[spriteRenderer.GetCurrentFrame()].Texture->GetHeight();
 				if (!relationship.IsChild())

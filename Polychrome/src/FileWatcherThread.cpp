@@ -26,9 +26,9 @@ namespace Polychrome
 
 	void Polychrome::FileWatcherThread::SetWatch(const std::string& asset_dir)
 	{
-		//CHROMA_CORE_INFO("{}", asset_dir);
+		CHROMA_CORE_INFO("{}", asset_dir);
 		std::string watch_dir = std::filesystem::path(asset_dir).parent_path().string();
-		//CHROMA_CORE_INFO("{}", watch_dir);
+		CHROMA_CORE_INFO("{}", watch_dir);
 
 
 
@@ -49,12 +49,12 @@ namespace Polychrome
 				{
 				case FileStatus::created:
 					file_queue.enqueue([file, root]() {
-						std::string relative = std::filesystem::path(file).parent_path().lexically_relative(root).string();
-						//CHROMA_CORE_TRACE("File Created: {}", relative);
+						std::string relative = std::filesystem::path(file).lexically_relative(std::filesystem::path(root).parent_path()).string();
+						CHROMA_CORE_TRACE("File Created: {}", relative);
 						std::string extension = std::filesystem::path(file).extension().string();
 						if (extension == ".ase" || extension == ".aseprite" || extension == ".png" || extension == ".jpg")
 						{
-							Chroma::AssetManager::LoadSprite(relative);
+							Chroma::AssetManager::Load(relative);
 						}
 						else if (extension == ".cs")
 						{
@@ -75,17 +75,17 @@ namespace Polychrome
 				case FileStatus::modified:
 					file_queue.enqueue([file, root]() {
 						std::string extension = std::filesystem::path(file).extension().string();
-						std::string relative = std::filesystem::path(file).parent_path().lexically_relative(root).string();
-						//CHROMA_CORE_TRACE("File Modified: {}", relative);
+						std::string relative = std::filesystem::path(file).lexically_relative(std::filesystem::path(root).parent_path()).string();
+						CHROMA_CORE_TRACE("File Modified: {}", relative);
 						if (extension == ".ase" || extension == ".aseprite" || extension == ".png" || extension == ".jpg")
 						{
-							if (Chroma::AssetManager::HasSprite(relative))
+							if (Chroma::AssetManager::Exists(relative))
 							{
-								Chroma::AssetManager::GetSprite(relative)->Reload();
+								Chroma::AssetManager::Reload(relative);
 							}
 							else
 							{
-								Chroma::AssetManager::LoadSprite(relative);
+								Chroma::AssetManager::Load(relative);
 							}
 						}
 						else if (extension == ".cs")
@@ -108,7 +108,7 @@ namespace Polychrome
 				case FileStatus::erased:
 					file_queue.enqueue([file, root]() {
 						std::string relative = std::filesystem::path(file).parent_path().lexically_relative(root).string();
-						//CHROMA_CORE_TRACE("File Erased: {}", relative);
+						CHROMA_CORE_TRACE("File Erased: {}", relative);
 						std::string extension = std::filesystem::path(relative).extension().string();
 						if (extension == ".ase" || extension == ".png" || extension == ".jpg")
 						{

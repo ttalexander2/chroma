@@ -14,6 +14,7 @@
 #include <Chroma/Scripting/MonoScripting.h>
 #include <Chroma/Components/SpriteRenderer.h>
 #include <Chroma/Components/ParticleEmitter.h>
+#include <Chroma/Assets/AssetManager.h>
 
 #include "EditorApp.h"
 #include "Hierarchy.h"
@@ -38,13 +39,13 @@ namespace Polychrome
 	void ComponentWidgets::Draw(Chroma::Component* c)
 	{
 		if (c->IsTypeOf<Chroma::Transform>()) DrawTransform(c);
-		else if (c->IsTypeOf<Chroma::CSharpScript>()) DrawCSharpScript(c);
-		else if (c->IsTypeOf<Chroma::AudioSource>()) DrawAudioSource(c);
-		else if (c->IsTypeOf<Chroma::BoxCollider>()) DrawBoxCollider(c);
-		else if (c->IsTypeOf<Chroma::CircleCollider>()) DrawCircleCollider(c);
-		else if (c->IsTypeOf<Chroma::SpriteRenderer>()) DrawSpriteRenderer(c);
-		else if (c->IsTypeOf<Chroma::Camera>()) DrawCameraComponent(c);
-		else if (c->IsTypeOf<Chroma::ParticleEmitter>()) DrawParticleEmitter(c);
+		if (c->IsTypeOf<Chroma::CSharpScript>()) DrawCSharpScript(c);
+		if (c->IsTypeOf<Chroma::AudioSource>()) DrawAudioSource(c);
+		if (c->IsTypeOf<Chroma::BoxCollider>()) DrawBoxCollider(c);
+		if (c->IsTypeOf<Chroma::CircleCollider>()) DrawCircleCollider(c);
+		if (c->IsTypeOf<Chroma::SpriteRenderer>()) DrawSpriteRenderer(c);
+		if (c->IsTypeOf<Chroma::Camera>()) DrawCameraComponent(c);
+		if (c->IsTypeOf<Chroma::ParticleEmitter>()) DrawParticleEmitter(c);
 	}
 
 	void ComponentWidgets::DrawTransform(Chroma::Component* c)
@@ -206,6 +207,46 @@ namespace Polychrome
 	void ComponentWidgets::DrawBoxCollider(Chroma::Component* c)
 	{
 		Chroma::BoxCollider* b = reinterpret_cast<Chroma::BoxCollider*>(c);
+
+		std::vector<std::string> names;
+		for (int i = 0; i < 32; i++)
+		{
+			names.push_back("Layer " + std::to_string(i + 1));
+		}
+
+		if (DrawComponentValueCollapsible(c, "Collision Layer"))
+		{
+			if (ImGui::BeginListBox("##layer_list_box", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
+			{
+				for (int i = 0; i < 32; i++)
+				{
+					bool is_selected = (b->m_Layer >> i) & 1U;
+					if (ImGui::Selectable(names[i].c_str(), &is_selected))
+					{
+						b->m_Layer ^= 1UL << i;
+					}
+				}
+				ImGui::EndListBox();
+			}
+		}
+
+		if (DrawComponentValueCollapsible(c, "Collision Mask"))
+		{
+			if (ImGui::BeginListBox("##mask_list_box", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
+			{
+				for (int i = 0; i < 32; i++)
+				{
+					bool is_selected = (b->m_Mask >> i) & 1U;
+					if (ImGui::Selectable(names[i].c_str(), &is_selected))
+					{
+						b->m_Mask ^= 1UL << i;
+					}
+				}
+				ImGui::EndListBox();
+			}
+		}
+
+
 
 		DrawComponentValue(c, "Min");
 		{
@@ -559,7 +600,7 @@ namespace Polychrome
 
 		if (ImGui::BeginCombo("##Sprite", spr->GetSpriteID().c_str()))
 		{
-			for (auto& [id, sprite] : *Chroma::AssetManager::GetSprites())
+			for (auto sprite : Chroma::AssetManager::View<Chroma::Sprite>())
 			{
 				bool selected = (spr->GetSpriteID() == sprite->GetPath());
 				if (ImGui::Selectable(sprite->GetPath().c_str(), &selected))
@@ -589,9 +630,9 @@ namespace Polychrome
 
 
 
-		if (Chroma::AssetManager::HasSprite(spr->GetSpriteID()))
+		if (Chroma::AssetManager::Exists(spr->GetSpriteID()))
 		{
-			Chroma::Ref<Chroma::Sprite> s = Chroma::AssetManager::GetSprite(spr->GetSpriteID());
+			Chroma::Ref<Chroma::Sprite> s = Chroma::AssetManager::Get<Chroma::Sprite>(spr->GetSpriteID());
 
 			DrawComponentValue(c, "Size");
 			ImGui::Text(("[" + std::to_string(s->Frames[spr->GetCurrentFrame()].Texture->GetWidth()) + ", " + std::to_string(s->Frames[spr->GetCurrentFrame()].Texture->GetHeight()) + "]").c_str());

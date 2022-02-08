@@ -5,41 +5,15 @@
 #include <Chroma/Images/Color.h>
 #include <Chroma/Images/Image.h>
 #include <Chroma/IO/Endian.h>
-
-#include <fstream>
+#include <Chroma/IO/File.h>
+#include <Chroma/IO/FileSystem.h>
 
 namespace Chroma
 {
 	// Adapted from https://github.com/NoelFB/blah/
 
-	/// @brief Helper function to read data from stream.
-	/// @tparam T Type of data to read from stream. T must be arithmetic.
-	/// @param stream Stream to read from.
-	/// @param endian Endianness the data should be.
-	/// @return Returns object read.
-	/// 
-	/// Read function will swap endianess if data expected doesn't match system.
-	template<typename T, typename = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
-	T read(std::fstream& stream, Endian endian)
-	{
-		T result;
-		stream.read((char*)&result, sizeof(T));
-		if (!Chroma::SystemIsEndian(endian))
-			Chroma::SwapEndian(&result);
-		return result;
-	}
 
-	/// @brief Helper function to read data from stream.
-	/// @tparam T Type of data to read from stream. T must be arithmetic.
-	/// @param stream Stream to read from.
-	/// @return Returns object read
-	template<typename T, typename = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
-	T read(std::fstream& stream)
-	{
-		T result;
-		stream.read((char*)&result, sizeof(T));
-		return result;
-	}
+
 
 	/// @brief Aseprite object, holding all data parsed from an `.ase` file.
 	///
@@ -218,7 +192,7 @@ namespace Chroma
 
 		/// @brief Load an Aseprite from a byte stream.
 		/// @param stream Stream to the Aseprite data.
-		Aseprite(std::fstream& stream);
+		Aseprite(File& stream);
 
 		/// @brief Construct an Aseprite object from an existing Aseprite object.
 		/// @param src Aseprite object to copy.
@@ -252,37 +226,37 @@ namespace Chroma
 
 		/// @brief Parse a `.ase` file from a stream.
 		/// @param stream Stream to parse.
-		void parse(std::fstream& stream);
+		void parse(File& stream);
 
 		/// @brief Parse an aseprite layer chunk from a stream.
 		/// @param stream Stream to parse.
 		/// @param frame Frame number.
-		void parse_layer(std::fstream& stream, int frame);
+		void parse_layer(File& stream, int frame);
 
 		/// @brief Parse an aseprite cel chunk from a stream.
 		/// @param stream Stream to parse.
 		/// @param frame Frame number.
-		void parse_cel(std::fstream& stream, int frame, size_t maxPosition);
+		void parse_cel(File& stream, int frame, size_t maxPosition);
 
 		/// @brief Parse an aseprite pallete chunk from a stream.
 		/// @param stream Stream to parse.
 		/// @param frame Frame number.
-		void parse_palette(std::fstream& stream, int frame);
+		void parse_palette(File& stream, int frame);
 
 		/// @brief Parse an aseprite pallete chunk from a stream.
 		/// @param stream Stream to parse.
 		/// @param frame Frame number.
-		void parse_user_data(std::fstream& stream, int frame);
+		void parse_user_data(File& stream, int frame);
 
 		/// @brief Parse an aseprite tag chunk from a stream.
 		/// @param stream Stream to parse.
 		/// @param frame Frame number.
-		void parse_tag(std::fstream& stream, int frame);
+		void parse_tag(File& stream, int frame);
 
 		/// @brief Parse an aseprite slice chunk from a stream.
 		/// @param stream Stream to parse.
 		/// @param frame Frame number.
-		void parse_slice(std::fstream& stream, int frame);
+		void parse_slice(File& stream, int frame);
 
 		/// @brief Render a single cel and blend it with the cells beneath it.
 		/// @param stream Stream to parse.

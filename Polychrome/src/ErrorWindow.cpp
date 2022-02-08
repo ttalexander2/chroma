@@ -1,5 +1,6 @@
 #include "ErrorWindow.h"
 #include "Build.h"
+#include "Project.h"
 
 #include <imgui.h>
 #include <imgui_stdlib.h>
@@ -7,6 +8,7 @@
 #include "Fonts/IconsForkAwesome.h"
 #include <filesystem>
 #include <Chroma/Assets/AssetManager.h>
+
 
 namespace Polychrome
 {
@@ -140,7 +142,7 @@ namespace Polychrome
 					ImGui::Selectable("##select", &is_selected, ImGuiSelectableFlags_SpanAllColumns);
 					if (is_selected && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left) && ImGui::IsItemHovered())
 					{
-						system(("code " + std::filesystem::path(Chroma::AssetManager::AssetDirectory).parent_path().string() + " -g " + error.file + ":" + std::to_string(error.line) + ":" + std::to_string(error.offset)).c_str());
+						system(("code " + std::filesystem::path(Project::AssetDirectory).parent_path().string() + " -g " + error.file + ":" + std::to_string(error.line) + ":" + std::to_string(error.offset)).c_str());
 					}
 
 					ImGui::SameLine();
@@ -171,7 +173,7 @@ namespace Polychrome
 					ImGui::TableNextColumn();
 					ImGui::Text(error.message.c_str());
 					ImGui::TableNextColumn();
-					ImGui::Text(std::filesystem::relative(error.file, Chroma::AssetManager::AssetDirectory).string().c_str());
+					ImGui::Text(std::filesystem::relative(error.file, Project::AssetDirectory).string().c_str());
 					ImGui::TableNextColumn();
 					ImGui::Text(("(" + std::to_string(error.line) + "," + std::to_string(error.offset) + ")").c_str());
 					ImGui::PopID();

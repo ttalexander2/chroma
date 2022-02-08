@@ -19,6 +19,8 @@ namespace Polychrome
 	std::string Project::Name;
 	std::string Project::Path;
 
+	std::string Project::AssetDirectory = "\\Assets\\";
+
 	bool Project::CreateProject(const std::string& name, const std::string& directory, const std::string& starting_scene)
 	{
 		if (!std::filesystem::exists(directory))
@@ -105,7 +107,7 @@ namespace Polychrome
 				}
 				if (project["AssetDirectory"])
 				{
-					Chroma::AssetManager::AssetDirectory = std::filesystem::path(path).parent_path().string() + "\\" + project["AssetDirectory"].as<std::string>();
+					AssetDirectory = std::filesystem::path(path).parent_path().string() + "\\" + project["AssetDirectory"].as<std::string>();
 				}
 				if (project["StartingScene"])
 				{
@@ -124,17 +126,43 @@ namespace Polychrome
 		}
 		stream.close();
 
+		try
+		{
+			Chroma::FileSystem::UnmountAll();
+			Chroma::FileSystem::Mount(AssetDirectory);
+			//Chroma::FileSystem::Mount(std::filesystem::path(Chroma::AssetManager::AssetDirectory).parent_path().string() + "\\TestArchive.7z");
+
+		}
+		catch (Chroma::FileSystem::FileSystemException e)
+		{
+			CHROMA_CORE_ERROR("{}", e.what());
+		}
+
+		for (auto& file : Chroma::FileSystem::RecursiveFileIterator(""))
+		{
+			//CHROMA_CORE_INFO("{}", file.path().string());
+			if (Chroma::FileSystem::HasFileExtension(file, ".ase") || Chroma::FileSystem::HasFileExtension(file, ".aseprite") || Chroma::FileSystem::HasFileExtension(file, ".png") || Chroma::FileSystem::HasFileExtension(file, ".jpg"))
+			{
+				Chroma::AssetManager::Create<Chroma::Sprite>(file);
+				bool result = Chroma::AssetManager::Load(file);
+				if (!result)
+					CHROMA_CORE_ERROR("Failed to load {}", file);
+			}
+		}
+
+
+
 		Path = std::filesystem::path(path).parent_path().string();
 
-		if (!StartingScene.empty() && std::filesystem::exists(Chroma::AssetManager::AssetDirectory + "\\" + StartingScene))
+		if (!StartingScene.empty() && std::filesystem::exists(AssetDirectory + "\\" + StartingScene))
 		{
 			ss = std::ostringstream{};
-			std::ifstream stream(Chroma::AssetManager::AssetDirectory + "\\" + StartingScene);
+			std::ifstream stream(AssetDirectory + "\\" + StartingScene);
 			ss << stream.rdbuf();
 			Chroma::Scene* scene = new Chroma::Scene();
 			Chroma::Scene::Deserialize(scene, ss.str());
 			EditorApp::CurrentScene = scene;
-			EditorApp::CurrentScenePath = Chroma::AssetManager::AssetDirectory + StartingScene;
+			EditorApp::CurrentScenePath = AssetDirectory + StartingScene;
 		}
 		else
 		{
@@ -162,21 +190,7 @@ namespace Polychrome
 
 		//SaveCurrentProject();
 
-		for (auto& file : std::filesystem::recursive_directory_iterator(Chroma::AssetManager::AssetDirectory))
-		{
-			if (file.is_regular_file())
-			{
-				//CHROMA_CORE_INFO("{}", file.path().string());
-				std::string extension = file.path().extension().string();
-				if (extension == ".ase" || extension == ".aseprite" || extension == ".png" || extension == ".jpg")
-				{
-					Chroma::AssetManager::LoadSprite(file.path().lexically_relative(Chroma::AssetManager::AssetDirectory).string());
-					//CHROMA_CORE_INFO("file: {}", file.path().string());
-				}
-			}
-		}
-
-		auto result = Build::BuildMonoAssembly(std::filesystem::path(Chroma::AssetManager::AssetDirectory).parent_path().string(), Project::Name);
+		auto result = Build::BuildMonoAssembly(std::filesystem::path(AssetDirectory).parent_path().string(), Project::Name);
 		Chroma::ScriptEngineRegistry::RegisterAll();
 		Chroma::MonoScripting::SetDeltaTime(0.f, 0.f);
 		Chroma::MonoScripting::SetSceneContext(EditorApp::CurrentScene);
@@ -201,17 +215,7 @@ namespace Polychrome
 		//CHROMA_CORE_WARN("Mounted: {}", std::filesystem::path(Chroma::AssetManager::AssetDirectory).parent_path().string() + "\\TestArchive.7z");
 		//CHROMA_CORE_WARN("");
 
-		try
-		{
-			Chroma::FileSystem::UnmountAll();
-			Chroma::FileSystem::Mount(Chroma::AssetManager::AssetDirectory);
-			//Chroma::FileSystem::Mount(std::filesystem::path(Chroma::AssetManager::AssetDirectory).parent_path().string() + "\\TestArchive.7z");
 
-		}
-		catch (Chroma::FileSystem::FileSystemException e)
-		{
-			CHROMA_CORE_ERROR("{}", e.what());
-		}
 
 		//for (auto& path : Chroma::FileSystem::GetFileListRecursive(""))
 		//{

@@ -135,6 +135,7 @@ namespace Chroma
 		friend struct Tag;
 		friend struct Transform;
 		friend struct Relationship;
+		friend struct EntityInfo;
 	};
 
 	template<typename T>

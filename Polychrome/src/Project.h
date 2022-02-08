@@ -13,6 +13,7 @@ namespace Polychrome
 		static std::string Name;
 		static std::string Path;
 		static std::string StartingScene;
+		static std::string AssetDirectory;
 
 	};
 }

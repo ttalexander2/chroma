@@ -58,6 +58,7 @@
 namespace Chroma
 {
 
+
 	// TODO: Replace unique_ptr and shared_ptr with new reference counter class
 	template<typename T>
 	using Scope = std::unique_ptr<T>;
@@ -74,6 +75,9 @@ namespace Chroma
 	{
 		return std::make_shared<T>(std::forward<Args>(args)...);
 	}
+
+
+
 
 }
 

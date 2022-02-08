@@ -11,18 +11,7 @@ namespace Chroma
 	/// Class for Game Sprite. This sprite can be static or animated.
 	struct Sprite: public Asset
 	{
-		Sprite() = default;
-		Sprite(const Sprite&) = default;
-		Sprite(const std::string& path)
-		{
-			Path = path;
-		}
-
-		~Sprite()
-		{
-			Unload();
-		}
-
+		CHROMA_ASSET(Sprite, Asset);
 
 		/// @brief Enum for looping direction
 		enum class LoopDirection
@@ -57,12 +46,13 @@ namespace Chroma
 			
 		const Math::vec2 GetSize() const { return Size; }
 
+		/// @brief Returns true if the sprite is animated.
+		bool Animated() { return Animations.size() > 0; }
+
+	protected:
 		bool Load() override;
 		bool Unload() override;
 		bool Reload() override;
-
-		/// @brief Returns true if the sprite is animated.
-		bool Animated() { return Animations.size() > 0; }
 
 	private:
 		Math::vec2 Size;

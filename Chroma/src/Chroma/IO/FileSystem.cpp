@@ -11,6 +11,7 @@ namespace Chroma
 
     void FileSystem::Mount(const std::string& path)
     {
+        CHROMA_CORE_INFO("Mounted: {}", path);
         int result = PHYSFS_mount(path.c_str(), NULL, 1);
         if (result == 0)
             throw FileSystemException(GetLastError());
@@ -160,6 +161,20 @@ namespace Chroma
         return statbuf.readonly != 0;
     }
 
+    const std::string FileSystem::GetFileExtension(const std::string& filePath)
+    {
+        size_t pos = filePath.find_last_of('.');
+        if (pos == std::string::npos)
+            return "";
+
+        return filePath.substr(pos);
+    }
+
+    bool FileSystem::HasFileExtension(const std::string& filePath, const std::string& extension)
+    {
+        return GetFileExtension(filePath) == extension;
+    }
+
     std::vector<std::string> FileSystem::GetFileList(const std::string& directory)
     {
         std::vector<std::string> out;
@@ -193,11 +208,14 @@ namespace Chroma
         char** i;
         for (i = rc; *i != NULL; i++)
         {
-            if (FileSystem::IsFile(directory + "/" + *i))
-                out.push_back(directory + "/" +  *i);
-            else if (FileSystem::IsDirectory(directory + "/" + *i))
+            std::string dir = directory + "/";
+            if (directory.empty())
+                dir = "";
+            if (FileSystem::IsFile(dir + *i))
+                out.push_back(dir +  *i);
+            else if (FileSystem::IsDirectory(dir + *i))
             {
-                auto recr = GetFileListRecursive(directory + "/" + *i);
+                auto recr = GetFileListRecursive(dir + *i);
                 out.insert(out.end(), recr.begin(), recr.end());
             }
                 
@@ -222,8 +240,9 @@ namespace Chroma
         {
             file = PHYSFS_openAppend(filePath.c_str());
         }
-        
-        return Chroma::File(file);
+        Chroma::File res = Chroma::File(file);
+        res.m_Path = filePath;
+        return res;
     }
 
     void FileSystem::SetWriteDirectory(const std::string& directory)

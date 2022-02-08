@@ -71,6 +71,11 @@ namespace Chroma
 		if (val)
 		{
 			SpriteID = val.as<std::string>();
+			Ref<Sprite> spr = AssetManager::Create<Sprite>(SpriteID);
+			if (spr)
+				AssetManager::Load(SpriteID);
+			else
+				CHROMA_CORE_ERROR("Sprite '{}' could not be loaded!", SpriteID);
 		}
 		val = node["Loop"];
 		if (val)
@@ -100,9 +105,9 @@ namespace Chroma
 		}
 		else
 		{
-			if (AssetManager::HasSprite(SpriteID))
+			if (AssetManager::Exists(SpriteID))
 			{
-				SortingPoint = AssetManager::GetSprite(SpriteID)->GetSize().y;
+				SortingPoint = AssetManager::Get<Sprite>(SpriteID)->GetSize().y;
 			}
 		}
 
@@ -115,14 +120,14 @@ namespace Chroma
 	/// @param spriteID Name/Path of the sprite.
 	void SpriteRenderer::SetSprite(const std::string& spriteID)
 	{
-		if (AssetManager::HasSprite(spriteID))
+		if (AssetManager::IsLoaded(spriteID))
 		{
 			//CHROMA_CORE_INFO("SET SPRITE: {}", spriteID);
 			SpriteID = spriteID;
 			Animation = 0;
 			CurrentFrame = 0;
 			SetSpriteOrigin(SpriteOrigin::Default);
-			SortingPoint = AssetManager::GetSprite(SpriteID)->GetSize().y;
+			SortingPoint = AssetManager::Get<Sprite>(SpriteID)->GetSize().y;
 		}
 			
 		else
@@ -131,9 +136,9 @@ namespace Chroma
 
 	void SpriteRenderer::SetAnimation(unsigned int animation)
 	{
-		if (AssetManager::HasSprite(SpriteID))
+		if (AssetManager::IsLoaded(SpriteID))
 		{
-			Ref<Sprite> s = AssetManager::GetSprite(SpriteID);
+			Ref<Sprite> s = AssetManager::Get<Sprite>(SpriteID);
 			if (animation >= s->Animations.size())
 			{
 				CHROMA_CORE_WARN("Attempted to set sprite animation number. Sprite [{}] does not contain animation [{}].", SpriteID, animation);
@@ -155,9 +160,9 @@ namespace Chroma
 
 	void SpriteRenderer::SetAnimation(const std::string& animation_name)
 	{
-		if (AssetManager::HasSprite(SpriteID))
+		if (AssetManager::IsLoaded(SpriteID))
 		{
-			Ref<Sprite> s = AssetManager::GetSprite(SpriteID);
+			Ref<Sprite> s = AssetManager::Get<Sprite>(SpriteID);
 			bool exists = false;
 			unsigned int i = 0;
 			for (auto& anim : s->Animations)
@@ -190,9 +195,9 @@ namespace Chroma
 
 	std::string SpriteRenderer::GetAnimationName(unsigned int animation)
 	{
-		if (AssetManager::HasSprite(SpriteID))
+		if (AssetManager::IsLoaded(SpriteID))
 		{
-			Ref<Sprite> s = AssetManager::GetSprite(SpriteID);
+			Ref<Sprite> s = AssetManager::Get<Sprite>(SpriteID);
 			if (animation >= s->Animations.size())
 				CHROMA_CORE_WARN("Attempted to get sprite animation name. Sprite [{}] does not contain animation [{}]", SpriteID, animation);
 			else
@@ -212,9 +217,9 @@ namespace Chroma
 		if (frame == 0)
 			CurrentFrame = 0;
 
-		if (AssetManager::HasSprite(SpriteID))
+		if (AssetManager::IsLoaded(SpriteID))
 		{
-			Ref<Sprite> s = AssetManager::GetSprite(SpriteID);
+			Ref<Sprite> s = AssetManager::Get<Sprite>(SpriteID);
 			if (frame >= s->Frames.size())
 			{
 				frame = s->Frames.size() - 1;
@@ -236,9 +241,9 @@ namespace Chroma
 	void SpriteRenderer::SetSpriteOrigin(SpriteOrigin origin)
 	{
 		Origin = origin;
-		if (AssetManager::HasSprite(SpriteID))
+		if (AssetManager::IsLoaded(SpriteID))
 		{
-			Ref<Sprite> s = AssetManager::GetSprite(SpriteID);
+			Ref<Sprite> s = AssetManager::Get<Sprite>(SpriteID);
 			const Math::vec2 size = s->GetSize();
 			switch (origin)
 			{
@@ -308,9 +313,9 @@ namespace Chroma
 	void SpriteRenderer::SetSpriteOrigin(const Math::vec2& custom_position)
 	{
 		Origin = SpriteOrigin::Custom;
-		if (AssetManager::HasSprite(SpriteID))
+		if (AssetManager::IsLoaded(SpriteID))
 		{
-			Ref<Sprite> s = AssetManager::GetSprite(SpriteID);
+			Ref<Sprite> s = AssetManager::Get<Sprite>(SpriteID);
 			const Math::vec2 size = s->GetSize();
 			OriginValue = { Math::clamp(0.f, size.x, custom_position.x), Math::clamp(0.f, size.y, custom_position.y) };
 		}
@@ -332,9 +337,9 @@ namespace Chroma
 
 	void SpriteRenderer::RestartAnimation()
 	{
-		if (AssetManager::HasSprite(SpriteID) && AssetManager::GetSprite(SpriteID)->Animated())
+		if (AssetManager::Exists(SpriteID) && AssetManager::Get<Sprite>(SpriteID)->Animated())
 		{
-			Ref<Sprite> s = AssetManager::GetSprite(SpriteID);
+			Ref<Sprite> s = AssetManager::Get<Sprite>(SpriteID);
 			if (Animation >= s->Animations.size())
 				Animation = s->Animations.size() - 1;
 			else if (Animation < 0)

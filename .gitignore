@@ -9,6 +9,9 @@ Sandbox\imgui.ini
 Chroma.Mono/Source/bin
 Chroma.Mono/Source/obj
 
+Polychrome/Chroma.Mono.dll
+Runtime/Chroma.Mono.dll
+
 .vs/
 **.sln
 **.vcxproj
@@ -17,7 +20,7 @@ Chroma.Mono/Source/obj
 
 scripts\__pycache__
 Chroma/third_party/VulkanSDK
-Polychorme/assets/cache
+Polychrome/assets/cache
 
 # Files
 *.user

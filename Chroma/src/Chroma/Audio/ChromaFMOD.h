@@ -12,6 +12,7 @@
 
 namespace Chroma
 {
+
 	/// @brief Struct to interface with a loaded FMOD Studio instance.
 	struct ChromaFMOD
 	{

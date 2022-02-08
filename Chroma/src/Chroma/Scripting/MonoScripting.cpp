@@ -234,7 +234,11 @@ namespace Chroma
 		//CHROMA_CORE_INFO("Instantiate: {}, scriptClass: {}, currentMonoDomain: {}", scriptClass.ClassName, scriptClass.Class != nullptr, currentMonoDomain != nullptr);
 		MonoObject* instance = mono_object_new(currentMonoDomain, scriptClass.Class);
 		if (!instance)
-			std::cout << "mono_object_new failed" << std::endl;
+		{
+			CHROMA_CORE_ERROR("mono_object_new failed. {}", scriptClass.FullName);
+			return 0;
+		}
+			
 
 		mono_runtime_object_init(instance);
 		uint32_t handle = mono_gchandle_new(instance, false);
@@ -371,7 +375,7 @@ namespace Chroma
 
 	bool MonoScripting::LoadAppAssembly(const std::string& path)
 	{
-		//CHROMA_CORE_INFO("LOADING APP ASSEMBLY");
+		CHROMA_CORE_INFO("Loading: {}", path);
 		if (appAssembly)
 		{
 			appAssembly = nullptr;

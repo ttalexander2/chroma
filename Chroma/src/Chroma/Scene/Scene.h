@@ -53,7 +53,7 @@ namespace Chroma
 		void DestroyEntity(EntityID id, bool destroy_children = false);
 
 		std::string Serialize();
-		static bool Deserialize(Scene* out, const std::string& yaml);
+		static bool Deserialize(Scene* out, const std::string& yaml, bool load_assets = false);
 
 		bool IsDescendant(EntityID child, EntityID parent);
 		bool IsRoot(EntityID entity);
@@ -227,9 +227,7 @@ namespace Chroma
 
 		//TODO: Load & Unload Functions
 
-		void PreLoad();
-		void Load();
-		void PostLoad();
+		void OnLoad();
 
 		void EarlyInit();
 		void Init();
@@ -257,6 +255,8 @@ namespace Chroma
 		std::vector<EntityID> EntityOrder;
 		EntityID PrimaryCameraEntity = ENTITY_NULL;
 
+		GUID ID;
+
 		static std::unordered_map<StringHash, std::function<Component* (EntityID, entt::registry*)>> s_ComponentAdd;
 		static std::unordered_map<StringHash, std::function<Component* (EntityID, entt::registry*)>> s_ComponentGet;
 		static std::unordered_map<StringHash, std::function<bool(EntityID, entt::registry*)>> s_ComponentHas;
@@ -265,7 +265,7 @@ namespace Chroma
 
 		static std::list<const TypeInfo*> s_Types;
 
-		GUID ID;
+
 
 		friend class Entity;
 		friend class Polychrome::Hierarchy;
