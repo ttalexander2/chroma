@@ -97,7 +97,8 @@ namespace Polychrome
 
 			static bool debug = false;
 			static bool copy_mdb = false;
-			static bool pack_assets = true;
+			static bool pack_assets = false;
+			static bool run_game = true;
 			static std::string project_name = Project::Name;
 			static std::string location_path = Project::Path + "\\bin\\";
 
@@ -127,6 +128,7 @@ namespace Polychrome
 			ImGui::Checkbox("Debug", &debug);
 			ImGui::Checkbox("Copy MDB/PDB Files", &copy_mdb);
 			ImGui::Checkbox("Pack Assets", &pack_assets);
+			ImGui::Checkbox("Run Game", &run_game);
 
 			ImGui::Separator();
 
@@ -137,7 +139,7 @@ namespace Polychrome
 			{
 				button_pressed = true;
 				building.store(true);
-				buildThread = std::thread(ExecuteGameBuild, debug, copy_mdb, pack_assets, project_name, location_path);
+				buildThread = std::thread(ExecuteGameBuild, debug, copy_mdb, pack_assets, project_name, location_path, run_game);
 			}
 
 			ImGui::SameLine();
@@ -204,7 +206,7 @@ namespace Polychrome
 		//ImGui::PopStyleColor();
 }
 
-	void Build::ExecuteGameBuild(bool debug, bool copy_mdb, bool pack_assets, const std::string& project_name, const std::string& location)
+	void Build::ExecuteGameBuild(bool debug, bool copy_mdb, bool pack_assets, const std::string& project_name, const std::string& location, bool run_game)
 	{
 		while (!progressLock.try_lock()){}
 
@@ -246,10 +248,10 @@ namespace Polychrome
 		progress = 0.5f;
 		progressLock.unlock();
 
-		std::filesystem::create_directories(location + "\\" + project_name + "\\Assets\\");
+		std::filesystem::create_directories(location + "\\" + project_name + "\\assets\\");
 
-		std::filesystem::path newDir = std::filesystem::path(location + "\\" + project_name + "\\Assets\\");
-		std::filesystem::path assetDir = std::filesystem::path(Project::Path + "\\Assets\\");
+		std::filesystem::path newDir = std::filesystem::path(location + "\\" + project_name + "\\assets\\");
+		std::filesystem::path assetDir = std::filesystem::path(Project::Path + "\\assets\\");
 		for (auto& file : std::filesystem::recursive_directory_iterator(assetDir))
 		{
 			if (file.is_regular_file() && file.path().extension() == ".cs")
@@ -274,12 +276,21 @@ namespace Polychrome
 		}
 
 		progressMessage = "Constructing additional pylons...";
-		progress = 0.8f;
+		progress = 0.85f;
 		progressLock.unlock();
 
-		std::filesystem::copy_file(Project::Path + "\\" + Project::Name + ".polychrome", location + "\\" + project_name + "\\" + Project::Name + ".polychrome", std::filesystem::copy_options::overwrite_existing);
+		std::filesystem::copy_file(Project::Path + "\\" + Project::Name + ".polychrome", location + "\\" + project_name + "\\" + "app.info", std::filesystem::copy_options::overwrite_existing);
 
-		std::this_thread::sleep_for(std::chrono::seconds(2));
+		std::filesystem::copy("Runtime", location + "\\" + project_name + "\\", std::filesystem::copy_options::recursive | std::filesystem::copy_options::overwrite_existing);
+		std::filesystem::copy("mono", location + "\\" + project_name + "\\mono\\", std::filesystem::copy_options::recursive | std::filesystem::copy_options::overwrite_existing);
+
+		std::filesystem::rename(location + "\\" + project_name + "\\Runtime.exe", location + "\\" + project_name + "\\" + project_name + ".exe");
+		if (std::filesystem::exists(location + "\\" + project_name + "\\Runtime.exp"))
+			std::filesystem::rename(location + "\\" + project_name + "\\Runtime.exp", location + "\\" + project_name + "\\" + project_name + ".exp");
+		if (std::filesystem::exists(location + "\\" + project_name + "\\Runtime.lib"))
+			std::filesystem::rename(location + "\\" + project_name + "\\Runtime.lib", location + "\\" + project_name + "\\" + project_name + ".lib");
+		if (std::filesystem::exists(location + "\\" + project_name + "\\Runtime.pdb"))
+			std::filesystem::rename(location + "\\" + project_name + "\\Runtime.pdb", location + "\\" + project_name + "\\" + project_name + ".pdb");
 
 		building.store(false);
 		done.store(true);
@@ -291,6 +302,20 @@ namespace Polychrome
 		progressMessage = "Done!";
 		progress = 1.f;
 		progressLock.unlock();
+
+#ifdef _WIN32
+		if (run_game)
+		{
+			std::string command = "start \"\" /D \"" + location + "\\" + project_name + "\" \"" + project_name + ".exe\"";
+			CHROMA_CORE_INFO("Running: {}", command);
+			system(command.c_str());
+		}
+		else
+		{
+			system(("explorer \"" + location + "\\" + project_name + "\"").c_str());
+
+		}
+#endif
 	}
 
 	Build::BuildMessage* GetFirstOfType(Build::BuildMessage::Severity severity)

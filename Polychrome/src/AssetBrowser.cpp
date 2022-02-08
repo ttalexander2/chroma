@@ -1,13 +1,19 @@
 #include "AssetBrowser.h"
+
 #include <imgui.h>
 #include <imgui_internal.h>
-#include "Fonts/IconsForkAwesome.h"
 #include <string>
 #include <imgui_stdlib.h>
 #include <filesystem>
 #include <Chroma/Assets/AssetManager.h>
+
+
+#include "Project.h"
 #include "EditorApp.h"
 #include "FuzzyFileSearch.h"
+#include "Fonts/IconsForkAwesome.h"
+
+
 #if _WIN32
 #include <shellapi.h>
 #include <shlobj.h>
@@ -50,9 +56,9 @@ namespace Polychrome
 	void AssetBrowser::Draw()
 	{
 		if (active_dir.empty() || !std::filesystem::exists(active_dir))
-			active_dir = Chroma::AssetManager::AssetDirectory;
+			active_dir = Project::AssetDirectory;
 
-			for (std::filesystem::path path : std::filesystem::recursive_directory_iterator(Chroma::AssetManager::AssetDirectory))
+			for (std::filesystem::path path : std::filesystem::recursive_directory_iterator(Project::AssetDirectory))
 			{
 				if (!Icons.contains(path))
 				{
@@ -89,7 +95,7 @@ namespace Polychrome
 				static std::vector<std::filesystem::path> search_paths;
 				if (searching && last_search != search_term)
 				{
-					search_paths = FuzzyFileSearch::Search(search_term, Chroma::AssetManager::AssetDirectory);
+					search_paths = FuzzyFileSearch::Search(search_term, Project::AssetDirectory);
 					last_search = search_term;
 				}
 				
@@ -123,17 +129,17 @@ namespace Polychrome
 						std::string icon = asset_folder_open ? ICON_FK_FOLDER_OPEN : ICON_FK_FOLDER;
 
 						auto flags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_OpenOnArrow;
-						if (Chroma::AssetManager::AssetDirectory == active_dir)
+						if (Project::AssetDirectory == active_dir)
 							flags |= ImGuiTreeNodeFlags_Selected;
 
 	
-						if (ImGui::TreeNodeEx((icon + " " + std::filesystem::path(Chroma::AssetManager::AssetDirectory).filename().string()).c_str(), flags))
+						if (ImGui::TreeNodeEx((icon + " " + std::filesystem::path(Project::AssetDirectory).filename().string()).c_str(), flags))
 						{
 							asset_folder_open = ImGui::TreeNodeBehaviorIsOpen(ImGui::GetActiveID());
 							if (ImGui::IsItemClicked(ImGuiMouseButton_Left))
-								active_dir = Chroma::AssetManager::AssetDirectory;
+								active_dir = Project::AssetDirectory;
 							//ImGui::Indent();
-							bool changed = ParseFolder(Chroma::AssetManager::AssetDirectory);
+							bool changed = ParseFolder(Project::AssetDirectory);
 							if (changed)
 							{
 								ImGui::TreePop();
@@ -152,7 +158,7 @@ namespace Polychrome
 						{
 							asset_folder_open = ImGui::TreeNodeBehaviorIsOpen(ImGui::GetActiveID());
 							if (ImGui::IsItemClicked(ImGuiMouseButton_Left))
-								active_dir = Chroma::AssetManager::AssetDirectory;
+								active_dir = Project::AssetDirectory;
 						}
 					
 						ImGui::EndChild();
@@ -162,8 +168,8 @@ namespace Polychrome
 
 					ImGui::TableNextColumn();
 
-					std::filesystem::path path_build = std::filesystem::path(Chroma::AssetManager::AssetDirectory).parent_path();
-					for (auto& part : std::filesystem::relative(active_dir, std::filesystem::path(Chroma::AssetManager::AssetDirectory).parent_path()))
+					std::filesystem::path path_build = std::filesystem::path(Project::AssetDirectory).parent_path();
+					for (auto& part : std::filesystem::relative(active_dir, std::filesystem::path(Project::AssetDirectory).parent_path()))
 					{
 						if (part == ".")
 							continue;
@@ -682,35 +688,23 @@ namespace Polychrome
 	{
 		std::wstring w = path.wstring();
 
-		//CHROMA_CORE_INFO("path: {}", std::filesystem::absolute(path).string());
-
-		if (path.extension().compare(".png") == 0 || path.extension().compare(".jpg") == 0)
+		if (path.extension().compare(".png") == 0 || path.extension().compare(".jpg") == 0 || path.extension().compare(".ase") == 0 || path.extension().compare(".aseprite") == 0)
 		{
-			auto icon_texture = Chroma::Texture2D::Create(path.string(), false);
-			//auto image = Chroma::Image(path.string());
-			//auto icon_texture = Chroma::Texture2D::Create(image.Width, image.Height);
-			//Chroma::Color* data = new Chroma::Color[image.Width * image.Width];
-			//image.GetData(data);
-			//icon_texture->SetData(data, image.Height * image.Width * sizeof(Chroma::Color));
-			//
-			//delete[] data;
+			std::string sprite_path = path.lexically_relative(Project::AssetDirectory).string();
 
-			Icons[path] = icon_texture;
-			return;
-		}
+			if (Chroma::AssetManager::Exists(sprite_path))
+			{
+				auto sprite = Chroma::AssetManager::Get<Chroma::Sprite>(sprite_path);
 
-		if (path.extension().compare(".ase") == 0 || path.extension().compare(".aseprite") == 0)
-		{
-			Chroma::Aseprite a = Chroma::Aseprite(path.string());
-			
-			Chroma::Color* color = new Chroma::Color[a.width * a.height];
-			a.frames[0].image.GetData(color);
-			auto icon_texture = Chroma::Texture2D::Create(a.width, a.height);
-			icon_texture->SetData(color, a.width * a.height * sizeof(Chroma::Color));
-			Icons[path] = icon_texture;
-			delete[] color;
-			a.Dispose();
-			return;
+				if (!sprite->Frames.empty())
+				{
+					Icons[path] = sprite->Frames[0].Texture;
+					return;
+				}
+			}
+
+
+
 		}
 
 #if _WIN32

@@ -376,7 +376,7 @@ namespace Chroma
 
 	}
 
-	bool Scene::Deserialize(Scene* out, const std::string& yaml)
+	bool Scene::Deserialize(Scene* out, const std::string& yaml, bool load_assets)
 	{
 		uint64_t maxId = 0;
 		auto data = YAML::Load(yaml);
@@ -550,7 +550,7 @@ namespace Chroma
 		return retval;
 	}
 
-	void Scene::Load()
+	void Scene::OnLoad()
 	{
 		for (System* s : Systems)
 		{

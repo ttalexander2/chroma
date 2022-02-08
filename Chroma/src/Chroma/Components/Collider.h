@@ -9,8 +9,7 @@ namespace Chroma
 	{
 		CHROMA_ABSTRACT_COMPONENT(Collider, Component);
 
-	private:
-
-		unsigned long m_CollisionMask;
+		unsigned long m_Layer = 1U;
+		unsigned long m_Mask = 1U;
 	};
 }

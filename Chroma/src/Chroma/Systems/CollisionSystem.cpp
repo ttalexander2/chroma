@@ -55,6 +55,9 @@ namespace Chroma
 			auto& collider = m_Scene->Registry.get<Chroma::BoxCollider>(entity);
 			if (!collider.IsEnabled())
 				continue;
+			if (collider.m_Mask == 0)
+				return;
+
 			auto position = m_Scene->GetTransformAbsolutePosition(entity);
 
 			b2AABB aabb;
@@ -71,6 +74,10 @@ namespace Chroma
 				if (entity == collider2->GetEntityID())
 					return true;
 
+				if ((collider.m_Mask & collider2->m_Layer) == 0)
+					return true;
+
+
 				auto position2 = m_Scene->GetTransformAbsolutePosition(collider2->GetEntityID());
 
 
@@ -81,6 +88,8 @@ namespace Chroma
 				aabb2.upperBound = b2Vec2(upperBound2.x, upperBound2.y);
 
 				collider.m_Colliding = b2TestOverlap(aabb, aabb2);
+				if (collider.IsColliding())
+					CHROMA_CORE_INFO("{} colliding with {}", entity, collider2->GetEntityID());
 
 				return false;
 			};

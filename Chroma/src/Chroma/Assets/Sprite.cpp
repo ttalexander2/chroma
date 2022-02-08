@@ -1,9 +1,12 @@
 #include "chromapch.h"
 
 #include "Sprite.h"
+#include "Chroma/IO/FileSystem.h"
+#include "Chroma/IO/File.h"
 
 namespace Chroma
 {
+
 	/// @brief Load the sprite from file.
 	/// 
 	/// This function loads the sprite from a file, if it exists.
@@ -12,13 +15,17 @@ namespace Chroma
 	/// @return Returns true if the sprite was loaded succesfully.
 	bool Sprite::Load()
 	{
-		std::string path = AssetManager::GetPath(Path);
-		if (!std::filesystem::exists(path))
-			return false;
 
-		if (std::filesystem::path(path).extension() == ".ase" || std::filesystem::path(path).extension() == ".aseprite")
+		if (!Chroma::FileSystem::Exists(GetPath()))
 		{
-			Aseprite a = Aseprite(path);
+			CHROMA_CORE_ERROR("Could not load sprite! The following path does not exist: {}", GetPath());
+			return false;
+		}
+
+
+		if (FileSystem::HasFileExtension(GetPath(), ".ase") || FileSystem::HasFileExtension(GetPath(), ".aseprite"))
+		{
+			Aseprite a = Aseprite(GetPath());
 
 			Chroma::Color* data = new Chroma::Color[a.width * a.height];
 			float width = 0.f; float height = 0.f;
@@ -68,21 +75,25 @@ namespace Chroma
 
 			return true;
 		}
-		else if (std::filesystem::path(path).extension() == ".png")
+		else if (FileSystem::HasFileExtension(GetPath(), ".png"))
 		{
 			Frame fr;
-			fr.Texture = Chroma::Texture2D::Create(path);
+			fr.Texture = Chroma::Texture2D::Create(GetPath());
 			Frames.push_back(fr);
 			Size = { fr.Texture->GetWidth(), fr.Texture->GetHeight() };
 			return true;
 		}
-		else if (std::filesystem::path(path).extension() == ".jpg")
+		else if (std::filesystem::path(GetPath()).extension() == ".jpg")
 		{
 			Frame fr;
-			fr.Texture = Chroma::Texture2D::Create(path);
+			fr.Texture = Chroma::Texture2D::Create(GetPath());
 			Frames.push_back(fr);
 			Size = { fr.Texture->GetWidth(), fr.Texture->GetHeight() };
 			return true;
+		}
+		else
+		{
+			CHROMA_CORE_ERROR("Sprite type not supported: {}", std::filesystem::path(GetPath()).extension());
 		}
 
 		return false;

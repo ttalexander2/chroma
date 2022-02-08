@@ -1,7 +1,12 @@
 #include "chromapch.h"
 #include "OpenGLTexture.h"
 
+
+#include "Chroma/IO/File.h"
+#include "Chroma/IO/FileSystem.h"
+
 #include "stb_image.h"
+
 
 #include <glad/glad.h>
 
@@ -21,7 +26,22 @@ namespace Chroma
 		else
 			stbi_set_flip_vertically_on_load(0);
 
-		stbi_uc* data = stbi_load(path.c_str(), &width, &height, &channels, 0);
+		auto file = Chroma::File::Open(path);
+		if (!file.Good())
+		{
+			CHROMA_CORE_ERROR("Failed to load texture: [{}]", path);
+			return;
+		}
+
+		int64_t len = file.Length();
+		std::vector<unsigned char> raw_data(len);
+		file.Read(raw_data.data(), len);
+
+		file.Close();
+
+		stbi_uc* data = stbi_load_from_memory(raw_data.data(), len, &width, &height, &channels, 0);
+
+
 		CHROMA_ASSERT(data, "Failed to load image \'{0}\'", path);
 		m_Width = width;
 		m_Height = height;

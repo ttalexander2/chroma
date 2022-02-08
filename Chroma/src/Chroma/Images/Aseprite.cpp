@@ -5,8 +5,9 @@
 #define STBI_ONLY_ZLIB
 #include "stb_image.h"
 
-#include <fstream>
 #include "BlendFunctions.h"
+#include "Chroma/IO/File.h"
+#include "Chroma/IO/FileSystem.h"
 
 
 
@@ -19,12 +20,12 @@ namespace Chroma
 
 	Aseprite::Aseprite(const std::string& path)
 	{
-		std::fstream fs(path, std::fstream::in | std::fstream::binary);
+		Chroma::File fs = FileSystem::Open(path, FileMode::Read);
 		parse(fs);
-		fs.close();
+		fs.Close();
 	}
 
-	Aseprite::Aseprite(std::fstream & stream)
+	Aseprite::Aseprite(Chroma::File& stream)
 	{
 		parse(stream);
 	}
@@ -101,9 +102,9 @@ namespace Chroma
 		palette.clear();
 	}
 
-	void Aseprite::parse(std::fstream & stream)
+	void Aseprite::parse(Chroma::File& stream)
 	{
-		if (!stream.good())
+		if (!stream.Good())
 		{
 			CHROMA_CORE_ASSERT(false, "std::fstream is not readable");
 			return;
@@ -114,10 +115,10 @@ namespace Chroma
 		// header
 		{
 			// filesize
-			read<uint32_t>(stream, Endian::Little);
+			uint64_t first = stream.Read<uint32_t>(Endian::Little);
 
 			// magic number
-			auto magic = read<uint16_t>(stream, Endian::Little);
+			uint16_t magic = stream.Read<uint16_t>(Endian::Little);
 			if (magic != 0xA5E0)
 			{
 				CHROMA_CORE_ASSERT(false, "File is not a valid Aseprite file");
@@ -125,25 +126,23 @@ namespace Chroma
 			}
 
 			// main info
-			frame_count = read<uint16_t>(stream, Endian::Little);
-			width = read<uint16_t>(stream, Endian::Little);
-			height = read<uint16_t>(stream, Endian::Little);
-			mode = static_cast<Aseprite::Modes>(read<uint16_t>(stream, Endian::Little) / 8);
+			frame_count = stream.Read<uint16_t>(Endian::Little);
+			width = stream.Read<uint16_t>(Endian::Little);
+			height = stream.Read<uint16_t>(Endian::Little);
+			mode = static_cast<Aseprite::Modes>(stream.Read<uint16_t>(Endian::Little) / 8);
 
 			// don't care about other info
-			read<uint32_t>(stream, Endian::Little);				// Flags
-			read<uint16_t>(stream, Endian::Little);				// Speed (deprecated)
-			read<uint32_t>(stream, Endian::Little);				// Should be 0
-			read<uint32_t>(stream, Endian::Little);				// Should be 0
-			read<uint8_t>(stream, Endian::Little);				// Palette entry
-			stream.seekg(3, std::ios_base::cur);				// Ignore these bytes
-			read<uint16_t>(stream, Endian::Little);				// Number of colors (0 means 256 for old sprites)
-			read<int8_t>(stream, Endian::Little);				// Pixel width
-			read<int8_t>(stream, Endian::Little);				// Pixel height
-			stream.seekg(92, std::ios_base::cur);				// For Future
+			stream.Read<uint32_t>(Endian::Little);				// Flags
+			stream.Read<uint16_t>(Endian::Little);				// Speed (deprecated)
+			stream.Read<uint32_t>(Endian::Little);				// Should be 0
+			stream.Read<uint32_t>(Endian::Little);				// Should be 0
+			stream.Read<uint8_t>(Endian::Little);				// Palette entry
+			stream.Seek(3 + stream.Tell());						// Ignore these bytes
+			stream.Read<uint16_t>(Endian::Little);				// Number of colors (0 means 256 for old sprites)
+			stream.Read<int8_t>(Endian::Little);				// Pixel width
+			stream.Read<int8_t>(Endian::Little);				// Pixel height
+			stream.Seek(92 + stream.Tell());					// For Future
 		}
-
-		stream.seekg(128, std::ios_base::beg);
 
 		frames.resize(frame_count);
 
@@ -152,32 +151,32 @@ namespace Chroma
 		// frames
 		for (int i = 0; i < frame_count; i++)
 		{
-			auto frameStart = stream.tellg();
+			auto frameStart = stream.Tell();
 
-			auto offset = read<uint32_t>(stream, Endian::Little);
+			auto offset = stream.Read<uint32_t>(Endian::Little);
 
-			stream.seekg((std::streamoff)offset - 4, std::ios_base::cur);
-			auto frameEnd = stream.tellg();
+			stream.Seek((int64_t)offset - 4 + stream.Tell());
+			auto frameEnd = stream.Tell();
 
-			stream.seekg(frameStart);
+			stream.Seek(frameStart);
 
-			stream.seekg(4, std::ios_base::cur);
+			stream.Seek(4 + stream.Tell());
 
 			unsigned int chunks = 0;
 
 			// frame header
 			{
-				auto magic = read<uint16_t>(stream, Endian::Little); // magic number
+				auto magic = stream.Read<uint16_t>(Endian::Little); // magic number
 				if (magic != 0xF1FA)
 				{
-					CHROMA_CORE_ASSERT(false, "File is not a valid Aseprite file");
+					CHROMA_CORE_ASSERT(false, "File is not a valid Aseprite file! Magic: {:x}", magic);
 					return;
 				}
 
-				auto old_chunk_count = read<uint16_t>(stream, Endian::Little);
-				frames[i].duration = read<uint16_t>(stream, Endian::Little);
-				stream.seekg(2, std::ios_base::cur); // for future
-				auto new_chunk_count = read<uint32_t>(stream, Endian::Little);
+				auto old_chunk_count = stream.Read<uint16_t>(Endian::Little);
+				frames[i].duration = stream.Read<uint16_t>(Endian::Little);
+				stream.Seek(2 + stream.Tell());			// for future
+				auto new_chunk_count = stream.Read<uint32_t>(Endian::Little);
 
 				if (old_chunk_count == 0xFFFF)
 					chunks = new_chunk_count;
@@ -193,23 +192,23 @@ namespace Chroma
 			// frame chunks
 			for (unsigned int j = 0; j < chunks; j++)
 			{
-				auto chunkStart = stream.tellg();
-				uint32_t chunkSize = read<uint32_t>(stream, Endian::Little);
-				stream.seekg((std::streamoff)chunkSize - 4, std::ios_base::cur);
-				auto chunkEnd = stream.tellg();
-				stream.seekg(chunkStart);
-				stream.seekg(4, std::ios_base::cur);
+				auto chunkStart = stream.Tell();
+				uint32_t chunkSize = stream.Read<uint32_t>(Endian::Little);
+				stream.Seek((int64_t)chunkSize - 4 + stream.Tell());
+				auto chunkEnd = stream.Tell();
+				stream.Seek(chunkStart);
+				stream.Seek(4 + stream.Tell());
 
-				auto chunkType = static_cast<Chunks>(read<uint16_t>(stream, Endian::Little));
+				auto chunkType = static_cast<Chunks>(stream.Read<uint16_t>(Endian::Little));
 
-				//CHROMA_CORE_TRACE("Chunk [{}]: Start[{}], End[{}], Size[{}], Type[0x{:x}]", j, (std::streamoff)chunkStart, (std::streamoff)chunkEnd, chunkSize, chunkType);
+				//CHROMA_CORE_TRACE("Chunk [{}]: Start[{}], End[{}], Size[{}], Type[0x{:x}]", j, (int64_t)chunkStart, (int64_t)chunkEnd, chunkSize, chunkType);
 
 
 
 				switch (chunkType)
 				{
 					case Chunks::Layer: parse_layer(stream, i); break;
-					case Chunks::Cel: parse_cel(stream, i, (std::streamoff)chunkEnd); break;
+					case Chunks::Cel: parse_cel(stream, i, (int64_t)chunkEnd); break;
 					case Chunks::Palette: parse_palette(stream, i); break;
 					case Chunks::UserData: parse_user_data(stream, i); break;
 					case Chunks::FrameTags: parse_tag(stream, i); break;
@@ -217,33 +216,33 @@ namespace Chroma
 					default: break;
 				}
 
-				stream.seekg(chunkEnd);
+				stream.Seek(chunkEnd);
 			}
 
-			stream.seekg(frameEnd);
+			stream.Seek(frameEnd);
 		}
 	}
 
-	void Aseprite::parse_layer(std::fstream & stream, int frame)
+	void Aseprite::parse_layer(File& stream, int frame)
 	{
 		layers.emplace_back();
 
 		auto& layer = layers.back();
-		layer.flag = static_cast<LayerFlags>(read<uint16_t>(stream, Endian::Little));
+		layer.flag = static_cast<LayerFlags>(stream.Read<uint16_t>(Endian::Little));
 		layer.visible = ((int)layer.flag & (int)LayerFlags::Visible) == (int)LayerFlags::Visible;
-		layer.type = static_cast<LayerTypes>(read<uint16_t>(stream, Endian::Little));
-		layer.child_level = read<uint16_t>(stream, Endian::Little);
-		read<uint16_t>(stream, Endian::Little); // width
-		read<uint16_t>(stream, Endian::Little); // height
-		int blendMode = read<uint16_t>(stream, Endian::Little);
+		layer.type = static_cast<LayerTypes>(stream.Read<uint16_t>(Endian::Little));
+		layer.child_level = stream.Read<uint16_t>(Endian::Little);
+		stream.Read<uint16_t>(Endian::Little); // width
+		stream.Read<uint16_t>(Endian::Little); // height
+		int blendMode = stream.Read<uint16_t>(Endian::Little);
 		if (blendMode < 0 || blendMode > 18)
 			blendMode = 0;
 		layer.blendmode = static_cast<BlendMode>(blendMode);
-		layer.alpha = read<uint8_t>(stream, Endian::Little);
-		stream.seekg(3, std::ios_base::cur); // for future
+		layer.alpha = stream.Read<uint8_t>(Endian::Little);
+		stream.Seek(3+ stream.Tell()); // for future
 
-		char* buff = new char[read<uint16_t>(stream, Endian::Little)];
-		stream.read(buff, layer.name.length());
+		char* buff = new char[stream.Read<uint16_t>(Endian::Little)];
+		stream.Read(buff, layer.name.length());
 		layer.name = std::string(buff);
 		delete[] buff;
 
@@ -252,26 +251,26 @@ namespace Chroma
 		m_last_userdata = &(layer.userdata);
 	}
 
-	void Aseprite::parse_cel(std::fstream & stream, int frameIndex, size_t maxPosition)
+	void Aseprite::parse_cel(File& stream, int frameIndex, size_t maxPosition)
 	{
 		Frame& frame = frames[frameIndex];
 
 		frame.cels.emplace_back();
 		auto& cel = frame.cels.back();
-		cel.layer_index = read<uint16_t>(stream, Endian::Little);
-		cel.x = read<uint16_t>(stream, Endian::Little);
-		cel.y = read<uint16_t>(stream, Endian::Little);
-		cel.alpha = read<uint8_t>(stream, Endian::Little);
+		cel.layer_index = stream.Read<uint16_t>(Endian::Little);
+		cel.x = stream.Read<uint16_t>(Endian::Little);
+		cel.y = stream.Read<uint16_t>(Endian::Little);
+		cel.alpha = stream.Read<uint8_t>(Endian::Little);
 		cel.linked_frame_index = -1;
 
-		auto celType = read<uint16_t>(stream, Endian::Little);
-		stream.seekg(7, std::ios_base::cur);
+		auto celType = stream.Read<uint16_t>(Endian::Little);
+		stream.Seek(7 + stream.Tell());
 
 		// RAW or DEFLATE
 		if (celType == 0 || celType == 2)
 		{
-			auto width = read<uint16_t>(stream, Endian::Little);
-			auto height = read<uint16_t>(stream, Endian::Little);
+			auto width = stream.Read<uint16_t>(Endian::Little);
+			auto height = stream.Read<uint16_t>(Endian::Little);
 			auto count = width * height * (int)mode;
 
 			cel.image = Image(width, height);
@@ -279,7 +278,7 @@ namespace Chroma
 			// RAW
 			if (celType == 0)
 			{
-				stream.read(reinterpret_cast<char*>(cel.image.Pixels), count);
+				stream.Read(reinterpret_cast<char*>(cel.image.Pixels), count);
 				//stream.read(cel.image.Pixels, count);
 			}
 			// DEFLATE (zlib)
@@ -287,12 +286,12 @@ namespace Chroma
 			{
 				// this could be optimized to use a buffer on the stack if we only read set chunks at a time
 				// stbi's zlib doesn't have that functionality though
-				auto size = maxPosition - (std::streamoff)stream.tellg();
+				auto size = maxPosition - (int64_t)stream.Tell();
 				if (size > INT32_MAX)
 					size = INT32_MAX;
 
 				char* buffer = new char[size];
-				stream.read(buffer, size);
+				stream.Read(buffer, size);
 
 				int olen = width * height * sizeof(Math::vec4);
 				int res = stbi_zlib_decode_buffer(reinterpret_cast<char*>(cel.image.Pixels), olen, buffer, (int)size);
@@ -328,7 +327,7 @@ namespace Chroma
 		// this cel directly references a previous cel
 		else if (celType == 1)
 		{
-			cel.linked_frame_index = read<uint16_t>(stream, Endian::Little);
+			cel.linked_frame_index = stream.Read<uint16_t>(Endian::Little);
 		}
 
 		// draw to frame if visible
@@ -342,68 +341,68 @@ namespace Chroma
 		m_last_userdata = &(cel.userdata);
 	}
 
-	void Aseprite::parse_palette(std::fstream & stream, int frame)
+	void Aseprite::parse_palette(File& stream, int frame)
 	{
-		/* size */ read<uint32_t>(stream, Endian::Little);
-		auto start = read<uint32_t>(stream, Endian::Little);
-		auto end = read<uint32_t>(stream, Endian::Little);
-		stream.seekg(8, std::ios_base::cur);
+		/* size */ stream.Read<uint32_t>(Endian::Little);
+		auto start = stream.Read<uint32_t>(Endian::Little);
+		auto end = stream.Read<uint32_t>(Endian::Little);
+		stream.Seek(8 + stream.Tell());
 
 		palette.resize(palette.size() + (end - start + 1));
 
 		for (int p = 0, len = static_cast<int>(end - start) + 1; p < len; p++)
 		{
-			auto hasName = read<uint16_t>(stream, Endian::Little);
-			palette[start + p] = read<uint32_t>(stream, Endian::Little);
+			auto hasName = stream.Read<uint16_t>(Endian::Little);
+			palette[start + p] = stream.Read<uint32_t>(Endian::Little);
 
 			if (hasName & 0xF000)
 			{
-				int len = read<uint16_t>(stream, Endian::Little);
-				stream.seekg(len, std::ios_base::cur);
+				int len = stream.Read<uint16_t>(Endian::Little);
+				stream.Seek(len + stream.Tell());
 			}
 		}
 	}
 
-	void Aseprite::parse_user_data(std::fstream & stream, int frame)
+	void Aseprite::parse_user_data(File& stream, int frame)
 	{
 		if (m_last_userdata != nullptr)
 		{
-			auto flags = read<uint32_t>(stream, Endian::Little);
+			auto flags = stream.Read<uint32_t>(Endian::Little);
 
 			// has text
 			if (flags & (1 << 0))
 			{
-				char* buff = new char[read<uint16_t>(stream, Endian::Little)];
-				stream.read(buff, m_last_userdata->text.length());
+				char* buff = new char[stream.Read<uint16_t>(Endian::Little)];
+				stream.Read(buff, m_last_userdata->text.length());
 				m_last_userdata->text = std::string(buff);
 				delete[] buff;
 			}
 
 			// has color
 			if (flags & (1 << 1))
-				m_last_userdata->color = read<uint32_t>(stream, Endian::Little);
+				m_last_userdata->color = stream.Read<uint32_t>(Endian::Little);
 		}
 	}
 
-	void Aseprite::parse_tag(std::fstream & stream, int frame)
+	void Aseprite::parse_tag(File& stream, int frame)
 	{
-		auto count = read<uint16_t>(stream, Endian::Little);
-		stream.seekg(8, std::ios_base::cur);
+		auto count = stream.Read<uint16_t>(Endian::Little);
+		stream.Seek(8 + stream.Tell());
 
 		for (int t = 0; t < count; t++)
 		{
 			Tag tag;
-			tag.from = read<uint16_t>(stream, Endian::Little);
-			tag.to = read<uint16_t>(stream, Endian::Little);
-			tag.loops = static_cast<LoopDirections>(read<int8_t>(stream, Endian::Little));
+			tag.from = stream.Read<uint16_t>(Endian::Little);
+			tag.to = stream.Read<uint16_t>(Endian::Little);
+			tag.loops = static_cast<LoopDirections>(stream.Read<int8_t>(Endian::Little));
 
-			stream.seekg(8, std::ios_base::cur);
-			tag.color = Color(read<int8_t>(stream), read<int8_t>(stream), read<int8_t>(stream, Endian::Little), 255);
-			stream.seekg(1, std::ios_base::cur);
+			stream.Seek(8 + stream.Tell());
+			tag.color = Color(stream.Read<int8_t>(), stream.Read<int8_t>(), stream.Read<int8_t>(Endian::Little), 255);
+			stream.Seek(1 + stream.Tell());
 
-			uint16_t len = read<uint16_t>(stream, Endian::Little);
+			uint16_t len = stream.Read<uint16_t>(Endian::Little);
 			char* buff = new char[len];
-			stream.read(buff, len);
+			stream.Read(buff, len);
 			tag.name = std::string(buff, buff + len);
 			delete[] buff;
 
@@ -411,15 +410,15 @@ namespace Chroma
 		}
 	}
 
-	void Aseprite::parse_slice(std::fstream & stream, int frame)
+	void Aseprite::parse_slice(File& stream, int frame)
 	{
-		int count = read<uint32_t>(stream, Endian::Little);
-		int flags = read<uint32_t>(stream, Endian::Little);
-		read<uint32_t>(stream, Endian::Little); // reserved
+		int count = stream.Read<uint32_t>(Endian::Little);
+		int flags = stream.Read<uint32_t>(Endian::Little);
+		stream.Read<uint32_t>(Endian::Little); // reserved
 
 		std::string name;
-		char* buff = new char[read<uint16_t>(stream, Endian::Little)];
-		stream.read(buff, name.length());
+		char* buff = new char[stream.Read<uint16_t>(Endian::Little)];
+		stream.Read(buff, name.length());
 		name = std::string(buff);
 		delete[] buff;
 
@@ -429,19 +428,19 @@ namespace Chroma
 
 			auto& slice = slices.back();
 			slice.name = name;
-			slice.frame = read<uint32_t>(stream, Endian::Little);
-			slice.origin.x = read<int32_t>(stream, Endian::Little);
-			slice.origin.y = read<int32_t>(stream, Endian::Little);
-			slice.width = read<uint32_t>(stream, Endian::Little);
-			slice.height = read<uint32_t>(stream, Endian::Little);
+			slice.frame = stream.Read<uint32_t>(Endian::Little);
+			slice.origin.x = stream.Read<int32_t>(Endian::Little);
+			slice.origin.y = stream.Read<int32_t>(Endian::Little);
+			slice.width = stream.Read<uint32_t>(Endian::Little);
+			slice.height = stream.Read<uint32_t>(Endian::Little);
 
 			// 9 slice (ignored atm)
 			if (flags & (1 << 0))
 			{
-				read<int32_t>(stream, Endian::Little);
-				read<int32_t>(stream, Endian::Little);
-				read<uint32_t>(stream, Endian::Little);
-				read<uint32_t>(stream, Endian::Little);
+				stream.Read<int32_t>(Endian::Little);
+				stream.Read<int32_t>(Endian::Little);
+				stream.Read<uint32_t>(Endian::Little);
+				stream.Read<uint32_t>(Endian::Little);
 			}
 
 			// pivot point
@@ -449,8 +448,8 @@ namespace Chroma
 			if (flags & (1 << 1))
 			{
 				slice.has_pivot = true;
-				slice.pivot.x = read<uint32_t>(stream, Endian::Little);
-				slice.pivot.y = read<uint32_t>(stream, Endian::Little);
+				slice.pivot.x = stream.Read<uint32_t>(Endian::Little);
+				slice.pivot.y = stream.Read<uint32_t>(Endian::Little);
 			}
 
 			slice.userdata.color = 0xffffff;

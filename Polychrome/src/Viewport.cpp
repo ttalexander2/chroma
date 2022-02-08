@@ -116,7 +116,7 @@ namespace Polychrome
 				if (!EditorApp::ScenePaused)
 				{
 					clone = EditorApp::CurrentScene->Copy();
-					EditorApp::CurrentScene->Load();
+					EditorApp::CurrentScene->OnLoad();
 					EditorApp::CurrentScene->Init();
 				}
 				EditorApp::SceneRunning = true;
@@ -218,7 +218,6 @@ namespace Polychrome
 				//}
 
 				clone = EditorApp::CurrentScene->Copy();
-				EditorApp::CurrentScene->Load();
 				EditorApp::CurrentScene->Init();
 
 				EditorApp::SceneRunning = true;

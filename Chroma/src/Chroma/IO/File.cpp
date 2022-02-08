@@ -50,7 +50,7 @@ namespace Chroma
 
 		return PHYSFS_tell(m_Handle);
 	}
-	bool File::Seek(uint64_t pos)
+	bool File::Seek(int64_t pos)
 	{
 		return PHYSFS_seek(m_Handle, pos) != 0;
 	}
@@ -67,21 +67,21 @@ namespace Chroma
 		return Write((void*)reinterpret_cast<const void*>(string), len);
 	}
 
-	int File::Read(void* buffer, size_t size)
+	int64_t File::Read(void* buffer, size_t size)
 	{
 		if (!Good())
-			return 0;
+			return -1;
 
-		return PHYSFS_readBytes(m_Handle, buffer, size);
+		int64_t result = PHYSFS_readBytes(m_Handle, buffer, size);
+		return result;
 	}
 
-	int File::Write(void* buffer, size_t size)
+	int64_t File::Write(void* buffer, size_t size)
 	{
 		if (!Good())
 		{
-			return 0;
+			return -1;
 		}
-
 
 		return PHYSFS_writeBytes(m_Handle, buffer, size);
 	}

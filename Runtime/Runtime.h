@@ -6,8 +6,8 @@ using namespace Chroma;
 class Runtime : public Chroma::Application
 {
 public:
-	static Scene* CurrentScene;
 	Runtime();
 	~Runtime();
+	void Init() override;
 	void Update(Time delta) override;
 };

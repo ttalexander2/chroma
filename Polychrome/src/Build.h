@@ -40,6 +40,6 @@ namespace Polychrome
 		static bool Success();
 
 	private:
-		static void ExecuteGameBuild(bool debug, bool copy_mdb, bool pack_assets, const std::string& project_name, const std::string& location);
+		static void ExecuteGameBuild(bool debug, bool copy_mdb, bool pack_assets, const std::string& project_name, const std::string& location, bool run_game = true);
 	};
 }

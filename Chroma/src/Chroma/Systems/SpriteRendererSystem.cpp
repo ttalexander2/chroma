@@ -46,9 +46,9 @@ namespace Chroma
 			if (!spriteRenderer.IsEnabled())
 				continue;
 
-			if (AssetManager::HasSprite(spriteRenderer.SpriteID))
+			if (AssetManager::Exists(spriteRenderer.SpriteID))
 				{
-					Ref<Sprite> s = AssetManager::GetSprite(spriteRenderer.SpriteID);
+					Ref<Sprite> s = AssetManager::Get<Sprite>(spriteRenderer.SpriteID);
 					if (spriteRenderer.Playing && s->Animated())
 					{
 						
@@ -120,7 +120,7 @@ namespace Chroma
 				continue;
 
 			Math::vec2 absPos = m_Scene->GetTransformAbsolutePosition(e);
-			if (!AssetManager::HasSprite(s.SpriteID))
+			if (!AssetManager::Exists(s.SpriteID))
 				continue;
 			float y = -1.f*(absPos.y + s.Offset.y + s.SortingPoint);
 			if (sprites.find(y) == sprites.end())
@@ -142,9 +142,9 @@ namespace Chroma
 
 				const Math::vec2& origin = spriteRenderer.GetSpriteOriginVector();
 
-				if (AssetManager::HasSprite(spriteRenderer.SpriteID))
+				if (AssetManager::Exists(spriteRenderer.SpriteID))
 				{
-					Ref<Sprite> s = AssetManager::GetSprite(spriteRenderer.SpriteID);
+					Ref<Sprite> s = AssetManager::Get<Sprite>(spriteRenderer.SpriteID);
 					int w = s->Frames[spriteRenderer.CurrentFrame].Texture->GetWidth();
 					int h = s->Frames[spriteRenderer.CurrentFrame].Texture->GetHeight();
 					if (!relationship.IsChild())

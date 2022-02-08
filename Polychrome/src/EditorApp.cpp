@@ -48,6 +48,10 @@
 #include <mono/metadata/threads.h>
 #include <mono/jit/jit.h>
 
+#ifdef CHROMA_PLATFORM_WINDOWS
+#include <Windows.h>
+#endif
+
 #define CHROMA_DEBUG_LOG
 #include <Chroma/Core/Log.h>
 #include "thid_party/platform_folders.h"
@@ -106,9 +110,6 @@ namespace Polychrome
 #ifdef CHROMA_PLATFORM_WINDOWS
 		glfwSetDropCallback((GLFWwindow*)this->GetWindow().GetNativeWindow(), FileDrop::HandleFileDrop);
 #endif
-
-
-
 
 	}
 
@@ -172,7 +173,7 @@ namespace Polychrome
 
 			Launcher* l = new Launcher();
 
-			GLFWwindow* window = glfwCreateWindow(1280, 720, "Chroma", nullptr, nullptr);
+			GLFWwindow* window = glfwCreateWindow(1280, 720, "Polychrome Launcher", nullptr, nullptr);
 			glfwMakeContextCurrent(window);
 			glfwSetWindowUserPointer(window, l);
 
@@ -275,7 +276,7 @@ namespace Polychrome
 			Launcher::ProgressMessage = "Creating Project File...";
 			Launcher::ProgressLock.unlock();
 			Project::CreateProject(Launcher::project_name, Launcher::path, "\\Scenes\\" + Launcher::starting_scene);
-			Chroma::AssetManager::AssetDirectory = Launcher::path + "\\" + Launcher::project_name + "\\Assets";
+			Project::AssetDirectory = Launcher::path + "\\" + Launcher::project_name + "\\Assets";
 			while (!Launcher::ProgressLock.try_lock()) {}
 			Launcher::ProgressMessage = "Creating Scene...";
 			Launcher::ProgressLock.unlock();
@@ -284,7 +285,7 @@ namespace Polychrome
 			this->CurrentScene->SetPrimaryCamera(camera.GetID());
 			this->CurrentScene->GetComponent<Chroma::Tag>(camera.GetID()).EntityName = "Camera";
 			this->CurrentScene->Name = Launcher::starting_scene;
-			EditorApp::CurrentScenePath = Chroma::AssetManager::AssetDirectory + "\\Scenes\\" + Launcher::starting_scene + ".chroma";
+			EditorApp::CurrentScenePath = Project::AssetDirectory + "\\Scenes\\" + Launcher::starting_scene + ".chroma";
 			while (!Launcher::ProgressLock.try_lock()) {}
 			Launcher::ProgressMessage = "Saving Scene...";
 			Launcher::ProgressLock.unlock();
@@ -296,7 +297,7 @@ namespace Polychrome
 			Launcher::ProgressMessage = "Loading Project...";
 			Launcher::ProgressLock.unlock();
 			Project::LoadProject(Launcher::path + "\\" + Launcher::project_name + ".polychrome");
-			EditorApp::CurrentScenePath = Chroma::AssetManager::AssetDirectory + "\\Scenes\\" + Project::StartingScene + ".chroma";
+			EditorApp::CurrentScenePath = Project::AssetDirectory + "\\Scenes\\" + Project::StartingScene + ".chroma";
 		}
 
 
@@ -304,9 +305,9 @@ namespace Polychrome
 		Launcher::ProgressMessage = "Constructing Additional Pylons...";
 		Launcher::ProgressLock.unlock();
 
-		Polychrome::FileWatcherThread::SetWatch(Chroma::AssetManager::AssetDirectory);
+		Polychrome::FileWatcherThread::SetWatch(Project::AssetDirectory);
 
-		for (std::filesystem::path path : std::filesystem::recursive_directory_iterator(Chroma::AssetManager::AssetDirectory))
+		for (std::string path : Chroma::FileSystem::RecursiveFileIterator(Project::AssetDirectory))
 		{
 			if (!AssetBrowser::Icons.contains(path))
 			{
@@ -447,6 +448,10 @@ namespace Polychrome
 		//io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;  //Enable gamepad controls
 		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;       //Enable docking
 		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;     //Enable Multi-viewport windows
+
+		//io.FontGlobalScale = dpi;
+
+		//CHROMA_CORE_ERROR("DPI: {}", dpi);
 
 		ImGuiStyle& style = ImGui::GetStyle();
 		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
@@ -1056,9 +1061,9 @@ namespace Polychrome
 		
 		const Math::vec2& origin = spriteRenderer.GetSpriteOriginVector();
 		
-		if (Chroma::AssetManager::HasSprite(spriteRenderer.GetSpriteID()))
+		if (Chroma::AssetManager::Exists(spriteRenderer.GetSpriteID()))
 		{
-			Chroma::Ref<Chroma::Sprite> s = Chroma::AssetManager::GetSprite(spriteRenderer.GetSpriteID());
+			Chroma::Ref<Chroma::Sprite> s = Chroma::AssetManager::Get<Chroma::Sprite>(spriteRenderer.GetSpriteID());
 			int w = s->Frames[spriteRenderer.GetCurrentFrame()].Texture->GetWidth();
 			int h = s->Frames[spriteRenderer.GetCurrentFrame()].Texture->GetHeight();
 			if (!relationship.IsChild())

@@ -184,7 +184,9 @@ project "Polychrome"
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
     objdir ("obj/" .. outputdir .. "/%{prj.name}")
 
-    dependson { "Chroma.Mono" }
+    dependson { "Chroma.Mono", "Runtime" }
+
+    debugdir ("bin/" .. outputdir .. "/%{prj.name}")
 
     links
     {
@@ -255,9 +257,9 @@ project "Polychrome"
         runtime "Debug"
         symbols "On"
         optimize "Debug"
-        postbuildcommands
-		{
-			"{COPYDIR} \"%{LibraryDir.VulkanSDK_DebugDLL}\" \"%{cfg.targetdir}\""
+        postbuildcommands{
+			"{COPYDIR} \"%{LibraryDir.VulkanSDK_DebugDLL}\" \"%{cfg.targetdir}\"",
+            '{COPYDIR} \"%{wks.location}bin/' .. outputdir .. '/Runtime" "%{cfg.targetdir}/Runtime\"'
 		}
 
     filter "configurations:Release"
@@ -300,6 +302,8 @@ project "Runtime"
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
     objdir ("obj/" .. outputdir .. "/%{prj.name}")
 
+    dependson { "Chroma.Mono" }
+
     files
     {
         "%{prj.name}/**.h",
@@ -308,14 +312,22 @@ project "Runtime"
 
     includedirs
     {
-        "Chroma/third_party/spdlog/include",
         "Chroma/src",
+        "Chroma/third_party/spdlog/include",
         "%{IncludeDir.glm}",
+        "%{IncludeDir.Glad}",
         "%{IncludeDir.ImGui}",
+        "%{IncludeDir.ImGui}/misc/cpp",
+        "%{IncludeDir.entt}",
         "%{IncludeDir.FMOD}",
         "%{IncludeDir.yaml}",
-        "%{IncludeDir.entt}"
-
+        "%{IncludeDir.concurrentqueue}",
+        "%{IncludeDir.readerwriterqueue}",
+        "%{IncludeDir.ImGuizmo}",
+        "%{IncludeDir.mono}",
+        "%{IncludeDir.cute_headers}",
+        "%{IncludeDir.miniz}",
+        "%{IncludeDir.box2d}"
     }
 
     links
@@ -333,33 +345,47 @@ project "Runtime"
         "{ECHO} Copying assets to %{cfg.targetdir}/assets",
         "{COPYDIR} assets %{cfg.targetdir}/assets",
         "{ECHO} Copying ../Chroma/third_party/mono/bin/mono-2.0-sgen.dll to %{cfg.targetdir}",
-        '{COPYFILE} "../Chroma/third_party/mono/bin/mono-2.0-sgen.dll" "%{cfg.targetdir}"'
+        '{COPYFILE} "../Chroma/third_party/mono/bin/mono-2.0-sgen.dll" "%{cfg.targetdir}"',
+        "{COPYFILE} Chroma.Mono.dll %{cfg.targetdir}"
     }
 
-
-    filter "system:windows"
-        systemversion "latest"
-
-        defines
-        {
-            "CHROMA_PLATFORM_WINDOWS",
-        }
 
     filter "configurations:Debug"
         defines "CHROMA_DEBUG"
         runtime "Debug"
         symbols "On"
         optimize "Debug"
+        postbuildcommands{
+			"{COPYDIR} \"%{LibraryDir.VulkanSDK_DebugDLL}\" \"%{cfg.targetdir}\""
+		}
 
     filter "configurations:Release"
         defines "CHROMA_RELEASE"
         runtime "Release"
         optimize "On"
+        postbuildcommands{
+            "{ECHO} Copying Vulkan dlls...",
+            "{ECHO} \"%{LibraryDir.VulkanSDK_Bin}/shaderc_shared.dll\" %{cfg.targetdir}",
+            "{COPYFILE} \"%{LibraryDir.VulkanSDK_Bin}/shaderc_shared.dll\" %{cfg.targetdir}",
+            "{ECHO} \"%{LibraryDir.VulkanSDK_Bin}/spirv-cross-c-shared.dll\" %{cfg.targetdir}",
+            "{COPYFILE} \"%{LibraryDir.VulkanSDK_Bin}/spirv-cross-c-shared.dll\" %{cfg.targetdir}",
+            "{ECHO} \"%{LibraryDir.VulkanSDK_Bin}/SPIRV-Tools-shared.dll\" %{cfg.targetdir}",
+            "{COPYFILE} \"%{LibraryDir.VulkanSDK_Bin}/SPIRV-Tools-shared.dll\" %{cfg.targetdir}"
+        }
 
     filter "configurations:Dist"
         defines "CHROMA_DIST"
         runtime "Release"
         optimize "On"
+        postbuildcommands{
+            "{ECHO} Copying Vulkan dlls...",
+            "{ECHO} \"%{LibraryDir.VulkanSDK_Bin}/shaderc_shared.dll\" %{cfg.targetdir}",
+            "{COPYFILE} \"%{LibraryDir.VulkanSDK_Bin}/shaderc_shared.dll\" %{cfg.targetdir}",
+            "{ECHO} \"%{LibraryDir.VulkanSDK_Bin}/spirv-cross-c-shared.dll\" %{cfg.targetdir}",
+            "{COPYFILE} \"%{LibraryDir.VulkanSDK_Bin}/spirv-cross-c-shared.dll\" %{cfg.targetdir}",
+            "{ECHO} \"%{LibraryDir.VulkanSDK_Bin}/SPIRV-Tools-shared.dll\" %{cfg.targetdir}",
+            "{COPYFILE} \"%{LibraryDir.VulkanSDK_Bin}/SPIRV-Tools-shared.dll\" %{cfg.targetdir}"
+        }
 
 
 
@@ -380,19 +406,22 @@ project "Chroma.Mono"
         buildcommands {
             "{ECHO} Building Chroma.Mono.dll with mcs...",
             "%{wks.location}Polychrome/mono/bin/mono.exe %{wks.location}Polychrome/mono/lib/mono/4.5/mcs.exe -debug -target:library -nostdlib -out:%{wks.location}bin/" .. outputdir .. "/%{prj.name}/Chroma.Mono.dll -r:%{wks.location}Polychrome/mono/lib/mono/4.5/mscorlib.dll,%{wks.location}Polychrome/mono/lib/mono/4.5/System.dll,%{wks.location}Polychrome/mono/lib/mono/4.5/System.Core.dll -recurse:Source/**.cs",
-            "{COPYFILE} %{wks.location}bin/" .. outputdir .. "/%{prj.name}/Chroma.Mono.dll %{wks.location}Polychrome"
+            "{COPYFILE} %{wks.location}bin/" .. outputdir .. "/%{prj.name}/Chroma.Mono.dll %{wks.location}Polychrome",
+            "{COPYFILE} %{wks.location}bin/" .. outputdir .. "/%{prj.name}/Chroma.Mono.dll %{wks.location}Runtime"
         }
 
     filter "configurations:Release"
         buildcommands {
             "{ECHO} Building Chroma.Mono.dll with mcs...",
             "%{wks.location}Polychrome/mono/bin/mono.exe %{wks.location}Polychrome/mono/lib/mono/4.5/mcs.exe -target:library -nostdlib -optimize -out:%{wks.location}bin/" .. outputdir .. "/%{prj.name}/Chroma.Mono.dll -r:%{wks.location}Polychrome/mono/lib/mono/4.5/mscorlib.dll,%{wks.location}Polychrome/mono/lib/mono/4.5/System.dll,%{wks.location}Polychrome/mono/lib/mono/4.5/System.Core.dll -recurse:Source/**.cs",
-            "{COPYFILE} %{wks.location}bin/" .. outputdir .. "/%{prj.name}/Chroma.Mono.dll %{wks.location}Polychrome"
+            "{COPYFILE} %{wks.location}bin/" .. outputdir .. "/%{prj.name}/Chroma.Mono.dll %{wks.location}Polychrome",
+            "{COPYFILE} %{wks.location}bin/" .. outputdir .. "/%{prj.name}/Chroma.Mono.dll %{wks.location}Runtime"
         }
 
     filter "configurations:Dist"
         buildcommands {
             "{ECHO} Building Chroma.Mono.dll with mcs...",
             "%{wks.location}Polychrome/mono/bin/mono.exe %{wks.location}Polychrome/mono/lib/mono/4.5/mcs.exe -target:library -nostdlib -optimize -out:%{wks.location}bin/" .. outputdir .. "/%{prj.name}/Chroma.Mono.dll -r:%{wks.location}Polychrome/mono/lib/mono/4.5/mscorlib.dll,%{wks.location}Polychrome/mono/lib/mono/4.5/System.dll,%{wks.location}Polychrome/mono/lib/mono/4.5/System.Core.dll -recurse:Source/**.cs",
-            "{COPYFILE} %{wks.location}bin/" .. outputdir .. "/%{prj.name}/Chroma.Mono.dll %{wks.location}Polychrome"
+            "{COPYFILE} %{wks.location}bin/" .. outputdir .. "/%{prj.name}/Chroma.Mono.dll %{wks.location}Polychrome",
+            "{COPYFILE} %{wks.location}bin/" .. outputdir .. "/%{prj.name}/Chroma.Mono.dll %{wks.location}Runtime"
         }

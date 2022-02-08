@@ -1,124 +1,117 @@
 #include "chromapch.h"
 #include "AssetManager.h"
-#include <Chroma/Assets/Sprite.h>
+#include <Chroma/Assets/Asset.h>
 #include <Chroma/Core/Log.h>
 
 namespace Chroma
 {
-
-
-    /// @brief Directory containing assets
-    std::string AssetManager::AssetDirectory = ".\\assets";
     
-    /// @brief Map containing references to the game's Sprites.
+    /// @brief Map containing references to the game's assets.
     /// @see AssetID
     /// @see Sprite
-    std::unordered_map<size_t, Ref<Sprite>> AssetManager::Sprites;
+    std::unordered_map<size_t, Ref<Asset>> AssetManager::s_Assets;
+    std::unordered_map<StringHash, std::vector<size_t>> AssetManager::s_AssetTypes;
+    std::hash<std::string> AssetManager::s_Hash;
 
 
-    /// @brief Hash relative path to Asset to get Asset's ID.
-    /// @param path Relative path to Asset in AssetDirectory
-    /// @return ID of Asset
-    size_t AssetManager::HashPath(const std::string& path)
+    Ref<Asset> AssetManager::Get(const std::string& assetPath)
     {
-        return std::hash<std::string>()(path);
-    }
-
-    std::string AssetManager::GetPath(const std::string& asset)
-    {
-        return AssetDirectory + "\\" + asset;
-    }
-
-    /// @brief Begin loading of sprites.
-    /// 
-    /// This function begins the loading phase for sprites. Any sprites already loaded
-    /// will be marked as unloaded. LoadSprite() must be called after this function
-    /// for every sprite to be loaded.
-    /// 
-    /// @see LoadSprite()
-    /// @see EndSpriteLoad()
-    void AssetManager::BeginSpriteLoad()
-    {
-        for (auto& [id, sprite] : Sprites)
+        if (Exists(assetPath))
         {
-            sprite->Loaded = false;
+            return (s_Assets[s_Hash(assetPath)]);
+        }
+        return nullptr;
+    }
+
+
+    bool AssetManager::Exists(const std::string& id)
+    {
+        return s_Assets.contains(s_Hash(id));
+    }
+
+
+    bool AssetManager::Load(const std::string& id)
+    {
+        if (!Exists(id))
+        {
+            CHROMA_CORE_WARN("Asset cannot be loaded, as it does not yet exist! {}", id);
+            return false;
+        }
+            
+
+        auto& asset = s_Assets[s_Hash(id)];
+
+        if (asset->IsLoaded())
+        {
+            CHROMA_CORE_WARN("Asset is already loaded! {}", id);
+            return false;
+        }
+
+        bool result = asset->Load();
+        asset->m_Loaded = true;
+        return result;
+    }
+
+
+    bool AssetManager::Unload(const std::string& id)
+    {
+        if (!Exists(id))
+            return false;
+        auto& asset = s_Assets[s_Hash(id)];
+
+        if (!asset->IsLoaded())
+            return false;
+
+        return asset->Unload();
+    }
+
+
+    bool AssetManager::Reload(const std::string& id)
+    {
+        if (!Exists(id))
+            return false;
+        auto& asset = s_Assets[s_Hash(id)];
+
+        if (asset->IsLoaded())
+            return asset->Unload();
+
+        return asset->Load();
+    }
+
+    bool AssetManager::IsLoaded(const std::string& assetPath)
+    {
+        return Exists(assetPath) && s_Assets[s_Hash(assetPath)]->IsLoaded();
+    }
+
+    void AssetManager::UnloadAll()
+    {
+        std::vector<size_t> toRemove;
+        for (auto& [hash, asset] : s_Assets)
+        {
+            asset.reset();
+            toRemove.push_back(hash);
+        }
+        for (size_t hash : toRemove)
+        {
+            s_Assets.erase(s_Assets.find(hash));
         }
     }
 
-    /// @brief End loading of sprites.
-    /// 
-    /// This function ends the loading phase for sprites. Any sprites that were loaded before the begining of the
-    /// load phase that have not been loaded durring this phase will be unloaded.
-    /// LoadSprite() must be called before this function for every Sprite that should be loaded
-    /// (even if the sprite was loaded prior to the loading phase.
-    /// 
-    /// @see LoadSprite()
-    /// @see BeginSpriteLoad()
-    void AssetManager::EndSpriteLoad()
+    void AssetManager::UnloadUnused()
     {
-        for (auto it = Sprites.begin(); it != Sprites.end();)
+        std::vector<size_t> toRemove;
+        for (auto& [hash, asset] : s_Assets)
         {
-            if (!it->second->Loaded)
-                it = Sprites.erase(it);
-            else
-                ++it;
+            if (asset.use_count() < 1)
+            {
+                asset.reset();
+                toRemove.push_back(hash);
+            }
         }
-    }
-
-    /// @brief Load a sprite into the AssetManager.
-    /// 
-    /// This function will load a sprite, if it is not already loaded.
-    /// This function must be called during load step in order for the sprite to remain loaded.
-    /// Currently supports loading ```.ase```, ```.png```, & ```.jpg``` sprite formats.
-    /// 
-    /// @param path Relative path of the Sprite.
-    /// @return Whether the sprite was loaded succesfully.
-    bool AssetManager::LoadSprite(const std::string& path)
-    {
-        size_t hashval = std::hash<std::string>()(path);
-        if (!AssetManager::HasSprite(path))
+        for (size_t hash : toRemove)
         {
-            AssetManager::Sprites.insert({ hashval, CreateRef<Sprite>(path) });
+            s_Assets.erase(s_Assets.find(hash));
         }
-        bool success = AssetManager::Sprites[hashval]->Load();
-        if (success)
-            AssetManager::Sprites[hashval]->Loaded = true;
-
-        //if (success)
-           // CHROMA_CORE_TRACE("Sprite Loaded: {}", path);
-        //else
-            //CHROMA_CORE_ERROR("Sprite Failed to Load: {}", path);
-        if (!success)
-            CHROMA_CORE_ERROR("Sprite Failed to Load: {}", path);
-
-        return success;
-    }
-
-
-    /// @brief Get a sprite given relative path.
-    /// @param path Relative path to the sprite.
-    /// @return Reference to the Sprite.
-    Ref<Sprite> AssetManager::GetSprite(const std::string& path)
-    {
-        size_t hashval = std::hash<std::string>()(path);
-        return AssetManager::Sprites[hashval];
-    }
-
-    /// @brief Check whether a sprite is loaded.
-    /// @param path Relative path to the sprite.
-    /// @return Returns true if the sprite is loaded.
-    bool AssetManager::HasSprite(const std::string& path)
-    {
-        return Sprites.contains(std::hash<std::string>()(path));
-    }
-
-    /// @brief Get map of Sprites
-    /// @return Map of sprites.
-    std::unordered_map<size_t, Ref<Sprite>>* AssetManager::GetSprites()
-    {
-        return &AssetManager::Sprites;
     }
 
 }
-
-
