@@ -236,7 +236,8 @@ project "Polychrome"
         '{COPYFILE} "%{wks.location}Chroma/third_party/mono/bin/mono-2.0-sgen.dll" "%{cfg.targetdir}"',
         "{ECHO} Copying imgui.ini to %{cfg.targetdir}",
         "{COPYFILE} imgui.ini %{cfg.targetdir}",
-        "{COPYFILE} Chroma.Mono.dll %{cfg.targetdir}"
+        "{COPYFILE} Chroma.Mono.dll %{cfg.targetdir}",
+        '{COPYDIR} \"%{wks.location}bin/' .. outputdir .. '/Runtime" "%{cfg.targetdir}/Runtime\"'
     }
 
     defines
@@ -259,7 +260,6 @@ project "Polychrome"
         optimize "Debug"
         postbuildcommands{
 			"{COPYDIR} \"%{LibraryDir.VulkanSDK_DebugDLL}\" \"%{cfg.targetdir}\"",
-            '{COPYDIR} \"%{wks.location}bin/' .. outputdir .. '/Runtime" "%{cfg.targetdir}/Runtime\"'
 		}
 
     filter "configurations:Release"

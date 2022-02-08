@@ -524,15 +524,19 @@ namespace Polychrome
 		}
 		
 
-		std::function<void()> func;
-		bool success;
-		while (success = FileWatcherThread::file_queue.try_dequeue(func))
+		if (!EditorApp::SceneRunning && !EditorApp::ScenePaused)
 		{
-			if (success)
-				func();
-			else
-				break;
+			std::function<void()> func;
+			bool success;
+			while (success = FileWatcherThread::file_queue.try_dequeue(func))
+			{
+				if (success)
+					func();
+				else
+					break;
+			}
 		}
+
 	}
 
 

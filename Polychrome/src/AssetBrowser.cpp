@@ -690,12 +690,12 @@ namespace Polychrome
 
 		if (path.extension().compare(".png") == 0 || path.extension().compare(".jpg") == 0 || path.extension().compare(".ase") == 0 || path.extension().compare(".aseprite") == 0)
 		{
-			std::string sprite_path = path.lexically_relative(Project::AssetDirectory).string();
+			std::string sprite_path = std::filesystem::path(path.lexically_relative(Project::AssetDirectory)).string();
+			std::replace(sprite_path.begin(), sprite_path.end(), '\\', '/');
 
 			if (Chroma::AssetManager::Exists(sprite_path))
 			{
 				auto sprite = Chroma::AssetManager::Get<Chroma::Sprite>(sprite_path);
-
 				if (!sprite->Frames.empty())
 				{
 					Icons[path] = sprite->Frames[0].Texture;

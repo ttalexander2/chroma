@@ -89,7 +89,6 @@ void Runtime::Init()
 }
 
 void Runtime::Update(Time delta)
-	
 {
 	
 		Engine::CurrentScene->Update(delta);
