@@ -31,7 +31,7 @@ jobs:
       - name: Setup Vulkan
         uses: crazy-max/ghaction-chocolatey@v1
         with:
-          args: install vulkan-sdk --version=1.2.182.0
+          args: install vulkan-sdk
         
           
       - name: Checkout Repository
