@@ -13,10 +13,12 @@ namespace Chroma
 		CHROMA_COMPONENT(EntityInfo, Component);
 
 		std::string Name = "New Entity";
-		unsigned long Layer = 0;
+		unsigned int Layer = 0;
+		unsigned int Ordering = 0;
+
 		std::unordered_set<std::string> Tags;
 		GUID ID = GUID::CreateGUID();
-		unsigned int Ordering = 0;
+
 
 
 		std::vector<EntityID> Children;

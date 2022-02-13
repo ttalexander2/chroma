@@ -58,8 +58,8 @@ namespace Chroma
 	};
 
 	static RenderData s_Data;
-
 	static Frustum s_CullingFrustum;
+
 
 	void Renderer2D::Init()
 	{

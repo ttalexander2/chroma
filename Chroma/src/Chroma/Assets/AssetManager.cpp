@@ -88,6 +88,7 @@ namespace Chroma
         std::vector<size_t> toRemove;
         for (auto& [hash, asset] : s_Assets)
         {
+            asset->Unload();
             asset.reset();
             toRemove.push_back(hash);
         }
@@ -104,6 +105,7 @@ namespace Chroma
         {
             if (asset.use_count() < 1)
             {
+                asset->Unload();
                 asset.reset();
                 toRemove.push_back(hash);
             }

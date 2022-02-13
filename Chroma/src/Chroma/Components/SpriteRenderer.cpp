@@ -14,9 +14,6 @@ namespace Chroma
 		out << YAML::Key << "Offset";
 		out << YAML::Value << Offset;
 
-		out << YAML::Key << "Layer";
-		out << YAML::Value << Layer.ToString();
-
 		out << YAML::Key << "PlayOnStart";
 		out << YAML::Value << PlayOnStart;
 
@@ -56,11 +53,6 @@ namespace Chroma
 		if (val)
 		{
 			Offset = val.as<Math::vec2>();
-		}
-		val = node["Layer"];
-		if (val)
-		{
-			Layer = GUID::Parse(val.as<std::string>());
 		}
 		val = node["PlayOnStart"];
 		if (val)

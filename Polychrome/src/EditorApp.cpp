@@ -94,9 +94,6 @@ namespace Polychrome
 	std::string EditorApp::InfoMessage;
 	EditorApp::MessageSeverity EditorApp::InfoSeverity = EditorApp::MessageSeverity::Info;
 
-	//static std::thread launcher_thread;
-
-
 
 
 	EditorApp::EditorApp()
@@ -167,7 +164,6 @@ namespace Polychrome
 		ImGui::SetCurrentContext(cnew);
 
 		auto result = std::async([&]() {
-			
 
 			ImGui::SetCurrentContext(cnew);
 

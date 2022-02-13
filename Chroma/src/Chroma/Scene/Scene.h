@@ -52,6 +52,8 @@ namespace Chroma
 
 		void DestroyEntity(EntityID id, bool destroy_children = false);
 
+		void SerializeEntity(YAML::Emitter& out, EntityID entity);
+
 		std::string Serialize();
 		static bool Deserialize(Scene* out, const std::string& yaml, bool load_assets = false);
 
@@ -220,6 +222,8 @@ namespace Chroma
 		std::vector<Component*> GetAllComponents(EntityID entity);
 
 
+
+
 		//template<ComponentType... Types>
 		//auto View() { return Registry.view<Types>(); }
 
@@ -247,6 +251,10 @@ namespace Chroma
 
 #pragma endregion
 		entt::registry Registry;
+
+		std::unordered_map<size_t, EntityID> Tags;
+		//std::unordered_map<unsigned int, EntityID> Layers;
+
 
 		std::vector<Layer> Layers;
 

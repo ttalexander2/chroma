@@ -130,6 +130,7 @@ namespace Polychrome
 		{
 			Chroma::FileSystem::UnmountAll();
 			Chroma::FileSystem::Mount(AssetDirectory);
+			Chroma::FileSystem::SetWriteDirectory(AssetDirectory);
 			//Chroma::FileSystem::Mount(std::filesystem::path(Chroma::AssetManager::AssetDirectory).parent_path().string() + "\\TestArchive.7z");
 
 		}

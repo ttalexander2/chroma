@@ -310,7 +310,7 @@ namespace Chroma
 		SpriteRenderer* sr = scene->Registry.try_get<SpriteRenderer>(id);
 		if (sr != nullptr)
 		{
-			return mono_string_new(mono_domain_get(), sr->Layer.ToString().c_str());
+			return mono_string_new(mono_domain_get(), "");
 		}
 		return nullptr;
 	}
@@ -321,7 +321,6 @@ namespace Chroma
 		SpriteRenderer* sr = scene->Registry.try_get<SpriteRenderer>(id);
 		if (sr != nullptr)
 		{
-			sr->Layer = Chroma::GUID::Parse(mono_string_to_utf8(val));
 		}
 	}
 	bool Script::SpriteRenderer_GetPlayOnStart(EntityID id)

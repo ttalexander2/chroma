@@ -33,6 +33,13 @@ void Runtime::Init()
 		std::string Name = "Game";
 		auto ss = std::ostringstream{};
 		std::ifstream stream(path);
+
+		if (!std::filesystem::exists(path))
+		{
+			this->Stop();
+			return;
+		}
+			
 		if (stream.good())
 		{
 			ss << stream.rdbuf();
@@ -62,6 +69,7 @@ void Runtime::Init()
 		{
 			Chroma::FileSystem::UnmountAll();
 			Chroma::FileSystem::Mount(AssetDirectory);
+			Chroma::FileSystem::SetWriteDirectory(AssetDirectory);
 
 		}
 		catch (Chroma::FileSystem::FileSystemException e)

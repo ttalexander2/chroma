@@ -100,7 +100,9 @@ project "Chroma"
         "opengl32.lib",
         "%{Library.mono}",
         "PhysicsFS",
-        "box2d"
+        "box2d",
+        "%{Library.Vulkan}",
+        "%{Library.VulkanUtils}"
     }
 
     filter "files:Chroma/third_party/ImGuizmo/**.cpp or files:Chroma/third_party/yaml-cpp/src/**.cpp"
@@ -236,6 +238,8 @@ project "Polychrome"
         '{COPYFILE} "%{wks.location}Chroma/third_party/mono/bin/mono-2.0-sgen.dll" "%{cfg.targetdir}"',
         "{ECHO} Copying imgui.ini to %{cfg.targetdir}",
         "{COPYFILE} imgui.ini %{cfg.targetdir}",
+        "{ECHO} Copying EditorLayout.ini to %{cfg.targetdir}",
+        "{COPYFILE} EditorLayout.ini %{cfg.targetdir}",
         "{COPYFILE} Chroma.Mono.dll %{cfg.targetdir}",
         '{COPYDIR} \"%{wks.location}bin/' .. outputdir .. '/Runtime" "%{cfg.targetdir}/Runtime\"'
     }
