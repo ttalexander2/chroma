@@ -97,7 +97,10 @@ namespace Chroma
 
 	std::string Scene::CreatePrefab(EntityID entity)
 	{
-		return std::string();
+		
+		YAML::Emitter out;
+		SerializeEntity(out, entity);
+		return std::string(out.c_str());
 	}
 
 	void Scene::MakeUnique(EntityID entity)
@@ -300,51 +303,7 @@ namespace Chroma
 
 		for (auto entity : view)
 		{
-			out << YAML::BeginMap;
-			out << YAML::Key << "Entity" << YAML::Value << (uint32_t)entity;
-
-			Tag& tag = Registry.get_or_emplace<Tag>(entity);
-			out << YAML::Key << "Name" << YAML::Value << tag.EntityName;
-
-			out << YAML::Key << "Components" << YAML::Value << YAML::BeginMap;
-			
-			std::vector<Component*> components = this->GetAllComponents(entity);
-			std::sort(components.begin(), components.end(), [](Component* a, Component* b) {return a->order_id < b->order_id; });
-
-			for (Component* comp : components)
-			{
-				if (comp->IsTypeOf<Relationship>())
-				{
-					Relationship* rel = reinterpret_cast<Relationship*>(comp);
-					if (rel->HasChildren() || rel->IsChild())
-						comp->DoSerialize(out);
-					
-				}
-				else if (comp->IsTypeOf<Tag>())
-				{
-					continue;
-				}
-				else if (comp->IsTypeOf<Camera>())
-				{
-					comp->BeginSerialize(out);
-					comp->Serialize(out);
-					if (PrimaryCameraEntity == entity)
-					{
-						out << YAML::Key << "Primary";
-						out << YAML::Value << true;
-					}
-					comp->EndSerialize(out);
-
-				}
-				else
-				{
-					comp->DoSerialize(out);
-				}
-					
-			}
-			
-			out << YAML::EndMap;
-			out << YAML::EndMap;
+			SerializeEntity(out, entity);
 		}
 
 		out << YAML::EndSeq;
@@ -548,6 +507,55 @@ namespace Chroma
 		}
 
 		return retval;
+	}
+
+	void Scene::SerializeEntity(YAML::Emitter& out, EntityID entity)
+	{
+		out << YAML::BeginMap;
+		out << YAML::Key << "Entity" << YAML::Value << (uint32_t)entity;
+
+		Tag& tag = Registry.get_or_emplace<Tag>(entity);
+		out << YAML::Key << "Name" << YAML::Value << tag.EntityName;
+
+		out << YAML::Key << "Components" << YAML::Value << YAML::BeginMap;
+
+		std::vector<Component*> components = this->GetAllComponents(entity);
+		std::sort(components.begin(), components.end(), [](Component* a, Component* b) {return a->order_id < b->order_id; });
+
+		for (Component* comp : components)
+		{
+			if (comp->IsTypeOf<Relationship>())
+			{
+				Relationship* rel = reinterpret_cast<Relationship*>(comp);
+				if (rel->HasChildren() || rel->IsChild())
+					comp->DoSerialize(out);
+
+			}
+			else if (comp->IsTypeOf<Tag>())
+			{
+				continue;
+			}
+			else if (comp->IsTypeOf<Camera>())
+			{
+				comp->BeginSerialize(out);
+				comp->Serialize(out);
+				if (PrimaryCameraEntity == entity)
+				{
+					out << YAML::Key << "Primary";
+					out << YAML::Value << true;
+				}
+				comp->EndSerialize(out);
+
+			}
+			else
+			{
+				comp->DoSerialize(out);
+			}
+
+		}
+
+		out << YAML::EndMap;
+		out << YAML::EndMap;
 	}
 
 	void Scene::OnLoad()

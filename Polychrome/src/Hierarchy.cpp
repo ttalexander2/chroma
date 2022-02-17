@@ -11,6 +11,7 @@
 #include "imgui_stdlib.h"
 #include <Chroma/Components/Relationship.h>
 #include <Chroma/Utilities/ContainerHelpers.h>
+#include "Project.h"
 
 
 namespace Polychrome
@@ -30,8 +31,6 @@ namespace Polychrome
 
 	void Hierarchy::Draw()
 	{
-
-
 
 		if (Hierarchy::Open)
 		{
@@ -331,7 +330,24 @@ namespace Polychrome
 				ImGui::MenuItem("Duplicate##HIERARCHY_CONTEXT_MENU");
 				if (ImGui::MenuItem("Create Prefab##HIERARCHY_CONTEXT_MENU"))
 				{
-					//Hierarchy::SelectedEntity
+					std::string prefab = scene->CreatePrefab(e);
+					std::string prefab_name = scene->GetComponent<Chroma::Tag>(e).EntityName;
+					if (!Chroma::FileSystem::Exists("Prefabs/ " + prefab_name + ".prefab"))
+					{
+						CHROMA_CORE_TRACE("Creating Prefab: {}", "Prefabs/" + prefab_name + ".prefab");
+						Chroma::File file = Chroma::File::Open("Prefabs/" + prefab_name + ".prefab", Chroma::FileMode::Write);
+						file.Write(prefab);
+						file.Close();
+					}
+					else
+					{
+						CHROMA_CORE_TRACE("Creating Prefab: {}", "Prefabs/" + prefab_name + "_1.prefab");
+						Chroma::File file = Chroma::File::Open("Prefabs/" + prefab_name + "_1.prefab", Chroma::FileMode::Write);
+						file.Write(prefab);
+						file.Close();
+					}
+
+
 				}
 
 				ImGui::Separator();

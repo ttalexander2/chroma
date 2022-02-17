@@ -505,9 +505,11 @@ namespace Polychrome
 				}
 				ImGui::SameLine();
 
-				ImGui::PushItemFlag(ImGuiItemFlags_Disabled, !std::filesystem::exists(std::filesystem::path(creating_path).parent_path()));
+				//ImGui::PushItemFlag(ImGuiItemFlags_Disabled, !std::filesystem::exists(std::filesystem::path(creating_path).parent_path()));
 				if (ImGui::Button("Create"))
 				{
+					if (!std::filesystem::exists(std::filesystem::path(creating_path).parent_path()))
+						std::filesystem::create_directories(std::filesystem::path(creating_path));
 					std::time_t t = std::time(nullptr);
 					char buffer[80];
 					strftime(buffer, sizeof(buffer), "%d/%m/%Y %H:%M", std::localtime(&t));
@@ -545,7 +547,7 @@ namespace Polychrome
 					Launcher::create = true;
 					Launcher::starting_scene = creating_starting;
 				}
-				ImGui::PopItemFlag();
+				//ImGui::PopItemFlag();
 
 
 

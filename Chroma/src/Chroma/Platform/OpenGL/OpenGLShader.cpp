@@ -50,7 +50,7 @@ namespace Chroma
 	static const char* GetCacheDirectory()
 	{
 		// TODO: make sure the assets directory is valid
-		return "assets/cache/shader/opengl";
+		return "assets/cache/shader";
 	}
 
 	static void CreateCacheDirectoryIfNeeded()
@@ -173,11 +173,10 @@ namespace Chroma
 
 	void OpenGLShader::CompileOrGetVulkanBinaries(const std::unordered_map<GLenum, std::string>& shaderSources)
 	{
-		GLuint program = glCreateProgram();
-
 		shaderc::Compiler compiler;
 		shaderc::CompileOptions options;
 		options.SetTargetEnvironment(shaderc_target_env_vulkan, shaderc_env_version_vulkan_1_2);
+		options.SetTargetSpirv(shaderc_spirv_version_1_5);
 
 		const bool optimize = true;
 		if (optimize)

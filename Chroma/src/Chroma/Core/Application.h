@@ -10,8 +10,9 @@
 #include "Chroma/Core/Time.h"
 
 #include "Chroma/Renderer/Shader.h"
-#include "Chroma/Renderer/Buffer.h"
-#include "Chroma/Renderer/VertexArray.h"
+#include "Chroma/Renderer/VertexBuffer.h"
+#include "Chroma/Renderer/IndexBuffer.h"
+#include "Chroma/Renderer/Pipeline.h"
 #include "Chroma/Scene/Scene.h"
 
 

@@ -5,7 +5,6 @@
 #include "Chroma/Core/Input.h"
 #include "Chroma/Core/KeyCodes.h"
 #include "Chroma/Core/MouseButtonCodes.h"
-#include "Chroma/Renderer/Renderer.h"
 
 #include "Chroma/Core/Time.h"
 #include "Chroma/Audio/Audio.h"
@@ -24,6 +23,8 @@
 #include "Chroma/Components/CSharpScript.h"
 #include "Chroma/Components/Camera.h"
 #include "Chroma/Components/ParticleEmitter.h"
+#include "Chroma/Renderer/RenderCommand.h"
+#include "Chroma/Renderer/Renderer2D.h"
 
 
 
@@ -49,7 +50,8 @@ namespace Chroma
 		m_Window = Scope<Window>(Window::Create(props));
 		m_Window->SetEventCallback(CHROMA_BIND_EVENT_FN(Application::ProcessEvents));
 		Input::Init();
-		Renderer::Init();
+		RenderCommand::Init();
+		Renderer2D::Init();
 
 		m_ImGuiLayer = new ImGuiLayer();
 
@@ -98,7 +100,7 @@ namespace Chroma
 		}
 		m_Minimized = false;
 
-		Renderer::OnWindowResize(e.GetWidth(), e.GetHeight());
+		RenderCommand::SetViewport(0,0,e.GetWidth(), e.GetHeight());
 
 		return false;
 	}

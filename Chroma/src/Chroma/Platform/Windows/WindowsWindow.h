@@ -48,6 +48,8 @@ namespace Chroma
 		/// @return Returns pointer to native window handle.
 		inline virtual void* GetNativeWindow() const { return m_Window; }
 
+		inline virtual GraphicsContext* GetGraphicsContext() const override { return m_Context; }
+
 	private:
 		/// @brief Initialize the window.
 		/// @param props Properties of the window.

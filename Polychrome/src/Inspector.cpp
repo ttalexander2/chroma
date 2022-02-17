@@ -72,6 +72,10 @@ namespace Polychrome
 					Chroma::Tag& tagComp = EditorApp::CurrentScene->GetComponent<Chroma::Tag>(Hierarchy::SelectedEntity);
 					ImGui::InputText("##entity_name", &tagComp.EntityName);
 
+					//ImGui::SameLine();
+					//
+					//ImGui::BeginCombo("##entity_layer", "");
+
 
 					DrawEntity();
 					if (EditorApp::SceneRunning && !EditorApp::ScenePaused)

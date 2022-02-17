@@ -5,8 +5,12 @@
 #include "Chroma/Core/Core.h"
 #include "Chroma/Events/Event.h"
 
+
+
 namespace Chroma
 {
+	class GraphicsContext;
+
 	/// @brief Properties needed to construct a window.
 	struct WindowProps
 	{
@@ -17,14 +21,17 @@ namespace Chroma
 		/// @brief Height of the window.
 		unsigned int Height;
 
+		bool Decorated = true;
+
 		/// @brief Constructs a WindowProps object.
 		/// @param title Title of the window.
 		/// @param width Width of the window.
 		/// @param height Height of the window.
-		WindowProps(const std::string& title = "Rendering Engine",
+		WindowProps(const std::string& title = "Polychrome",
 			unsigned int width = 1920,
-			unsigned int height = 1080)
-			: Title(title), Width(width), Height(height)
+			unsigned int height = 1080,
+			bool decorated = true)
+			: Title(title), Width(width), Height(height), Decorated(decorated)
 		{
 		}
 	};
@@ -67,6 +74,8 @@ namespace Chroma
 		/// @brief Gets the native window implementation object.
 		/// @return Returns a void pointer. Casting of this pointer would be dependent on the windowing backend.
 		virtual void* GetNativeWindow() const = 0;
+
+		inline virtual GraphicsContext* GetGraphicsContext() const = 0;
 
 		/// @brief Create a new window. The engine should do this for you.
 		/// @param props Window properties (name & size).

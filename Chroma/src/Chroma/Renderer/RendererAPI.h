@@ -2,10 +2,14 @@
 
 #include <glm/glm.hpp>
 
-#include <Chroma/Renderer/VertexArray.h>
-
 namespace Chroma
 {
+
+	enum class PrimitiveType
+	{
+		None = 0, Triangles, Lines
+	};
+
 	class RendererAPI
 	{
 	public:
@@ -26,7 +30,7 @@ namespace Chroma
 
 		virtual void SetViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height) = 0;
 
-		virtual void DrawIndexed(const Ref<VertexArray>& vertexArray, uint32_t indexCount = 0) = 0;
+		virtual void DrawIndexed(uint32_t count, PrimitiveType type, bool depthTest = true) = 0;
 
 		inline static API GetAPI() { return s_API; }
 

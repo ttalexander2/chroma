@@ -3,6 +3,7 @@
 
 #include "Renderer.h"
 #include "Chroma/Platform/OpenGL/OpenGLShader.h"
+#include "Chroma/Platform/Vulkan/VulkanShader.h"
 
 
 
@@ -17,6 +18,7 @@ namespace Chroma
 		{
 			case RendererAPI::API::None: CHROMA_CORE_ASSERT(false, "RendererAPI::API::None not supported!"); return nullptr;
 			case RendererAPI::API::OpenGL: return std::make_shared<OpenGLShader>(filePath);
+			case RendererAPI::API::Vulkan: return std::make_shared<VulkanShader>(filePath);
 
 		}
 
@@ -30,6 +32,7 @@ namespace Chroma
 		{
 			case RendererAPI::API::None: CHROMA_CORE_ASSERT(false, "RendererAPI::API::None not supported!"); return nullptr;
 			case RendererAPI::API::OpenGL: return std::make_shared<OpenGLShader>(name, vertexSrc, fragmentSrc);
+			case RendererAPI::API::Vulkan: return std::make_shared<VulkanShader>(name, vertexSrc, fragmentSrc);
 
 		}
 

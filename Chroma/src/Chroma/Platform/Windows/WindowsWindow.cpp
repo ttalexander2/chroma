@@ -6,6 +6,8 @@
 #include "Chroma/Events/MouseEvent.h"
 #include "Chroma/Events/Event.h"
 #include "Chroma/Platform/OpenGL/OpenGLContext.h"
+#include "Chroma/Platform/Vulkan/VulkanContext.h"
+#include "Chroma/Renderer/RendererAPI.h"
 
 #include <glad/glad.h>
 
@@ -48,16 +50,33 @@ namespace Chroma
 			s_GLFWInitialized = true;
 		}
 
+		if (RendererAPI::GetAPI() == RendererAPI::API::Vulkan)
+			glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+
+		if (props.Decorated)
+		{
+			glfwWindowHint(GLFW_DECORATED, true);
+		}
+		else
+		{
+			glfwWindowHint(GLFW_DECORATED, false);
+		}
+
 
 
 		m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), nullptr, nullptr);
 
-		m_Context = new OpenGLContext(m_Window);
+		if (RendererAPI::GetAPI() == RendererAPI::API::OpenGL)
+			m_Context = new OpenGLContext(m_Window);
+		else if (RendererAPI::GetAPI() == RendererAPI::API::Vulkan)
+			m_Context = new VulkanContext(m_Window);
+		else
+			throw std::runtime_error("Other rendering APIs are not yet supported!");
 
 		m_Context->Init();
 		
 		glfwSetWindowUserPointer(m_Window, &m_Data);
-		SetVSync(false);
+		//SetVSync(false);
 
 		//Set GLFW callbacks
 		glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height)
@@ -155,6 +174,7 @@ namespace Chroma
 
 	void WindowsWindow::Shutdown()
 	{
+		delete m_Context;
 		glfwDestroyWindow(m_Window);
 	}
 

@@ -4,6 +4,7 @@
 #include "Chroma/Core/Core.h";
 #include "Renderer.h"
 #include "Chroma/Platform/OpenGL/OpenGLTexture.h"
+#include "Chroma/Platform/Vulkan/VulkanTexture.h"
 
 namespace Chroma
 {
@@ -14,6 +15,7 @@ namespace Chroma
 		{
 			case RendererAPI::API::None: CHROMA_CORE_ASSERT(false, "RendererAPI::API::None not supported!"); return nullptr;
 			case RendererAPI::API::OpenGL: return CreateRef<OpenGLTexture2D>(width, height);
+			case RendererAPI::API::Vulkan: return CreateRef<VulkanTexture2D>(width, height);
 		}
 
 		CHROMA_CORE_ASSERT(false, "Unknown Renderer API!");
@@ -26,7 +28,7 @@ namespace Chroma
 		{
 			case RendererAPI::API::None: CHROMA_CORE_ASSERT(false, "RendererAPI::API::None not supported!"); return nullptr;
 			case RendererAPI::API::OpenGL: return CreateRef<OpenGLTexture2D>(path, flip);
-
+			case RendererAPI::API::Vulkan: return CreateRef<VulkanTexture2D>(path, flip);
 		}
 
 		CHROMA_CORE_ASSERT(false, "Unknown Renderer API!");
