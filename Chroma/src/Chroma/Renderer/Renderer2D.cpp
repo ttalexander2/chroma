@@ -1,7 +1,7 @@
 #include "chromapch.h"
 #include "Renderer2D.h"
 
-#include "Chroma/Renderer/VertexArray.h"
+#include "Chroma/Renderer/Pipeline.h"
 #include "Chroma/Renderer/Shader.h"
 #include "Chroma/Renderer/RenderCommand.h"
 
@@ -11,6 +11,7 @@
 #include <Chroma/Scene/Scene.h>
 
 #include <Chroma/Renderer/UniformBuffer.h>
+#include <Chroma/Renderer/IndexBuffer.h>
 
 namespace Chroma
 {
@@ -20,6 +21,7 @@ namespace Chroma
 		glm::vec4	Color;
 		glm::vec2	TexCoord;
 		float		TexIndex;
+		float		TilingFactor;
 
 		// Editor-only
 		int EntityID = -1;
@@ -32,9 +34,9 @@ namespace Chroma
 		const uint32_t MaxIndices = MaxQuads * 6;
 		static const uint32_t MaxTextureSlots = 32; //TODO: Query graphics card driver for max #
 
-		Ref<VertexArray> QuadVertexArray;
+		Ref<Pipeline> QuadPipeline;
 		Ref<VertexBuffer> QuadVertexBuffer;
-		Ref<Shader> TextureShader;
+		Ref<IndexBuffer> QuadIndexBuffer;
 		Ref<Texture2D> WhiteTexture;
 
 		uint32_t QuadIndexCount = 0;
@@ -64,19 +66,21 @@ namespace Chroma
 	void Renderer2D::Init()
 	{
 		CHROMA_PROFILE_FUNCTION();
-		s_Data.QuadVertexArray = VertexArray::Create();
 
-		s_Data.QuadVertexBuffer = VertexBuffer::Create(s_Data.MaxVertices * sizeof(QuadVertex));
-		s_Data.QuadVertexBuffer->SetLayout({
+		PipelineSpecification spec;
+		spec.Layout = {
 			{ Chroma::ShaderDataType::Float3, "a_Position" },
 			{ Chroma::ShaderDataType::Float4, "a_Color" },
 			{ Chroma::ShaderDataType::Float2, "a_TextCoord" },
 			{ Chroma::ShaderDataType::Float, "a_TexIndex" },
+			{ Chroma::ShaderDataType::Float, "a_TilingFactor" },
 			{ Chroma::ShaderDataType::Int, "a_EntityID" }
-		});
+		};
+		spec.Shader = Shader::Create("assets/shaders/Texture.glsl");
 
-		s_Data.QuadVertexArray->AddVertexBuffer(s_Data.QuadVertexBuffer);
+		s_Data.QuadPipeline = Pipeline::Create(spec);
 
+		s_Data.QuadVertexBuffer = VertexBuffer::Create(s_Data.MaxVertices * sizeof(QuadVertex));
 		s_Data.QuadVertexBufferBase = new QuadVertex[s_Data.MaxVertices];
 
 
@@ -97,9 +101,7 @@ namespace Chroma
 		}
 
 
-		Ref<IndexBuffer> quadIB = IndexBuffer::Create(quadIndices, s_Data.MaxIndices);
-		s_Data.QuadVertexArray->SetIndexBuffer(quadIB);
-
+		s_Data.QuadIndexBuffer = IndexBuffer::Create(quadIndices, s_Data.MaxIndices);
 		delete[] quadIndices;
 
 
@@ -110,8 +112,6 @@ namespace Chroma
 		int32_t samplers[s_Data.MaxTextureSlots];
 		for (int32_t i = 0; i < s_Data.MaxTextureSlots; i++)
 			samplers[i] = i;
-
-		s_Data.TextureShader = Shader::Create("assets/shaders/Texture.glsl");
 
 		s_Data.TextureSlots[0] = s_Data.WhiteTexture;
 
@@ -194,8 +194,11 @@ namespace Chroma
 		for (uint32_t i = 0; i < s_Data.TextureSlotIndex; i++)
 			s_Data.TextureSlots[i]->Bind(i);
 
-		s_Data.TextureShader->Bind();
-		RenderCommand::DrawIndexed(s_Data.QuadVertexArray, s_Data.QuadIndexCount);
+		s_Data.QuadPipeline->GetSpecification().Shader->Bind();
+		s_Data.QuadVertexBuffer->Bind();
+		s_Data.QuadPipeline->Bind();
+		s_Data.QuadIndexBuffer->Bind();
+		RenderCommand::DrawIndexed(s_Data.QuadIndexCount, PrimitiveType::Triangles, true);
 		s_Data.Stats.DrawCalls++;
 	}
 
@@ -214,7 +217,10 @@ namespace Chroma
 			s_Data.TextureSlots[i]->Bind(i);
 
 		shader->Bind();
-		RenderCommand::DrawIndexed(s_Data.QuadVertexArray, s_Data.QuadIndexCount);
+		s_Data.QuadVertexBuffer->Bind();
+		s_Data.QuadPipeline->Bind();
+		s_Data.QuadIndexBuffer->Bind();
+		RenderCommand::DrawIndexed(s_Data.QuadIndexCount, PrimitiveType::Triangles, true);
 		s_Data.Stats.DrawCalls++;
 	}
 
@@ -272,6 +278,7 @@ namespace Chroma
 		s_Data.QuadVertexBufferPtr->TexCoord = { 0.0f, 0.0f };
 		s_Data.QuadVertexBufferPtr->TexIndex = textureIndex;
 		s_Data.QuadVertexBufferPtr->EntityID = entityID;
+		s_Data.QuadVertexBufferPtr->TilingFactor = 0;
 		s_Data.QuadVertexBufferPtr++;
 
 		s_Data.QuadVertexBufferPtr->Position = transform * s_Data.QuadVertexPositions[1];
@@ -279,6 +286,7 @@ namespace Chroma
 		s_Data.QuadVertexBufferPtr->TexCoord = { 1.0f, 0.0f };
 		s_Data.QuadVertexBufferPtr->TexIndex = textureIndex;
 		s_Data.QuadVertexBufferPtr->EntityID = entityID;
+		s_Data.QuadVertexBufferPtr->TilingFactor = 0;
 		s_Data.QuadVertexBufferPtr++;
 
 		s_Data.QuadVertexBufferPtr->Position = transform * s_Data.QuadVertexPositions[2];
@@ -286,6 +294,7 @@ namespace Chroma
 		s_Data.QuadVertexBufferPtr->TexCoord = { 1.0f, 1.0f };
 		s_Data.QuadVertexBufferPtr->TexIndex = textureIndex;
 		s_Data.QuadVertexBufferPtr->EntityID = entityID;
+		s_Data.QuadVertexBufferPtr->TilingFactor = 0;
 		s_Data.QuadVertexBufferPtr++;
 
 		s_Data.QuadVertexBufferPtr->Position = transform * s_Data.QuadVertexPositions[3];
@@ -293,6 +302,7 @@ namespace Chroma
 		s_Data.QuadVertexBufferPtr->TexCoord = { 0.0f, 1.0f };
 		s_Data.QuadVertexBufferPtr->TexIndex = textureIndex;
 		s_Data.QuadVertexBufferPtr->EntityID = entityID;
+		s_Data.QuadVertexBufferPtr->TilingFactor = 0;
 		s_Data.QuadVertexBufferPtr++;
 
 		s_Data.QuadIndexCount += 6;

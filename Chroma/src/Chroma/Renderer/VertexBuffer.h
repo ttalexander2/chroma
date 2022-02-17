@@ -40,7 +40,7 @@ namespace Chroma
 	}
 
 	/// @brief Buffer element.
-	struct BufferElement
+	struct VertexBufferElement
 	{
 		/// @brief Name of the element
 		std::string Name;
@@ -54,13 +54,13 @@ namespace Chroma
 		bool Normalized = false;
 
 		/// @brief Constructs an empty BufferElement.
-		BufferElement() {}
+		VertexBufferElement() {}
 
 		/// @brief Constructs a BufferElement.
 		/// @param type Type of the uniform data.
 		/// @param name Name of the buffer element.
 		/// @param normalized Whether the data should be normalized.
-		BufferElement(ShaderDataType type, const std::string& name, bool normalized = false)
+		VertexBufferElement(ShaderDataType type, const std::string& name, bool normalized = false)
 			: Name(name), Type(type), Size(ShaderDataTypeSize(type)), Offset(0), Normalized(normalized)
 		{
 		}
@@ -88,14 +88,14 @@ namespace Chroma
 	};
 
 	/// @brief Iterable layout of a buffer.
-	class CHROMA_API BufferLayout
+	class VertexBufferLayout
 	{
 	public:
 		/// @brief Constructs an empty BufferLayout.
-		BufferLayout() {}
+		VertexBufferLayout() {}
 		/// @brief Constructs a new BufferLayout.
 		/// @param elements List of BufferElements to populate the layout.
-		BufferLayout(const std::initializer_list<BufferElement>& elements)
+		VertexBufferLayout(const std::initializer_list<VertexBufferElement>& elements)
 			: m_Elements(elements)
 		{
 			CalculateOffsetAndStride();
@@ -103,16 +103,16 @@ namespace Chroma
 
 		/// @brief Gets the BufferElements from the layout.
 		/// @return List of BufferElement.
-		inline const std::vector<BufferElement>& GetElements() const { return m_Elements; }
+		inline const std::vector<VertexBufferElement>& GetElements() const { return m_Elements; }
 
 		/// @brief Gets the Stride.
 		inline uint32_t GetStride() const { return m_Stride; }
 
 
-		std::vector<BufferElement>::iterator begin() { return m_Elements.begin(); }
-		std::vector<BufferElement>::iterator end() { return m_Elements.end(); }
-		std::vector<BufferElement>::const_iterator begin() const { return m_Elements.begin(); }
-		std::vector<BufferElement>::const_iterator end() const { return m_Elements.end(); }
+		std::vector<VertexBufferElement>::iterator begin() { return m_Elements.begin(); }
+		std::vector<VertexBufferElement>::iterator end() { return m_Elements.end(); }
+		std::vector<VertexBufferElement>::const_iterator begin() const { return m_Elements.begin(); }
+		std::vector<VertexBufferElement>::const_iterator end() const { return m_Elements.end(); }
 
 	private:
 		void CalculateOffsetAndStride()
@@ -128,41 +128,30 @@ namespace Chroma
 		}
 
 	private:
-		std::vector<BufferElement> m_Elements;
+		std::vector<VertexBufferElement> m_Elements;
 		uint32_t m_Stride = 0;
 	};
 
+	enum class VertexBufferUsage
+	{
+		Static = 0, Dynamic = 1
+	};
 
-	/// @brief 
-	class CHROMA_API VertexBuffer 
+
+	class VertexBuffer 
 	{
 	public:
 		virtual ~VertexBuffer() {};
 		
 		virtual void Bind() const = 0;
-		virtual void Unbind() const = 0;
+		virtual void SetData(const void* data, uint32_t size, uint32_t offset = 0) = 0;
 
-		virtual void SetData(const void* data, uint32_t size) = 0;
+		virtual const VertexBufferLayout& GetLayout() const = 0;
+		virtual void SetLayout(const VertexBufferLayout& layout) = 0;
 
-		virtual const BufferLayout& GetLayout() const = 0;
-		virtual void SetLayout(const BufferLayout& layout) = 0;
+		virtual uint32_t GetSize() const = 0;
 
-		static Ref<VertexBuffer> Create(uint32_t size);
-		static Ref<VertexBuffer> Create(float* vertices, uint32_t size);
-	};
-
-	// Assumes 32-bit index buffer
-	class CHROMA_API IndexBuffer
-	{
-	public:
-		virtual ~IndexBuffer() {};
-
-		virtual void Bind() const = 0;
-		virtual void Unbind() const = 0;
-
-		virtual uint32_t GetCount() const = 0;
-
-		static Ref<IndexBuffer> Create(uint32_t* indices, uint32_t count);
-
+		static Ref<VertexBuffer> Create(uint32_t size, VertexBufferUsage usage = VertexBufferUsage::Dynamic);
+		static Ref<VertexBuffer> Create(float* vertices, uint32_t size, VertexBufferUsage = VertexBufferUsage::Static);
 	};
 }

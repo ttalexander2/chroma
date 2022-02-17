@@ -2,6 +2,7 @@
 #include "RenderCommand.h"
 
 #include "Chroma/Platform/OpenGL/OpenGLRendererAPI.h"
+#include "Chroma/Platform/Vulkan/VulkanRendererAPI.h"
 
 namespace Chroma
 {

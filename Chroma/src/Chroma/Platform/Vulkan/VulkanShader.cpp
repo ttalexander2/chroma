@@ -84,6 +84,17 @@ namespace Chroma
 		CreateShaderModules();
 	}
 
+	VulkanShader::VulkanShader(const std::string& name, const std::string& vertexSource, const std::string& fragmentSource)
+		:m_Name(name)
+	{
+		std::unordered_map<VkShaderStageFlagBits, std::string> sources;
+		sources[VK_SHADER_STAGE_VERTEX_BIT] = vertexSource;
+		sources[VK_SHADER_STAGE_FRAGMENT_BIT] = fragmentSource;
+
+		CompileOrGetVulkanBinaries(sources);
+		CreateShaderModules();
+	}
+
 	VulkanShader::~VulkanShader()
 	{
 		for (auto& [type, shader] : m_ShaderModules)

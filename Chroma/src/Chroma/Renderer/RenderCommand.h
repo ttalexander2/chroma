@@ -30,9 +30,9 @@ namespace Chroma
 			s_RendererAPI->Clear();
 		}
 
-		inline static void DrawIndexed(const Ref<VertexArray>& vertexArray, uint32_t indexCount = 0)
+		inline static void DrawIndexed(uint32_t count, PrimitiveType type, bool depthTest)
 		{
-			s_RendererAPI->DrawIndexed(vertexArray, indexCount);
+			s_RendererAPI->DrawIndexed(count, type, depthTest);
 		}
 	private:
 		static RendererAPI* s_RendererAPI;

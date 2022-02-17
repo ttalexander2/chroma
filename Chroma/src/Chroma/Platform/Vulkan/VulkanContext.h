@@ -69,6 +69,13 @@ namespace Chroma
 
 		static inline VulkanContext& Instance() { return *s_Instance; }
 		static inline VkDevice GetDevice() { return s_Instance->m_Device; }
+		static inline VkPhysicalDevice GetPhysicalDevice() { return s_Instance->m_PhysicalDevice; }
+		static inline std::vector<VkCommandBuffer>& GetCommandBuffers() { return s_Instance->m_CommandBuffers; }
+		static inline uint32_t GetFrameIndex() { return s_Instance->m_CurrentFrame; }
+
+		static uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
+		static void CreateBuffer(VkDevice device, VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
+		static void CopyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
 
 	private:
 
@@ -91,6 +98,7 @@ namespace Chroma
 		VkSurfaceFormatKHR ChooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
 		VkPresentModeKHR ChooseSwapPresetMode(const std::vector<VkPresentModeKHR>& availablePresentModes);
 		VkExtent2D ChooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
+
 
 	private:
 		static VulkanContext* s_Instance;
@@ -119,6 +127,9 @@ namespace Chroma
 
 		VkCommandPool m_CommandPool = VK_NULL_HANDLE;
 		std::vector<VkCommandBuffer> m_CommandBuffers;
+
+		VkBuffer m_StagingBuffer;
+		VkDeviceMemory m_StagingBufferMemory;
 
 		size_t m_CurrentFrame = 0;
 		std::vector<VkSemaphore> m_ImageAvailableSemaphores;

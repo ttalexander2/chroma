@@ -51,11 +51,27 @@ namespace Chroma
 		glLoadIdentity();
 	}
 
-	void OpenGLRendererAPI::DrawIndexed(const Ref<VertexArray>& vertexArray, uint32_t indexCount)
+	void OpenGLRendererAPI::DrawIndexed(uint32_t count, PrimitiveType type, bool depthTest)
 	{
-		uint32_t count = indexCount ? indexCount : vertexArray->GetIndexBuffer()->GetCount();
-		glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, nullptr);
-		//glBindTexture(GL_TEXTURE_2D, 0);
+		if (!depthTest)
+			glDisable(GL_DEPTH_TEST);
+
+		GLenum glPrimitiveType = 0;
+		switch (type)
+		{
+		case PrimitiveType::Triangles:
+			glPrimitiveType = GL_TRIANGLES;
+			break;
+		case PrimitiveType::Lines:
+			glPrimitiveType = GL_LINES;
+			break;
+		}
+
+		glDrawElements(glPrimitiveType, count, GL_UNSIGNED_INT, nullptr);
+
+		if (!depthTest)
+			glEnable(GL_DEPTH_TEST);
+
 	}
 
 }

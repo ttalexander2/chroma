@@ -26,14 +26,14 @@
 #include "Chroma/Audio/Audio.h"
 
 // -----------Render------------------
-#include "Chroma/Renderer/Renderer.h"
 #include "Chroma/Renderer/Renderer2D.h"
 #include "Chroma/Renderer/RenderCommand.h"
 
-#include "Chroma/Renderer/Buffer.h"
+#include "Chroma/Renderer/VertexBuffer.h"
 #include "Chroma/Renderer/Shader.h"
 #include "Chroma/Renderer/Texture.h"
-#include "Chroma/Renderer/VertexArray.h"
+#include "Chroma/Renderer/IndexBuffer.h"
+#include "Chroma/Renderer/Pipeline.h"
 #include "Chroma/Renderer/Framebuffer.h"
 
 #include "Chroma/Renderer/OrthographicCamera.h"

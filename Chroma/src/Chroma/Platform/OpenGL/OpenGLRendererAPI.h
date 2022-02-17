@@ -29,6 +29,6 @@ namespace Chroma
 		/// @brief Draw an indexed vertex array.
 		/// @param vertexArray Vertex array to draw.
 		/// @param indexCount Number of indices to draw.
-		virtual void DrawIndexed(const Ref<VertexArray>& vertexArray, uint32_t indexCount = 0) override;
+		virtual void DrawIndexed(uint32_t count, PrimitiveType type, bool depthTest) override;
 	};
 }

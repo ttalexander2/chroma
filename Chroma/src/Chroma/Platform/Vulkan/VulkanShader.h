@@ -17,6 +17,7 @@ namespace Chroma
 
 
 		VulkanShader(const std::string& filePath);
+		VulkanShader(const std::string& name, const std::string& vertexSource, const std::string& fragmentSource);
 		virtual ~VulkanShader();
 
 		virtual void Bind() const override;

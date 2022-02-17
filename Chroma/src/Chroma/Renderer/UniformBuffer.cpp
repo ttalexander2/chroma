@@ -3,6 +3,7 @@
 
 #include "Chroma/Renderer/Renderer.h"
 #include "Chroma/Platform/OpenGL/OpenGLUniformBuffer.h"
+#include "Chroma/Platform/Vulkan/VulkanUniformBuffer.h"
 
 namespace Chroma
 {
@@ -12,6 +13,7 @@ namespace Chroma
 		{
 		case RendererAPI::API::None:	CHROMA_CORE_ASSERT(false, "RendererAPI::None is currently not supported!"); return nullptr;
 		case RendererAPI::API::OpenGL: return CreateRef<OpenGLUniformBuffer>(size, binding);
+		case RendererAPI::API::Vulkan: return CreateRef<VulkanUniformBuffer>(size, binding);
 		}
 
 		CHROMA_CORE_ASSERT(false, "Unknown RendererAPI!");
