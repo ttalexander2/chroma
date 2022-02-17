@@ -3,11 +3,21 @@
 
 namespace Chroma
 {
+    /// <summary>
+    /// Float based math class for use in engine.
+    /// </summary>
     public class Mathf
     {
-
+        /// <summary>
+        /// PI to a precision of 16 decimal digits.
+        /// </summary>
         public const float PI = 3.1415926535897931f;
+
+        /// <summary>
+        /// E to a precision of 16 decimal digits.
+        /// </summary>
         public const float E = 2.7182818284590451f;
+
         public static float Abs(float val)
         {
             return (float)System.Math.Abs((double)val);

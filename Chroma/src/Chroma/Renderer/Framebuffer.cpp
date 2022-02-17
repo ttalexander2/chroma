@@ -3,13 +3,13 @@
 
 #include "Chroma/Platform/OpenGL/OpenGLFramebuffer.h"
 #include "Chroma/Platform/Vulkan/VulkanFramebuffer.h"
-#include "Chroma/Renderer/Renderer.h"
+#include "Chroma/Renderer/RendererAPI.h"
 
 namespace Chroma
 {
 	Ref<Framebuffer> Framebuffer::Create(const FramebufferSpecification& spec)
 	{
-		switch (Renderer::GetAPI())
+		switch (RendererAPI::GetAPI())
 		{
 			case RendererAPI::API::None:		CHROMA_CORE_ASSERT(false, "RenderAPI::None is currently not supported!"); return nullptr;
 			case RendererAPI::API::OpenGL:		return CreateRef<OpenGLFramebuffer>(spec);

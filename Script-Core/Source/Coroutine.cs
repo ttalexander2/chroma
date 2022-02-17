@@ -4,9 +4,20 @@ using System.Collections.Generic;
 
 namespace Chroma
 {
+    /// <summary>
+    /// Coroutine based on the IEnumerator system.
+    /// 
+    /// </summary>
     public class Coroutine
     {
+        /// <summary>
+        /// Whether the coroutine is active.
+        /// </summary>
         public bool Active { get; private set; }
+
+        /// <summary>
+        /// Whether the coroutine has completed. Independent of <c cref="Active">Active</c>.
+        /// </summary>
         public bool Finished { get; private set; }
 
         public delegate IEnumerator CoroutineFunction();
@@ -68,6 +79,9 @@ namespace Chroma
 
         }
 
+        /// <summary>
+        /// Starts the coroutine.
+        /// </summary>
         public void Start()
         {
             if (Active)
@@ -83,16 +97,25 @@ namespace Chroma
             _enumerators.Push(_func());
         }
 
+        /// <summary>
+        /// Pauses the coroutine.
+        /// </summary>
         public void Pause()
         {
             Active = false;
         }
 
+        /// <summary>
+        /// Resumes the coroutine.
+        /// </summary>
         public void Resume()
         {
             Active = true;
         }
 
+        /// <summary>
+        /// Restarts the coroutine.
+        /// </summary>
         public void Restart()
         {
             Active = true;
@@ -103,6 +126,9 @@ namespace Chroma
             _enumerators.Push(_func());
         }
 
+        /// <summary>
+        /// Stops the coroutine.
+        /// </summary>
         public void Stop()
         {
             Active = false;
@@ -112,6 +138,10 @@ namespace Chroma
             _ended = true;
         }
 
+        /// <summary>
+        /// Sets the function which the coroutine executes.
+        /// </summary>
+        /// <param name="function">Function returning an IEnumerator, yield return represent time values in seconds.</param>
         public void Set(CoroutineFunction function)
         {
             Finished = false;

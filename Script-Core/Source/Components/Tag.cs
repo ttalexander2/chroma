@@ -3,8 +3,14 @@
 
 namespace Chroma
 {
+    /// <summary>
+    /// [DEPRICATED] Tag component for the entity.
+    /// </summary>
     internal class Tag : Component
     {
+        /// <summary>
+        /// Entity's name
+        /// </summary>
         internal string Name
         {
             get
