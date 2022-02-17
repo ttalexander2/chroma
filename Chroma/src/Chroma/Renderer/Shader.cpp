@@ -1,7 +1,7 @@
 #include "chromapch.h"
 #include "Shader.h"
 
-#include "Renderer.h"
+#include "RendererAPI.h"
 #include "Chroma/Platform/OpenGL/OpenGLShader.h"
 #include "Chroma/Platform/Vulkan/VulkanShader.h"
 
@@ -14,7 +14,7 @@ namespace Chroma
 {
 	Ref<Shader> Shader::Create(const std::string& filePath)
 	{
-		switch (Renderer::GetAPI())
+		switch (RendererAPI::GetAPI())
 		{
 			case RendererAPI::API::None: CHROMA_CORE_ASSERT(false, "RendererAPI::API::None not supported!"); return nullptr;
 			case RendererAPI::API::OpenGL: return std::make_shared<OpenGLShader>(filePath);
@@ -28,7 +28,7 @@ namespace Chroma
 
 	Ref<Shader> Shader::Create(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc)
 	{
-		switch (Renderer::GetAPI())
+		switch (RendererAPI::GetAPI())
 		{
 			case RendererAPI::API::None: CHROMA_CORE_ASSERT(false, "RendererAPI::API::None not supported!"); return nullptr;
 			case RendererAPI::API::OpenGL: return std::make_shared<OpenGLShader>(name, vertexSrc, fragmentSrc);

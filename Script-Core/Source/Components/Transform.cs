@@ -2,8 +2,14 @@
 
 namespace Chroma
 {
+    /// <summary>
+    /// Transform component for the entity. The engine enforces the existance of this component for all entities.
+    /// </summary>
     public class Transform : Component
     {
+        /// <summary>
+        /// Positional component for the transform. Represents the position of the entity in the scene.
+        /// </summary>
         public Vector2 Position
         {
             get
@@ -17,6 +23,11 @@ namespace Chroma
             }
         }
 
+        /// <summary>
+        /// Rotational component for the transform. Represents the euler angle in degrees of the entity.
+        /// Rotation is internally stored in radians and is converted in this geter/setter.
+        /// Use <c cref="RadRotation">RadRotation</c> for accessing the rotation in radians.
+        /// </summary>
         public float Rotation
         {
             get
@@ -28,6 +39,26 @@ namespace Chroma
                 SetTransformRotation_Native(Entity.ID, Mathf.DegreesToRadians(value));
             }
         }
+
+        /// <summary>
+        /// Rotational component for the transform in radians.
+        /// Use <c cref="Rotation">Rotation</c> for accessing rotation in degrees.
+        /// </summary>
+        public float RadRotation
+        {
+            get
+            {
+                return GetTransformRotation_Native(Entity.ID);
+            }
+            set
+            {
+                SetTransformRotation_Native(Entity.ID, value);
+            }
+        }
+
+        /// <summary>
+        /// Scale component of the transform.
+        /// </summary>
         public Vector2 Scale
         {
             get
@@ -41,6 +72,10 @@ namespace Chroma
             }
         }
 
+        /// <summary>
+        /// Gets the transform component as a string.
+        /// </summary>
+        /// <returns>Formatted string containing transform data.</returns>
         public override string ToString()
         {
             return string.Format("Position: {0}, Rotation: {1}, Scale: {2}", Position.ToString(), Rotation, Scale.ToString());
