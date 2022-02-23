@@ -9,6 +9,7 @@
 #include <Chroma/Scene/Scene.h>
 #include <Chroma/Scripting/ScriptEngineRegistry.h>
 #include <Chroma/Components/CSharpScript.h>
+#include <Chroma/Assets/AssetManager.h>
 #include "../../Chroma/third_party/GLFW/include/GLFW/glfw3.h"
 
 using namespace Chroma;
@@ -77,6 +78,18 @@ void Runtime::Init()
 			CHROMA_CORE_ERROR("{}", e.what());
 		}
 
+		if (!std::filesystem::exists("Assets.yaml"))
+		{
+			CHROMA_CORE_ERROR("Missing Assets.yaml!");
+			this->Stop();
+		}
+
+
+		std::ifstream asset_stream("Assets.yaml");
+		std::stringstream asset_ss;
+		asset_ss << asset_stream.rdbuf();
+		Chroma::AssetManager::LoadManifest(asset_ss.str());
+		asset_stream.close();
 
 		Chroma::Engine::LoadScene(StartingScene);
 

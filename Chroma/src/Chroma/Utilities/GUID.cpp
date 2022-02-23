@@ -97,6 +97,8 @@ namespace Chroma
 			stream = std::ostringstream();
 			stream << std::hex << std::uppercase << std::setw(2) << std::setfill('0') << (int)Data4[i];
 			result += stream.str();
+			if (i == 1)
+				result += "-";
 		}
 
 		return result;

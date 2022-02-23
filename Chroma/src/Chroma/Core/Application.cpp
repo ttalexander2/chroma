@@ -25,6 +25,9 @@
 #include "Chroma/Components/ParticleEmitter.h"
 #include "Chroma/Renderer/RenderCommand.h"
 #include "Chroma/Renderer/Renderer2D.h"
+#include "Chroma/Assets/Asset.h"
+#include "Chroma/Assets/AssetManager.h"
+#include "Chroma/Assets/Sprite.h"
 
 
 
@@ -71,6 +74,8 @@ namespace Chroma
 			Scene::RegisterComponent<SpriteRenderer>();
 			Scene::RegisterComponent<Tag>();
 			Scene::RegisterComponent<Transform>();
+
+			AssetManager::Register<Sprite>();
 		}
 
 

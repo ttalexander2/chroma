@@ -54,7 +54,7 @@ namespace Polychrome
 						std::string extension = std::filesystem::path(file).extension().string();
 						if (extension == ".ase" || extension == ".aseprite" || extension == ".png" || extension == ".jpg")
 						{
-							Chroma::AssetManager::Load(relative);
+							Chroma::AssetManager::Load(Chroma::AssetManager::GetID(relative));
 						}
 						else if (extension == ".cs")
 						{
@@ -79,13 +79,13 @@ namespace Polychrome
 						CHROMA_CORE_TRACE("File Modified: {}", relative);
 						if (extension == ".ase" || extension == ".aseprite" || extension == ".png" || extension == ".jpg")
 						{
-							if (Chroma::AssetManager::Exists(relative))
+							if (Chroma::AssetManager::Exists(Chroma::AssetManager::GetID(relative)))
 							{
-								Chroma::AssetManager::Reload(relative);
+								Chroma::AssetManager::Reload(Chroma::AssetManager::GetID(relative));
 							}
 							else
 							{
-								Chroma::AssetManager::Load(relative);
+								Chroma::AssetManager::Load(Chroma::AssetManager::GetID(relative));
 							}
 						}
 						else if (extension == ".cs")

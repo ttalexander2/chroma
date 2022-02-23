@@ -100,7 +100,7 @@ namespace Polychrome
 			static bool pack_assets = false;
 			static bool run_game = true;
 			static std::string project_name = Project::Name;
-			static std::string location_path = Project::Path + "\\bin\\";
+			static std::string location_path = Project::Path + "\\bin";
 
 			if (building)
 			{
@@ -280,6 +280,7 @@ namespace Polychrome
 		progressLock.unlock();
 
 		std::filesystem::copy_file(Project::Path + "\\" + Project::Name + ".polychrome", location + "\\" + project_name + "\\" + "app.info", std::filesystem::copy_options::overwrite_existing);
+		std::filesystem::copy_file(Project::Path + "\\Assets.yaml", location + "\\" + project_name + "\\" + "Assets.yaml", std::filesystem::copy_options::overwrite_existing);
 
 		std::filesystem::copy("Runtime", location + "\\" + project_name + "\\", std::filesystem::copy_options::recursive | std::filesystem::copy_options::overwrite_existing);
 		std::filesystem::copy("mono", location + "\\" + project_name + "\\mono\\", std::filesystem::copy_options::recursive | std::filesystem::copy_options::overwrite_existing);

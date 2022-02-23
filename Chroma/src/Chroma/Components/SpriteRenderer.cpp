@@ -18,7 +18,7 @@ namespace Chroma
 		out << YAML::Value << PlayOnStart;
 
 		out << YAML::Key << "SpriteID";
-		out << YAML::Value << SpriteID;
+		out << YAML::Value << SpriteID.ToString();
 
 		out << YAML::Key << "Loop";
 		out << YAML::Value << Loop;
@@ -62,12 +62,8 @@ namespace Chroma
 		val = node["SpriteID"];
 		if (val)
 		{
-			SpriteID = val.as<std::string>();
-			Ref<Sprite> spr = AssetManager::Create<Sprite>(SpriteID);
-			if (spr)
-				AssetManager::Load(SpriteID);
-			else
-				CHROMA_CORE_ERROR("Sprite '{}' could not be loaded!", SpriteID);
+			SpriteID = GUID::Parse(val.as<std::string>());
+			AssetManager::Load(SpriteID);
 		}
 		val = node["Loop"];
 		if (val)
@@ -97,10 +93,9 @@ namespace Chroma
 		}
 		else
 		{
-			if (AssetManager::Exists(SpriteID))
-			{
+			if (AssetManager::IsLoaded(SpriteID))
 				SortingPoint = AssetManager::Get<Sprite>(SpriteID)->GetSize().y;
-			}
+
 		}
 
 	}
@@ -110,31 +105,32 @@ namespace Chroma
 	/// Sprite must already be loaded.
 	/// @see AssetManager to load sprite.
 	/// @param spriteID Name/Path of the sprite.
-	void SpriteRenderer::SetSprite(const std::string& spriteID)
+	void SpriteRenderer::SetSprite(const GUID& spriteID)
 	{
 		if (AssetManager::IsLoaded(spriteID))
 		{
-			//CHROMA_CORE_INFO("SET SPRITE: {}", spriteID);
 			SpriteID = spriteID;
+			auto sprite = AssetManager::Get<Sprite>(spriteID);
+			//CHROMA_CORE_INFO("SET SPRITE: {}", spriteID);
 			Animation = 0;
 			CurrentFrame = 0;
-			SetSpriteOrigin(SpriteOrigin::Default);
-			SortingPoint = AssetManager::Get<Sprite>(SpriteID)->GetSize().y;
+			//SetSpriteOrigin(SpriteOrigin::Default);
+			//SortingPoint = sprite->GetSize().y;
 		}
 			
 		else
-			CHROMA_CORE_WARN("Attempted to set sprite. Sprite [{}] could not be found or is not loaded.", spriteID);
+			CHROMA_CORE_WARN("Attempted to set sprite. Sprite [{}] could not be found or is not loaded.", spriteID.ToString());
 	}
 
 	void SpriteRenderer::SetAnimation(unsigned int animation)
 	{
 		if (AssetManager::IsLoaded(SpriteID))
 		{
-			Ref<Sprite> s = AssetManager::Get<Sprite>(SpriteID);
-			if (animation >= s->Animations.size())
+			auto sprite = AssetManager::Get<Sprite>(SpriteID);
+			if (animation >= sprite->Animations.size())
 			{
-				CHROMA_CORE_WARN("Attempted to set sprite animation number. Sprite [{}] does not contain animation [{}].", SpriteID, animation);
-				Animation = s->Animations.size() - 1;
+				CHROMA_CORE_WARN("Attempted to set sprite animation number. Sprite [{}] does not contain animation [{}].", sprite->GetPath(), animation);
+				Animation = sprite->Animations.size() - 1;
 				return;
 			}
 			bool restart = Animation != animation;
@@ -145,19 +141,20 @@ namespace Chroma
 		}
 		else
 		{
-			CHROMA_CORE_WARN("Attempted to set sprite animation. Sprite [{}] could not be found or is not loaded.", SpriteID);
+			CHROMA_CORE_WARN("Attempted to set sprite animation. Sprite [{}] could not be found or is not loaded.", SpriteID.ToString());
 		}
 			
 	}
 
 	void SpriteRenderer::SetAnimation(const std::string& animation_name)
 	{
+
 		if (AssetManager::IsLoaded(SpriteID))
 		{
-			Ref<Sprite> s = AssetManager::Get<Sprite>(SpriteID);
+			auto sprite = AssetManager::Get<Sprite>(SpriteID);
 			bool exists = false;
 			unsigned int i = 0;
-			for (auto& anim : s->Animations)
+			for (auto& anim : sprite->Animations)
 			{
 				if (anim.Tag == animation_name)
 				{
@@ -171,12 +168,12 @@ namespace Chroma
 			}
 			if (!exists)
 			{
-				CHROMA_CORE_WARN("Attempted to set sprite animation. Sprite [{}] does not contain animation [{}]", SpriteID, animation_name);
+				CHROMA_CORE_WARN("Attempted to set sprite animation. Sprite [{}] does not contain animation [{}]", SpriteID.ToString(), animation_name);
 			}
 		}
 		else
 		{
-			CHROMA_CORE_WARN("Attempted to set sprite animation. Sprite [{}] could not be found or is not loaded.", SpriteID);
+			CHROMA_CORE_WARN("Attempted to set sprite animation. Sprite [{}] could not be found or is not loaded.", SpriteID.ToString());
 		}
 	}
 
@@ -189,11 +186,11 @@ namespace Chroma
 	{
 		if (AssetManager::IsLoaded(SpriteID))
 		{
-			Ref<Sprite> s = AssetManager::Get<Sprite>(SpriteID);
-			if (animation >= s->Animations.size())
-				CHROMA_CORE_WARN("Attempted to get sprite animation name. Sprite [{}] does not contain animation [{}]", SpriteID, animation);
+			auto sprite = AssetManager::Get<Sprite>(SpriteID);
+			if (animation >= sprite->Animations.size())
+				CHROMA_CORE_WARN("Attempted to get sprite animation name. Sprite [{}] does not contain animation [{}]", SpriteID.ToString(), animation);
 			else
-				return s->Animations[animation].Tag;
+				return sprite->Animations[animation].Tag;
 			
 		}
 		return "";
@@ -211,11 +208,11 @@ namespace Chroma
 
 		if (AssetManager::IsLoaded(SpriteID))
 		{
-			Ref<Sprite> s = AssetManager::Get<Sprite>(SpriteID);
-			if (frame >= s->Frames.size())
+			auto sprite = AssetManager::Get<Sprite>(SpriteID);
+			if (frame >= sprite->Frames.size())
 			{
-				frame = s->Frames.size() - 1;
-				CHROMA_CORE_WARN("Attempted to set sprite frame. Frame [{}] is an invalid frame for Sprite [{}].", frame, SpriteID);
+				frame = sprite->Frames.size() - 1;
+				CHROMA_CORE_WARN("Attempted to set sprite frame. Frame [{}] is an invalid frame for Sprite [{}].", frame, sprite->GetPath());
 			}
 			else
 				CurrentFrame = frame;
@@ -235,8 +232,8 @@ namespace Chroma
 		Origin = origin;
 		if (AssetManager::IsLoaded(SpriteID))
 		{
-			Ref<Sprite> s = AssetManager::Get<Sprite>(SpriteID);
-			const Math::vec2 size = s->GetSize();
+			auto sprite = AssetManager::Get<Sprite>(SpriteID);
+			const Math::vec2 size = sprite->GetSize();
 			switch (origin)
 			{
 			case SpriteOrigin::Center:
@@ -286,7 +283,7 @@ namespace Chroma
 			}
 			case SpriteOrigin::Custom:
 			{
-				CHROMA_CORE_WARN("Attempted to set sprite [{}] origin. Origin was set to 'custom' but no origin was provided.", SpriteID);
+				CHROMA_CORE_WARN("Attempted to set sprite [{}] origin. Origin was set to 'custom' but no origin was provided.", sprite->GetPath());
 				break;
 			}
 			default:
@@ -298,22 +295,23 @@ namespace Chroma
 		}
 		else
 		{
-			CHROMA_CORE_WARN("Attempted to set sprite origin. Sprite [{}] could not be found or is not loaded.", SpriteID);
+			CHROMA_CORE_WARN("Attempted to set sprite origin. Sprite [{}] could not be found or is not loaded.", SpriteID.ToString());
 		}
 	}
 
 	void SpriteRenderer::SetSpriteOrigin(const Math::vec2& custom_position)
 	{
+
 		Origin = SpriteOrigin::Custom;
 		if (AssetManager::IsLoaded(SpriteID))
 		{
-			Ref<Sprite> s = AssetManager::Get<Sprite>(SpriteID);
-			const Math::vec2 size = s->GetSize();
+			auto sprite = AssetManager::Get<Sprite>(SpriteID);
+			const Math::vec2 size = sprite->GetSize();
 			OriginValue = { Math::clamp(0.f, size.x, custom_position.x), Math::clamp(0.f, size.y, custom_position.y) };
 		}
 		else
 		{
-			CHROMA_CORE_WARN("Attempted to set sprite origin. Sprite [{}] could not be found or is not loaded.", SpriteID);
+			CHROMA_CORE_WARN("Attempted to set sprite origin. Sprite [{}] could not be found or is not loaded.", SpriteID.ToString());
 		}
 	}
 
@@ -327,16 +325,26 @@ namespace Chroma
 		return OriginValue;
 	}
 
+	std::string SpriteRenderer::GetSpritePath()
+	{
+		return AssetManager::GetPath(SpriteID);
+	}
+
 	void SpriteRenderer::RestartAnimation()
 	{
-		if (AssetManager::Exists(SpriteID) && AssetManager::Get<Sprite>(SpriteID)->Animated())
+
+		if (AssetManager::Exists(SpriteID))
 		{
-			Ref<Sprite> s = AssetManager::Get<Sprite>(SpriteID);
-			if (Animation >= s->Animations.size())
-				Animation = s->Animations.size() - 1;
-			else if (Animation < 0)
-				Animation = 0;
-			CurrentFrame = s->Animations[Animation].Start;
+			auto sprite = AssetManager::Get<Sprite>(SpriteID);
+			if (sprite->Animated())
+			{
+				if (Animation >= sprite->Animations.size())
+					Animation = sprite->Animations.size() - 1;
+				else if (Animation < 0)
+					Animation = 0;
+				CurrentFrame = sprite->Animations[Animation].Start;
+			}
+
 		}
 	}
 

@@ -6,6 +6,8 @@
 #include "Chroma/Core/Core.h"
 #include "Chroma/Utilities/GUID.h"
 
+#include "Chroma/Assets/Sprite.h"
+
 #include <unordered_map>
 
 namespace Chroma
@@ -24,7 +26,7 @@ namespace Chroma
 		using pointer = Ref<T>*;
 		using reference = Ref<T>;
 
-		AssetIterator(std::unordered_map<size_t, Ref<Asset>>* assets, std::vector<size_t>::iterator iterator) :
+		AssetIterator(std::unordered_map<GUID, Ref<Asset>>* assets, std::vector<GUID>::iterator iterator) :
 			m_Assets(assets), m_Iterator(iterator)
 		{
 		}
@@ -42,21 +44,21 @@ namespace Chroma
 		friend bool operator!= (const AssetIterator& a, const AssetIterator& b) { return a.m_Iterator != b.m_Iterator || a.m_Assets != b.m_Assets; }
 
 	private:
-		std::unordered_map<size_t, Ref<Asset>>* m_Assets;
-		std::vector<size_t>::iterator m_Iterator;
+		std::unordered_map<GUID, Ref<Asset>>* m_Assets;
+		std::vector<GUID>::iterator m_Iterator;
 	};
 
 	template <typename T>
 	struct AssetView
 	{
-		AssetView(std::unordered_map<size_t, Ref<Asset>>* assets, std::vector<size_t>* data) : m_Assets(assets), m_Data(data) {}
+		AssetView(std::unordered_map<GUID, Ref<Asset>>* assets, std::vector<GUID>* data) : m_Assets(assets), m_Data(data) {}
 
 		AssetIterator<T> begin() { return AssetIterator<T>(m_Assets, m_Data->begin()); }
 		AssetIterator<T> end() { return AssetIterator<T>(m_Assets, m_Data->end()); }
 
 	private:
-		std::unordered_map<size_t, Ref<Asset>>* m_Assets;
-		std::vector<size_t>* m_Data;
+		std::unordered_map<GUID, Ref<Asset>>* m_Assets;
+		std::vector<GUID>* m_Data;
 	};
 
 	/// @brief Manages loading/unloading assets.
@@ -65,47 +67,43 @@ namespace Chroma
 	/// Manages references to assets.
 	class AssetManager
 	{
+	private:
+		static std::hash<std::string> s_Hash;
 	public:
 
 		template<typename T>
-		static Ref<T> Get(const std::string& assetPath)
+		static Ref<T> Get(const GUID& id)
 		{
 
 			static_assert(std::is_base_of<Chroma::Asset, T>::value, "Get only works for types derived from Asset!");
 
-			return std::dynamic_pointer_cast<T>(Get(assetPath));
+			return std::dynamic_pointer_cast<T>(Get(id));
 		}
 
 		template<typename T>
-		static Ref<T> Create(const std::string& assetPath)
+		static Ref<T> Create(const GUID& id, const std::string& path)
 		{
-
 			static_assert(std::is_base_of<Chroma::Asset, T>::value, "Create only works for types derived from Asset!");
 
-			if (Exists(assetPath))
+			if (Exists(id))
 			{
-				return Get<T>(assetPath);
+				return Get<T>(id);
 			}
 
-			size_t hash = s_Hash(assetPath);
+			size_t type_hash = s_Hash(T::GetTypeNameStatic());
+			s_CreateFuncs[type_hash](id, path);
 
-			s_Assets[hash] = CreateRef<T>();
-			if (!s_AssetTypes.contains(T::GetTypeStatic()))
-				s_AssetTypes[T::GetTypeStatic()] = std::vector<size_t>();
-			s_AssetTypes[T::GetTypeStatic()].push_back(hash);
-			s_Assets[hash]->m_Path = assetPath;
-			s_Assets[hash]->m_Loaded = false;
-			s_Assets[hash]->m_Hash = hash;
-
-			return std::dynamic_pointer_cast<T>(Get(assetPath));
+			return std::dynamic_pointer_cast<T>(Get(id));
 		}
 
-		const inline std::unordered_map<size_t, Ref<Asset>>::const_iterator cbegin() const
+		static Ref<Asset> Create(const GUID& id, const std::string& path, const std::string& type);
+
+		const inline std::unordered_map<GUID, Ref<Asset>>::const_iterator cbegin() const
 		{
 			return s_Assets.cbegin();
 		}
 
-		const inline std::unordered_map<size_t, Ref<Asset>>::const_iterator cend() const
+		const inline std::unordered_map<GUID, Ref<Asset>>::const_iterator cend() const
 		{
 			return s_Assets.cend();
 		}
@@ -117,6 +115,13 @@ namespace Chroma
 			return T::GetTypeStatic();
 		}
 
+		static StringHash GetAssetType(const GUID& id)
+		{
+			if (!Exists(id))
+				return StringHash::Hash("");
+			return Get(id)->GetType();
+		}
+
 		
 		template <typename T>
 		static AssetView<T> View()
@@ -126,24 +131,47 @@ namespace Chroma
 			
 		}
 
-		static Ref<Asset> Get(const std::string& assetPath);
+		template <typename T>
+		static void Register()
+		{
+			static_assert(std::is_base_of<Chroma::Asset, T>::value, "Type T is not derived from Asset!");
 
-		static bool Exists(const std::string& assetPath);
+			size_t hash = s_Hash(T::GetTypeNameStatic());
 
-		static bool Load(const std::string& assetPath);
+			s_CreateFuncs[hash] = [&] (const GUID& id, const std::string& path) {
+				s_Assets[id] = CreateRef<T>();
+				if (!s_AssetTypes.contains(T::GetTypeStatic()))
+					s_AssetTypes[T::GetTypeStatic()] = std::vector<GUID>();
+				s_AssetTypes[T::GetTypeStatic()].push_back(id);
+				s_Assets[id]->m_Path = path;
+				s_Assets[id]->m_Loaded = false;
+				s_Assets[id]->m_ID = id;
+				s_Paths[s_Hash(path)] = id;
+			};
 
-		static bool Unload(const std::string& assetPath);
+		}
 
-		static bool Reload(const std::string& assetPath);
+		static Ref<Asset> Get(const GUID& id);
+		static bool Exists(const GUID& id);
+		static bool Load(const GUID& id);
+		static bool Unload(const GUID& id);
+		static bool Reload(const GUID& id);
+		static bool IsLoaded(const GUID& id);
 
-		static bool IsLoaded(const std::string& assetPath);
+		static GUID GetID(const std::string& path);
+		static std::string GetPath(const GUID& id) { if (!Exists(id)) return""; return s_Assets[id]->GetPath(); }
 
 		static void UnloadAll();
 		static void UnloadUnused();
+		static std::unordered_map<GUID, Ref<Asset>>& GetAssetMap() { return s_Assets; }
+
+		static void LoadManifest(const std::string& yaml);
 
 	private:
-		static std::unordered_map<size_t, Ref<Asset>> s_Assets;
-		static std::unordered_map<StringHash, std::vector<size_t>> s_AssetTypes;
-		static std::hash<std::string> s_Hash;
+		static std::unordered_map<GUID, Ref<Asset>> s_Assets;
+		static std::unordered_map<StringHash, std::vector<GUID>> s_AssetTypes;
+		static std::unordered_map<size_t, GUID> s_Paths;
+		static std::unordered_map<size_t, std::function<void(const GUID&, const std::string&)>> s_CreateFuncs;
+
 	};
 }

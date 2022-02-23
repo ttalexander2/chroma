@@ -24,6 +24,7 @@ At the moment, only Windows building is supported. Support for other platforms w
     - Follow instructions to install prerequisits and verify requirements.
     - Open Solution File.
     - Select Build > Build Solution.
+ - Please note, Chroma.Mono must be built first in order for Polychrome to function.
      
 ##### Mac & Linux
 - Currently does not support building on mac/linux, but support is on the way!

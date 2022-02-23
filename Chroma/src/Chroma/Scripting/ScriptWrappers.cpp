@@ -414,7 +414,7 @@ namespace Chroma
 		SpriteRenderer* sr = scene->Registry.try_get<SpriteRenderer>(id);
 		if (sr != nullptr)
 		{
-			return mono_string_new(mono_domain_get(), sr->GetSpriteID().c_str());
+			return mono_string_new(mono_domain_get(), sr->GetSpriteID().ToString().c_str());
 		}
 		return nullptr;
 	}
@@ -425,7 +425,7 @@ namespace Chroma
 		SpriteRenderer* sr = scene->Registry.try_get<SpriteRenderer>(id);
 		if (sr != nullptr)
 		{
-			sr->SetSprite(mono_string_to_utf8(val));
+			sr->SetSprite(GUID::Parse(mono_string_to_utf8(val)));
 		}
 	}
 	unsigned int Script::SpriteRenderer_GetAnimation(EntityID id)

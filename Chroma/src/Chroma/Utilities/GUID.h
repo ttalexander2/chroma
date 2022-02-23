@@ -19,6 +19,12 @@ namespace Chroma
 
 		bool operator==(const GUID& other) const;
 		bool operator< (GUID& other) const;
+
+
+		friend std::ostream& operator<<(std::ostream& os, const GUID& guid)
+		{
+			return os << guid.ToString();
+		}
 	};
 
 

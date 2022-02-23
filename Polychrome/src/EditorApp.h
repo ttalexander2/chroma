@@ -73,6 +73,7 @@ namespace Polychrome
 	private:
 
 		bool m_ViewportFocused = false;
+		bool m_SceneDirty = false;
 
 		static std::string InfoMessage;
 		static MessageSeverity InfoSeverity;

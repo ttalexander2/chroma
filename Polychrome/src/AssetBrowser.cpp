@@ -6,7 +6,7 @@
 #include <imgui_stdlib.h>
 #include <filesystem>
 #include <Chroma/Assets/AssetManager.h>
-
+#include <Chroma/Utilities/Clipboard.h>
 
 #include "Project.h"
 #include "EditorApp.h"
@@ -14,7 +14,7 @@
 #include "Fonts/IconsForkAwesome.h"
 
 
-#if _WIN32
+#if CHROMA_PLATFORM_WINDOWS
 #include <shellapi.h>
 #include <shlobj.h>
 #include <combaseapi.h>
@@ -44,12 +44,31 @@ namespace Polychrome
 	static std::string file_editing_path;
 	static std::filesystem::path file_editing;
 
+	bool AssetBrowser::s_IsSelecting = false;
+	std::function<void(Chroma::Ref<Chroma::Asset>, void*)> AssetBrowser::s_SelectionCallback;
+	StringHash AssetBrowser::s_SelectionType;
+	void* AssetBrowser::s_UserData = nullptr;
+
 	void AssetBrowser::HandleOpen(std::filesystem::path path)
 	{
 		if (!std::filesystem::exists(path) || !std::filesystem::is_regular_file(path))
 			return;
 
-		
+		if (s_IsSelecting)
+		{
+			std::string copy_path = path.lexically_relative(Project::AssetDirectory).string();
+			std::replace(copy_path.begin(), copy_path.end(), '\\', '/');
+			Chroma::GUID id = Chroma::AssetManager::GetID(copy_path);
+
+			if (Chroma::AssetManager::Exists(id) && Chroma::AssetManager::GetAssetType(id) == s_SelectionType)
+			{
+				s_IsSelecting = false;
+				s_SelectionCallback(Chroma::AssetManager::Get(id), s_UserData);
+				s_UserData = nullptr;
+			}
+
+			return;
+		}
 
 	}
 
@@ -66,7 +85,9 @@ namespace Polychrome
 				}
 			}
 
-
+			ImGuiWindowFlags flags = ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse;
+			if (s_IsSelecting)
+				flags |= ImGuiWindowFlags_Popup | ImGuiWindowFlags_Modal;
 			ImGui::PushStyleColor(ImGuiCol_Button, { 0,0,0,0 });
 			if (ImGui::Begin("Asset Browser##editor", &Open, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse))
 			{
@@ -307,8 +328,16 @@ namespace Polychrome
 										if (Icons.contains(dir.path()))
 										{
 											auto& texture = Icons.find(dir.path())->second;
-										
-											if (ImGui::ImageButton(reinterpret_cast<void*>(texture->GetTextureID()), { icon_size, icon_size }))
+											ImVec2 uv1 = { 0,0 };
+											ImVec2 uv2 = { 1,1 };
+
+											if (dir.path().extension() == ".ase" || dir.path().extension() == ".aseprite" || dir.path().extension() == ".png")
+											{
+												uv1 = { 1,1 };
+												uv2 = { 0,0 };
+											}
+
+											if (ImGui::ImageButton(reinterpret_cast<void*>((intptr_t)texture->GetTextureID()), { icon_size, icon_size }, uv1, uv2))
 											{
 												Selected = dir.path();
 											}
@@ -449,8 +478,16 @@ namespace Polychrome
 									if (Icons.contains(dir))
 									{
 										auto& texture = Icons.find(dir)->second;
+										ImVec2 uv1 = { 0,0 };
+										ImVec2 uv2 = { 1,1 };
 
-										if (ImGui::ImageButton(reinterpret_cast<void*>(texture->GetTextureID()), { icon_size, icon_size }))
+										if (dir.extension() == ".ase" || dir.extension() == ".aseprite" || dir.extension() == ".png")
+										{
+											uv1 = { 1,1 };
+											uv2 = { 0,0 };
+										}
+
+										if (ImGui::ImageButton(reinterpret_cast<void*>(texture->GetTextureID()), { icon_size, icon_size }, uv1, uv2))
 										{
 											Selected = dir;
 										}
@@ -640,14 +677,48 @@ namespace Polychrome
 					}
 					std::string path_text = Selected.string();
 					ImGui::Text(path_text.c_str());
-					ImGui::SameLine(ImGui::GetColumnWidth() - 120);
+
+					if (s_IsSelecting)
+					{
+						ImGui::SameLine(ImGui::GetColumnWidth() - 200);
+
+					}
+					else
+					{
+						ImGui::SameLine(ImGui::GetColumnWidth() - 90);
+					}
+
 					ImGui::SetNextItemWidth(100);
 					ImGui::SliderFloat("##asset_browser_view_size", &icon_size, 40, 150, "");
+
+					if (s_IsSelecting)
+					{
+						ImGui::SameLine();
+						std::string copy_path = Selected.lexically_relative(Project::AssetDirectory).string();
+						std::replace(copy_path.begin(), copy_path.end(), '\\', '/');
+						Chroma::GUID id = Chroma::AssetManager::GetID(copy_path);
+
+						ImGui::PushItemFlag(ImGuiItemFlags_Disabled, Selected.empty() && Chroma::AssetManager::Exists(id) && Chroma::AssetManager::GetAssetType(id) == s_SelectionType);
+						if (ImGui::Button("Select"))
+						{
+							s_IsSelecting = false;
+							s_SelectionCallback(Chroma::AssetManager::Get(id), s_UserData);
+							s_UserData = nullptr;
+						}
+						ImGui::PopItemFlag();
+						ImGui::SameLine();
+
+						if (ImGui::Button("Cancel"))
+						{
+							s_IsSelecting = false;
+							s_UserData = nullptr;
+						}
+
+					}
+
 					ImGui::EndTable();
 				}
 			
-
-
 			
 
 			}
@@ -659,7 +730,9 @@ namespace Polychrome
 
 	void AssetBrowser::FileClickPopup()
 	{
-#ifdef _WIN32
+
+
+#ifdef CHROMA_PLATFORM_WINDOWS
 		if (ImGui::Selectable("Show in File Explorer.."))
 		{
 			std::string directory_to_open = std::filesystem::absolute(context_item).string();
@@ -671,11 +744,25 @@ namespace Polychrome
 			system(("code " + std::filesystem::path(active_dir).parent_path().parent_path().string() + " " + context_item.string()).c_str());
 			context_item.clear();
 		}
+
+		if (ImGui::Selectable("Copy Path"))
+		{
+			std::string copy_path = context_item.lexically_relative(Project::AssetDirectory).string();
+			std::replace(copy_path.begin(), copy_path.end(), '\\', '/');
+			Chroma::Clipboard::Write(copy_path);
+		}
+
+		if (ImGui::Selectable("Copy GUID"))
+		{
+			std::string copy_path = context_item.lexically_relative(Project::AssetDirectory).string();
+			std::replace(copy_path.begin(), copy_path.end(), '\\', '/');
+			Chroma::Clipboard::Write(Chroma::AssetManager::GetID(copy_path).ToString());
+		}
 	}
 
 	void AssetBrowser::FolderClickPopup()
 	{
-#ifdef _WIN32
+#ifdef CHROMA_PLATFORM_WINDOWS
 		if (ImGui::Selectable("Open in File Explorer.."))
 		{
 			std::string directory_to_open = std::filesystem::absolute(context_item).string();
@@ -693,9 +780,9 @@ namespace Polychrome
 			std::string sprite_path = std::filesystem::path(path.lexically_relative(Project::AssetDirectory)).string();
 			std::replace(sprite_path.begin(), sprite_path.end(), '\\', '/');
 
-			if (Chroma::AssetManager::Exists(sprite_path))
+			if (Chroma::AssetManager::Exists(Chroma::AssetManager::GetID(sprite_path)))
 			{
-				auto sprite = Chroma::AssetManager::Get<Chroma::Sprite>(sprite_path);
+				auto sprite = Chroma::AssetManager::Get<Chroma::Sprite>(Chroma::AssetManager::GetID(sprite_path));
 				if (!sprite->Frames.empty())
 				{
 					Icons[path] = sprite->Frames[0].Texture;
@@ -707,7 +794,7 @@ namespace Polychrome
 
 		}
 
-#if _WIN32
+#if CHROMA_PLATFORM_WINDOWS
 
 		//SHGetFileInfoW(ucPath, FILE_ATTRIBUTE_NORMAL, &info, sizeof(info), SHGFI_ICON | SHGFI_USEFILEATTRIBUTES | SHGFI_LARGEICON);
 		//HICON 

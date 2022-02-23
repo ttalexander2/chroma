@@ -5,6 +5,8 @@
 #include "Chroma/Math/Vec2.h"
 #include "Chroma/Math/Vec3.h"
 #include "Chroma/Math/Vec4.h"
+#include "Chroma/Assets/Asset.h"
+#include "Chroma/Core/Core.h"
 
 namespace YAML
 {

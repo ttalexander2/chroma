@@ -293,7 +293,7 @@ namespace Polychrome
 			Launcher::ProgressMessage = "Loading Project...";
 			Launcher::ProgressLock.unlock();
 			Project::LoadProject(Launcher::path + "\\" + Launcher::project_name + ".polychrome");
-			EditorApp::CurrentScenePath = Project::AssetDirectory + "\\Scenes\\" + Project::StartingScene + ".chroma";
+			//EditorApp::CurrentScenePath = Project::AssetDirectory + "\\Scenes\\" + Project::StartingScene + ".chroma";
 		}
 
 
@@ -777,12 +777,23 @@ namespace Polychrome
 
 		ImGui::ShowDemoWindow();
 
+		bool asset_selecting = AssetBrowser::IsSelecting();
+		ImGui::PushItemFlag(ImGuiItemFlags_Disabled, asset_selecting);
+		if (asset_selecting)
+			ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f);
+
 		Hierarchy::Draw();
 		Inspector::Draw();
 		Viewport::Draw(time, m_Framebuffer, m_GuizmoFramebuffer);
 		LogWindow::Draw();
 		ErrorWindow::Draw();
+		ImGui::PopItemFlag();
+		if (asset_selecting)
+			ImGui::PopStyleVar();
 		AssetBrowser::Draw();
+		if (asset_selecting)
+			ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f);
+		ImGui::PushItemFlag(ImGuiItemFlags_Disabled, asset_selecting);
 		GameSettings::Draw();
 
 		if (OpenBuildWindow)
@@ -945,13 +956,20 @@ namespace Polychrome
 		ImGui::PopStyleColor();
 
 
+		ImGui::PopItemFlag();
+		if (asset_selecting)
+			ImGui::PopStyleVar();
 
 
 
-
-
-		
-
+		if (!m_SceneDirty)
+		{
+			if (ImGui::IsAnyItemActive())
+			{
+				glfwSetWindowTitle((GLFWwindow*)this->Get().GetWindow().GetNativeWindow(), ("Polychrome Editor - " + Project::Name + " - " + Project::StartingScene + "*").c_str());
+				m_SceneDirty = true;
+			}
+		}
 
 
 		ImGui::End();
@@ -998,17 +1016,21 @@ namespace Polychrome
 			std::ofstream fout2(filepath);
 			fout2 << yaml;
 			CurrentScenePath = filepath;
+			glfwSetWindowTitle((GLFWwindow*)this->Get().GetWindow().GetNativeWindow(), ("Polychrome Editor - " + Project::Name + " - " + Project::StartingScene).c_str());
+			m_SceneDirty = false;
 		}
 	}
 
 	void EditorApp::SaveScene()
 	{
-		//CHROMA_CORE_TRACE("{}", CurrentScenePath);
+		CHROMA_CORE_TRACE("{}", CurrentScenePath);
 		if (!CurrentScenePath.empty() && std::filesystem::exists(CurrentScenePath))
 		{
 			std::string yaml = EditorApp::CurrentScene->Serialize();
 			std::ofstream fout2(CurrentScenePath);
 			fout2 << yaml;
+			glfwSetWindowTitle((GLFWwindow*)this->Get().GetWindow().GetNativeWindow(), ("Polychrome Editor - " + Project::Name + " - " + Project::StartingScene).c_str());
+			m_SceneDirty = false;
 		}
 		else if (!CurrentScenePath.empty())
 		{
@@ -1016,6 +1038,8 @@ namespace Polychrome
 			std::string yaml = EditorApp::CurrentScene->Serialize();
 			std::ofstream fout2(CurrentScenePath);
 			fout2 << yaml;
+			glfwSetWindowTitle((GLFWwindow*)this->Get().GetWindow().GetNativeWindow(), ("Polychrome Editor - " + Project::Name + " - " + Project::StartingScene).c_str());
+			m_SceneDirty = false;
 		}
 	}
 
@@ -1071,14 +1095,13 @@ namespace Polychrome
 				Math::vec2 size = transform.Scale * Math::vec2((float)w, (float)h);
 				Math::vec2 originAdjustment = { Math::abs(size.x) / 2.f - origin.x, -Math::abs(size.y) / 2.f + origin.y };
 
-
 				Chroma::Renderer2D::DrawQuad(transform.Position + spriteRenderer.Offset + originAdjustment, transform.Scale * Math::vec2((float)w + offset, (float)h + offset), s->Frames[spriteRenderer.GetCurrentFrame()].Texture, {0.f,1.f,1.f,1.f}, transform.Rotation);
 			}
 			else
 			{
 				Math::vec2 pos = transform.Position;
 				Math::vec2 scale = transform.Scale;
-				Math::vec2 parentPos{ 0,0 };
+				Math::vec2 parentPos { 0, 0 };
 				float parentRot = 0;
 				float rotation = transform.Rotation;
 				Chroma::EntityID parent = relationship.Parent;
