@@ -2,6 +2,10 @@
 #include "AssetManager.h"
 #include <Chroma/Assets/Asset.h>
 #include <Chroma/Core/Log.h>
+#include <Chroma/IO/File.h>
+#include <Chroma/IO/FileSystem.h>
+
+#include <yaml-cpp/yaml.h>
 
 namespace Chroma
 {
@@ -9,41 +13,55 @@ namespace Chroma
     /// @brief Map containing references to the game's assets.
     /// @see AssetID
     /// @see Sprite
-    std::unordered_map<size_t, Ref<Asset>> AssetManager::s_Assets;
-    std::unordered_map<StringHash, std::vector<size_t>> AssetManager::s_AssetTypes;
+    std::unordered_map<GUID, Ref<Asset>> AssetManager::s_Assets;
+    std::unordered_map<StringHash, std::vector<GUID>> AssetManager::s_AssetTypes;
+    std::unordered_map<size_t, GUID> AssetManager::s_Paths;
+    std::unordered_map<size_t, std::function<void(const GUID&, const std::string&)>> AssetManager::s_CreateFuncs;
     std::hash<std::string> AssetManager::s_Hash;
 
 
-    Ref<Asset> AssetManager::Get(const std::string& assetPath)
+    Ref<Asset> AssetManager::Get(const GUID& id)
     {
-        if (Exists(assetPath))
+        if (Exists(id))
         {
-            return (s_Assets[s_Hash(assetPath)]);
+            return (s_Assets[id]);
         }
+        CHROMA_CORE_ERROR("Sprite {} does not exist!", id.ToString());
         return nullptr;
     }
 
 
-    bool AssetManager::Exists(const std::string& id)
+    Ref<Asset> AssetManager::Create(const GUID& id, const std::string& path, const std::string& type)
     {
-        return s_Assets.contains(s_Hash(id));
+        if (Exists(id))
+        {
+            return Get(id);
+        }
+
+        s_CreateFuncs[s_Hash(type)](id, path);
+        return Get(id);
+    }
+
+    bool AssetManager::Exists(const GUID& id)
+    {
+        return s_Assets.contains(id);
     }
 
 
-    bool AssetManager::Load(const std::string& id)
+    bool AssetManager::Load(const GUID& id)
     {
         if (!Exists(id))
         {
-            CHROMA_CORE_WARN("Asset cannot be loaded, as it does not yet exist! {}", id);
+            CHROMA_CORE_WARN("Asset cannot be loaded, as it does not yet exist! {}", id.ToString());
             return false;
         }
             
 
-        auto& asset = s_Assets[s_Hash(id)];
+        auto& asset = s_Assets[id];
 
         if (asset->IsLoaded())
         {
-            CHROMA_CORE_WARN("Asset is already loaded! {}", id);
+            CHROMA_CORE_WARN("Asset is already loaded! {}", id.ToString());
             return false;
         }
 
@@ -53,11 +71,11 @@ namespace Chroma
     }
 
 
-    bool AssetManager::Unload(const std::string& id)
+    bool AssetManager::Unload(const GUID& id)
     {
         if (!Exists(id))
             return false;
-        auto& asset = s_Assets[s_Hash(id)];
+        auto& asset = s_Assets[id];
 
         if (!asset->IsLoaded())
             return false;
@@ -66,11 +84,11 @@ namespace Chroma
     }
 
 
-    bool AssetManager::Reload(const std::string& id)
+    bool AssetManager::Reload(const GUID& id)
     {
         if (!Exists(id))
             return false;
-        auto& asset = s_Assets[s_Hash(id)];
+        auto& asset = s_Assets[id];
 
         if (asset->IsLoaded())
             return asset->Unload();
@@ -78,41 +96,66 @@ namespace Chroma
         return asset->Load();
     }
 
-    bool AssetManager::IsLoaded(const std::string& assetPath)
+    bool AssetManager::IsLoaded(const GUID& id)
     {
-        return Exists(assetPath) && s_Assets[s_Hash(assetPath)]->IsLoaded();
+        return Exists(id) && s_Assets[id]->IsLoaded();
     }
 
     void AssetManager::UnloadAll()
     {
-        std::vector<size_t> toRemove;
         for (auto& [hash, asset] : s_Assets)
         {
             asset->Unload();
-            asset.reset();
-            toRemove.push_back(hash);
-        }
-        for (size_t hash : toRemove)
-        {
-            s_Assets.erase(s_Assets.find(hash));
         }
     }
 
     void AssetManager::UnloadUnused()
     {
-        std::vector<size_t> toRemove;
         for (auto& [hash, asset] : s_Assets)
         {
             if (asset.use_count() < 1)
             {
                 asset->Unload();
-                asset.reset();
-                toRemove.push_back(hash);
             }
         }
-        for (size_t hash : toRemove)
+    }
+
+    GUID AssetManager::GetID(const std::string& path)
+    {
+        if (s_Paths.contains(s_Hash(path)))
         {
-            s_Assets.erase(s_Assets.find(hash));
+            return s_Paths[s_Hash(path)];
+        }
+        return GUID::Zero();
+    }
+
+    void AssetManager::LoadManifest(const std::string& yaml)
+    {
+        auto data = YAML::Load(yaml);
+        if (data && data.IsMap())
+        {
+            for (auto item : data)
+            {
+                GUID id = GUID::Parse(item.first.as<std::string>());
+                if (item.second && item.second.IsMap())
+                {
+                    std::string path;
+                    auto val = item.second["Path"];
+                    if (val)
+                    {
+                        path = val.as<std::string>();
+                        s_Paths[s_Hash(path)] = id;
+                    }
+
+                    val = item.second["Type"];
+                    if (val)
+                    {
+                        std::string type = val.as<std::string>();
+                        Create(id, path, type);
+
+                    }
+                }
+            }
         }
     }
 

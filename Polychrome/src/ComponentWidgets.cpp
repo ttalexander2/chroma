@@ -15,10 +15,14 @@
 #include <Chroma/Components/SpriteRenderer.h>
 #include <Chroma/Components/ParticleEmitter.h>
 #include <Chroma/Assets/AssetManager.h>
+#include "AssetBrowser.h"
 
 #include "EditorApp.h"
 #include "Hierarchy.h"
 #include "UndoRedo.h"
+#include "Project.h"
+#include "Viewport.h"
+#include "ComponentDebugGizmos.h"
 
 
 namespace ImGui
@@ -594,27 +598,41 @@ namespace Polychrome
 	void ComponentWidgets::DrawSpriteRenderer(Chroma::Component* c)
 	{
 		Chroma::SpriteRenderer* spr = reinterpret_cast<Chroma::SpriteRenderer*>(c);
-		std::string selectedSprite = spr->GetSpriteID();
+		auto selectedSprite = spr->GetSpritePath();
 
 		DrawComponentValue(c, "Sprite");
 
-		if (ImGui::BeginCombo("##Sprite", spr->GetSpriteID().c_str()))
+		std::string spr_path = spr->GetSpritePath();
+
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 0, 0 });
+		if (ImGui::Button(ICON_FK_LIST "##sprite_selection_button"))
+		{
+			//Chroma::EntityID* id = new Chroma::EntityID(spr->GetEntityID());
+			AssetBrowser::SelectAsset<Chroma::Sprite>([](Chroma::Ref<Chroma::Asset> asset, void* user_data) {
+				Chroma::SpriteRenderer* e = reinterpret_cast<Chroma::SpriteRenderer*>(user_data);
+				e->SetSprite(asset->GetID());
+				//delete e;
+				}, (void*)spr);
+		}
+
+		if (ImGui::IsItemHovered())
+			ImGui::SetTooltip("Select Asset");
+
+		ImGui::SameLine();
+		ImGui::InputText("##sprite_to_render", &spr_path, ImGuiInputTextFlags_ReadOnly);
+		ImGui::PopStyleVar();
+
+		/*
+		if (ImGui::BeginCombo("##Sprite", spr->GetSpritePath().c_str()))
 		{
 			for (auto sprite : Chroma::AssetManager::View<Chroma::Sprite>())
 			{
-				bool selected = (spr->GetSpriteID() == sprite->GetPath());
+				bool selected = (spr->GetSpritePath() == sprite->GetPath());
 				if (ImGui::Selectable(sprite->GetPath().c_str(), &selected))
 				{
-					spr->SetSprite(sprite->GetPath());
+					spr->SetSprite(sprite->GetID());
 					spr->SetCurrentFrame(0);
 				}
-
-				UndoRedo::ImGuiRegister<std::string>(&spr->SpriteID, selectedSprite, "Modify Selected Sprite", [](std::string* ptr, std::string val, void* user_data)
-					{
-						Chroma::SpriteRenderer* userData = reinterpret_cast<Chroma::SpriteRenderer*>(user_data);
-						userData->SetSprite(val);
-					},
-					(void*)spr);
 
 				if (selected)
 				{
@@ -625,7 +643,7 @@ namespace Polychrome
 			}
 			ImGui::EndCombo();
 		}
-
+		*/
 
 
 
@@ -660,7 +678,28 @@ namespace Polychrome
 			
 			float oldSortingPoint = spr->SortingPoint;
 			DrawComponentValue(c, "Sorting Point");
+			static bool dragging = false;
+			static bool gizmo_on = false;
 			ImGui::DragFloat("##sorting_point_sprite", &spr->SortingPoint);
+
+			if (ImGui::IsItemActive())
+			{
+				
+				if (!dragging)
+				{
+					gizmo_on = ComponentDebugGizmos::DrawSpriteBoundries;
+					ComponentDebugGizmos::DrawSpriteBoundries = true;
+				}
+					
+				dragging = true;
+			}
+			else
+			{
+				dragging = false;
+				if (!gizmo_on)
+					ComponentDebugGizmos::DrawSpriteBoundries = false;
+			}
+
 			UndoRedo::ImGuiRegister<float>(&spr->SortingPoint, oldSortingPoint, "Modify Sprite Sorting Point");
 
 

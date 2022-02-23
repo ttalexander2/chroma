@@ -3,6 +3,9 @@
 #include <filesystem>
 #include <Chroma/Math/Math.h>
 #include <Chroma/Renderer/Texture.h>
+#include <Chroma/Core/Core.h>
+#include <Chroma/Assets/Asset.h>
+#include <Chroma/Utilities/StringHash.h>
 #include <map>
 
 namespace Polychrome
@@ -14,6 +17,18 @@ namespace Polychrome
 		static std::filesystem::path Selected;
 		static void Draw();
 		static void HandleOpen(std::filesystem::path path);
+		static bool IsSelecting() { return s_IsSelecting; }
+
+		template <typename T>
+		static void SelectAsset(std::function<void(Chroma::Ref<Chroma::Asset>, void*)> callback, void* user_data = nullptr)
+		{
+			static_assert(std::is_base_of<Chroma::Asset, T>::value, "Type T is not derived from Asset!");
+
+			s_IsSelecting = true;
+			s_SelectionCallback = callback;
+			s_SelectionType = T::GetTypeStatic();
+			s_UserData = user_data;
+		}
 
 		static std::map<std::filesystem::path, Chroma::Ref<Chroma::Texture2D>> Icons;
 		static void LoadFileIcon(std::filesystem::path path);
@@ -25,5 +40,11 @@ namespace Polychrome
 		
 		static void AssetBrowserCreatePopup();
 		//static std::map<std::filesystem::path, Chroma::Ref<Chroma::Texture2D>> Icons;
+
+
+		static bool s_IsSelecting;
+		static std::function<void(Chroma::Ref<Chroma::Asset>, void*)> s_SelectionCallback;
+		static StringHash s_SelectionType;
+		static void* s_UserData;
 	};
 }

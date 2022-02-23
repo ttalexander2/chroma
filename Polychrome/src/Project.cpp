@@ -11,6 +11,7 @@
 #include <Chroma/Scripting/MonoScripting.h>
 #include <Chroma/IO/FileSystem.h>
 #include <Chroma/Components/CSharpScript.h>
+#include <fstream>
 
 namespace Polychrome
 {
@@ -89,6 +90,8 @@ namespace Polychrome
 		return true;
 	}
 
+
+
 	bool Project::LoadProject(const std::string& path)
 	{
 		auto ss = std::ostringstream{};
@@ -126,6 +129,12 @@ namespace Polychrome
 		}
 		stream.close();
 
+
+		std::ifstream asset_stream(std::filesystem::path(AssetDirectory).parent_path().string() + "/Assets.yaml");
+		std::stringstream asset_ss;
+		asset_ss << asset_stream.rdbuf();
+		Chroma::AssetManager::LoadManifest(asset_ss.str());
+
 		try
 		{
 			Chroma::FileSystem::UnmountAll();
@@ -139,13 +148,15 @@ namespace Polychrome
 			CHROMA_CORE_ERROR("{}", e.what());
 		}
 
+
+
+
 		for (auto& file : Chroma::FileSystem::RecursiveFileIterator(""))
 		{
 			//CHROMA_CORE_INFO("{}", file.path().string());
 			if (Chroma::FileSystem::HasFileExtension(file, ".ase") || Chroma::FileSystem::HasFileExtension(file, ".aseprite") || Chroma::FileSystem::HasFileExtension(file, ".png") || Chroma::FileSystem::HasFileExtension(file, ".jpg"))
 			{
-				Chroma::AssetManager::Create<Chroma::Sprite>(file);
-				bool result = Chroma::AssetManager::Load(file);
+				bool result = Chroma::AssetManager::Load(Chroma::AssetManager::GetID(file));
 				if (!result)
 					CHROMA_CORE_ERROR("Failed to load {}", file);
 			}
@@ -163,11 +174,12 @@ namespace Polychrome
 			Chroma::Scene* scene = new Chroma::Scene();
 			Chroma::Scene::Deserialize(scene, ss.str());
 			EditorApp::CurrentScene = scene;
-			EditorApp::CurrentScenePath = AssetDirectory + StartingScene;
+			EditorApp::CurrentScenePath = AssetDirectory + "\\" + StartingScene;
 		}
 		else
 		{
 			EditorApp::CurrentScene = new Chroma::Scene();
+			EditorApp::CurrentScenePath.clear();
 		}
 
 		std::string proj = R"(<Project Sdk="Microsoft.NET.Sdk">
@@ -223,6 +235,32 @@ namespace Polychrome
 		//	CHROMA_CORE_WARN("{}", path);
 		//}
 
+
+		/*
+
+
+		YAML::Emitter out;
+		out << YAML::BeginMap;
+
+		for (auto& [id, asset] : Chroma::AssetManager::GetAssetMap())
+		{
+			out << YAML::Key << Chroma::GUID::CreateGUID().ToString();
+			out << YAML::Value << YAML::BeginMap;
+
+			out << YAML::Key << "Path" << YAML::Value << asset->GetPath();
+			out << YAML::Key << "Type" << YAML::Value << asset->GetTypeName();
+
+			out << YAML::EndMap;
+		}
+
+		out << YAML::EndMap;
+
+		std::ofstream stream2(std::filesystem::path(AssetDirectory).parent_path().string() + "/Assets.yaml", std::fstream::out);
+		std::string str(out.c_str());
+		stream2 << str;
+		stream2.close();
+
+		*/
 
 		return true;
 

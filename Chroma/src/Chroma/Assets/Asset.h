@@ -56,6 +56,7 @@ namespace Chroma
 
 		const std::string GetPath() const { return m_Path; }
 		const bool IsLoaded() const { return m_Loaded; }
+		GUID GetID() const { return m_ID; }
 
 	protected:
 		virtual bool Load() { return true; };
@@ -65,8 +66,8 @@ namespace Chroma
 		virtual void NOTYPEINFO() = 0;
 
 	private:
+		GUID m_ID;
 		std::string m_Path;
-		size_t m_Hash;
 		bool m_Loaded = true;
 
 

@@ -46,20 +46,20 @@ namespace Chroma
 			if (!spriteRenderer.IsEnabled())
 				continue;
 
-			if (AssetManager::Exists(spriteRenderer.SpriteID))
-				{
-					Ref<Sprite> s = AssetManager::Get<Sprite>(spriteRenderer.SpriteID);
-					if (spriteRenderer.Playing && s->Animated())
+			if (AssetManager::IsLoaded(spriteRenderer.SpriteID))
+			{
+				auto sprite = AssetManager::Get<Sprite>(spriteRenderer.SpriteID);
+					if (spriteRenderer.Playing && sprite->Animated())
 					{
 						
 						spriteRenderer.SetAnimation(spriteRenderer.Animation);
 
-						Sprite::Animation animation = s->Animations[spriteRenderer.Animation];
-						if (spriteRenderer.time_till_next_frame >= s->Frames[spriteRenderer.CurrentFrame].Durration)
+						Sprite::Animation animation = sprite->Animations[spriteRenderer.Animation];
+						if (spriteRenderer.time_till_next_frame >= sprite->Frames[spriteRenderer.CurrentFrame].Durration)
 						{
 							spriteRenderer.time_till_next_frame = 0;
-							int start = s->Animations[spriteRenderer.Animation].Start;
-							int end = s->Animations[spriteRenderer.Animation].End;
+							int start = sprite->Animations[spriteRenderer.Animation].Start;
+							int end = sprite->Animations[spriteRenderer.Animation].End;
 
 							if (animation.Direction == Sprite::LoopDirection::Forward)
 							{
@@ -120,7 +120,7 @@ namespace Chroma
 				continue;
 
 			Math::vec2 absPos = m_Scene->GetTransformAbsolutePosition(e);
-			if (!AssetManager::Exists(s.SpriteID))
+			if (!AssetManager::IsLoaded(s.SpriteID))
 				continue;
 			float y = -1.f*(absPos.y + s.Offset.y + s.SortingPoint);
 			if (sprites.find(y) == sprites.end())
@@ -142,17 +142,20 @@ namespace Chroma
 
 				const Math::vec2& origin = spriteRenderer.GetSpriteOriginVector();
 
-				if (AssetManager::Exists(spriteRenderer.SpriteID))
+				
+
+				if (AssetManager::IsLoaded(spriteRenderer.SpriteID))
 				{
-					Ref<Sprite> s = AssetManager::Get<Sprite>(spriteRenderer.SpriteID);
-					int w = s->Frames[spriteRenderer.CurrentFrame].Texture->GetWidth();
-					int h = s->Frames[spriteRenderer.CurrentFrame].Texture->GetHeight();
+
+					auto sprite = AssetManager::Get<Sprite>(spriteRenderer.SpriteID);
+					int w = sprite->Frames[spriteRenderer.CurrentFrame].Texture->GetWidth();
+					int h = sprite->Frames[spriteRenderer.CurrentFrame].Texture->GetHeight();
 					if (!relationship.IsChild())
 					{
 						Math::vec2 size = transform.Scale * Math::vec2((float)w, (float)h);
 						Math::vec2 originAdjustment = { Math::abs(size.x) / 2.f - origin.x, -Math::abs(size.y) / 2.f + origin.y};
 
-						Chroma::Renderer2D::DrawSprite((int)e, transform.Position + spriteRenderer.Offset + originAdjustment * transform.Scale, size, s->Frames[spriteRenderer.CurrentFrame].Texture, spriteRenderer.Color, transform.Rotation);
+						Chroma::Renderer2D::DrawSprite((int)e, transform.Position + spriteRenderer.Offset + originAdjustment * transform.Scale, size, sprite->Frames[spriteRenderer.CurrentFrame].Texture, spriteRenderer.Color, transform.Rotation);
 					}
 					else
 					{
@@ -178,7 +181,7 @@ namespace Chroma
 						Math::vec2 size = scale * Math::vec2((float)w, (float)h);
 						Math::vec2 originAdjustment = { Math::abs(size.x) / 2.f - origin.x, -Math::abs(size.y) / 2.f + origin.y};
 
-						Chroma::Renderer2D::DrawSprite((int)e, parentPos + adjusted + spriteRenderer.Offset + originAdjustment * transform.Scale, size, s->Frames[spriteRenderer.CurrentFrame].Texture, spriteRenderer.Color, rotation + parentRot);
+						Chroma::Renderer2D::DrawSprite((int)e, parentPos + adjusted + spriteRenderer.Offset + originAdjustment * transform.Scale, size, sprite->Frames[spriteRenderer.CurrentFrame].Texture, spriteRenderer.Color, rotation + parentRot);
 					}
 
 				}

@@ -104,8 +104,8 @@ namespace Polychrome
 					Math::vec2 center = transform.Position + spriteRenderer.Offset + originAdjustment;
 					Math::vec2 sortPointPosition = {center.x, center.y + spriteRenderer.SortingPoint};
 
-					Chroma::Renderer2D::DrawRect(transform.Position + spriteRenderer.Offset + originAdjustment, transform.Scale * Math::vec2((float)w, (float)h), 1.f / EditorApp::Camera.GetZoom(), { 0.95f, 0.0f , 0.5f , 1.f });
-					Chroma::Renderer2D::DrawLine({ center.x - size.x / 2.f, center.y + spriteRenderer.SortingPoint }, { center.x + size.x / 2.f, center.y + spriteRenderer.SortingPoint }, 1.f / EditorApp::Camera.GetZoom(), { 0.95f, 0.0f , 0.5f , 1.f });
+					Chroma::Renderer2D::DrawRect(transform.Position + spriteRenderer.Offset + originAdjustment, transform.Scale * Math::vec2((float)w, (float)h), 2.f / EditorApp::Camera.GetZoom(), { 0.95f, 0.0f , 0.5f , 1.f });
+					Chroma::Renderer2D::DrawLine({ center.x - size.x / 2.f, center.y + spriteRenderer.SortingPoint }, { center.x + size.x / 2.f, center.y + spriteRenderer.SortingPoint }, 2.f / EditorApp::Camera.GetZoom(), { 0.95f, 0.0f , 0.5f , 1.f });
 				}
 				else
 				{
@@ -133,8 +133,8 @@ namespace Polychrome
 					Math::vec2 sortPointPosition = { center.x, center.y + spriteRenderer.SortingPoint };
 
 
-					Chroma::Renderer2D::DrawRect(parentPos + adjusted + spriteRenderer.Offset + originAdjustment, scale * Math::vec2((float)w, (float)h), 1.f / EditorApp::Camera.GetZoom(), { 0.95f, 0.0f , 0.5f , 1.f });
-					Chroma::Renderer2D::DrawLine({ center.x - size.x / 2.f, center.y + spriteRenderer.SortingPoint }, { center.x + size.x / 2.f, center.y + spriteRenderer.SortingPoint }, 1.f / EditorApp::Camera.GetZoom(), { 0.95f, 0.0f , 0.5f , 1.f });
+					Chroma::Renderer2D::DrawRect(parentPos + adjusted + spriteRenderer.Offset + originAdjustment, scale * Math::vec2((float)w, (float)h), 2.f / EditorApp::Camera.GetZoom(), { 0.95f, 0.0f , 0.5f , 1.f });
+					Chroma::Renderer2D::DrawLine({ center.x - size.x / 2.f, center.y + spriteRenderer.SortingPoint }, { center.x + size.x / 2.f, center.y + spriteRenderer.SortingPoint }, 2.f / EditorApp::Camera.GetZoom(), { 0.95f, 0.0f , 0.5f , 1.f });
 				}
 
 			}

@@ -58,13 +58,13 @@ namespace Chroma
 
 		/// @brief Gets the sprite ID/Path
 		/// @return Relative path/name of the sprite.
-		const std::string& GetSpriteID() const { return SpriteID; }
+		const GUID& GetSpriteID() const { return SpriteID; }
 		/// @brief Set the sprite to render.
 		/// 
 		/// Sprite must already be loaded.
 		/// @see AssetManager to load sprite.
 		/// @param spriteID Name/Path of the sprite.
-		void SetSprite(const std::string& spriteID);
+		void SetSprite(const GUID& spriteID);
 
 		/// @brief Set the animation of the sprite.
 		/// @param animation Number of the animation.
@@ -97,6 +97,8 @@ namespace Chroma
 		SpriteOrigin GetSpriteOrigin();
 		const Math::vec2& GetSpriteOriginVector();
 
+		std::string GetSpritePath();
+
 		/// @brief Restart the animation.
 		/// 
 		/// WARNING: Not Implemented.
@@ -118,7 +120,7 @@ namespace Chroma
 
 		float time_till_next_frame = 0;
 		bool looping_forward = 0;
-		std::string SpriteID;
+		GUID SpriteID;
 
 		friend class SpriteRendererSystem;
 
