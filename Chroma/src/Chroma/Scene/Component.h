@@ -3,6 +3,7 @@
 
 #include "Chroma/Core/Log.h"
 #include <string>
+#include <map>
 #include "Chroma/Utilities/Yaml.h"
 #include "yaml-cpp/node/convert.h"
 #include "yaml-cpp/node/node.h"
@@ -11,6 +12,7 @@
 #include "Chroma/Utilities/StringHash.h"
 #include <Chroma/Core/TypeInfo.h>
 #include "Chroma/Scene/EntityID.h"
+#include "Chroma/Utilities/StringHash.h"
 
 namespace Polychrome
 {
@@ -23,7 +25,9 @@ namespace Chroma
 	class Scene;
 
 
+
 #define CHROMA_COMPONENT(typeName, baseTypeName) \
+		public: \
 			using ClassName = typeName; \
 			using BaseClass = baseTypeName; \
 			typeName() = default; \
@@ -37,11 +41,13 @@ namespace Chroma
 			static const std::string& GetTypeNameStatic() { return GetTypeInfoStatic()->GetTypeName(); } \
 			static const TypeInfo* GetTypeInfoStatic () { static const TypeInfo typeInfoStatic(#typeName, baseTypeName::GetTypeInfoStatic()); return &typeInfoStatic; } \
 			static const size_t GetTypeSizeStatic() { return sizeof(#typeName); } \
+			static void CreateReflectionModel(); \
 		private: \
 			virtual void NOTYPEINFO() override {} \
 		public: \
 
 #define CHROMA_ABSTRACT_COMPONENT(typeName, baseTypeName) \
+		public:\
 			using ClassName = typeName; \
 			using BaseClass = baseTypeName; \
 			typeName() = default; \
@@ -56,7 +62,7 @@ namespace Chroma
 			static const TypeInfo* GetTypeInfoStatic () { static const TypeInfo typeInfoStatic(#typeName, baseTypeName::GetTypeInfoStatic()); return &typeInfoStatic; } \
 			static const size_t GetTypeSizeStatic() { return sizeof(#typeName); } \
 		public: \
-
+		
 
 	struct Component
 	{
@@ -126,6 +132,7 @@ namespace Chroma
 		int order_id = 1;
 		unsigned int comparison_id;
 		static unsigned int comparison_counter;
+		std::map<std::string, void*> _DataMembers;
 
 
 		friend class Polychrome::ComponentWidgets;

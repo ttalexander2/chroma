@@ -12,17 +12,16 @@ namespace Chroma
 	struct BoxCollider : public Collider
 	{
 		CHROMA_COMPONENT(BoxCollider, Collider);
+		
+		Math::vec2 Max { 20.0f, 20.0f };
+		Math::vec2 Min { 0.0f,  0.0f  };
 
-		/// @brief 2D Min of the Box Collider.
-		Math::vec2 Min{ 0.0f, 0.0f };
-
-		Math::vec2 Max{ 20.0f, 20.0f };
 
 		void Serialize(YAML::Emitter& out) override;
-
 		void Deserialize(YAML::Node& node) override;
 
 		bool IsColliding() const { return m_Colliding; }
+
 
 	private:
 		bool m_Colliding = false;
@@ -32,4 +31,3 @@ namespace Chroma
 
 	};
 }
-

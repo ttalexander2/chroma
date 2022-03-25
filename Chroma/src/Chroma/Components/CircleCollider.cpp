@@ -27,4 +27,12 @@ namespace Chroma
 		}
 
 	}
+
+	void CircleCollider::CreateReflectionModel()
+	{
+		entt::meta<CircleCollider>()
+			.data<&CircleCollider::Radius>("Radius"_hs)
+			.data<&CircleCollider::Offset>("Offset"_hs)
+			.type("CircleCollider"_hs);
+	}
 }

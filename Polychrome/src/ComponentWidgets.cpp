@@ -443,7 +443,7 @@ namespace Polychrome
 		ImGui::UVec2IntNoReset("##camera_size", size);
 
 		if (size != camSize)
-			camera->SetSize(size.x, size.y);
+			camera->SetSize({ size.x, size.y });
 
 		DrawComponentValue(c, "PrimaryCamera");
 		bool primary = Hierarchy::SelectedEntity == EditorApp::CurrentScene->GetPrimaryCameraEntity();
@@ -693,7 +693,7 @@ namespace Polychrome
 					
 				dragging = true;
 			}
-			else
+			else if(dragging)
 			{
 				dragging = false;
 				if (!gizmo_on)

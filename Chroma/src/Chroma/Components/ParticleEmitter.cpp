@@ -189,4 +189,39 @@ namespace Chroma
 		return dist(engine);
 	}
 
+	void ParticleEmitter::CreateReflectionModel()
+	{
+		entt::meta<ParticleEmitter>()
+			.data<&ParticleEmitter::PositionVariance>("PositionVariance"_hs)
+			.data<&ParticleEmitter::StartColor>("StartColor"_hs)
+			.data<&ParticleEmitter::EndColor>("EndColor"_hs)
+			.data<&ParticleEmitter::Life>("Life"_hs)
+			.data<&ParticleEmitter::LifeVariance>("LifeVariance"_hs)
+			.data<&ParticleEmitter::Angle>("Angle"_hs)
+			.data<&ParticleEmitter::AngleVariance>("AngleVariance"_hs)
+			.data<&ParticleEmitter::Speed>("Speed"_hs)
+			.data<&ParticleEmitter::SpeedVariance>("SpeedVariance"_hs)
+			.data<&ParticleEmitter::Gravity>("Gravity"_hs)
+			.data<&ParticleEmitter::GravityVariance>("GravityVariance"_hs)
+			.data<&ParticleEmitter::Continuous>("Continuous"_hs)
+			.data<&ParticleEmitter::EmissionRate>("EmissionRate"_hs)
+			.data<&ParticleEmitter::PreWarm>("PreWarm"_hs)
+			.data<&ParticleEmitter::PreWarmSeconds>("PreWarmSeconds"_hs)
+			.data<&ParticleEmitter::SetSeed, &ParticleEmitter::GetSeed>("Seed"_hs)
+			.func<&ParticleEmitter::GenerateRandomSeed>("GenerateRandomSeed"_hs)
+			.func<&ParticleEmitter::Emit>("Emit"_hs)
+			.data<&ParticleEmitter::SetCount, &ParticleEmitter::GetCount>("GetCount"_hs)
+			.data<&ParticleEmitter::Particles>("Particles"_hs)
+			.type("ParticleEmitter"_hs);
+
+		entt::meta<Particle>()
+			.data<&Particle::Active>("Active"_hs)
+			.data<&Particle::Position>("Position"_hs)
+			.data<&Particle::Life>("Life"_hs)
+			.data<&Particle::TotalLife>("TotalLife"_hs)
+			.data<&Particle::Speed>("Speed"_hs)
+			.data<&Particle::Angle>("Angle"_hs)
+			.type("Particle"_hs);
+	}
+
 }

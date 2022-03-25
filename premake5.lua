@@ -397,7 +397,7 @@ project "Runtime"
 
 project "Chroma.Mono"
     location "Script-Core"
-    kind "None"
+    kind "StaticLib"
 
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("obj/" .. outputdir .. "/%{prj.name}")
@@ -409,18 +409,34 @@ project "Chroma.Mono"
 
     filter "configurations:Debug"
         buildcommands {
-            "{ECHO} Building Chroma.Mono.dll with mcs...",
             "%{wks.location}third_party/mono/bin/mono.exe %{wks.location}third_party/mono/lib/mono/4.5/mcs.exe -debug -target:library -nostdlib -out:%{wks.location}bin/" .. outputdir .. "/%{prj.name}/Chroma.Mono.dll -r:%{wks.location}third_party/mono/lib/mono/4.5/mscorlib.dll,%{wks.location}third_party/mono/lib/mono/4.5/System.dll,%{wks.location}third_party/mono/lib/mono/4.5/System.Core.dll -recurse:Source/**.cs"
+        }
+
+        buildmessage "Compiling Chroma.mono.dll with mcs..."
+
+        buildoutputs {
+            "bin/" .. outputdir .. "/%{prj.name}/Chroma.Mono.dll",
+            "bin/" .. outputdir .. "/%{prj.name}/Chroma.Mono.dll.mdb"
         }
 
     filter "configurations:Release"
         buildcommands {
-            "{ECHO} Building Chroma.Mono.dll with mcs...",
             "%{wks.location}third_party/mono/bin/mono.exe %{wks.location}third_party/mono/lib/mono/4.5/mcs.exe -target:library -nostdlib -optimize -out:%{wks.location}bin/" .. outputdir .. "/%{prj.name}/Chroma.Mono.dll -r:%{wks.location}third_party/mono/lib/mono/4.5/mscorlib.dll,%{wks.location}third_party/mono/lib/mono/4.5/System.dll,%{wks.location}third_party/mono/lib/mono/4.5/System.Core.dll -recurse:Source/**.cs"
+        }
+
+        buildmessage "Compiling Chroma.mono.dll with mcs..."
+
+        buildoutputs {
+            "bin/" .. outputdir .. "/%{prj.name}/Chroma.Mono.dll"
         }
 
     filter "configurations:Dist"
         buildcommands {
-            "{ECHO} Building Chroma.Mono.dll with mcs...",
             "%{wks.location}third_party/mono/bin/mono.exe %{wks.location}third_party/mono/lib/mono/4.5/mcs.exe -target:library -nostdlib -optimize -out:%{wks.location}bin/" .. outputdir .. "/%{prj.name}/Chroma.Mono.dll -r:%{wks.location}third_party/mono/lib/mono/4.5/mscorlib.dll,%{wks.location}third_party/mono/lib/mono/4.5/System.dll,%{wks.location}third_party/mono/lib/mono/4.5/System.Core.dll -recurse:Source/**.cs"
+        }
+
+        buildmessage "Compiling Chroma.mono.dll with mcs..."
+
+        buildoutputs {
+            "bin/" .. outputdir .. "/%{prj.name}/Chroma.Mono.dll"
         }

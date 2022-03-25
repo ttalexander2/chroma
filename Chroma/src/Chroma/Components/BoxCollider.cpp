@@ -11,6 +11,8 @@ namespace Chroma
 		out << YAML::Key << "Max";
 		out << YAML::Value << Max;
 	}
+
+
 	void BoxCollider::Deserialize(YAML::Node& node)
 	{
 
@@ -26,5 +28,13 @@ namespace Chroma
 			Max = val.as<Math::vec2>();
 		}
 
+	}
+
+	void BoxCollider::CreateReflectionModel()
+	{
+		entt::meta<BoxCollider>()
+			.data<&BoxCollider::Min>("Min"_hs)
+			.data<&BoxCollider::Max>("Max"_hs)
+			.type("BoxCollider"_hs);
 	}
 }

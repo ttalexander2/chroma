@@ -19,4 +19,12 @@ namespace Chroma
 		}
 
 	}
+	void AudioSource::CreateReflectionModel()
+	{
+		entt::meta<AudioSource>()
+			.data<&AudioSource::SetEvent, &AudioSource::GetEvent>("Event"_hs)
+			.data<&AudioSource::Mute>("Mute"_hs)
+			.data<&AudioSource::PlayOnInit>("PlayOnInit"_hs)
+			.type("AudioSource"_hs);
+	}
 }

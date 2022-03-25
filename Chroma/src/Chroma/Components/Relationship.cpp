@@ -44,6 +44,16 @@ namespace Chroma
 			}
 		}
 	}
+
+	void Relationship::CreateReflectionModel()
+	{
+		entt::meta<Relationship>()
+			.data<&Relationship::Parent>("Parent"_hs)
+			.data<&Relationship::Children>("Children"_hs)
+			.func<&Relationship::HasChild>("HasChild"_hs)
+			.func<&Relationship::HasChildren>("HasChildren"_hs)
+			.type("Relationship"_hs);
+	}
 }
 
 
