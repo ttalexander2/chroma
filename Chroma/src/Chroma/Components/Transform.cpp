@@ -46,6 +46,16 @@ namespace Chroma
 		}
 
 	}
+
+	void Transform::CreateReflectionModel()
+	{
+		entt::meta<Transform>()
+			.data<&Transform::Position>("Position"_hs)
+			.data<&Transform::Rotation>("Rotation"_hs)
+			.data<&Transform::Scale>("Scale"_hs)
+			.func<&Transform::GetTransform>("GetTransform"_hs)
+			.type("Transform"_hs);
+	}
 }
 
 

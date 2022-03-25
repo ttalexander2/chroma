@@ -1,6 +1,8 @@
 # To Do
 
-### Renderer:
-- Remove abstraction for Vertex Array Buffer (only found in OpenGL)
-- Create graphics pipeline abstraction
-- Create
+ - ### Prefabs
+   - Add ability to create/edit prefabs
+   - Create new game objects from prefabs
+   - Serialize objects from prefabs (only serialize unique parameters)
+   - Add api for loading objects from prefabs
+   - Data structure in game for holding loaded prefab copies (instantiation of prefabs will just copy this entity)

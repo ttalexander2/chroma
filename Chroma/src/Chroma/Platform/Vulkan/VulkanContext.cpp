@@ -99,7 +99,7 @@ namespace Chroma
 		CreateCommandBuffers();
 		CreateSyncObjects();
 
-		//DRAW LOOP
+		//TEST DRAW LOOP
 		while (!glfwWindowShouldClose(m_WindowHandle))
 		{
 			glfwPollEvents();

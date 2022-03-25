@@ -19,6 +19,13 @@ namespace Chroma
 		}
 	}
 
+	void Tag::CreateReflectionModel()
+	{
+		entt::meta<Tag>()
+			.data<&Tag::EntityName>("Entity"_hs)
+			.type("Tag"_hs);
+	}
+
 
 }
 

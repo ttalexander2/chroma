@@ -9,6 +9,7 @@ namespace Chroma
 		out << YAML::Key << "Module";
 		out << YAML::Value << ModuleName;
 	}
+
 	void CSharpScript::Deserialize(YAML::Node& node)
 	{
 		auto val = node["Module"];
@@ -16,5 +17,12 @@ namespace Chroma
 		{
 			ModuleName = val.as<std::string>();
 		}
+	}
+
+	void CSharpScript::CreateReflectionModel()
+	{
+		entt::meta<CSharpScript>()
+			.data<&CSharpScript::ModuleName>("ModuleName"_hs)
+			.type("CSharpScript"_hs);
 	}
 }

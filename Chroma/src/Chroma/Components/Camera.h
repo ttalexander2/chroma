@@ -16,7 +16,6 @@ namespace Chroma
 
 		const Math::uvec2& GetSize() const { return size; }
 		void SetSize(const Math::uvec2& size) { this->size = size; dirty = true; }
-		void SetSize(uint32_t x, uint32_t y) { size = { x, y, }; dirty = true; }
 
 
 		const Math::mat4& GetProjectionMatrix() const { return projectionMatrix; }
@@ -25,7 +24,6 @@ namespace Chroma
 
 
 		void Serialize(YAML::Emitter& out) override;
-
 		void Deserialize(YAML::Node& node) override;
 
 

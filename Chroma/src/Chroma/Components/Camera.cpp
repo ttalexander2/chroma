@@ -37,6 +37,19 @@ namespace Chroma
 			size = val.as<Math::vec2>();
 		}
 	}
+
+
+	void Camera::CreateReflectionModel()
+	{
+		entt::meta<Camera>()
+			.data<&Camera::SetPosition, &Camera::GetPosition>("Position"_hs)
+			.data<&Camera::SetSize, &Camera::GetSize>("Size"_hs)
+			.data<nullptr, &Camera::GetProjectionMatrix>("ProjectionMatrix"_hs)
+			.data<nullptr, &Camera::GetViewMatrix>("ViewMatrix"_hs)
+			.data<nullptr, &Camera::GetViewProjectionMatrix>("ViewProjectionMatrix"_hs)
+			.type("Camera"_hs);
+
+	}
 }
 
 

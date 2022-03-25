@@ -42,6 +42,7 @@
 #include "Build.h"
 #include "GameSettings.h"
 #include "UndoRedo.h"
+#include "AnimationEditor.h"
 #include <Chroma/Components/ParticleEmitter.h>
 #include <Chroma/Systems/ParticleSystem.h>
 
@@ -163,6 +164,8 @@ namespace Polychrome
 		ImGuiContext* cnew = ImGui::CreateContext();
 		ImGui::SetCurrentContext(cnew);
 
+		std::atomic_bool quit_from_launcher = false;
+
 		auto result = std::async([&]() {
 
 			ImGui::SetCurrentContext(cnew);
@@ -223,6 +226,11 @@ namespace Polychrome
 
 				l->ImGuiDraw(m_Time, (float)x, (float)y);
 
+				if (glfwWindowShouldClose(window))
+				{
+					quit_from_launcher.store(true);
+					break;
+				}
 
 
 				_io.DisplaySize = ImVec2(x,y);
@@ -245,8 +253,6 @@ namespace Polychrome
 
 			glfwDestroyWindow(window);
 
-
-
 			delete l;
 
 			Launcher::Stopped.store(true);
@@ -254,7 +260,7 @@ namespace Polychrome
 
 		while (!Launcher::Loading)
 		{
-			if (Launcher::Stopped)
+			if (quit_from_launcher)
 			{
 				this->Stop();
 				return;
@@ -765,7 +771,7 @@ namespace Polychrome
 			ImGui::MenuItem("Game Settings##MAIN_MENU_BAR", "", &GameSettings::Open);
 			ImGui::MenuItem("Preferences##MAIN_MENU_BAR", "", &PreferencesWindowOpen);
 
-
+			
 			ImGui::EndMenu();
 		}
 
@@ -784,6 +790,7 @@ namespace Polychrome
 
 		Hierarchy::Draw();
 		Inspector::Draw();
+		//AnimationEditor::Draw();
 		Viewport::Draw(time, m_Framebuffer, m_GuizmoFramebuffer);
 		LogWindow::Draw();
 		ErrorWindow::Draw();

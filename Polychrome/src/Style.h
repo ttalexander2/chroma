@@ -1952,7 +1952,7 @@ namespace ImGui
             ImGuiStyle& style = ImGui::GetStyle();
 
             // Missing part... just guessing
-            style.FrameBorderSize = 1.0f;
+            style.FrameBorderSize = 0.0f;
             style.FramePadding = ImVec2(4.0f, 4.0f);
             style.ScrollbarSize = 16.0f;
             style.ChildRounding = style.FrameRounding = style.ScrollbarRounding = style.GrabRounding = style.TabRounding =

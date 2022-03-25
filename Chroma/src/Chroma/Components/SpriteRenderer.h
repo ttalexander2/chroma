@@ -100,8 +100,6 @@ namespace Chroma
 		std::string GetSpritePath();
 
 		/// @brief Restart the animation.
-		/// 
-		/// WARNING: Not Implemented.
 		void RestartAnimation();
 
 

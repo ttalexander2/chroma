@@ -18,7 +18,6 @@ namespace Chroma
 
 
 		void Serialize(YAML::Emitter& out) override;
-
 		void Deserialize(YAML::Node& node) override;
 	};
 }

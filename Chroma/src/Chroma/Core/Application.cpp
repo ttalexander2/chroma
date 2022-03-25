@@ -29,6 +29,10 @@
 #include "Chroma/Assets/AssetManager.h"
 #include "Chroma/Assets/Sprite.h"
 
+#include <entt.hpp>
+#include "Chroma/Utilities/StringHash.h"
+#include <any>
+
 
 
 namespace Chroma

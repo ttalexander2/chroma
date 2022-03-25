@@ -90,6 +90,7 @@ namespace Chroma
 		template <ComponentType T>
 		static void RegisterComponent()
 		{
+			T::CreateReflectionModel();
 			StringHash hash = T::GetTypeInfoStatic()->GetType();
 			if (s_ComponentAdd.find(hash) != s_ComponentAdd.end())
 			{

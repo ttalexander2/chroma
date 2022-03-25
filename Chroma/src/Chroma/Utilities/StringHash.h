@@ -54,6 +54,12 @@ public:
 	size_t m_Hash;
 };
 
+
+static constexpr size_t operator"" _hs(const char* str, std::size_t) noexcept
+{
+	return StringHash::Hash(str);
+}
+
 namespace std
 {
 	template <>

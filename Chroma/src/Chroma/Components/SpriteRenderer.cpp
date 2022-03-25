@@ -3,6 +3,8 @@
 #include "Chroma/Core/Application.h"
 #include "Chroma/Assets/AssetManager.h"
 
+#include <functional>
+
 namespace Chroma
 {
 	
@@ -346,6 +348,28 @@ namespace Chroma
 			}
 
 		}
+	}
+
+
+	void SpriteRenderer::CreateReflectionModel()
+	{	
+		entt::meta<SpriteRenderer>()
+			.data<&SpriteRenderer::Color>("Color"_hs)
+			.data<&SpriteRenderer::Offset>("Offset"_hs)
+			.data<&SpriteRenderer::SortingPoint>("SortingPoint"_hs)
+			.data<&SpriteRenderer::PlayOnStart>("PlayOnStart"_hs)
+			.data<&SpriteRenderer::Playing>("Playing"_hs)
+			.data<&SpriteRenderer::Loop>("Loop"_hs)
+			.data<&SpriteRenderer::SpeedMultiplier>("SpeedMultiplier"_hs)
+			.data<&SpriteRenderer::SetSprite, &SpriteRenderer::GetSpriteID>("SpriteID"_hs)
+			//.data<static_cast<void (SpriteRenderer::*)(unsigned int)>(&SpriteRenderer::SetAnimation), &SpriteRenderer::GetAnimation>("Animation"_hs)
+			//.data<static_cast<void (SpriteRenderer::*)(const std::string&)>(&SpriteRenderer::SetAnimation), &SpriteRenderer::GetAnimationName>("AnimationName"_hs)
+			.data<&SpriteRenderer::SetCurrentFrame, &SpriteRenderer::GetCurrentFrame>("CurrentFrame"_hs)
+			//.data<static_cast<void (SpriteRenderer::*)(SpriteOrigin)>(&SpriteRenderer::SetSpriteOrigin), &SpriteRenderer::GetSpriteOrigin>("Origin"_hs)
+			//.data<static_cast<void (SpriteRenderer::*)(const Math::vec2&)>(&SpriteRenderer::SetSpriteOrigin), &SpriteRenderer::GetSpriteOriginVector>("OriginVector"_hs)
+			.data<nullptr, &SpriteRenderer::GetSpritePath>("SpritePath"_hs)
+			.func<&SpriteRenderer::RestartAnimation>("RestartAnimation"_hs)
+			.type("SpriteRenderer"_hs);
 	}
 
 }
