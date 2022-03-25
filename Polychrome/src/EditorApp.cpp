@@ -95,6 +95,7 @@ namespace Polychrome
 	std::string EditorApp::InfoMessage;
 	EditorApp::MessageSeverity EditorApp::InfoSeverity = EditorApp::MessageSeverity::Info;
 
+	//This commit does nothing
 
 
 	EditorApp::EditorApp()
