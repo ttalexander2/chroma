@@ -397,7 +397,7 @@ project "Runtime"
 
 project "Chroma.Mono"
     location "Script-Core"
-    kind "StaticLib"
+    kind "None"
 
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("obj/" .. outputdir .. "/%{prj.name}")
