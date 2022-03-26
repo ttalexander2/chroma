@@ -12,14 +12,16 @@
 
 namespace Chroma
 {
-	std::string FileDialogs::OpenFile(const char* filter)
+	std::string FileDialogs::OpenFile(const char* filter, void* nativeHandle)
 	{
 #if _WIN32
+		if (nativeHandle == nullptr)
+			nativeHandle = Application::Get().GetWindow().GetNativeWindow();
 		OPENFILENAMEA ofn;
 		CHAR szFile[260] = { 0 };
 		ZeroMemory(&ofn, sizeof(OPENFILENAME));
 		ofn.lStructSize = sizeof(OPENFILENAME);
-		ofn.hwndOwner = glfwGetWin32Window((GLFWwindow*)Application::Get().GetWindow().GetNativeWindow());
+		ofn.hwndOwner = glfwGetWin32Window((GLFWwindow*)nativeHandle);
 		ofn.lpstrFile = szFile;
 		ofn.nMaxFile = sizeof(szFile);
 		ofn.lpstrFilter = filter;
@@ -34,14 +36,16 @@ namespace Chroma
 
 	}
 
-	std::string FileDialogs::SaveFile(const char* filter)
+	std::string FileDialogs::SaveFile(const char* filter, void* nativeHandle)
 	{
 #if _WIN32
+		if (nativeHandle == nullptr)
+			nativeHandle = Application::Get().GetWindow().GetNativeWindow();
 		OPENFILENAMEA ofn;
 		CHAR szFile[260] = { 0 };
 		ZeroMemory(&ofn, sizeof(OPENFILENAME));
 		ofn.lStructSize = sizeof(OPENFILENAME);
-		ofn.hwndOwner = glfwGetWin32Window((GLFWwindow*)Application::Get().GetWindow().GetNativeWindow());
+		ofn.hwndOwner = glfwGetWin32Window((GLFWwindow*)nativeHandle);
 		ofn.lpstrFile = szFile;
 		ofn.nMaxFile = sizeof(szFile);
 		ofn.lpstrFilter = filter;
@@ -56,9 +60,13 @@ namespace Chroma
 
 	}
 
-	std::string FileDialogs::OpenDirectory()
+	std::string FileDialogs::OpenDirectory(void* nativeHandle)
 	{
 #if _WIN32
+
+		if (nativeHandle == nullptr)
+			nativeHandle = Application::Get().GetWindow().GetNativeWindow();
+
 		IFileOpenDialog* pFileOpen;
 
 		auto hr = CoCreateInstance(CLSID_FileOpenDialog, NULL, CLSCTX_ALL,
@@ -67,7 +75,7 @@ namespace Chroma
 		if (SUCCEEDED(hr))
 		{
 			pFileOpen->SetOptions(FOS_PICKFOLDERS);
-			hr = pFileOpen->Show(glfwGetWin32Window((GLFWwindow*)Application::Get().GetWindow().GetNativeWindow()));
+			hr = pFileOpen->Show(glfwGetWin32Window((GLFWwindow*)nativeHandle));
 			
 			if (SUCCEEDED(hr))
 			{

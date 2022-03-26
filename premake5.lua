@@ -351,6 +351,7 @@ project "Runtime"
         "{ECHO} Copying ../Chroma/third_party/mono/bin/mono-2.0-sgen.dll to %{cfg.targetdir}",
         '{COPYFILE} "../Chroma/third_party/mono/bin/mono-2.0-sgen.dll" "%{cfg.targetdir}"',
         '{COPYDIR} "../third_party/mono/lib" "%{cfg.targetdir}/mono/lib"',
+        '{COPYFILE} \"%{wks.location}bin/' .. outputdir .. '/Chroma.Mono/Chroma.Mono.dll\" %{cfg.targetdir}',
     }
 
 
@@ -396,7 +397,7 @@ project "Runtime"
 
 project "Chroma.Mono"
     location "Script-Core"
-    kind "SharedLib"
+    kind "None"
 
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("obj/" .. outputdir .. "/%{prj.name}")
