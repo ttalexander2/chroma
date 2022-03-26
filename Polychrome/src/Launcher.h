@@ -29,7 +29,7 @@ namespace Polychrome
 		~Launcher();
 
 		void Init();
-		void ImGuiDraw(Chroma::Time time, float width, float height);
+		void ImGuiDraw(Chroma::Time time, float width, float height, void* nativeWindowHandle);
 
 
 

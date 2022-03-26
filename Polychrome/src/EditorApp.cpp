@@ -95,8 +95,6 @@ namespace Polychrome
 	std::string EditorApp::InfoMessage;
 	EditorApp::MessageSeverity EditorApp::InfoSeverity = EditorApp::MessageSeverity::Info;
 
-	//This commit does nothing
-
 
 	EditorApp::EditorApp()
 		:Chroma::Application("Polychrome Editor", 1920U, 1080U)
@@ -182,7 +180,7 @@ namespace Polychrome
 
 			
 			ImGui_ImplOpenGL3_Init("#version 410");
-			ImGui_ImplGlfw_InitForOpenGL(window, false);
+			ImGui_ImplGlfw_InitForOpenGL(window, true);
 
 			auto& _io = ImGui::GetIO();
 			_io.DisplaySize = ImVec2(1280, 720);
@@ -225,7 +223,7 @@ namespace Polychrome
 
 				glfwGetWindowSize(window, &x, &y);
 
-				l->ImGuiDraw(m_Time, (float)x, (float)y);
+				l->ImGuiDraw(m_Time, (float)x, (float)y, (void*)window);
 
 				if (glfwWindowShouldClose(window))
 				{

@@ -123,7 +123,7 @@ namespace Polychrome
 	}
 
 
-	void Launcher::ImGuiDraw(Chroma::Time time, float width, float height)
+	void Launcher::ImGuiDraw(Chroma::Time time, float width, float height, void* nativeWindowHandle)
 	{
 
 		//ImGui::SetNextWindowPos({ 0,0 });
@@ -173,6 +173,7 @@ namespace Polychrome
 			static std::string creating_name;
 			static std::string creating_path;
 			static std::string creating_starting;
+
 
 
 
@@ -449,7 +450,7 @@ namespace Polychrome
 				ImGui::SameLine();
 				if (ImGui::Button("Add an existing project..."))
 				{
-					std::string selectedFile = Chroma::FileDialogs::OpenFile("Polychrome Project (*.polychrome)\0*.polychrome\0");
+					std::string selectedFile = Chroma::FileDialogs::OpenFile("Polychrome Project (*.polychrome)\0*.polychrome\0", nativeWindowHandle);
 
 					if (!selectedFile.empty())
 					{
@@ -476,15 +477,22 @@ namespace Polychrome
 			{
 				ImGui::PushItemWidth(ImGui::GetContentRegionAvailWidth() * 0.7f);
 				ImGui::Text("Name:");
-				ImGui::InputText("##name_new_proj", &creating_name, ImGuiInputTextFlags_CharsNoBlank);
+
+				ImGui::InputText("##name_new_proj", &creating_name);
+
+
 				ImGui::Dummy({ 1, 12 });
 				ImGui::Text("Location");
-				ImGui::InputText("##path_new_proj", &creating_path, ImGuiInputTextFlags_CharsNoBlank);
+
+				ImGui::InputText("##path_new_proj", &creating_path);
+
+
+
 				ImGui::SameLine();
 				ImGui::PopItemWidth();
 				if (ImGui::Button("..."))
 				{
-					std::string selectedFile = Chroma::FileDialogs::OpenDirectory();
+					std::string selectedFile = Chroma::FileDialogs::OpenDirectory(nativeWindowHandle);
 					if (!selectedFile.empty())
 					{
 						creating_path = selectedFile;
@@ -493,7 +501,9 @@ namespace Polychrome
 				ImGui::PushItemWidth(ImGui::GetContentRegionAvailWidth() * 0.7f);
 				ImGui::Dummy({ 1, 12 });
 				ImGui::Text("Starting Scene Name:");
-				ImGui::InputText("##starting_scene_new_proj", &creating_starting, ImGuiInputTextFlags_CharsNoBlank);
+
+				ImGui::InputText("##starting_scene_new_proj", &creating_starting);
+
 
 				ImGui::PopItemWidth();
 

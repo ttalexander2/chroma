@@ -7,8 +7,8 @@ namespace Chroma
 	class FileDialogs
 	{
 	public:
-		static std::string OpenFile(const char* filter);
-		static std::string SaveFile(const char* filter);
-		static std::string OpenDirectory();
+		static std::string OpenFile(const char* filter, void* nativeHandle = nullptr);
+		static std::string SaveFile(const char* filter, void* nativeHandle = nullptr);
+		static std::string OpenDirectory(void* nativeHandle = nullptr);
 	};
 }
