@@ -1,10 +1,9 @@
-## Chroma & Polychrome Editor
+## Chroma Engine
 
 [![Build](https://github.com/ttalexander2/chroma/actions/workflows/build.yml/badge.svg)](https://github.com/ttalexander2/chroma/actions/workflows/build.yml)
 [![Documentation](https://github.com/ttalexander2/chroma/actions/workflows/main.yml/badge.svg)](https://github.com/ttalexander2/chroma/actions/workflows/main.yml)
 
-A small 2D C++ Game Engine and Editor, designed in order to providing simple tools for creating games in 2D. It was started as a way to learn computer graphics and game
-engine design. It takes ideas and inspiration from other open-source engines, and is designed to be lightweight and easily modifiable.
+A small C++ Game Engine and Editor, designed in order to providing simple tools for creating games in 2D. It was started as a way to learn more about game technology, computer graphics and game engine design. It takes ideas and inspiration from other open-source engines, and is designed to be lightweight and easily modifiable.
 
 At the moment, only Windows building is supported. Support for other platforms will be implemented at a later date.
 
@@ -13,6 +12,11 @@ At the moment, only Windows building is supported. Support for other platforms w
 ![](https://raw.githubusercontent.com/ttalexander2/chroma/master/docs/screencap.png)
 
 ---
+
+
+#### Prerequisites
+- Visual C++ Redistributable 2019
+- 
 
 #### Building
 ##### Windows
