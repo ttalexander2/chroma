@@ -103,7 +103,7 @@ namespace Polychrome
 		glfwHideWindow((GLFWwindow*)this->GetWindow().GetNativeWindow());
 
 
-
+		//This could be a platform agnostic api call
 #ifdef CHROMA_PLATFORM_WINDOWS
 		glfwSetDropCallback((GLFWwindow*)this->GetWindow().GetNativeWindow(), FileDrop::HandleFileDrop);
 #endif
@@ -165,6 +165,8 @@ namespace Polychrome
 
 		std::atomic_bool quit_from_launcher = false;
 
+
+		//TODO: Remove specific glfw and opengl calls here. Platform abstraction should be able to function with multiple windows/contexts.
 		auto result = std::async([&]() {
 
 			ImGui::SetCurrentContext(cnew);
@@ -340,6 +342,8 @@ namespace Polychrome
 
 		ProjectLoaded = true;
 
+		//TODO: Setting/reseting window callbacks should be an abstracted API call
+
 		//Reset glfw callbacks
 		glfwSetMouseButtonCallback((GLFWwindow*)this->GetWindow().GetNativeWindow(), NULL);
 		glfwSetScrollCallback((GLFWwindow*)this->GetWindow().GetNativeWindow(), NULL);
@@ -441,6 +445,7 @@ namespace Polychrome
 
 		GetWindow().SetEventCallback(CHROMA_BIND_EVENT_FN(Application::ProcessEvents));
 
+		//Internal ImGui intialization should be abstracted & dependent on the current render API
 		ImGui_ImplOpenGL3_Init("#version 410");
 		ImGui_ImplGlfw_InitForOpenGL((GLFWwindow*)this->GetWindow().GetNativeWindow(), true);
 
@@ -461,6 +466,7 @@ namespace Polychrome
 			style.Colors[ImGuiCol_WindowBg].w = 1.0f;
 		}
 
+		//Not quite sure if this is still neccesary, but it broke when I removed it once, so i'll just leave it
 		ImGui::LoadIniSettingsFromDisk("EditorLayout.ini");
 
 
