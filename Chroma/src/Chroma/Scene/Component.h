@@ -14,11 +14,13 @@
 #include "Chroma/Scene/EntityID.h"
 #include "Chroma/Utilities/StringHash.h"
 
+
 namespace Polychrome
 {
 	class Inspector;
 	class ComponentWidgets;
 }
+
 
 namespace Chroma
 {
@@ -134,11 +136,11 @@ namespace Chroma
 		static unsigned int comparison_counter;
 		std::map<std::string, void*> _DataMembers;
 
-
 		friend class Polychrome::ComponentWidgets;
+		friend class Polychrome::Inspector;
 		friend class Scene;
 		friend class ECS;
-		friend class Polychrome::Inspector;
+
 		friend struct Tag;
 		friend struct Transform;
 		friend struct Relationship;
@@ -146,7 +148,7 @@ namespace Chroma
 	};
 
 	template<typename T>
-	concept ComponentType = std::is_base_of<Chroma::Component, T>::value;
+	concept ComponentType = std::is_base_of_v<Chroma::Component, T>;
 				
 }
 

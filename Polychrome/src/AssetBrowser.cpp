@@ -739,7 +739,7 @@ namespace Polychrome
 			system(("explorer /select," + directory_to_open).c_str());
 		}
 #endif
-		if (ImGui::Selectable("Open in VSCode.."))
+		if (EditorApp::VSCodeInstalled && ImGui::Selectable("Open in VSCode.."))
 		{
 			system(("code " + std::filesystem::path(active_dir).parent_path().parent_path().string() + " " + context_item.string()).c_str());
 			context_item.clear();

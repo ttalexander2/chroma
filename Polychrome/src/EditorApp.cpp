@@ -80,6 +80,8 @@ namespace Polychrome
 	bool EditorApp::ScenePaused = false;
 	bool EditorApp::PreviewSprites = true;
 
+	bool EditorApp::VSCodeInstalled = false;
+
 	ImFont* EditorApp::LargeIcons = nullptr;
 	ImFont* EditorApp::SmallIcons = nullptr;
 	ImFont* EditorApp::LargeFont = nullptr;
@@ -107,6 +109,8 @@ namespace Polychrome
 #ifdef CHROMA_PLATFORM_WINDOWS
 		glfwSetDropCallback((GLFWwindow*)this->GetWindow().GetNativeWindow(), FileDrop::HandleFileDrop);
 #endif
+		std::string path_var (std::getenv("PATH"));
+		VSCodeInstalled = path_var.find("VS Code") != std::string::npos;
 
 	}
 
@@ -777,6 +781,21 @@ namespace Polychrome
 			ImGui::MenuItem("Preferences##MAIN_MENU_BAR", "", &PreferencesWindowOpen);
 
 			
+			ImGui::EndMenu();
+		}
+
+
+
+		if (ImGui::BeginMenu("Options##MAIN_MENU_BAR"))
+		{
+			if (VSCodeInstalled)
+			{
+				if (ImGui::MenuItem("Install VSCode Extension##MAIN_MENU_BAR"))
+				{
+					system("code --install-extension polychrome.vsix");
+				}
+			}
+
 			ImGui::EndMenu();
 		}
 
