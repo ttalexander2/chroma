@@ -33,6 +33,14 @@
 																				"default": true
 																}
 												}
+								},
+								"views": {
+									"explorer": [
+										{
+											"id": "polychrome.assets",
+											"name": "Polychrome Assets"
+										}
+									]
 								}
 				},
 				"scripts": {

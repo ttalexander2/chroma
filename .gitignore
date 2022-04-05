@@ -22,6 +22,8 @@ scripts\__pycache__
 Chroma/third_party/VulkanSDK
 Polychrome/assets/cache
 VSCode-Extension/node_modules
+VSCode-Extension/out
+VSCode-Extension/.vscode
 
 Chroma/third_party/Glad/bin
 Chroma/third_party/Glad/obj
