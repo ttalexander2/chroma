@@ -2,6 +2,8 @@
 #include "Audio.h"
 
 #include "Chroma/Audio/ChromaFMOD.h"
+#include "Chroma/IO/FileSystem.h"
+#include "Chroma/IO/File.h"
 
 namespace Chroma
 {
@@ -31,16 +33,24 @@ namespace Chroma
 	/// @brief Load FMOD bank.
 	/// @param bankName Path of the FMOD bank to load.
 	/// @param flags Bank load flags. FMOD_STUDIO_LOAD_BANK_NORMAL by default.
-	void Audio::LoadBank(const std::string& bankName, FMOD_STUDIO_LOAD_BANK_FLAGS flags)
+	void Audio::LoadBank(const std::string& bankPath, FMOD_STUDIO_LOAD_BANK_FLAGS flags)
 	{
-		auto found = s_FMOD->m_Banks.find(bankName);
+		auto found = s_FMOD->m_Banks.find(bankPath);
 		if (found != s_FMOD->m_Banks.end())
 			return;
 
 		FMOD::Studio::Bank* bank;
-		Audio::ErrorCheck(s_FMOD->m_StudioSystem->loadBankFile(bankName.c_str(), flags, &bank));
+
+		std::vector<char> buffer;
+
+		File f = File::Open(bankPath);
+		buffer.resize(f.Length());
+		f.Read(buffer.data(), f.Length());
+		f.Close();
+
+		Audio::ErrorCheck(s_FMOD->m_StudioSystem->loadBankMemory(buffer.data(), buffer.size(), FMOD_STUDIO_LOAD_MEMORY_MODE::FMOD_STUDIO_LOAD_MEMORY, flags, &bank));
 		if (bank)
-			s_FMOD->m_Banks[bankName] = bank;
+			s_FMOD->m_Banks[bankPath] = bank;
 	}
 
 	/// @brief Load an FMOD event.

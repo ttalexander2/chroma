@@ -267,6 +267,25 @@ namespace Polychrome
 		{
 			if (quit_from_launcher)
 			{
+				YAML::Emitter e;
+				e << YAML::BeginMap;
+				e << YAML::Key << "RecentProjects" << YAML::Value << YAML::BeginSeq;
+
+				for (auto& proj : Launcher::recentProjects)
+				{
+					e << YAML::BeginMap;
+					e << YAML::Key << "Name" << YAML::Value << proj.Name;
+					e << YAML::Key << "TimeStamp" << YAML::Value << proj.TimeStamp;
+					e << YAML::Key << "Path" << YAML::Value << proj.Path;
+					e << YAML::Key << "Pinned" << YAML::Value << proj.Pinned;
+					e << YAML::EndMap;
+				}
+
+				e << YAML::EndSeq << YAML::EndMap;
+
+				std::ofstream stream(sago::getDataHome() + "/Polychrome/RecentProjects.yaml");
+				stream.write(e.c_str(), e.size());
+				stream.close();
 				this->Stop();
 				return;
 			}
@@ -833,6 +852,15 @@ namespace Polychrome
 			OpenBuildWindow = false;
 		}
 		Build::DrawBuildWindow();
+		if (AssetBrowser::OpenScriptCreatePopup)
+		{
+			ImGui::OpenPopup("Script##CREATE_SCRIPT_WINDOW");
+		}
+		AssetBrowser::DrawScriptCreateWindow();
+		if (AssetBrowser::OpenScriptCreatePopup)
+		{
+			AssetBrowser::OpenScriptCreatePopup = false;
+		}
 
 
 

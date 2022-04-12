@@ -3,14 +3,17 @@
 #include <imgui.h>
 #include <imgui_internal.h>
 #include <string>
+#include <regex>
 #include <imgui_stdlib.h>
 #include <filesystem>
 #include <Chroma/Assets/AssetManager.h>
 #include <Chroma/Utilities/Clipboard.h>
+#include <Chroma/Scripting/MonoScripting.h>
 
 #include "Project.h"
 #include "EditorApp.h"
 #include "FuzzyFileSearch.h"
+#include "Chroma/Utilities/FileDialogs.h"
 #include "Fonts/IconsForkAwesome.h"
 
 
@@ -26,6 +29,7 @@
 namespace Polychrome
 {
 	bool AssetBrowser::Open = true;
+	bool AssetBrowser::OpenScriptCreatePopup = false;
 
 
 	std::string search_term;
@@ -911,11 +915,17 @@ namespace Polychrome
 			}
 				
 		}
+
 		if (ImGui::Selectable("New C# Script"))
 		{
-
+			OpenScriptCreatePopup = true;
 		}
 
+	}
+
+	std::string AssetBrowser::GetActiveDirectory()
+	{
+		return active_dir.string();
 	}
 
 	bool AssetBrowser::ParseFolder(std::filesystem::path path)
@@ -1025,5 +1035,209 @@ namespace Polychrome
 			}
 		}
 		return false;
+	}
+	void AssetBrowser::DrawScriptCreateWindow()
+	{
+		ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+		ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+		ImGui::SetNextWindowSize(ImVec2(800, 400));
+		//ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.13f, 0.14f, 0.17f, 1.00f));
+		if (ImGui::BeginPopup("Script##CREATE_SCRIPT_WINDOW", ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_Modal))
+		{
+			static std::string name;
+			static std::string className;
+			static std::string nameSpace;
+			static std::string fileName;
+			static std::filesystem::path path;
+			static bool validate = false;
+			static bool valid = false;
+			static bool validClassName = false;
+			static bool validNameSpace = false;
+			if (OpenScriptCreatePopup)
+			{
+				name = "NewScript";
+				path = active_dir;
+				className = "NewScript";
+				nameSpace = Project::Name;
+				fileName = name + ".cs";
+				validate = true;
+				valid = false;
+				validClassName = false;
+				validNameSpace = false;
+			}
+			ImGui::BeginTable("##add_csharp_script_table", 2, ImGuiTableFlags_SizingStretchProp);
+
+			if (!valid)
+			{
+				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1, 0, 0, 1));
+			}
+			else
+			{
+				ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4((ImGuiCol_Text)));
+			}
+			//Script name
+			ImGui::TableNextRow();
+			ImGui::TableNextColumn();
+			ImGui::Text("Name:");
+			ImGui::TableNextColumn();
+
+			std::string prev = name;
+			bool overwrite = className == name;
+			ImGui::InputText("##create_csharp_script_name", &name);
+			if (prev != name && overwrite)
+			{
+				className = name;
+			}
+
+			ImGui::PopStyleColor();
+
+			if (!validClassName)
+			{
+				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1, 0, 0, 1));
+			}
+			else
+			{
+				ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4((ImGuiCol_Text)));
+			}
+
+			std::string prevClass = className;
+			//Class Name
+			ImGui::TableNextRow();
+			ImGui::TableNextColumn();
+			ImGui::Text("Class Name:");
+			ImGui::TableNextColumn();
+			ImGui::InputText("##create_csharp_script_classname", &className);
+
+			ImGui::PopStyleColor();
+
+
+
+			if (!validNameSpace)
+			{
+				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1, 0, 0, 1));
+			}
+			else
+			{
+				ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4((ImGuiCol_Text)));
+			}
+
+			std::string prevNamespace = nameSpace;
+			//Class Name
+			ImGui::TableNextRow();
+			ImGui::TableNextColumn();
+			ImGui::Text("Namespace:");
+			ImGui::TableNextColumn();
+			ImGui::InputText("##create_csharp_script_namespace", &nameSpace);
+
+			ImGui::PopStyleColor();
+
+			if (name != prev || prevClass != className || prevNamespace != nameSpace)
+				validate = true;
+
+			if (validate)
+			{
+				fileName = name + ".cs";
+				std::filesystem::path full_path = path;
+				full_path /= fileName;
+				valid = !name.empty() && !className.empty();
+				try
+				{
+					bool exists = std::filesystem::exists(full_path);
+
+					int i = 1;
+					while (std::filesystem::exists(full_path))
+					{
+						fileName = name + " (" + std::to_string(i) + ").cs";
+						full_path = path;
+						full_path /= fileName;
+						exists = false;
+						i++;
+					}
+
+					if (!exists)
+					{
+						std::ofstream stream(full_path);
+						valid = valid && stream.is_open();
+						stream.close();
+						std::filesystem::remove(full_path);
+					}
+				} catch (const std::filesystem::filesystem_error& e)
+				{
+					valid = false;
+				}
+
+
+
+				validNameSpace = Chroma::MonoScripting::ValidateIdentifier(nameSpace);
+				validClassName = Chroma::MonoScripting::ValidateClassName(nameSpace + "." + className) && Chroma::MonoScripting::ValidateIdentifier(className);
+			}
+
+
+
+
+			std::filesystem::path full_path = path;
+			full_path /= fileName;
+
+			//Path
+			ImGui::TableNextRow();
+			ImGui::TableNextColumn();
+			ImGui::Text("Location:");
+			ImGui::TableNextColumn();
+			ImGui::Text(full_path.string().c_str());
+
+
+			ImGui::EndTable();
+			
+
+			if (ImGui::Button("Cancel"))
+			{
+				ImGui::CloseCurrentPopup();
+			}
+
+			ImGui::SameLine();
+
+			validate = false;
+			ImGui::PushItemFlag(ImGuiItemFlags_Disabled, !valid);
+			if (!valid && ! validClassName && !validNameSpace)
+			{
+				ImVec4 disableColor = ImGui::GetStyleColorVec4(ImGuiCol_Button);
+				disableColor.w = disableColor.w * 0.5f;
+				ImGui::PushStyleColor(ImGuiCol_Button, disableColor);
+			}
+
+			if (ImGui::Button("Done"))
+			{
+				std::ifstream stream("./assets/templates/Entity.cs.template");
+				std::stringstream buffer;
+				buffer << stream.rdbuf();
+				std::string templateFile = buffer.str();
+				templateFile = std::regex_replace(templateFile, std::regex("%NAMESPACE%"), nameSpace);
+				templateFile = std::regex_replace(templateFile, std::regex("%CLASSNAME%"), className);
+
+				full_path = path;
+				full_path /= fileName;
+
+				std::ofstream out(full_path);
+				if (out.good())
+				{
+					out << templateFile;
+				}
+				out.close();
+
+				
+				ImGui::CloseCurrentPopup();
+			}
+
+			if (!valid && ! validClassName && !validNameSpace)
+			{
+				ImGui::PopStyleColor();
+			}
+			ImGui::PopItemFlag();
+
+
+			ImGui::EndPopup();
+		}
+
+
 	}
 }

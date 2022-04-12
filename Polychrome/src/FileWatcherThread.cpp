@@ -49,9 +49,9 @@ namespace Polychrome
 				{
 				case FileStatus::created:
 					file_queue.enqueue([file, root]() {
+						std::string extension = std::filesystem::path(file).extension().string();
 						std::string relative = std::filesystem::path(file).lexically_relative(std::filesystem::path(root).parent_path()).string();
 						CHROMA_CORE_TRACE("File Created: {}", relative);
-						std::string extension = std::filesystem::path(file).extension().string();
 						if (extension == ".ase" || extension == ".aseprite" || extension == ".png" || extension == ".jpg")
 						{
 							Chroma::AssetManager::Load(Chroma::AssetManager::GetID(relative));

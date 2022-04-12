@@ -12,6 +12,8 @@
 
 namespace Chroma
 {
+
+
 	std::string FileDialogs::OpenFile(const char* filter, void* nativeHandle)
 	{
 #if _WIN32

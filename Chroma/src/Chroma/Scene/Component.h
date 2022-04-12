@@ -112,6 +112,7 @@ namespace Chroma
 
 
 		void DoSerialize(YAML::Emitter& out);
+		void DoDeserialize(YAML::Node& node);
 
 
 	protected:

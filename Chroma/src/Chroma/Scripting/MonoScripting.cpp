@@ -582,6 +582,74 @@ namespace Chroma
 		return name;
 	}
 
+	int MonoScripting::GetModuleExecutionOrder(const std::string& moduleName)
+	{
+		if (!coreAssemblyImage)
+			return 0;
+
+		if (!appAssemblyImage)
+			return 0;
+
+		MonoMethod* method = GetMethod(coreAssemblyImage, "Chroma.ExecutionOrderHelper:GetOrderFromTypeName");
+
+		if (!method)
+
+		if (!ModuleExists(moduleName))
+			return 0;
+		
+
+		void* str = (void*)mono_string_new(mono_domain_get(), moduleName.c_str());
+		void* params[] = {str};
+		MonoObject* result = CallMethod(nullptr, method, params);
+		if (result == nullptr)
+			return 0;
+		int order = *(int*)mono_object_unbox(result);
+		return order;
+
+	}
+
+	bool MonoScripting::ValidateClassName(const std::string& className)
+	{
+		if (!coreAssemblyImage)
+			return false;
+		
+		if (!appAssemblyImage)
+			return false;
+
+		MonoMethod* method = GetMethod(coreAssemblyImage, "Chroma.Engine.ScriptCreationHelper:ValidateClassName");
+
+		if (!method)
+			return false;
+
+		void* str = (void*)mono_string_new(mono_domain_get(), className.c_str());
+		void* params[] = {str};
+		MonoObject* result = CallMethod(nullptr, method, params);
+		if (result == nullptr)
+			return false;
+		return *(bool*)mono_object_unbox(result);
+	}
+
+	bool MonoScripting::ValidateIdentifier(const std::string& className)
+	{
+		if (!coreAssemblyImage)
+			return false;
+		
+		if (!appAssemblyImage)
+			return false;
+
+		MonoMethod* method = GetMethod(coreAssemblyImage, "Chroma.Engine.ScriptCreationHelper:ValidateIdentifier");
+
+		if (!method)
+			return false;
+
+		void* str = (void*)mono_string_new(mono_domain_get(), className.c_str());
+		void* params[] = {str};
+		MonoObject* result = CallMethod(nullptr, method, params);
+		if (result == nullptr)
+			return false;
+		return *(bool*)mono_object_unbox(result);
+	}
+
 	void MonoScripting::OnScriptComponentDestroyed(GUID sceneID, EntityID entityID)
 	{
 		if (entityInstanceMap.find(sceneID) != entityInstanceMap.end())

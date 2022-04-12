@@ -100,6 +100,11 @@ namespace Chroma
 		static bool ModuleExists(const std::string& moduleName);
 		static std::string StripNamespace(const std::string& nameSpace, const std::string& moduleName);
 
+		static int GetModuleExecutionOrder(const std::string& moduleName);
+
+		static bool ValidateClassName(const std::string& className);
+		static bool ValidateIdentifier(const std::string& className);
+
 		static std::vector<std::string> GetModules();
 		static std::vector<std::string> GetModuleHierarchy();
 

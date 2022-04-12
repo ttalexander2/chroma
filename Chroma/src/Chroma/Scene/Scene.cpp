@@ -391,7 +391,7 @@ namespace Chroma
 						else
 							created->order_id = i;
 
-						created->Deserialize(component.second);
+						created->DoDeserialize(component.second);
 						if (key == Camera::GetTypeNameStatic())
 						{
 							auto val = component.second["Primary"];

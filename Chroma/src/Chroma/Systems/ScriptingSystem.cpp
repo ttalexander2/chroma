@@ -28,9 +28,16 @@ namespace Chroma
 			{
 				field.CopyStoredValueToRuntime(entityInstanceData.Instance);
 			}
+
+			script.ExecutionOrder = MonoScripting::GetModuleExecutionOrder(script.ModuleName);
 		}
 
-		
+		m_Scene->Registry.sort<CSharpScript>([](const CSharpScript &lhs, const CSharpScript &rhs)
+			{
+				return lhs.ExecutionOrder < rhs.ExecutionOrder;
+			});
+
+		CHROMA_CORE_INFO("LOADED SCRIPTING SYSTEM");
 
 	}
 

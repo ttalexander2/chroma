@@ -32,6 +32,7 @@
 #include <entt.hpp>
 #include "Chroma/Utilities/StringHash.h"
 #include <any>
+#include <Chroma/Assets/FMODBank.h>
 
 
 
@@ -80,6 +81,7 @@ namespace Chroma
 			Scene::RegisterComponent<Transform>();
 
 			AssetManager::Register<Sprite>();
+			AssetManager::Register<FMODBank>();
 		}
 
 

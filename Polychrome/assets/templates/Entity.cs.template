@@ -1,0 +1,24 @@
+using Chroma;
+
+namespace %NAMESPACE%
+{
+    // Single behavior script to attach to an entity.
+    public class %CLASSNAME% : Entity
+    {
+        
+        private Transform transform;
+
+        // This function is called before the first frame of the scene.
+        public override void Init()
+        {
+            transform = GetComponent<Transform>();
+            Log.Trace(transform.Position);
+        }
+
+        // This function is called once per frame.
+        public override void Update()
+        {
+            Log.Trace(Time.DeltaF);
+        }
+    }
+}

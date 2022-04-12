@@ -48,7 +48,7 @@ namespace Chroma
 		/// This function is automatically called, and should never be called outside the scope of engine entry point.
 		void Run();
 
-		/// @brief Processes and propogates application events.
+		/// @brief Processes and propagates application events.
 		/// @param e Event to process.
 		void ProcessEvents(Event& e);
 
