@@ -16,7 +16,6 @@ At the moment, only Windows building is supported. Support for other platforms w
 
 #### Prerequisites
 - Visual C++ Redistributable 2019
-- 
 
 #### Building
 ##### Windows
@@ -28,7 +27,7 @@ At the moment, only Windows building is supported. Support for other platforms w
     - Follow instructions to install prerequisits and verify requirements.
     - Open Solution File.
     - Select Build > Build Solution.
- - Please note, Chroma.Mono must be built first in order for Polychrome to function.
+ - Please note, if you experience an error, try building the Chroma.Mono project first.
      
 ##### Mac & Linux
 - Currently does not support building on mac/linux, but support is on the way!

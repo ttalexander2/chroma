@@ -53,13 +53,22 @@ namespace Chroma
 			s_FMOD->m_Banks[bankPath] = bank;
 	}
 
+	void Audio::UnloadBank(const std::string& bankPath)
+	{
+		auto found = s_FMOD->m_Banks.find(bankPath);
+		if (found == s_FMOD->m_Banks.end())
+			return;
+		Audio::ErrorCheck(found->second->unload());
+		s_FMOD->m_Banks.erase(found);
+	}
+
 	/// @brief Load an FMOD event.
 	/// @param eventName Name of the event to load.
 	void Audio::LoadEvent(const std::string& eventName)
 	{
 
 		auto found = s_FMOD->m_Events.find(eventName);
-		if (found != s_FMOD->m_Events.end())
+		if (found == s_FMOD->m_Events.end())
 			return;
 
 		FMOD::Studio::EventDescription* eventDesc = nullptr;

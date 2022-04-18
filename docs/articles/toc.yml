@@ -1,0 +1,10 @@
+- name: Introduction
+  href: intro.md
+- name: Getting Started
+  items:
+  - name: Setting Up
+    href: setting_up.md
+  - name: Creating a Project
+    href: creating_a_project.md
+  - name: VSCode Extension
+    href: vscode_extension.md

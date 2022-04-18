@@ -33,8 +33,8 @@ namespace Chroma
             CHROMA_CORE_ERROR("Scene {[]} failed to load!", file.GetPath());
             return false;
         }
-        if (Engine::CurrentScene != nullptr)
-            delete Engine::CurrentScene;
+
+    	delete Engine::CurrentScene;
 
         Engine::CurrentScene = out;
 

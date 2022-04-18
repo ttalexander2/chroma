@@ -21,7 +21,6 @@
 #include <Chroma/Utilities/FileDialogs.h>
 #include <filesystem>
 #include <Chroma/ImGui/ImGuiDebugMenu.h>
-#include "Fonts/Pinch.cpp"
 #include "Fonts/Roboto.cpp"
 #include <Chroma/Images/Aseprite.h>
 #include "Style.h"
@@ -823,8 +822,9 @@ namespace Polychrome
 		ImGui::GetStyle().FramePadding.y = prevFramePaddingY;
 
 		//ImGui::PopStyleVar();
-
+#if CHROMA_DEBUG
 		ImGui::ShowDemoWindow();
+#endif
 
 		bool asset_selecting = AssetBrowser::IsSelecting();
 		ImGui::PushItemFlag(ImGuiItemFlags_Disabled, asset_selecting);
@@ -835,7 +835,9 @@ namespace Polychrome
 		Inspector::Draw();
 		//AnimationEditor::Draw();
 		Viewport::Draw(time, m_Framebuffer, m_GuizmoFramebuffer);
+#if CHROMA_DEBUG
 		LogWindow::Draw();
+#endif
 		ErrorWindow::Draw();
 		ImGui::PopItemFlag();
 		if (asset_selecting)

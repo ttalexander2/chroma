@@ -28,6 +28,7 @@ namespace Chroma
 
 	void CollisionSystem::Update(Time time)
 	{
+
 		b2DynamicTree tree;
 
 		for (auto entity : m_Scene->Registry.view<Chroma::Transform, Chroma::BoxCollider>())

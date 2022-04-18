@@ -337,8 +337,8 @@ namespace Polychrome
 
 											if (dir.path().extension() == ".ase" || dir.path().extension() == ".aseprite" || dir.path().extension() == ".png")
 											{
-												uv1 = { 1,1 };
-												uv2 = { 0,0 };
+												uv1 = { 0,1 };
+												uv2 = { 1,0 };
 											}
 
 											if (ImGui::ImageButton(reinterpret_cast<void*>((intptr_t)texture->GetTextureID()), { icon_size, icon_size }, uv1, uv2))

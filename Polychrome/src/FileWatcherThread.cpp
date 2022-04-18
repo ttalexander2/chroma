@@ -10,6 +10,7 @@
 #include "Build.h"
 #include <Chroma/IO/FileSystem.h>
 #include <Chroma/Components/CSharpScript.h>
+#include <Chroma/Assets/FMODBank.h>
 
 
 namespace Polychrome
@@ -54,7 +55,13 @@ namespace Polychrome
 						CHROMA_CORE_TRACE("File Created: {}", relative);
 						if (extension == ".ase" || extension == ".aseprite" || extension == ".png" || extension == ".jpg")
 						{
-							Chroma::AssetManager::Load(Chroma::AssetManager::GetID(relative));
+							const Chroma::Ref<Chroma::Asset> asset = Chroma::AssetManager::Create(Chroma::GUID::CreateGUID(), std::filesystem::path(relative).lexically_relative(std::filesystem::path(Project::AssetDirectory)).string(), Chroma::Sprite::GetTypeNameStatic());
+							Chroma::AssetManager::Load(asset->GetID());
+						}
+						else if (extension == ".bank")
+						{
+							const Chroma::Ref<Chroma::Asset> asset = Chroma::AssetManager::Create(Chroma::GUID::CreateGUID(), std::filesystem::path(relative).lexically_relative(std::filesystem::path(Project::AssetDirectory)).string(), Chroma::FMODBank::GetTypeNameStatic());
+							Chroma::AssetManager::Load(asset->GetID());
 						}
 						else if (extension == ".cs")
 						{
@@ -79,13 +86,24 @@ namespace Polychrome
 						CHROMA_CORE_TRACE("File Modified: {}", relative);
 						if (extension == ".ase" || extension == ".aseprite" || extension == ".png" || extension == ".jpg")
 						{
-							if (Chroma::AssetManager::Exists(Chroma::AssetManager::GetID(relative)))
+							if (Chroma::AssetManager::Exists(Chroma::AssetManager::GetID(std::filesystem::path(relative).lexically_relative(std::filesystem::path(Project::AssetDirectory)).string())))
 							{
-								Chroma::AssetManager::Reload(Chroma::AssetManager::GetID(relative));
+								Chroma::AssetManager::Reload(Chroma::AssetManager::GetID(std::filesystem::path(relative).lexically_relative(std::filesystem::path(Project::AssetDirectory)).string()));
 							}
 							else
 							{
-								Chroma::AssetManager::Load(Chroma::AssetManager::GetID(relative));
+								Chroma::AssetManager::Load(Chroma::AssetManager::GetID(std::filesystem::path(relative).lexically_relative(std::filesystem::path(Project::AssetDirectory)).string()));
+							}
+						}
+						else if (extension == ".bank")
+						{
+							if (Chroma::AssetManager::Exists(Chroma::AssetManager::GetID(std::filesystem::path(relative).lexically_relative(std::filesystem::path(Project::AssetDirectory)).string())))
+							{
+								Chroma::AssetManager::Reload(Chroma::AssetManager::GetID(std::filesystem::path(relative).lexically_relative(std::filesystem::path(Project::AssetDirectory)).string()));
+							}
+							else
+							{
+								Chroma::AssetManager::Load(Chroma::AssetManager::GetID(std::filesystem::path(relative).lexically_relative(std::filesystem::path(Project::AssetDirectory)).string()));
 							}
 						}
 						else if (extension == ".cs")
@@ -112,7 +130,17 @@ namespace Polychrome
 						std::string extension = std::filesystem::path(relative).extension().string();
 						if (extension == ".ase" || extension == ".png" || extension == ".jpg")
 						{
-
+							if (Chroma::AssetManager::Exists(Chroma::AssetManager::GetID(std::filesystem::path(relative).lexically_relative(std::filesystem::path(Project::AssetDirectory)).string())))
+							{
+								Chroma::AssetManager::Unload(Chroma::AssetManager::GetID(std::filesystem::path(relative).lexically_relative(std::filesystem::path(Project::AssetDirectory)).string()));
+							}
+						}
+						else if (extension == ".bank")
+						{
+							if (Chroma::AssetManager::Exists(Chroma::AssetManager::GetID(std::filesystem::path(relative).lexically_relative(std::filesystem::path(Project::AssetDirectory)).string())))
+							{
+								Chroma::AssetManager::Unload(Chroma::AssetManager::GetID(std::filesystem::path(relative).lexically_relative(std::filesystem::path(Project::AssetDirectory)).string()));
+							}
 						}
 						else if (extension == ".cs")
 						{

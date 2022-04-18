@@ -25,7 +25,6 @@ namespace Chroma
 		friend class Application;
 		friend struct ChromaFMOD;
 	public:
-
 		static void LoadBank(const std::string& bankPath, FMOD_STUDIO_LOAD_BANK_FLAGS flags = FMOD_STUDIO_LOAD_BANK_NORMAL);
 		static void UnloadBank(const std::string& bankPath);
 		static void LoadEvent(const std::string& eventName);
