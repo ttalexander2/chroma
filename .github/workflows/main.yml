@@ -15,9 +15,9 @@ jobs:
     
     # Build the HTML documentation
     - name: docfx-action
-        uses: nikeee/docfx-action@v1.0.0
-        with:
-          args: docs/docfx.json
+      uses: nikeee/docfx-action@v1.0.0
+      with:
+        args: docs/docfx.json
     
     # Deploy the HTML documentation to GitHub Pages
     - name: GH Pages Deployment
