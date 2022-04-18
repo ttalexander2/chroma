@@ -16,7 +16,7 @@ namespace Chroma
 		std::optional<uint32_t> graphicsFamily;
 		std::optional<uint32_t> presentFamily;
 
-		bool IsComplete() { return graphicsFamily.has_value() && presentFamily.has_value(); }
+		bool IsComplete() const { return graphicsFamily.has_value() && presentFamily.has_value(); }
 	};
 
 	struct SwapChainSupportDetails
@@ -100,7 +100,6 @@ namespace Chroma
 		VkExtent2D ChooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
 
 
-	private:
 		static VulkanContext* s_Instance;
 
 		GLFWwindow* m_WindowHandle = nullptr;

@@ -21,7 +21,6 @@
 #include <Chroma/Utilities/FileDialogs.h>
 #include <filesystem>
 #include <Chroma/ImGui/ImGuiDebugMenu.h>
-#include "Fonts/Pinch.cpp"
 #include "Fonts/Roboto.cpp"
 #include <Chroma/Images/Aseprite.h>
 #include "Style.h"
@@ -80,6 +79,8 @@ namespace Polychrome
 	bool EditorApp::ScenePaused = false;
 	bool EditorApp::PreviewSprites = true;
 
+	bool EditorApp::VSCodeInstalled = false;
+
 	ImFont* EditorApp::LargeIcons = nullptr;
 	ImFont* EditorApp::SmallIcons = nullptr;
 	ImFont* EditorApp::LargeFont = nullptr;
@@ -107,6 +108,8 @@ namespace Polychrome
 #ifdef CHROMA_PLATFORM_WINDOWS
 		glfwSetDropCallback((GLFWwindow*)this->GetWindow().GetNativeWindow(), FileDrop::HandleFileDrop);
 #endif
+		std::string path_var (std::getenv("PATH"));
+		VSCodeInstalled = path_var.find("VS Code") != std::string::npos;
 
 	}
 
@@ -263,6 +266,25 @@ namespace Polychrome
 		{
 			if (quit_from_launcher)
 			{
+				YAML::Emitter e;
+				e << YAML::BeginMap;
+				e << YAML::Key << "RecentProjects" << YAML::Value << YAML::BeginSeq;
+
+				for (auto& proj : Launcher::recentProjects)
+				{
+					e << YAML::BeginMap;
+					e << YAML::Key << "Name" << YAML::Value << proj.Name;
+					e << YAML::Key << "TimeStamp" << YAML::Value << proj.TimeStamp;
+					e << YAML::Key << "Path" << YAML::Value << proj.Path;
+					e << YAML::Key << "Pinned" << YAML::Value << proj.Pinned;
+					e << YAML::EndMap;
+				}
+
+				e << YAML::EndSeq << YAML::EndMap;
+
+				std::ofstream stream(sago::getDataHome() + "/Polychrome/RecentProjects.yaml");
+				stream.write(e.c_str(), e.size());
+				stream.close();
 				this->Stop();
 				return;
 			}
@@ -780,13 +802,29 @@ namespace Polychrome
 			ImGui::EndMenu();
 		}
 
+
+
+		if (ImGui::BeginMenu("Options##MAIN_MENU_BAR"))
+		{
+			if (VSCodeInstalled)
+			{
+				if (ImGui::MenuItem("Install VSCode Extension##MAIN_MENU_BAR"))
+				{
+					system("code --install-extension polychrome.vsix");
+				}
+			}
+
+			ImGui::EndMenu();
+		}
+
 		ImGui::EndMainMenuBar();
 
 		ImGui::GetStyle().FramePadding.y = prevFramePaddingY;
 
 		//ImGui::PopStyleVar();
-
+#if CHROMA_DEBUG
 		ImGui::ShowDemoWindow();
+#endif
 
 		bool asset_selecting = AssetBrowser::IsSelecting();
 		ImGui::PushItemFlag(ImGuiItemFlags_Disabled, asset_selecting);
@@ -797,7 +835,9 @@ namespace Polychrome
 		Inspector::Draw();
 		//AnimationEditor::Draw();
 		Viewport::Draw(time, m_Framebuffer, m_GuizmoFramebuffer);
+#if CHROMA_DEBUG
 		LogWindow::Draw();
+#endif
 		ErrorWindow::Draw();
 		ImGui::PopItemFlag();
 		if (asset_selecting)
@@ -814,6 +854,15 @@ namespace Polychrome
 			OpenBuildWindow = false;
 		}
 		Build::DrawBuildWindow();
+		if (AssetBrowser::OpenScriptCreatePopup)
+		{
+			ImGui::OpenPopup("Script##CREATE_SCRIPT_WINDOW");
+		}
+		AssetBrowser::DrawScriptCreateWindow();
+		if (AssetBrowser::OpenScriptCreatePopup)
+		{
+			AssetBrowser::OpenScriptCreatePopup = false;
+		}
 
 
 

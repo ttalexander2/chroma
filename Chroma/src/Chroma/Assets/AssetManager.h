@@ -67,8 +67,6 @@ namespace Chroma
 	/// Manages references to assets.
 	class AssetManager
 	{
-	private:
-		static std::hash<std::string> s_Hash;
 	public:
 
 		template<typename T>
@@ -134,9 +132,9 @@ namespace Chroma
 		template <typename T>
 		static void Register()
 		{
-			static_assert(std::is_base_of<Chroma::Asset, T>::value, "Type T is not derived from Asset!");
+			static_assert(std::is_base_of_v<Chroma::Asset, T>, "Type T is not derived from Asset!");
 
-			size_t hash = s_Hash(T::GetTypeNameStatic());
+			const size_t hash = s_Hash(T::GetTypeNameStatic());
 
 			s_CreateFuncs[hash] = [&] (const GUID& id, const std::string& path) {
 				s_Assets[id] = CreateRef<T>();
@@ -166,12 +164,15 @@ namespace Chroma
 		static std::unordered_map<GUID, Ref<Asset>>& GetAssetMap() { return s_Assets; }
 
 		static void LoadManifest(const std::string& yaml);
+		static std::string SaveManifest();
+
 
 	private:
 		static std::unordered_map<GUID, Ref<Asset>> s_Assets;
 		static std::unordered_map<StringHash, std::vector<GUID>> s_AssetTypes;
 		static std::unordered_map<size_t, GUID> s_Paths;
 		static std::unordered_map<size_t, std::function<void(const GUID&, const std::string&)>> s_CreateFuncs;
-
+		static std::hash<std::string> s_Hash;
+		static std::unordered_map<size_t, std::string> s_Extensions;
 	};
 }

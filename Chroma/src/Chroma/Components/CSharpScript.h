@@ -14,5 +14,6 @@ namespace Chroma
 
 		std::string ModuleName;
 		ScriptModuleFieldMap ModuleFieldMap;
+		int ExecutionOrder = 0;
 	};
 }

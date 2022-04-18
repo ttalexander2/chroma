@@ -33,7 +33,7 @@ namespace Polychrome
 
 
 
-	std::vector<Polychrome::Launcher::RecentProjectInfo> recentProjects;
+	std::vector<Polychrome::Launcher::RecentProjectInfo> Launcher::recentProjects;
 
 
 	Launcher::Launcher()
@@ -182,32 +182,6 @@ namespace Polychrome
 			ImGui::PushFont(&headerf);
 			ImGui::Text("Polychrome Editor");
 			ImGui::PopFont();
-
-			ImGui::SameLine(ImGui::GetContentRegionAvailWidth() - 24.f);
-			ImGui::PushStyleColor(ImGuiCol_Button, { 0,0,0,0 });
-			if (ImGui::Button(ICON_FK_TIMES, { 24, 24 }))
-			{
-				YAML::Emitter e;
-				e << YAML::BeginMap;
-				e << YAML::Key << "RecentProjects" << YAML::Value << YAML::BeginSeq;
-
-				for (auto& proj : recentProjects)
-				{
-					e << YAML::BeginMap;
-					e << YAML::Key << "Name" << YAML::Value << proj.Name;
-					e << YAML::Key << "TimeStamp" << YAML::Value << proj.TimeStamp;
-					e << YAML::Key << "Path" << YAML::Value << proj.Path;
-					e << YAML::Key << "Pinned" << YAML::Value << proj.Pinned;
-					e << YAML::EndMap;
-				}
-
-				e << YAML::EndSeq << YAML::EndMap;
-
-				std::ofstream stream(sago::getDataHome() + "/Polychrome/RecentProjects.yaml");
-				stream.write(e.c_str(), e.size());
-				stream.close();
-			}
-			ImGui::PopStyleColor();
 
 			ImGui::Separator();
 

@@ -17,6 +17,7 @@ namespace Chroma
     std::unordered_map<StringHash, std::vector<GUID>> AssetManager::s_AssetTypes;
     std::unordered_map<size_t, GUID> AssetManager::s_Paths;
     std::unordered_map<size_t, std::function<void(const GUID&, const std::string&)>> AssetManager::s_CreateFuncs;
+    std::unordered_map<size_t, std::string> AssetManager::s_Extensions = {{s_Hash(".png"), Sprite::GetTypeNameStatic()}, {s_Hash(".ase"), Sprite::GetTypeNameStatic()}, {s_Hash(".aseprite"), Sprite::GetTypeNameStatic()}};
     std::hash<std::string> AssetManager::s_Hash;
 
 
@@ -157,6 +158,32 @@ namespace Chroma
                 }
             }
         }
+    }
+
+    std::string AssetManager::SaveManifest()
+    {
+        YAML::Emitter out;
+        out << YAML::BeginMap;
+
+        for (auto& [hash, asset] : s_Assets)
+        {
+	        out << YAML::Key << hash.ToString();
+            out << YAML::Value;
+            out << YAML::BeginMap;
+
+            out << YAML::Key << "Path";
+            out << YAML::Value << asset->m_Path;
+            out << YAML::Key << "Type";
+            out << YAML::Value << asset->GetTypeName();
+
+
+            out << YAML::EndMap;
+        }
+
+        out << YAML::EndMap;
+
+
+        return out.c_str();
     }
 
 }

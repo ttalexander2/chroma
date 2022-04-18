@@ -241,7 +241,8 @@ project "Polychrome"
         "{ECHO} Copying EditorLayout.ini to %{cfg.targetdir}",
         "{COPYFILE} EditorLayout.ini %{cfg.targetdir}",
         '{COPYFILE} \"%{wks.location}bin/' .. outputdir .. '/Chroma.Mono/Chroma.Mono.dll\" %{cfg.targetdir}',
-        '{COPYDIR} \"%{wks.location}bin/' .. outputdir .. '/Runtime" "%{cfg.targetdir}/Runtime\"'
+        '{COPYDIR} \"%{wks.location}bin/' .. outputdir .. '/Runtime" "%{cfg.targetdir}/Runtime\"',
+        '{COPYFILE} \"%{wks.location}VSCode-Extension/polychrome.vsix\" %{cfg.targetdir}'
     }
 
     defines
@@ -407,13 +408,59 @@ project "Chroma.Mono"
         "Script-Core/Source/**.cs",
     }
 
+    mono_dlls = "%{wks.location}third_party/mono/lib/mono/4.5/Facades/netstandard.dll,"..
+                "%{wks.location}third_party/mono/lib/mono/4.5/Facades/System.Collections.Concurrent.dll,"..
+                "%{wks.location}third_party/mono/lib/mono/4.5/Facades/System.Collections.dll,"..
+                "%{wks.location}third_party/mono/lib/mono/4.5/Facades/System.Diagnostics.Debug.dll,"..
+                "%{wks.location}third_party/mono/lib/mono/4.5/Facades/System.Diagnostics.FileVersionInfo.dll,"..
+                "%{wks.location}third_party/mono/lib/mono/4.5/Facades/System.Diagnostics.Tools.dll,"..
+                "%{wks.location}third_party/mono/lib/mono/4.5/Facades/System.Dynamic.Runtime.dll,"..
+                "%{wks.location}third_party/mono/lib/mono/4.5/Facades/System.Globalization.dll,"..
+                "%{wks.location}third_party/mono/lib/mono/4.5/Facades/System.IO.dll,"..
+                "%{wks.location}third_party/mono/lib/mono/4.5/Facades/System.IO.FileSystem.dll,"..
+                "%{wks.location}third_party/mono/lib/mono/4.5/Facades/System.IO.FileSystem.Primitives.dll,"..
+                "%{wks.location}third_party/mono/lib/mono/4.5/Facades/System.Linq.dll,"..
+                "%{wks.location}third_party/mono/lib/mono/4.5/Facades/System.Linq.Expressions.dll,"..
+                "%{wks.location}third_party/mono/lib/mono/4.5/Facades/System.Reflection.dll,"..
+                "%{wks.location}third_party/mono/lib/mono/4.5/Facades/System.Reflection.Extensions.dll,"..
+                "%{wks.location}third_party/mono/lib/mono/4.5/Facades/System.Reflection.Primitives.dll,"..
+                "%{wks.location}third_party/mono/lib/mono/4.5/Facades/System.Resources.ResourceManager.dll,"..
+                "%{wks.location}third_party/mono/lib/mono/4.5/Facades/System.Runtime.dll,"..
+                "%{wks.location}third_party/mono/lib/mono/4.5/Facades/System.Runtime.Extensions.dll,"..
+                "%{wks.location}third_party/mono/lib/mono/4.5/Facades/System.Runtime.InteropServices.dll,"..
+                "%{wks.location}third_party/mono/lib/mono/4.5/Facades/System.Runtime.Numerics.dll,"..
+                "%{wks.location}third_party/mono/lib/mono/4.5/Facades/System.Security.Cryptography.Algorithms.dll,"..
+                "%{wks.location}third_party/mono/lib/mono/4.5/Facades/System.Security.Cryptography.Primitives.dll,"..
+                "%{wks.location}third_party/mono/lib/mono/4.5/Facades/System.Text.Encoding.CodePages.dll,"..
+                "%{wks.location}third_party/mono/lib/mono/4.5/Facades/System.Text.Encoding.dll,"..
+                "%{wks.location}third_party/mono/lib/mono/4.5/Facades/System.Text.Encoding.Extensions.dll,"..
+                "%{wks.location}third_party/mono/lib/mono/4.5/Facades/System.Threading.dll,"..
+                "%{wks.location}third_party/mono/lib/mono/4.5/Facades/System.Threading.Tasks.dll,"..
+                "%{wks.location}third_party/mono/lib/mono/4.5/Facades/System.Threading.Tasks.Parallel.dll,"..
+                "%{wks.location}third_party/mono/lib/mono/4.5/Facades/System.ValueTuple.dll,"..
+                "%{wks.location}third_party/mono/lib/mono/4.5/Facades/System.Xml.ReaderWriter.dll,"..
+                "%{wks.location}third_party/mono/lib/mono/4.5/Facades/System.Xml.XDocument.dll,"..
+                "%{wks.location}third_party/mono/lib/mono/4.5/Mono.Cairo.dll,"..
+                "%{wks.location}third_party/mono/lib/mono/4.5/Mono.Security.dll,"..
+                "%{wks.location}third_party/mono/lib/mono/4.5/mscorlib.dll,"..
+                "%{wks.location}third_party/mono/lib/mono/4.5/System.Configuration.dll,"..
+                "%{wks.location}third_party/mono/lib/mono/4.5/System.Core.dll,"..
+                "%{wks.location}third_party/mono/lib/mono/4.5/System.dll,"..
+                "%{wks.location}third_party/mono/lib/mono/4.5/System.IO.Compression.dll,"..
+                "%{wks.location}third_party/mono/lib/mono/4.5/System.Numerics.dll,"..
+                "%{wks.location}third_party/mono/lib/mono/4.5/System.Security.dll,"..
+                "%{wks.location}third_party/mono/lib/mono/4.5/System.Xml.dll,"..
+                "%{wks.location}third_party/mono/lib/mono/4.5/System.Xml.Linq.dll"
+
+
+
     filter "configurations:Debug"
         buildcommands {
-            "%{wks.location}third_party/mono/bin/mono.exe %{wks.location}third_party/mono/lib/mono/4.5/mcs.exe -debug -target:library -nostdlib -out:%{wks.location}bin/" .. outputdir .. "/%{prj.name}/Chroma.Mono.dll -r:%{wks.location}third_party/mono/lib/mono/4.5/mscorlib.dll,%{wks.location}third_party/mono/lib/mono/4.5/System.dll,%{wks.location}third_party/mono/lib/mono/4.5/System.Core.dll -recurse:Source/**.cs"
+            "%{wks.location}third_party/mono/bin/mono.exe %{wks.location}third_party/mono/lib/mono/4.5/mcs.exe -debug -target:library -nostdlib -out:%{wks.location}bin/" .. outputdir .. "/%{prj.name}/Chroma.Mono.dll -r:" .. mono_dlls .. " -recurse:Source/**.cs"
         }
 
         rebuildcommands {
-            "%{wks.location}third_party/mono/bin/mono.exe %{wks.location}third_party/mono/lib/mono/4.5/mcs.exe -debug -target:library -nostdlib -out:%{wks.location}bin/" .. outputdir .. "/%{prj.name}/Chroma.Mono.dll -r:%{wks.location}third_party/mono/lib/mono/4.5/mscorlib.dll,%{wks.location}third_party/mono/lib/mono/4.5/System.dll,%{wks.location}third_party/mono/lib/mono/4.5/System.Core.dll -recurse:Source/**.cs"
+            "%{wks.location}third_party/mono/bin/mono.exe %{wks.location}third_party/mono/lib/mono/4.5/mcs.exe -debug -target:library -nostdlib -out:%{wks.location}bin/" .. outputdir .. "/%{prj.name}/Chroma.Mono.dll -r:" .. mono_dlls .. " -recurse:Source/**.cs"
         }
 
         buildmessage "Compiling Chroma.mono.dll with mcs..."
@@ -425,11 +472,11 @@ project "Chroma.Mono"
 
     filter "configurations:Release"
         buildcommands {
-            "%{wks.location}third_party/mono/bin/mono.exe %{wks.location}third_party/mono/lib/mono/4.5/mcs.exe -target:library -nostdlib -optimize -out:%{wks.location}bin/" .. outputdir .. "/%{prj.name}/Chroma.Mono.dll -r:%{wks.location}third_party/mono/lib/mono/4.5/mscorlib.dll,%{wks.location}third_party/mono/lib/mono/4.5/System.dll,%{wks.location}third_party/mono/lib/mono/4.5/System.Core.dll -recurse:Source/**.cs"
+            "%{wks.location}third_party/mono/bin/mono.exe %{wks.location}third_party/mono/lib/mono/4.5/mcs.exe -target:library -nostdlib -optimize -out:%{wks.location}bin/" .. outputdir .. "/%{prj.name}/Chroma.Mono.dll -r:" .. mono_dlls .. " -recurse:Source/**.cs"
         }
 
         rebuildcommands {
-            "%{wks.location}third_party/mono/bin/mono.exe %{wks.location}third_party/mono/lib/mono/4.5/mcs.exe -target:library -nostdlib -optimize -out:%{wks.location}bin/" .. outputdir .. "/%{prj.name}/Chroma.Mono.dll -r:%{wks.location}third_party/mono/lib/mono/4.5/mscorlib.dll,%{wks.location}third_party/mono/lib/mono/4.5/System.dll,%{wks.location}third_party/mono/lib/mono/4.5/System.Core.dll -recurse:Source/**.cs"
+            "%{wks.location}third_party/mono/bin/mono.exe %{wks.location}third_party/mono/lib/mono/4.5/mcs.exe -target:library -nostdlib -optimize -out:%{wks.location}bin/" .. outputdir .. "/%{prj.name}/Chroma.Mono.dll -r:" .. mono_dlls .. " -recurse:Source/**.cs"
         }
 
         buildmessage "Compiling Chroma.mono.dll with mcs..."
@@ -440,11 +487,11 @@ project "Chroma.Mono"
 
     filter "configurations:Dist"
         buildcommands {
-            "%{wks.location}third_party/mono/bin/mono.exe %{wks.location}third_party/mono/lib/mono/4.5/mcs.exe -target:library -nostdlib -optimize -out:%{wks.location}bin/" .. outputdir .. "/%{prj.name}/Chroma.Mono.dll -r:%{wks.location}third_party/mono/lib/mono/4.5/mscorlib.dll,%{wks.location}third_party/mono/lib/mono/4.5/System.dll,%{wks.location}third_party/mono/lib/mono/4.5/System.Core.dll -recurse:Source/**.cs"
+            "%{wks.location}third_party/mono/bin/mono.exe %{wks.location}third_party/mono/lib/mono/4.5/mcs.exe -target:library -nostdlib -optimize -out:%{wks.location}bin/" .. outputdir .. "/%{prj.name}/Chroma.Mono.dll -r:" .. mono_dlls .. " -recurse:Source/**.cs"
         }
 
         rebuildcommands {
-            "%{wks.location}third_party/mono/bin/mono.exe %{wks.location}third_party/mono/lib/mono/4.5/mcs.exe -target:library -nostdlib -optimize -out:%{wks.location}bin/" .. outputdir .. "/%{prj.name}/Chroma.Mono.dll -r:%{wks.location}third_party/mono/lib/mono/4.5/mscorlib.dll,%{wks.location}third_party/mono/lib/mono/4.5/System.dll,%{wks.location}third_party/mono/lib/mono/4.5/System.Core.dll -recurse:Source/**.cs"
+            "%{wks.location}third_party/mono/bin/mono.exe %{wks.location}third_party/mono/lib/mono/4.5/mcs.exe -target:library -nostdlib -optimize -out:%{wks.location}bin/" .. outputdir .. "/%{prj.name}/Chroma.Mono.dll -r:" .. mono_dlls .. " -recurse:Source/**.cs"
         }
 
         buildmessage "Compiling Chroma.mono.dll with mcs..."

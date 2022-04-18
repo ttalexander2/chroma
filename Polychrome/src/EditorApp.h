@@ -51,6 +51,7 @@ namespace Polychrome
 		static bool SceneRunning;
 		static bool ScenePaused;
 		static bool PreviewSprites;
+		static bool VSCodeInstalled;
 
 		static ImFont* LargeIcons;
 		static ImFont* LargeFont;

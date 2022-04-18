@@ -14,15 +14,19 @@ namespace Polychrome
 	{
 	public:
 		static bool Open;
+		static bool OpenScriptCreatePopup;
 		static std::filesystem::path Selected;
 		static void Draw();
+		static void DrawScriptCreateWindow();
 		static void HandleOpen(std::filesystem::path path);
 		static bool IsSelecting() { return s_IsSelecting; }
+
+		static std::string GetActiveDirectory();
 
 		template <typename T>
 		static void SelectAsset(std::function<void(Chroma::Ref<Chroma::Asset>, void*)> callback, void* user_data = nullptr)
 		{
-			static_assert(std::is_base_of<Chroma::Asset, T>::value, "Type T is not derived from Asset!");
+			static_assert(std::is_base_of_v<Chroma::Asset, T>, "Type T is not derived from Asset!");
 
 			s_IsSelecting = true;
 			s_SelectionCallback = callback;

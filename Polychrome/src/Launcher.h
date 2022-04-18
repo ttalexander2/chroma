@@ -44,5 +44,6 @@ namespace Polychrome
 		static std::string project_name;
 		static bool create;
 		static std::string starting_scene;
+		static std::vector<Polychrome::Launcher::RecentProjectInfo> recentProjects;
 	};
 }

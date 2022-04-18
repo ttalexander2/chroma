@@ -25,8 +25,8 @@ namespace Chroma
 		friend class Application;
 		friend struct ChromaFMOD;
 	public:
-
-		static void LoadBank(const std::string& bankName, FMOD_STUDIO_LOAD_BANK_FLAGS flags = FMOD_STUDIO_LOAD_BANK_NORMAL);
+		static void LoadBank(const std::string& bankPath, FMOD_STUDIO_LOAD_BANK_FLAGS flags = FMOD_STUDIO_LOAD_BANK_NORMAL);
+		static void UnloadBank(const std::string& bankPath);
 		static void LoadEvent(const std::string& eventName);
 		static void Set3dListenerAndOrientation(const Math::vec3& position = { 0, 0, 0 }, float volume_dB = 0.0f);
 		static void PlayEvent(const std::string& eventName);

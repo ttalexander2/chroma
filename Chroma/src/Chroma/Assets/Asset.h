@@ -20,6 +20,7 @@ namespace Chroma
 		friend class AssetManager;
 
 #define CHROMA_ASSET(typeName, baseTypeName) \
+		public: \
 			using ClassName = typeName; \
 			using BaseClass = baseTypeName; \
 			typeName() = default; \

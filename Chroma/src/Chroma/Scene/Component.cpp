@@ -43,5 +43,16 @@ namespace Chroma
 		EndSerialize(out);
 	}
 
+	void Component::DoDeserialize(YAML::Node& node)
+	{
+		auto val = node["Enabled"];
+		if (val)
+		{
+			m_Enabled = val.as<bool>();
+		}
+
+		Deserialize(node);
+	}
+
 	
 }
