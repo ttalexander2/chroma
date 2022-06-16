@@ -9,6 +9,7 @@
 namespace Polychrome
 {
 	class ComponentWidgets;
+	class EditorApp;
 }
 
 
@@ -58,7 +59,7 @@ namespace Chroma
 
 		/// @brief Gets the sprite ID/Path
 		/// @return Relative path/name of the sprite.
-		const GUID& GetSpriteID() const { return SpriteID; }
+		const GUID& GetSpriteID() const { return sprite->GetID(); }
 		/// @brief Set the sprite to render.
 		/// 
 		/// Sprite must already be loaded.
@@ -118,9 +119,11 @@ namespace Chroma
 
 		float time_till_next_frame = 0;
 		bool looping_forward = 0;
-		GUID SpriteID;
+		
+		Ref<Sprite> sprite;
 
 		friend class SpriteRendererSystem;
+		friend class Polychrome::EditorApp;
 
 	};
 }

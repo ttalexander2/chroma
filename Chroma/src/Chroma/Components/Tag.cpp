@@ -1,6 +1,8 @@
 #include "chromapch.h"
 #include "Tag.h"
 
+#include "Chroma/Reflection/Reflection.h"
+
 
 namespace Chroma
 {
@@ -21,9 +23,8 @@ namespace Chroma
 
 	void Tag::CreateReflectionModel()
 	{
-		entt::meta<Tag>()
-			.data<&Tag::EntityName>("Entity"_hs)
-			.type("Tag"_hs);
+		Reflection::RegisterComponent<Tag>();
+		Reflection::RegisterComponentProperty<Tag, &Tag::EntityName>("Name");
 	}
 
 

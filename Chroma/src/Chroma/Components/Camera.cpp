@@ -1,7 +1,10 @@
 #include "chromapch.h"
 #include "Camera.h"
 
+#include "Chroma/Reflection/Reflection.h"
+
 #include <glm/gtc/matrix_transform.hpp>
+
 
 namespace Chroma
 {
@@ -41,13 +44,12 @@ namespace Chroma
 
 	void Camera::CreateReflectionModel()
 	{
-		entt::meta<Camera>()
-			.data<&Camera::SetPosition, &Camera::GetPosition>("Position"_hs)
-			.data<&Camera::SetSize, &Camera::GetSize>("Size"_hs)
-			.data<nullptr, &Camera::GetProjectionMatrix>("ProjectionMatrix"_hs)
-			.data<nullptr, &Camera::GetViewMatrix>("ViewMatrix"_hs)
-			.data<nullptr, &Camera::GetViewProjectionMatrix>("ViewProjectionMatrix"_hs)
-			.type("Camera"_hs);
+		Reflection::RegisterComponent<Camera>();
+		Reflection::RegisterComponentProperty<Camera, &Camera::SetSize, &Camera::GetSize>("Size");
+		Reflection::RegisterComponentProperty<Camera, &Camera::SetPosition, &Camera::GetPosition>("Position", false);
+		Reflection::RegisterComponentProperty<Camera, nullptr, &Camera::GetProjectionMatrix>("ProjectionMatrix");
+		Reflection::RegisterComponentProperty<Camera, nullptr, &Camera::GetViewMatrix>("ViewMatrix");
+		Reflection::RegisterComponentProperty<Camera, nullptr, &Camera::GetViewProjectionMatrix>("ViewProjectionMatrix");
 
 	}
 }

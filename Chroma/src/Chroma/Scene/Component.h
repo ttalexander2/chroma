@@ -13,6 +13,7 @@
 #include <Chroma/Core/TypeInfo.h>
 #include "Chroma/Scene/EntityID.h"
 #include "Chroma/Utilities/StringHash.h"
+#include <entt.hpp>
 
 
 namespace Polychrome
@@ -44,6 +45,8 @@ namespace Chroma
 			static const TypeInfo* GetTypeInfoStatic () { static const TypeInfo typeInfoStatic(#typeName, baseTypeName::GetTypeInfoStatic()); return &typeInfoStatic; } \
 			static const size_t GetTypeSizeStatic() { return sizeof(#typeName); } \
 			static void CreateReflectionModel(); \
+			inline entt::meta_handle GetMetaHandle() override { return entt::meta_handle(*this); } \
+			inline entt::meta_type GetMetaType() override { return entt::resolve<typeName>();} \
 		private: \
 			virtual void NOTYPEINFO() override {} \
 		public: \
@@ -105,6 +108,9 @@ namespace Chroma
 		const inline void Disable() { SetEnabled(false); }
 		virtual const inline void SetEnabled(bool enabled) { m_Enabled = enabled; }
 
+		virtual entt::meta_handle GetMetaHandle() = 0;
+		inline virtual entt::meta_type GetMetaType() = 0;
+
 
 		virtual void Serialize(YAML::Emitter& out) {};
 
@@ -113,6 +119,8 @@ namespace Chroma
 
 		void DoSerialize(YAML::Emitter& out);
 		void DoDeserialize(YAML::Node& node);
+
+		inline int GetOrderID() const { return order_id; }
 
 
 	protected:

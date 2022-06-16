@@ -105,4 +105,23 @@ namespace Chroma
 		glTextureSubImage2D(m_RendererID, 0, 0, 0, m_Width, m_Height, m_DataFormat, GL_UNSIGNED_BYTE, data);
 	}
 
+	void OpenGLTexture2D::SetTextureFormat(TextureFormat format)
+	{
+		switch (format)
+		{
+			case TextureFormat::RGB8:
+			{
+				m_DataFormat = GL_RGB;
+				m_InternalFormat = GL_RGB8;
+				break;
+			}
+			case TextureFormat::RGBA8:
+			{
+				m_DataFormat = GL_RGBA;
+				m_InternalFormat = GL_RGBA8;
+				break;
+			}
+		}
+	}
+
 }

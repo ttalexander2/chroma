@@ -1,60 +1,67 @@
 #pragma once
 #include <vector>
-#include <any>
+#include <set>
 #include <string>
 #include "Chroma/Math/Vec2.h"
+#include "Chroma/Assets/Asset.h"
+
+#include <entt.hpp>
 
 
 namespace Chroma
 {
 
-	enum class LoopType
+	struct Animation : public Asset
 	{
-		None = 0,
-		Loop = 1,
-		PingPong = 2,
-	};
+		CHROMA_ASSET(Animation, Asset);
 
-	enum class UpdateType
-	{
-		Continuous = 0,
-		Discrete = 1
-	};
+		enum class LoopType
+		{
+			none = 0,
+			loop = 1,
+			pingPong = 2,
+		};
+
+		enum class UpdateType
+		{
+			continuous = 0,
+			discrete = 1
+		};
 
 
-	struct Transition
-	{
-		Math::vec2 a = { 0, 0 };
-		Math::vec2 b = { 1, 1 };
-	};
+		struct Transition
+		{
+			Math::vec2 a = { 0, 0 };
+			Math::vec2 b = { 1, 1 };
+		};
 
-	struct IKeyframe
-	{
-		float m_Time;
-		Transition m_Transition;
-	};
+		struct Keyframe
+		{
+			float time;
+			Transition transition;
+			entt::meta_any value;
+		};
 
-	template <typename T>
-	struct Keyframe : public IKeyframe
-	{
-		T m_Data;
-	};
+		struct TimeSort
+		{
+			bool operator ()(const Keyframe& lhs, const Keyframe& rhs) const
+			{
+				return lhs.time < rhs.time;
+			}
+		};
 
-	struct Track
-	{
-		std::string m_Name;
-		std::string m_ComponentName;
-		std::string m_DataName;
-		UpdateType m_Update;
+		struct Track
+		{
+			UpdateType update;
+			std::multiset<Keyframe, TimeSort> keyframes;
+			Chroma::EntityID entityID;
+			uint32_t componentID;
+			uint32_t propertyID;
+		};
 
-		std::vector<IKeyframe*> m_Keyframes;
-	};
-
-	struct Animation
-	{
-		float m_Length;
-		LoopType m_LoopType;
-		std::vector<Track> m_Tracks;
+		float length;
+		LoopType loop_type;
+		std::vector<Track> tracks;
 	};
 
 }

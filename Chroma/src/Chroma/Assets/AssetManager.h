@@ -6,14 +6,10 @@
 #include "Chroma/Core/Core.h"
 #include "Chroma/Utilities/GUID.h"
 
-#include "Chroma/Assets/Sprite.h"
-
 #include <unordered_map>
 
 namespace Chroma
 {
-
-
 
 	template <typename T>
 	struct AssetIterator
@@ -161,6 +157,7 @@ namespace Chroma
 
 		static void UnloadAll();
 		static void UnloadUnused();
+		static void Shutdown();
 		static std::unordered_map<GUID, Ref<Asset>>& GetAssetMap() { return s_Assets; }
 
 		static void LoadManifest(const std::string& yaml);

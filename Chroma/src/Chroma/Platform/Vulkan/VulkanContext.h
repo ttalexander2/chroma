@@ -10,7 +10,6 @@ namespace Chroma
 {
 
 
-
 	struct QueueFamilyIndices
 	{
 		std::optional<uint32_t> graphicsFamily;

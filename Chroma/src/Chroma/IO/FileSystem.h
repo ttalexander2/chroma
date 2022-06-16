@@ -120,8 +120,12 @@ namespace Chroma
 
 		static bool Exists(const std::string& path);
 
+		static std::string GetBaseDirectory();
+
         static bool IsDirectory(const std::string& path);
         static bool IsFile(const std::string& path);
+
+        static bool CreateDir(const std::string &path);
 
         static FileInfo GetFileInfo(const std::string& filePath);
         static int64_t GetFileSize(const std::string& filePath);

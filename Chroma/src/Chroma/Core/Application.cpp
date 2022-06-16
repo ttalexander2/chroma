@@ -28,11 +28,14 @@
 #include "Chroma/Assets/Asset.h"
 #include "Chroma/Assets/AssetManager.h"
 #include "Chroma/Assets/Sprite.h"
+#include "Chroma/Reflection/Reflection.h"
 
 #include <entt.hpp>
 #include "Chroma/Utilities/StringHash.h"
 #include <any>
 #include <Chroma/Assets/FMODBank.h>
+#include <Chroma/Components/AnimationPlayer.h>
+#include <Chroma/Assets/Font.h>
 
 
 
@@ -69,6 +72,8 @@ namespace Chroma
 			MonoScripting::Init("Chroma.Mono.dll");
 			ScriptEngineRegistry::RegisterAll();
 
+			Reflection::InitializeDataTypes();
+
 			Scene::RegisterComponent<AudioSource>();
 			Scene::RegisterComponent<BoxCollider>();
 			Scene::RegisterComponent<Camera>();
@@ -79,9 +84,11 @@ namespace Chroma
 			Scene::RegisterComponent<SpriteRenderer>();
 			Scene::RegisterComponent<Tag>();
 			Scene::RegisterComponent<Transform>();
+			Scene::RegisterComponent<AnimationPlayer>();
 
 			AssetManager::Register<Sprite>();
 			AssetManager::Register<FMODBank>();
+			AssetManager::Register<Font>();
 		}
 
 

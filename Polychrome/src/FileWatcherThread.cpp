@@ -11,6 +11,7 @@
 #include <Chroma/IO/FileSystem.h>
 #include <Chroma/Components/CSharpScript.h>
 #include <Chroma/Assets/FMODBank.h>
+#include <Chroma/Assets/Font.h>
 
 
 namespace Polychrome
@@ -40,6 +41,9 @@ namespace Polychrome
 
 			fw.start(file_watcher_thread_running, [&](const std::string& file, const std::string& dr, FileStatus status) {
 				// Process only regular files, all other file types are ignored
+
+				return;
+
 				std::string root = dr;
 				if (!std::filesystem::is_regular_file(std::filesystem::path(file)) && status != FileStatus::erased)
 				{
@@ -61,6 +65,11 @@ namespace Polychrome
 						else if (extension == ".bank")
 						{
 							const Chroma::Ref<Chroma::Asset> asset = Chroma::AssetManager::Create(Chroma::GUID::CreateGUID(), std::filesystem::path(relative).lexically_relative(std::filesystem::path(Project::AssetDirectory)).string(), Chroma::FMODBank::GetTypeNameStatic());
+							Chroma::AssetManager::Load(asset->GetID());
+						}
+						else if (extension == ".ttf" || extension == ".oft")
+						{
+							const Chroma::Ref<Chroma::Asset> asset = Chroma::AssetManager::Create(Chroma::GUID::CreateGUID(), std::filesystem::path(relative).lexically_relative(std::filesystem::path(Project::AssetDirectory)).string(), Chroma::Font::GetTypeNameStatic());
 							Chroma::AssetManager::Load(asset->GetID());
 						}
 						else if (extension == ".cs")
@@ -106,6 +115,17 @@ namespace Polychrome
 								Chroma::AssetManager::Load(Chroma::AssetManager::GetID(std::filesystem::path(relative).lexically_relative(std::filesystem::path(Project::AssetDirectory)).string()));
 							}
 						}
+						else if (extension == ".ttf" || extension == ".oft")
+						{
+							if (Chroma::AssetManager::Exists(Chroma::AssetManager::GetID(std::filesystem::path(relative).lexically_relative(std::filesystem::path(Project::AssetDirectory)).string())))
+							{
+								Chroma::AssetManager::Reload(Chroma::AssetManager::GetID(std::filesystem::path(relative).lexically_relative(std::filesystem::path(Project::AssetDirectory)).string()));
+							}
+							else
+							{
+								Chroma::AssetManager::Load(Chroma::AssetManager::GetID(std::filesystem::path(relative).lexically_relative(std::filesystem::path(Project::AssetDirectory)).string()));
+							}
+						}
 						else if (extension == ".cs")
 						{
 							auto result = Build::BuildMonoAssembly(root, Project::Name);
@@ -136,6 +156,13 @@ namespace Polychrome
 							}
 						}
 						else if (extension == ".bank")
+						{
+							if (Chroma::AssetManager::Exists(Chroma::AssetManager::GetID(std::filesystem::path(relative).lexically_relative(std::filesystem::path(Project::AssetDirectory)).string())))
+							{
+								Chroma::AssetManager::Unload(Chroma::AssetManager::GetID(std::filesystem::path(relative).lexically_relative(std::filesystem::path(Project::AssetDirectory)).string()));
+							}
+						}
+						else if (extension == ".ttf" || extension == ".oft")
 						{
 							if (Chroma::AssetManager::Exists(Chroma::AssetManager::GetID(std::filesystem::path(relative).lexically_relative(std::filesystem::path(Project::AssetDirectory)).string())))
 							{

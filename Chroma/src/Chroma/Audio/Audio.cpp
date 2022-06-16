@@ -89,9 +89,12 @@ namespace Chroma
 	/// @param volume_dB Volume
 	/// 
 	/// WARNING: Function not implemented.
+	/// TODO: Function should set listener orientation to the current camera position.
 	void Audio::Set3dListenerAndOrientation(const Math::vec3& position, float volume_dB)
 	{
 		CHROMA_CORE_WARN("Function [Audio::Set3dListenerAndOrientation] is not implemented!");
+		//const FMOD_VECTOR pos = { position.x, position.y, 0 };
+		//s_FMOD->m_System->set3DListenerAttributes()
 	}
 
 	/// @brief Play an audio event.

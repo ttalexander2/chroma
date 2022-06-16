@@ -1,6 +1,8 @@
 #include "chromapch.h"
 #include "CSharpScript.h"
 
+#include "Chroma/Reflection/Reflection.h"
+
 namespace Chroma
 {
 
@@ -21,8 +23,7 @@ namespace Chroma
 
 	void CSharpScript::CreateReflectionModel()
 	{
-		entt::meta<CSharpScript>()
-			.data<&CSharpScript::ModuleName>("ModuleName"_hs)
-			.type("CSharpScript"_hs);
+		Reflection::RegisterComponent<CSharpScript>();
+		Reflection::RegisterComponentProperty<CSharpScript, &CSharpScript::ModuleName>("Module");
 	}
 }

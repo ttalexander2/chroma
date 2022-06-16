@@ -77,6 +77,12 @@ namespace Chroma
 			return Write(reinterpret_cast<void*>(buffer.data()), buffer.size());
 		}
 
+		template <typename T, typename = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
+		int Write(T val)
+		{
+			return Write(reinterpret_cast<void *>(&val), sizeof(T));
+		}
+
 		int Write(std::string& string);
 		int Write(const char* string);
 

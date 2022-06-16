@@ -90,6 +90,7 @@ namespace Polychrome
 		Chroma::Ref<Chroma::Framebuffer> m_Framebuffer;
 		Chroma::Ref<Chroma::Framebuffer> m_GuizmoFramebuffer;
 		Chroma::Ref<Chroma::Shader> m_HighlightShader;
+		Chroma::Ref<Chroma::Shader> m_FontShader;
 
 		Chroma::SpriteRendererSystem sprite_system;
 

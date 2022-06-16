@@ -1,5 +1,8 @@
 #include "chromapch.h"
 #include "BoxCollider.h"
+
+#include "Chroma/Reflection/Reflection.h"
+
 namespace Chroma
 {
 
@@ -32,9 +35,8 @@ namespace Chroma
 
 	void BoxCollider::CreateReflectionModel()
 	{
-		entt::meta<BoxCollider>()
-			.data<&BoxCollider::Min>("Min"_hs)
-			.data<&BoxCollider::Max>("Max"_hs)
-			.type("BoxCollider"_hs);
+		Reflection::RegisterComponent<BoxCollider>();
+		Reflection::RegisterComponentProperty<BoxCollider, &BoxCollider::Min>("Min");
+		Reflection::RegisterComponentProperty<BoxCollider, &BoxCollider::Max>("Max");
 	}
 }

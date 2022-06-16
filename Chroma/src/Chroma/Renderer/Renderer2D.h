@@ -6,6 +6,7 @@
 #include <Chroma/Images/Color.h>
 #include <Chroma/Components/Camera.h>
 #include <Chroma/Renderer/Shader.h>
+#include <Chroma/Assets/Font.h>
 
 namespace Chroma
 {
@@ -43,6 +44,8 @@ namespace Chroma
 
 		static void DrawRect(const Math::vec2& position, const Math::vec2& size, float line_width, const Math::vec4& color, float rotation = 0.f);
 		static void DrawLine(const Math::vec2& p1, const Math::vec2& p2, float line_width, const Math::vec4& color);
+
+		static void DrawString(const std::string &string, const Ref<Font> &font, const Math::vec3 &position, float maxWidth, const glm::vec4 &color, float scale, float lineHeightOffset, float kerningOffset);
 
 		static void Clear();
 		static void SetClearColor(const Color& color);

@@ -61,11 +61,13 @@
 #include <mono/metadata/mono-gc.h>
 #include <Chroma/Components/CSharpScript.h>
 #include <Chroma/Scripting/MonoScripting.h>
+#include <Chroma/Assets/Font.h>
 
 #include "Launcher.h"
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
 #include <future>
+
 
 
 namespace Polychrome
@@ -95,12 +97,12 @@ namespace Polychrome
 
 	std::string EditorApp::InfoMessage;
 	EditorApp::MessageSeverity EditorApp::InfoSeverity = EditorApp::MessageSeverity::Info;
+	Chroma::Ref<Chroma::Font> test_font;
 
 
 	EditorApp::EditorApp()
 		:Chroma::Application("Polychrome Editor", 1920U, 1080U)
 	{
-
 		glfwHideWindow((GLFWwindow*)this->GetWindow().GetNativeWindow());
 
 
@@ -115,7 +117,9 @@ namespace Polychrome
 
 	void EditorApp::Init()
 	{
+
 		m_HighlightShader = Chroma::Shader::Create(".\\assets\\shaders\\Highlight.glsl");
+		m_FontShader = Chroma::Shader::Create(".\\assets\\shaders\\Font.glsl");
 
 		Chroma::FramebufferSpecification fbspec;
 		fbspec.Width = 1920;
@@ -493,7 +497,7 @@ namespace Polychrome
 
 
 
-
+		test_font = Chroma::AssetManager::Get<Chroma::Font>(Chroma::GUID::Parse("85519709-783D-4406-BCA3-C69A95030087"));
 		
 	}
 
@@ -590,20 +594,17 @@ namespace Polychrome
 
 		m_Framebuffer->ClearAttachment(1, -1);
 
-		//if (EditorApp::SceneRunning)
-		//{
-		//	Chroma::Renderer2D::Begin(CurrentScene->GetPrimaryCamera());
-		//}
-		//else
-		//{
-			Chroma::Renderer2D::Begin(Camera.GetViewProjectionMatrix());
-		//}
 
-		
+		Chroma::Renderer2D::Begin(Camera.GetViewProjectionMatrix());
 
 		EditorApp::CurrentScene->Draw(time);
 
 		Chroma::Renderer2D::End();
+
+		Chroma::Renderer2D::Begin(Camera.GetViewProjectionMatrix());
+		Chroma::Renderer2D::DrawString("Among Us 2: Sussy Baka", test_font, Math::vec3(90, 0, 0), 5, Math::vec4(1, 1, 1, 1), 24.f, 0, 0);
+		Chroma::Renderer2D::Flush(m_FontShader);
+		
 
 		m_Framebuffer->Unbind();
 
@@ -622,6 +623,8 @@ namespace Polychrome
 			Chroma::Renderer2D::Flush(m_HighlightShader);
 			Chroma::Renderer2D::StartBatch();
 		}
+
+
 
 		if (Viewport::ShouldDrawGrid)
 			ComponentDebugGizmos::DrawGrid();
@@ -833,7 +836,7 @@ namespace Polychrome
 
 		Hierarchy::Draw();
 		Inspector::Draw();
-		//AnimationEditor::Draw();
+		AnimationEditor::Draw(time.GetSeconds());
 		Viewport::Draw(time, m_Framebuffer, m_GuizmoFramebuffer);
 #if CHROMA_DEBUG
 		LogWindow::Draw();
@@ -1135,7 +1138,7 @@ namespace Polychrome
 		totalTime += time.GetSeconds();
 		float offset = (Math::sin(4.f * totalTime) + 1.f);
 
-		//CHROMA_CORE_INFO("offset: {}", offset);
+		//CHROMA_CORE_INFO("Selected Entity: {}", (uint32_t)Hierarchy::SelectedEntity);
 
 		if (Hierarchy::SelectedEntity == Chroma::ENTITY_NULL || !EditorApp::CurrentScene->HasComponent<Chroma::SpriteRenderer>(Hierarchy::SelectedEntity))
 			return;
@@ -1146,7 +1149,7 @@ namespace Polychrome
 		
 		const Math::vec2& origin = spriteRenderer.GetSpriteOriginVector();
 		
-		if (Chroma::AssetManager::Exists(spriteRenderer.GetSpriteID()))
+		if (spriteRenderer.sprite.get() != nullptr && spriteRenderer.sprite->IsLoaded())
 		{
 			Chroma::Ref<Chroma::Sprite> s = Chroma::AssetManager::Get<Chroma::Sprite>(spriteRenderer.GetSpriteID());
 			int w = s->Frames[spriteRenderer.GetCurrentFrame()].Texture->GetWidth();
@@ -1192,6 +1195,7 @@ namespace Polychrome
 	EditorApp::~EditorApp()
 	{
 		delete EditorApp::CurrentScene;
+		Chroma::AssetManager::Shutdown();
 		if (FileWatcherThread::file_watcher_thread_running)
 		{
 			FileWatcherThread::file_watcher_thread_running.store(false);

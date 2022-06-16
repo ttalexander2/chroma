@@ -12,7 +12,7 @@ namespace Polychrome
 		static float Zoom;
 		static float Step;
 		static float TimeSelection;
-		static void Draw();
+		static void Draw(float deltaTime);
 
 
 	};

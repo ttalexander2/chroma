@@ -24,6 +24,8 @@ IncludeDir["SPIRV_Cross"] = "%{wks.location}/Chroma/third_party/SPIRV-Cross"
 IncludeDir["VulkanSDK"] = "%{VULKAN_SDK}/Include"
 IncludeDir["miniz"] = "%{wks.location}/Chroma/third_party/miniz"
 IncludeDir["box2d"] = "%{wks.location}/Chroma/third_party/box2d/include/box2d"
+IncludeDir["msdfgen"] = "%{wks.location}/Chroma/third_party/msdf-atlas-gen/msdfgen"
+IncludeDir["msdf_atlasgen"] = "%{wks.location}/Chroma/third_party/msdf-atlas-gen"
 
 LibraryDir = {}
 

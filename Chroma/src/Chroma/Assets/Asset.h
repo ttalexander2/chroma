@@ -23,7 +23,6 @@ namespace Chroma
 		public: \
 			using ClassName = typeName; \
 			using BaseClass = baseTypeName; \
-			typeName() = default; \
 			virtual StringHash GetType() const override { return GetTypeInfoStatic()->GetType(); } \
 			virtual const std::string& GetTypeName() const override { return GetTypeInfoStatic()->GetTypeName(); } \
 			virtual const TypeInfo* GetTypeInfo() const override { return GetTypeInfoStatic(); } \

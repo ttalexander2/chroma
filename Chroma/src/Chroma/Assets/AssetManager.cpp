@@ -4,6 +4,8 @@
 #include <Chroma/Core/Log.h>
 #include <Chroma/IO/File.h>
 #include <Chroma/IO/FileSystem.h>
+#include "Chroma/Assets/Sprite.h"
+#include "Chroma/Assets/Font.h"
 
 #include <yaml-cpp/yaml.h>
 
@@ -17,7 +19,12 @@ namespace Chroma
     std::unordered_map<StringHash, std::vector<GUID>> AssetManager::s_AssetTypes;
     std::unordered_map<size_t, GUID> AssetManager::s_Paths;
     std::unordered_map<size_t, std::function<void(const GUID&, const std::string&)>> AssetManager::s_CreateFuncs;
-    std::unordered_map<size_t, std::string> AssetManager::s_Extensions = {{s_Hash(".png"), Sprite::GetTypeNameStatic()}, {s_Hash(".ase"), Sprite::GetTypeNameStatic()}, {s_Hash(".aseprite"), Sprite::GetTypeNameStatic()}};
+	std::unordered_map<size_t, std::string> AssetManager::s_Extensions = {
+		{s_Hash(".png"), Sprite::GetTypeNameStatic() },
+		{ s_Hash(".ase"), Sprite::GetTypeNameStatic() },
+		{ s_Hash(".aseprite"),Sprite::GetTypeNameStatic() },
+		{ s_Hash(".ttf"), Font::GetTypeNameStatic()},
+	};
     std::hash<std::string> AssetManager::s_Hash;
 
 
@@ -27,7 +34,7 @@ namespace Chroma
         {
             return (s_Assets[id]);
         }
-        CHROMA_CORE_ERROR("Sprite {} does not exist!", id.ToString());
+        CHROMA_CORE_ERROR("Asset {} does not exist!", id.ToString());
         return nullptr;
     }
 
@@ -119,6 +126,12 @@ namespace Chroma
                 asset->Unload();
             }
         }
+    }
+
+    void AssetManager::Shutdown()
+	{
+		UnloadAll();
+		s_Assets.clear();
     }
 
     GUID AssetManager::GetID(const std::string& path)

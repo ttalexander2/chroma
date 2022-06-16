@@ -8,6 +8,13 @@ namespace Chroma
 	class Texture
 	{
 	public:
+
+		enum class TextureFormat
+		{
+			RGB8,
+			RGBA8
+		};
+
 		virtual ~Texture() = default;
 
 		virtual uint32_t GetWidth() const = 0;
@@ -19,6 +26,8 @@ namespace Chroma
 		virtual bool operator==(const Texture& other) const = 0;
 
 		virtual uint32_t GetTextureID() const = 0;
+
+		virtual void SetTextureFormat(TextureFormat format) = 0;
 	};
 
 	class Texture2D : public Texture

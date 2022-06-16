@@ -40,6 +40,12 @@ namespace Chroma
             throw FileSystemException(GetLastError());
     }
 
+
+    std::string FileSystem::GetBaseDirectory()
+	{
+		return PHYSFS_getBaseDir();
+
+    }
     FileSystem::Error FileSystem::GetLastErrorCode()
     {
         return (FileSystem::Error)PHYSFS_getLastErrorCode();
@@ -81,7 +87,12 @@ namespace Chroma
             return false;
         }
         return (statbuf.filetype == PHYSFS_FILETYPE_REGULAR);
-    }
+	}
+
+	bool FileSystem::CreateDir(const std::string &path)
+	{
+		return PHYSFS_mkdir(path.c_str()) != 0;
+	}
 
     FileSystem::FileInfo FileSystem::GetFileInfo(const std::string& path)
     {

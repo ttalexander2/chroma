@@ -4,6 +4,24 @@
 namespace YAML
 {
 
+	Emitter& YAML::operator<<(Emitter& out, const Chroma::GUID& v) 
+	{
+		out << v.ToString();
+		return out;
+	}
+
+	Emitter& YAML::operator<<(Emitter& out, const Chroma::EntityID& v)
+	{
+		out << (uint32_t)v;
+		return out;
+	}
+
+	Emitter& YAML::operator<<(Emitter& out, const Chroma::Ref<Chroma::Asset>& v) 
+	{
+		out << v->GetID().ToString();
+		return out;
+	}
+
 	Emitter& YAML::operator<<(Emitter& out, const Math::vec2& v)
 	{
 		out << YAML::Flow;

@@ -1,6 +1,8 @@
 #include "chromapch.h"
 #include "Relationship.h"
 
+#include "Chroma/Reflection/Reflection.h"
+
 namespace Chroma
 {
 	void Relationship::Serialize(YAML::Emitter& out)
@@ -47,12 +49,11 @@ namespace Chroma
 
 	void Relationship::CreateReflectionModel()
 	{
-		entt::meta<Relationship>()
-			.data<&Relationship::Parent>("Parent"_hs)
-			.data<&Relationship::Children>("Children"_hs)
-			.func<&Relationship::HasChild>("HasChild"_hs)
-			.func<&Relationship::HasChildren>("HasChildren"_hs)
-			.type("Relationship"_hs);
+		Reflection::RegisterComponent<Relationship>();
+		Reflection::RegisterComponentProperty<Relationship, &Relationship::Parent>("Parent");
+		Reflection::RegisterComponentProperty<Relationship, &Relationship::Children>("Children");
+		Reflection::RegisterComponentFunction<Relationship, &Relationship::HasChild>("HasChild");
+		Reflection::RegisterComponentFunction<Relationship, &Relationship::HasChildren>("HasChildren");
 	}
 }
 

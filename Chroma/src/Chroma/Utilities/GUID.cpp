@@ -57,12 +57,12 @@ namespace Chroma
 			return GUID::Zero();
 
 		GUID result{};
-		result.Data1 = (uint32_t)strtol(s.substr(0, 8).c_str(), NULL, 16);
-		result.Data2 = (uint16_t)strtol(s.substr(8, 4).c_str(), NULL, 16);
-		result.Data3 = (uint16_t)strtol(s.substr(12, 4).c_str(), NULL, 16);
+		result.Data1 = std::stoll(s.substr(0, 8), nullptr, 16);
+		result.Data2 = std::stoll(s.substr(8, 4), nullptr, 16);
+		result.Data3 = std::stoll(s.substr(12, 4), nullptr, 16);
 		for (size_t i = 0; i < 8; i++)
 		{
-			result.Data4[i] = (uint8_t)strtol(s.substr((2*i) + 16, 2).c_str(), NULL, 16);
+			result.Data4[i] = std::stoll(s.substr((2 * i) + 16, 2), nullptr, 16);
 		}
 
 		return result;

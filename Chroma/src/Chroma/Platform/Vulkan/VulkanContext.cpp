@@ -333,8 +333,6 @@ namespace Chroma
 		{
 			throw std::runtime_error("Failed to find a suitable GPU!");
 		}
-
-
 	}
 
 	void VulkanContext::CreateLogicalDevice()

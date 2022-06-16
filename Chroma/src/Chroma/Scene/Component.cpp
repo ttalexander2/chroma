@@ -1,6 +1,8 @@
 #include "chromapch.h"
 #include "Component.h"
 
+#include "Chroma/Reflection/Reflection.h"
+
 namespace Chroma
 {
 

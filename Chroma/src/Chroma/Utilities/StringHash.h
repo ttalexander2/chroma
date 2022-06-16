@@ -24,6 +24,11 @@ public:
 		return StringHash(Hash_Internal(str, val_const));
 	}
 
+	static inline constexpr StringHash Hash(const std::string& str) noexcept
+	{
+		return StringHash(Hash_Internal(str.c_str(), val_const));
+	}
+
 	constexpr StringHash() noexcept
 		: m_Hash(0)
 	{

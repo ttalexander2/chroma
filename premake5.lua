@@ -25,6 +25,8 @@ group "Dependencies"
     include "Chroma/third_party/glm"
     include "Chroma/third_party/physfs"
     include "Chroma/third_party/box2d"
+group "Dependencies/msdf"
+    include "Chroma/third_party/msdf-atlas-gen"
 group "" -- end of dependencies
 
 
@@ -88,7 +90,9 @@ project "Chroma"
         "%{IncludeDir.VulkanSDK}",
         "%{IncludeDir.PhysicsFS}",
         "%{IncludeDir.miniz}",
-        "%{IncludeDir.box2d}"
+        "%{IncludeDir.box2d}",
+        "%{IncludeDir.msdfgen}",
+        "%{IncludeDir.msdf_atlasgen}"
 
     }
 
@@ -101,8 +105,10 @@ project "Chroma"
         "%{Library.mono}",
         "PhysicsFS",
         "box2d",
+        "msdf-atlas-gen",
         "%{Library.Vulkan}",
-        "%{Library.VulkanUtils}"
+        "%{Library.VulkanUtils}",
+
     }
 
     filter "files:Chroma/third_party/ImGuizmo/**.cpp or files:Chroma/third_party/yaml-cpp/src/**.cpp"
@@ -173,7 +179,10 @@ project "Chroma"
         optimize "Speed"
 
     configuration "vs*"
-        buildoptions { "/bigobj" }    -- Lua bindings made me do this :(
+        buildoptions { 
+            "/bigobj", -- Lua bindings made me do this :(
+            "/permissive-"
+         }    
 
 
 project "Polychrome"
@@ -220,7 +229,9 @@ project "Polychrome"
         "%{IncludeDir.mono}",
         "%{IncludeDir.cute_headers}",
         "%{IncludeDir.miniz}",
-        "%{IncludeDir.box2d}"
+        "%{IncludeDir.box2d}",
+        "%{IncludeDir.msdfgen}",
+        "%{IncludeDir.msdf_atlasgen}"
     }
 
 
@@ -247,7 +258,8 @@ project "Polychrome"
 
     defines
     {
-        CHROMA_EDITOR
+        CHROMA_EDITOR,
+        IMGUI_DEFINE_MATH_OPERATORS
     }
 
     filter "system:windows"
@@ -332,7 +344,9 @@ project "Runtime"
         "%{IncludeDir.mono}",
         "%{IncludeDir.cute_headers}",
         "%{IncludeDir.miniz}",
-        "%{IncludeDir.box2d}"
+        "%{IncludeDir.box2d}",
+        "%{IncludeDir.msdfgen}",
+        "%{IncludeDir.msdf_atlasgen}"
     }
 
     links

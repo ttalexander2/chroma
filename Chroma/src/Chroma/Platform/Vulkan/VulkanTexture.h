@@ -23,6 +23,8 @@ namespace Chroma
 
 		virtual uint32_t GetTextureID() const override { return m_TextureID; }
 
+		virtual void SetTextureFormat(TextureFormat format) override { };
+
 
 		virtual bool operator==(const Texture& other) const override
 		{

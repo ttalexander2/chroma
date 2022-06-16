@@ -1,6 +1,7 @@
 #include "chromapch.h"
 #include "AudioSource.h"
 
+#include "Chroma/Reflection/Reflection.h"
 
 namespace Chroma
 {
@@ -21,10 +22,9 @@ namespace Chroma
 	}
 	void AudioSource::CreateReflectionModel()
 	{
-		entt::meta<AudioSource>()
-			.data<&AudioSource::SetEvent, &AudioSource::GetEvent>("Event"_hs)
-			.data<&AudioSource::Mute>("Mute"_hs)
-			.data<&AudioSource::PlayOnInit>("PlayOnInit"_hs)
-			.type("AudioSource"_hs);
+		Reflection::RegisterComponent<AudioSource>();
+		Reflection::RegisterComponentProperty<AudioSource, &AudioSource::SetEvent, &AudioSource::GetEvent>("Event");
+		Reflection::RegisterComponentProperty<AudioSource, &AudioSource::Mute>("Mute");
+		Reflection::RegisterComponentProperty<AudioSource, &AudioSource::PlayOnInit>("PlayOnInit");
 	}
 }

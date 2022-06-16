@@ -1,6 +1,8 @@
 #include "chromapch.h"
 #include "CircleCollider.h"
 
+#include "Chroma/Reflection/Reflection.h"
+
 namespace Chroma
 {
 	void CircleCollider::Serialize(YAML::Emitter& out)
@@ -30,9 +32,8 @@ namespace Chroma
 
 	void CircleCollider::CreateReflectionModel()
 	{
-		entt::meta<CircleCollider>()
-			.data<&CircleCollider::Radius>("Radius"_hs)
-			.data<&CircleCollider::Offset>("Offset"_hs)
-			.type("CircleCollider"_hs);
+		Reflection::RegisterComponent<CircleCollider>();
+		Reflection::RegisterComponentProperty<CircleCollider, &CircleCollider::Radius>("Radius");
+		Reflection::RegisterComponentProperty<CircleCollider, &CircleCollider::Offset>("Offset");
 	}
 }

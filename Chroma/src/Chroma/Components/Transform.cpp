@@ -1,6 +1,8 @@
 #include "chromapch.h"
 #include "Transform.h"
 
+#include "Chroma/Reflection/Reflection.h"
+
 #include <glm/gtx/quaternion.hpp>
 
 
@@ -25,6 +27,7 @@ namespace Chroma
 		out << YAML::Key << "Scale";
 		out << YAML::Value << Scale;
 	}
+
 	void Transform::Deserialize(YAML::Node& node)
 	{
 		auto val = node["Position"];
@@ -49,12 +52,11 @@ namespace Chroma
 
 	void Transform::CreateReflectionModel()
 	{
-		entt::meta<Transform>()
-			.data<&Transform::Position>("Position"_hs)
-			.data<&Transform::Rotation>("Rotation"_hs)
-			.data<&Transform::Scale>("Scale"_hs)
-			.func<&Transform::GetTransform>("GetTransform"_hs)
-			.type("Transform"_hs);
+		Reflection::RegisterComponent<Transform>();
+		Reflection::RegisterComponentProperty<Transform, &Transform::Position>("Position");
+		Reflection::RegisterComponentProperty<Transform, &Transform::Rotation>("Rotation");
+		Reflection::RegisterComponentProperty<Transform, &Transform::Scale>("Scale");
+		Reflection::RegisterComponentFunction<Transform, &Transform::GetTransform>("GetTransform");
 	}
 }
 

@@ -68,6 +68,8 @@ namespace Chroma
 
 		virtual uint32_t GetTextureID() const override { return m_RendererID; }
 
+		virtual void SetTextureFormat(TextureFormat format) override;
+
 	private:
 		/// @brief Path to the texture file
 		std::string m_Path;

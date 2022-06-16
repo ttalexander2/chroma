@@ -1,6 +1,8 @@
 #include "chromapch.h"
 #include "ParticleEmitter.h"
 
+#include "Chroma/Reflection/Reflection.h"
+
 namespace Chroma
 {
 	std::random_device ParticleEmitter::sRd;
@@ -191,28 +193,26 @@ namespace Chroma
 
 	void ParticleEmitter::CreateReflectionModel()
 	{
-		entt::meta<ParticleEmitter>()
-			.data<&ParticleEmitter::PositionVariance>("PositionVariance"_hs)
-			.data<&ParticleEmitter::StartColor>("StartColor"_hs)
-			.data<&ParticleEmitter::EndColor>("EndColor"_hs)
-			.data<&ParticleEmitter::Life>("Life"_hs)
-			.data<&ParticleEmitter::LifeVariance>("LifeVariance"_hs)
-			.data<&ParticleEmitter::Angle>("Angle"_hs)
-			.data<&ParticleEmitter::AngleVariance>("AngleVariance"_hs)
-			.data<&ParticleEmitter::Speed>("Speed"_hs)
-			.data<&ParticleEmitter::SpeedVariance>("SpeedVariance"_hs)
-			.data<&ParticleEmitter::Gravity>("Gravity"_hs)
-			.data<&ParticleEmitter::GravityVariance>("GravityVariance"_hs)
-			.data<&ParticleEmitter::Continuous>("Continuous"_hs)
-			.data<&ParticleEmitter::EmissionRate>("EmissionRate"_hs)
-			.data<&ParticleEmitter::PreWarm>("PreWarm"_hs)
-			.data<&ParticleEmitter::PreWarmSeconds>("PreWarmSeconds"_hs)
-			.data<&ParticleEmitter::SetSeed, &ParticleEmitter::GetSeed>("Seed"_hs)
-			.func<&ParticleEmitter::GenerateRandomSeed>("GenerateRandomSeed"_hs)
-			.func<&ParticleEmitter::Emit>("Emit"_hs)
-			.data<&ParticleEmitter::SetCount, &ParticleEmitter::GetCount>("GetCount"_hs)
-			.data<&ParticleEmitter::Particles>("Particles"_hs)
-			.type("ParticleEmitter"_hs);
+		Reflection::RegisterComponent<ParticleEmitter>();
+		Reflection::RegisterComponentProperty<ParticleEmitter, &ParticleEmitter::PositionVariance>("PositionVariance");
+		Reflection::RegisterComponentProperty<ParticleEmitter, &ParticleEmitter::StartColor>("StartColor");
+		Reflection::RegisterComponentProperty<ParticleEmitter, &ParticleEmitter::EndColor>("EndColor");
+		Reflection::RegisterComponentProperty<ParticleEmitter, &ParticleEmitter::Life>("Life");
+		Reflection::RegisterComponentProperty<ParticleEmitter, &ParticleEmitter::LifeVariance>("LifeVariance");
+		Reflection::RegisterComponentProperty<ParticleEmitter, &ParticleEmitter::Angle>("Angle");
+		Reflection::RegisterComponentProperty<ParticleEmitter, &ParticleEmitter::AngleVariance>("AngleVariance");
+		Reflection::RegisterComponentProperty<ParticleEmitter, &ParticleEmitter::Speed>("Speed");
+		Reflection::RegisterComponentProperty<ParticleEmitter, &ParticleEmitter::Gravity>("Gravity");
+		Reflection::RegisterComponentProperty<ParticleEmitter, &ParticleEmitter::GravityVariance>("GravityVariance");
+		Reflection::RegisterComponentProperty<ParticleEmitter, &ParticleEmitter::Continuous>("Continuous");
+		Reflection::RegisterComponentProperty<ParticleEmitter, &ParticleEmitter::EmissionRate>("EmissionRate");
+		Reflection::RegisterComponentProperty<ParticleEmitter, &ParticleEmitter::PreWarm>("PreWarm");
+		Reflection::RegisterComponentProperty<ParticleEmitter, &ParticleEmitter::PreWarmSeconds>("PreWarmSeconds");
+		Reflection::RegisterComponentProperty<ParticleEmitter, &ParticleEmitter::SetSeed, &ParticleEmitter::GetSeed>("Seed");
+		Reflection::RegisterComponentFunction<ParticleEmitter, &ParticleEmitter::GenerateRandomSeed>("GenerateRandomSeed");
+		Reflection::RegisterComponentFunction<ParticleEmitter, &ParticleEmitter::Emit>("Emit");
+		Reflection::RegisterComponentProperty<ParticleEmitter, &ParticleEmitter::SetCount, &ParticleEmitter::GetCount>("Count");
+		Reflection::RegisterComponentProperty<ParticleEmitter, &ParticleEmitter::Particles>("Particles", false);
 
 		entt::meta<Particle>()
 			.data<&Particle::Active>("Active"_hs)

@@ -13,6 +13,8 @@
 #include <Chroma/Renderer/UniformBuffer.h>
 #include <Chroma/Renderer/IndexBuffer.h>
 
+#include <codecvt>
+
 namespace Chroma
 {
 	struct QuadVertex
@@ -26,6 +28,7 @@ namespace Chroma
 		// Editor-only
 		int EntityID = -1;
 	};
+
 
 	struct RenderData
 	{
@@ -502,6 +505,12 @@ namespace Chroma
 	{
 		CHROMA_PROFILE_FUNCTION();
 
+		if (texture == nullptr)
+		{
+			CHROMA_CORE_WARN("Attempted to draw null texture!");
+			return;
+		}
+
 		glm::vec3 p2 = position + size;
 
 		glm::mat4 transform;
@@ -594,6 +603,178 @@ namespace Chroma
 		//DrawQuad({ position.x, position.y + size.y / 2.f - line_width }, { 1,1 }, { 0.8f, 0.2f, 0.3f, 1.0f }); //h
 		//DrawQuad({ position.x - size.x / 2.f + line_width, position.y }, { 1,1 }, { 0.8f, 0.2f, 0.3f, 1.0f }); //v
 	}
+
+	static std::u32string To_UTF32(const std::string &s)
+	{
+		std::wstring_convert<std::codecvt_utf8<char32_t>, char32_t> conv;
+		return conv.from_bytes(s);
+	}
+
+	static bool NextLine(int index, const std::vector<int> &lines)
+	{
+		for (int line : lines)
+		{
+			if (line == index)
+				return true;
+		}
+		return false;
+	}
+
+
+
+	void Renderer2D::DrawString(const std::string &string, const Ref<Font> &font, const Math::vec3 &position, float maxWidth, const glm::vec4 &color, float scale, float lineHeightOffset = 0.f, float kerningOffset = 0.f)
+	{
+		if (string.empty())
+			return;
+
+		float textureIndex = 0.0f;
+
+		std::u32string utf32string = To_UTF32(string);
+
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::scale(glm::mat4(1.0f), glm::vec3(scale, scale, 0));
+		
+
+		Ref<Texture2D> fontAtlas = font->m_Atlas.texture;
+
+		for (uint32_t i = 0; i < s_Data.TextureSlotIndex; i++)
+		{
+			if (*s_Data.TextureSlots[i].get() == *fontAtlas.get())
+			{
+				textureIndex = (float)i;
+				break;
+			}
+		}
+
+		if (textureIndex == 0.0f)
+		{
+			textureIndex = (float)s_Data.TextureSlotIndex;
+			s_Data.TextureSlots[s_Data.TextureSlotIndex] = fontAtlas;
+			s_Data.TextureSlotIndex++;
+		}
+
+
+		std::vector<int> nextLines;
+		{
+			double x = 0.0;
+			double fsScale = 1 / (font->m_Atlas.ascender_y - font->m_Atlas.decender_y);
+			double y = -fsScale * font->m_Atlas.ascender_y;
+			int lastSpace = -1;
+			for (int i = 0; i < utf32string.size(); i++)
+			{
+				char32_t character = utf32string[i];
+				if (character == '\n')
+				{
+					x = 0;
+					y -= fsScale * font->m_Atlas.line_height + lineHeightOffset;
+					continue;
+				}
+
+				auto& glyph = font->m_Atlas.glyphs[character];
+				if (font->m_Atlas.glyphs.find(character) == font->m_Atlas.glyphs.end())
+					glyph = font->m_Atlas.glyphs['?'];
+				if (font->m_Atlas.glyphs.find('?') == font->m_Atlas.glyphs.end())
+					continue;
+
+				if (character != ' ')
+				{
+					glm::vec2 quadMin((float)glyph.pl, (float)glyph.pb);
+					glm::vec2 quadMax((float)glyph.pr, (float)glyph.pt);
+
+					quadMin *= fsScale;
+					quadMax *= fsScale;
+					quadMin += glm::vec2(x, y);
+					quadMax += glm::vec2(x, y);
+
+					if (quadMax.x > maxWidth && lastSpace != -1)
+					{
+						i = lastSpace;
+						nextLines.emplace_back(lastSpace);
+						lastSpace = -1;
+						x = 0;
+						y -= fsScale * font->m_Atlas.line_height + lineHeightOffset;
+					}
+				}
+				else
+				{
+					lastSpace = i;
+				}
+
+				double advance = font->m_Atlas.kerning[std::pair(character, utf32string[i + 1])];
+				x += fsScale * advance + kerningOffset;
+			}
+		}
+
+		{
+			double x = 0.0;
+			double fsScale = 1 / (font->m_Atlas.ascender_y - font->m_Atlas.decender_y);
+			double y = 0.0; // -fsScale * metrics.ascenderY;
+			for (int i = 0; i < utf32string.size(); i++)
+			{
+				char32_t character = utf32string[i];
+				if (character == '\n' || NextLine(i, nextLines))
+				{
+					x = 0;
+					y -= fsScale * font->m_Atlas.line_height + lineHeightOffset;
+					continue;
+				}
+
+				auto &glyph = font->m_Atlas.glyphs[character];
+				if (font->m_Atlas.glyphs.find(character) == font->m_Atlas.glyphs.end())
+					glyph = font->m_Atlas.glyphs['?'];
+				if (font->m_Atlas.glyphs.find('?') == font->m_Atlas.glyphs.end())
+					continue;
+
+				double l, b, r, t, pl, pb, pr, pt;
+				l = glyph.l;
+				b = glyph.b;
+				r = glyph.r;
+				t = glyph.t;
+				pl = glyph.pl;
+				pb = glyph.pb;
+				pr = glyph.pr;
+				pt = glyph.pt;
+
+
+				pl *= fsScale, pb *= fsScale, pr *= fsScale, pt *= fsScale;
+				pl += x, pb += y, pr += x, pt += y;
+
+				double texelWidth = 1. / fontAtlas->GetWidth();
+				double texelHeight = 1. / fontAtlas->GetHeight();
+				l *= texelWidth, b *= texelHeight, r *= texelWidth, t *= texelHeight;
+
+
+				s_Data.QuadVertexBufferPtr->Position = transform * glm::vec4(pl, pb, 0.0f, 1.0f);
+				s_Data.QuadVertexBufferPtr->Color = color;
+				s_Data.QuadVertexBufferPtr->TexCoord = { l, b };
+				s_Data.QuadVertexBufferPtr->TexIndex = textureIndex;
+				s_Data.QuadVertexBufferPtr++;
+
+				s_Data.QuadVertexBufferPtr->Position = transform * glm::vec4(pl, pt, 0.0f, 1.0f);
+				s_Data.QuadVertexBufferPtr->Color = color;
+				s_Data.QuadVertexBufferPtr->TexCoord = { l, t };
+				s_Data.QuadVertexBufferPtr->TexIndex = textureIndex;
+				s_Data.QuadVertexBufferPtr++;
+
+				s_Data.QuadVertexBufferPtr->Position = transform * glm::vec4(pr, pt, 0.0f, 1.0f);
+				s_Data.QuadVertexBufferPtr->Color = color;
+				s_Data.QuadVertexBufferPtr->TexCoord = { r, t };
+				s_Data.QuadVertexBufferPtr->TexIndex = textureIndex;
+				s_Data.QuadVertexBufferPtr++;
+
+				s_Data.QuadVertexBufferPtr->Position = transform * glm::vec4(pr, pb, 0.0f, 1.0f);
+				s_Data.QuadVertexBufferPtr->Color = color;
+				s_Data.QuadVertexBufferPtr->TexCoord = { r, b };
+				s_Data.QuadVertexBufferPtr->TexIndex = textureIndex;
+				s_Data.QuadVertexBufferPtr++;
+
+				s_Data.QuadIndexCount += 6;
+
+				double advance = font->m_Atlas.kerning[std::pair(character, utf32string[i + 1])];
+				x += fsScale * advance + kerningOffset;
+			}
+		}
+	}
+
 
 
 	void Renderer2D::ResetStats()

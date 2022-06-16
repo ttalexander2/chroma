@@ -117,6 +117,7 @@ namespace Chroma
 		glDeleteProgram(m_RendererID);
 	}
 
+
 	std::string OpenGLShader::ReadFile(const std::string& filePath)
 	{
 		std::string result;
@@ -144,6 +145,7 @@ namespace Chroma
 
 		return result;
 	}
+
 
 	std::unordered_map<GLenum, std::string> OpenGLShader::PreProcess(const std::string& source)
 	{
