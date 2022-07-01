@@ -1,6 +1,7 @@
 #include "chromapch.h"
 
 #include "Reflection.h"
+#include "Chroma/Components/Collider.h"
 
 
 namespace Chroma
@@ -48,7 +49,6 @@ namespace Chroma
 		REGISTER_TYPE(Math::vec4, "vec4");
 		REGISTER_TYPE(Chroma::EntityID, "entity_id");
 		REGISTER_TYPE(Chroma::GUID, "guid");
-		
 	}
 
 	std::string Reflection::ResolveComponentID(entt::id_type component_type)

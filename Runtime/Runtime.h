@@ -10,4 +10,5 @@ public:
 	~Runtime();
 	void Init() override;
 	void Update(Time delta) override;
+	void Draw(Time delta) override;
 };

@@ -6,8 +6,7 @@
 #include <mono/metadata/assembly.h>
 
 #include "Chroma/Components/AudioSource.h"
-#include "Chroma/Components/BoxCollider.h"
-#include "Chroma/Components/CircleCollider.h"
+#include "Chroma/Components/Collider.h"
 #include "Chroma/Components/SpriteRenderer.h"
 #include "Chroma/Components/Transform.h"
 #include "Chroma/Components/Tag.h"
@@ -40,8 +39,7 @@ namespace Chroma
 	{
 		Component_RegisterType(Transform);
 		Component_RegisterType(AudioSource);
-		Component_RegisterType(BoxCollider);
-		Component_RegisterType(CircleCollider);
+		Component_RegisterType(Collider);
 		Component_RegisterType(SpriteRenderer);
 		Component_RegisterType(Tag);
 		Component_RegisterType(Camera);

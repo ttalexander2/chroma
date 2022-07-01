@@ -6,21 +6,25 @@
 #include <Chroma/Components/Tag.h>
 #include <Chroma/Components/AudioSource.h>
 #include <Chroma/Components/SpriteRenderer.h>
-#include <Chroma/Components/BoxCollider.h>
-#include <Chroma/Components/CircleCollider.h>
-#include <Chroma/Systems/AudioSystem.h>
-#include <Chroma/Systems/SpriteRendererSystem.h>
+
+
 #include <yaml-cpp/node/node.h>
 #include <yaml-cpp/node/parse.h>
 #include <yaml-cpp/yaml.h>
 #include <Chroma/Scene/System.h>
 #include "Chroma/Utilities/GUID.h"
-#include <Chroma/Systems/ScriptingSystem.h>
-#include <Chroma/Components/Relationship.h>
+
 #include <Chroma/Utilities/ContainerHelpers.h>
+#include <Chroma/Components/CSharpScript.h>
+
+#include <Chroma/Systems/AudioSystem.h>
+#include <Chroma/Systems/SpriteRendererSystem.h>
+#include <Chroma/Systems/ScriptingSystem.h>
 #include <Chroma/Systems/CameraSystem.h>
 #include <Chroma/Systems/ParticleSystem.h>
-#include <Chroma/Components/CSharpScript.h>
+#include <Chroma/Systems/PhysicsSystem.h>
+
+
 
 
 
@@ -38,13 +42,30 @@ namespace Chroma
 	Scene::Scene()
 		: ID(GUID::CreateGUID())
 	{
-		RegisterSystem<ScriptingSystem>();
-		RegisterSystem<AudioSystem>();
-		RegisterSystem<SpriteRendererSystem>();
-		RegisterSystem<ParticleSystem>();
-		RegisterSystem<CollisionSystem>();
-		RegisterSystem<CameraSystem>();
 
+		physics_system = new PhysicsSystem();
+		scripting_system = new ScriptingSystem();
+		audio_system = new AudioSystem();
+		sprite_renderer_system = new SpriteRendererSystem();
+		particle_system = new ParticleSystem();
+		camera_system = new CameraSystem();
+
+		physics_system->m_Scene = this;
+		scripting_system->m_Scene = this;
+		audio_system->m_Scene = this;
+		sprite_renderer_system->m_Scene = this;
+		particle_system->m_Scene = this;
+		camera_system->m_Scene = this;
+	}
+
+	Scene::~Scene()
+	{
+		delete physics_system;
+		delete scripting_system;
+		delete audio_system;
+		delete sprite_renderer_system;
+		delete particle_system;
+		delete camera_system;
 	}
 
 	const GUID Scene::GetID() { return ID; }
@@ -73,7 +94,6 @@ namespace Chroma
 		Entity e = { entity, this };
 		Registry.emplace<Tag>(entity, entity).EntityName = fmt::format("Entity_{}", entity);
 		Registry.emplace<Transform>(entity, entity);
-		Registry.emplace<Relationship>(entity, entity);
 
 		EntityOrder.push_back(entity);
 		return e;
@@ -85,10 +105,9 @@ namespace Chroma
 		Entity e = { entity, this };
 		Registry.emplace<Tag>(entity, entity).EntityName = fmt::format("Entity_{}", entity);
 		Registry.emplace<Transform>(entity, entity);
-		Registry.emplace<Relationship>(entity, entity);
 
-		auto& child_r = e.GetComponent<Relationship>();
-		auto& parent_r = GetComponent<Relationship>((EntityID)parent);
+		auto& child_r = e.GetComponent<Transform>();
+		auto& parent_r = GetComponent<Transform>((EntityID)parent);
 		parent_r.Children.push_back(e.GetID());
 		child_r.Parent = (EntityID)parent;
 		return e;
@@ -110,17 +129,15 @@ namespace Chroma
 	const Math::vec2 Scene::GetTransformAbsolutePosition(EntityID entity)
 	{
 		Transform& transform = Registry.get<Transform>(entity);
-		Relationship& relationship = Registry.get<Relationship>(entity);
-		if (!relationship.IsChild())
+		if (!transform.IsChild())
 			return transform.Position;
 		Math::vec2 finalPos = transform.Position;
-		auto parentID = relationship.Parent;
+		auto parentID = transform.Parent;
 		while (parentID != ENTITY_NULL)
 		{
 			Transform& parentTransform = Registry.get<Transform>(parentID);
-			Relationship& ParentRelationship = Registry.get<Relationship>(parentID);
 			finalPos += parentTransform.Position;
-			parentID = ParentRelationship.Parent;
+			parentID = parentTransform.Parent;
 		}
 		return finalPos;
 	}
@@ -128,27 +145,25 @@ namespace Chroma
 	void Scene::SetTransformAbsolutePosition(EntityID entity, const Math::vec2& position)
 	{
 		Transform& transform = Registry.get<Transform>(entity);
-		Relationship& relationship = Registry.get<Relationship>(entity);
-		if (!relationship.IsChild())
+		if (!transform.IsChild())
 		{
-			transform.Position = { position.x, position.y };
+			transform.Position = Math::vec2(position.x, position.y);
 			return;
 		}
 		Math::vec2 finalPos = position;
-		auto parentID = relationship.Parent;
+		auto parentID = transform.Parent;
 		while (parentID != ENTITY_NULL)
 		{
 			Transform& parentTransform = Registry.get<Transform>(parentID);
-			Relationship& ParentRelationship = Registry.get<Relationship>(parentID);
 			finalPos -= parentTransform.Position;
-			parentID = ParentRelationship.Parent;
+			parentID = parentTransform.Parent;
 		}
 		transform.Position = finalPos;
 	}
 
 	void Scene::DestroyEntity(EntityID entity, bool destroy_children)
 	{
-		auto& rel = Registry.get<Relationship>(entity);
+		auto& rel = Registry.get<Transform>(entity);
 		if (destroy_children)
 		{
 			for (EntityID child : FindAllDescendants(entity))
@@ -160,12 +175,12 @@ namespace Chroma
 		{
 			for (EntityID child : rel.Children)
 			{
-				auto& crel = Registry.get<Relationship>(child);
+				auto& crel = Registry.get<Transform>(child);
 				crel.Parent = rel.Parent;
 				if (rel.Parent == ENTITY_NULL)
 					EntityOrder.push_back(child);
 				else
-					Registry.get<Relationship>(rel.Parent).Children.push_back(child);
+					Registry.get<Transform>(rel.Parent).Children.push_back(child);
 			}
 		}
 
@@ -175,14 +190,14 @@ namespace Chroma
 		}
 		else
 		{
-			PopValue(Registry.get<Relationship>(rel.Parent).Children, entity);
+			PopValue(Registry.get<Transform>(rel.Parent).Children, entity);
 		}
 		Registry.destroy(entity);
 	}
 
 	std::vector<EntityID> Scene::FindAllDescendants(EntityID entity)
 	{
-		auto& rel = Registry.get<Relationship>(entity);
+		auto &rel = Registry.get<Transform>(entity);
 		std::vector<EntityID> desc;
 		for (auto child : rel.Children)
 		{
@@ -203,7 +218,7 @@ namespace Chroma
 			return result;
 		}
 
-		auto& rel = Registry.get<Relationship>(entity);
+		auto &rel = Registry.get<Transform>(entity);
 		for (auto child : rel.Children)
 		{
 			result.push_back(child);
@@ -221,7 +236,7 @@ namespace Chroma
 			return Chroma::ENTITY_NULL;
 		}
 
-		auto& rel = Registry.get<Relationship>(entity);
+		auto &rel = Registry.get<Transform>(entity);
 		for (auto child : rel.Children)
 		{
 			auto& tag = Registry.get<Tag>(entity);
@@ -240,7 +255,7 @@ namespace Chroma
 			return Chroma::ENTITY_NULL;
 		}
 
-		auto& rel = Registry.get<Relationship>(entity);
+		auto &rel = Registry.get<Transform>(entity);
 		if (!rel.HasChildren() || rel.Children.size() <= 0)
 		{
 			CHROMA_CORE_ERROR("Entity [{}] does not have children!", entity);
@@ -258,7 +273,7 @@ namespace Chroma
 			return false;
 		}
 
-		auto& rel = Registry.get<Relationship>(entity);
+		auto &rel = Registry.get<Transform>(entity);
 		return rel.HasChildren();
 	}
 
@@ -270,7 +285,7 @@ namespace Chroma
 			return 0;
 		}
 
-		auto& rel = Registry.get<Relationship>(entity);
+		auto &rel = Registry.get<Transform>(entity);
 		return rel.Children.size();
 	}
 
@@ -386,7 +401,7 @@ namespace Chroma
 						}
 
 						auto created = out->AddComponent(key, newEntity);
-						if (key == "Transform" || key == "Relationship")
+						if (key == "Transform")
 							created->order_id = 0;
 						else
 							created->order_id = i;
@@ -406,7 +421,7 @@ namespace Chroma
 						i++;
 					}
 
-					out->Registry.get_or_emplace<Relationship>(newEntity, newEntity);
+					out->Registry.get_or_emplace<Transform>(newEntity, newEntity);
 				}
 			}
 			auto view = out->Registry.view<Camera>();
@@ -452,14 +467,14 @@ namespace Chroma
 		if (parent == Chroma::ENTITY_NULL || child == Chroma::ENTITY_NULL)
 			return false;
 
-		auto& p_rel = GetComponent<Chroma::Relationship>(parent);
-		auto& c_rel = GetComponent<Chroma::Relationship>(child);
+		auto &p_rel = GetComponent<Chroma::Transform>(parent);
+		auto &c_rel = GetComponent<Chroma::Transform>(child);
 
 		auto& cp = child;
 
 		while (cp != Chroma::ENTITY_NULL)
 		{
-			auto rpp = GetComponent<Chroma::Relationship>(cp).Parent;
+			auto rpp = GetComponent<Chroma::Transform>(cp).Parent;
 			if (rpp == parent)
 				return true;
 			cp = rpp;
@@ -472,7 +487,7 @@ namespace Chroma
 	{
 		if (entity == ENTITY_NULL)
 			return false;
-		auto& r = GetComponent<Chroma::Relationship>(entity);
+		auto &r = GetComponent<Chroma::Transform>(entity);
 		return r.Parent == ENTITY_NULL;
 	}
 
@@ -481,13 +496,13 @@ namespace Chroma
 		if (child == ENTITY_NULL)
 			return ENTITY_NULL;
 
-		auto& c_rel = GetComponent<Chroma::Relationship>(child);
+		auto& c_rel = GetComponent<Chroma::Transform>(child);
 
 		auto& cp = child;
 
 		while (cp != Chroma::ENTITY_NULL)
 		{
-			auto rpp = GetComponent<Chroma::Relationship>(cp).Parent;
+			auto rpp = GetComponent<Chroma::Transform>(cp).Parent;
 			if (rpp == ENTITY_NULL)
 				return cp;
 			cp = rpp;
@@ -520,18 +535,11 @@ namespace Chroma
 		out << YAML::Key << "Components" << YAML::Value << YAML::BeginMap;
 
 		std::vector<Component*> components = this->GetAllComponents(entity);
-		std::sort(components.begin(), components.end(), [](Component* a, Component* b) {return a->order_id < b->order_id; });
+		std::sort(components.begin(), components.end(), [](Component* a, Component* b) { return a->order_id < b->order_id; });
 
 		for (Component* comp : components)
 		{
-			if (comp->IsTypeOf<Relationship>())
-			{
-				Relationship* rel = reinterpret_cast<Relationship*>(comp);
-				if (rel->HasChildren() || rel->IsChild())
-					comp->DoSerialize(out);
-
-			}
-			else if (comp->IsTypeOf<Tag>())
+			if (comp->IsTypeOf<Tag>())
 			{
 				continue;
 			}
@@ -560,74 +568,98 @@ namespace Chroma
 
 	void Scene::OnLoad()
 	{
-		for (System* s : Systems)
-		{
-			s->PreLoad();
-		}
+		physics_system->PreLoad();
+		scripting_system->PreLoad();
+		audio_system->PreLoad();
+		sprite_renderer_system->PreLoad();
+		particle_system->PreLoad();
+		camera_system->PreLoad();
 
-		for (System* s : Systems)
-		{
-			s->Load();
-		}
+		physics_system->Load();
+		scripting_system->Load();
+		audio_system->Load();
+		sprite_renderer_system->Load();
+		particle_system->Load();
+		camera_system->Load();
 
-		for (System* s : Systems)
-		{
-			s->PostLoad();
-		}
+		physics_system->PostLoad();
+		scripting_system->PostLoad();
+		audio_system->PostLoad();
+		sprite_renderer_system->PostLoad();
+		particle_system->PostLoad();
+		camera_system->PostLoad();
 	}
 
 	void Scene::Init()
 	{
-		for (System* s : Systems)
-		{
-			s->EarlyInit();
-		}
+		physics_system->EarlyInit();
+		scripting_system->EarlyInit();
+		audio_system->EarlyInit();
+		sprite_renderer_system->EarlyInit();
+		particle_system->EarlyInit();
+		camera_system->EarlyInit();
 
-		for (System* s : Systems)
-		{
-			s->Init();
-		}
+		physics_system->Init();
+		scripting_system->Init();
+		audio_system->Init();
+		sprite_renderer_system->Init();
+		particle_system->Init();
+		camera_system->Init();
 
-		for (System* s : Systems)
-		{
-			s->LateInit();
-		}
+		physics_system->LateInit();
+		scripting_system->LateInit();
+		audio_system->LateInit();
+		sprite_renderer_system->LateInit();
+		particle_system->LateInit();
+		camera_system->LateInit();
 	}
 
 	void Scene::Update(Time delta)
 	{
-		for (System* s : Systems)
-		{
-			s->EarlyUpdate(delta);
-		}
+		physics_system->EarlyUpdate(delta);
+		scripting_system->EarlyUpdate(delta);
+		audio_system->EarlyUpdate(delta);
+		sprite_renderer_system->EarlyUpdate(delta);
+		particle_system->EarlyUpdate(delta);
+		camera_system->EarlyUpdate(delta);
 
-		for (System* s : Systems)
-		{
-			s->Update(delta);
-		}
+		physics_system->Update(delta);
+		scripting_system->Update(delta);
+		audio_system->Update(delta);
+		sprite_renderer_system->Update(delta);
+		particle_system->Update(delta);
+		camera_system->Update(delta);
 
-		for (System* s : Systems)
-		{
-			s->LateUpdate(delta);
-		}
+		physics_system->LateUpdate(delta);
+		scripting_system->LateUpdate(delta);
+		audio_system->LateUpdate(delta);
+		sprite_renderer_system->LateUpdate(delta);
+		particle_system->LateUpdate(delta);
+		camera_system->LateUpdate(delta);
 	}
 
 	void Scene::Draw(Time delta)
 	{
-		for (System* s : Systems)
-		{
-			s->EarlyDraw(delta);
-		}
+		scripting_system->EarlyDraw(delta);
+		audio_system->EarlyDraw(delta);
+		sprite_renderer_system->EarlyDraw(delta);
+		particle_system->EarlyDraw(delta);
+		camera_system->EarlyDraw(delta);
+		physics_system->EarlyDraw(delta);
 
-		for (System* s : Systems)
-		{
-			s->Draw(delta);
-		}
+		scripting_system->Draw(delta);
+		audio_system->Draw(delta);
+		sprite_renderer_system->Draw(delta);
+		particle_system->Draw(delta);
+		camera_system->Draw(delta);
+		physics_system->Draw(delta);
 
-		for (System* s : Systems)
-		{
-			s->LateDraw(delta);
-		}
+		scripting_system->LateDraw(delta);
+		audio_system->LateDraw(delta);
+		sprite_renderer_system->LateDraw(delta);
+		particle_system->LateDraw(delta);
+		camera_system->LateDraw(delta);
+		physics_system->LateDraw(delta);
 	}
 
 	Camera& Scene::GetPrimaryCamera()

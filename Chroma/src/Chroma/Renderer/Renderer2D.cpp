@@ -17,18 +17,18 @@
 
 namespace Chroma
 {
+
 	struct QuadVertex
 	{
-		glm::vec3	Position;
-		glm::vec4	Color;
-		glm::vec2	TexCoord;
-		float		TexIndex;
-		float		TilingFactor;
+		glm::vec3 Position;
+		glm::vec4 Color;
+		glm::vec2 TexCoord;
+		float TexIndex;
+		float TilingFactor;
 
 		// Editor-only
 		int EntityID = -1;
 	};
-
 
 	struct RenderData
 	{
@@ -225,6 +225,11 @@ namespace Chroma
 		s_Data.QuadIndexBuffer->Bind();
 		RenderCommand::DrawIndexed(s_Data.QuadIndexCount, PrimitiveType::Triangles, true);
 		s_Data.Stats.DrawCalls++;
+
+		s_Data.QuadIndexCount = 0;
+		s_Data.QuadVertexBufferPtr = s_Data.QuadVertexBufferBase;
+
+		s_Data.TextureSlotIndex = 1;
 	}
 
 	void Renderer2D::NextBatch()
@@ -590,6 +595,44 @@ namespace Chroma
 		DrawQuad(midpoint, { length, line_width }, color, rotation);
 	}
 
+	void Renderer2D::DrawTriangle(const Math::vec2 &p1, const Math::vec2 &p2, const Math::vec2 &p3, const Math::vec4 &color)
+	{
+		DrawTriangle({ p1.x, p1.y, 0 }, { p2.x, p2.y, 0 }, { p3.x, p3.y, 0 }, color);
+	}
+
+	void Renderer2D::DrawTriangle(const Math::vec3 &p1, const Math::vec3 &p2, const Math::vec3 &p3, const Math::vec4 &color)
+	{
+		CHROMA_PROFILE_FUNCTION();
+
+		if (s_Data.QuadIndexCount + 6 >= s_Data.MaxIndices)
+			FlushAndReset();
+
+		const float whiteTextureIndex = 0.0f;
+
+		s_Data.QuadVertexBufferPtr->Position = p1;
+		s_Data.QuadVertexBufferPtr->Color = color;
+		s_Data.QuadVertexBufferPtr->TexCoord = { 0.0f, 0.0f };
+		s_Data.QuadVertexBufferPtr->TexIndex = whiteTextureIndex;
+		s_Data.QuadVertexBufferPtr++;
+
+		s_Data.QuadVertexBufferPtr->Position = p2;
+		s_Data.QuadVertexBufferPtr->Color = color;
+		s_Data.QuadVertexBufferPtr->TexCoord = { 1.0f, 0.0f };
+		s_Data.QuadVertexBufferPtr->TexIndex = whiteTextureIndex;
+		s_Data.QuadVertexBufferPtr++;
+
+		s_Data.QuadVertexBufferPtr->Position = p3;
+		s_Data.QuadVertexBufferPtr->Color = color;
+		s_Data.QuadVertexBufferPtr->TexCoord = { 1.0f, 1.0f };
+		s_Data.QuadVertexBufferPtr->TexIndex = whiteTextureIndex;
+		s_Data.QuadVertexBufferPtr++;
+
+
+		s_Data.QuadIndexCount += 3;
+
+		s_Data.Stats.QuadCount++;
+	}
+
 	void Renderer2D::DrawRect(const Math::vec2& position, const Math::vec2& size, float line_width, const Math::vec4& color, float rotation)
 	{
 		DrawQuad({position.x, position.y - size.y/2.f }, { size.x + line_width, line_width }, color, rotation); //h
@@ -604,9 +647,41 @@ namespace Chroma
 		//DrawQuad({ position.x - size.x / 2.f + line_width, position.y }, { 1,1 }, { 0.8f, 0.2f, 0.3f, 1.0f }); //v
 	}
 
-	static std::u32string To_UTF32(const std::string &s)
+	static std::string To_UTF8(const std::u16string &s)
+	{
+		std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t> conv;
+		return conv.to_bytes(s);
+	}
+
+	static std::string To_UTF8(const std::u32string &s)
 	{
 		std::wstring_convert<std::codecvt_utf8<char32_t>, char32_t> conv;
+		return conv.to_bytes(s);
+	}
+
+	static std::u16string To_UTF16(const std::string &s)
+	{
+		std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t> conv;
+		return conv.from_bytes(s);
+	}
+
+	static std::u16string To_UTF16(const std::u32string &s)
+	{
+		std::wstring_convert<std::codecvt_utf16<char32_t>, char32_t> conv;
+		std::string bytes = conv.to_bytes(s);
+		return std::u16string(reinterpret_cast<const char16_t *>(bytes.c_str()), bytes.length() / sizeof(char16_t));
+	}
+
+	static std::u32string To_UTF32(const std::u16string &s)
+	{
+		const char16_t *pData = s.c_str();
+		std::wstring_convert<std::codecvt_utf16<char32_t>, char32_t> conv;
+		return conv.from_bytes(reinterpret_cast<const char *>(pData), reinterpret_cast<const char *>(pData + s.length()));
+	}
+
+	static std::u32string To_UTF32(const std::string &s)
+	{
+		std::wstring_convert<std::codecvt_utf16<char32_t>, char32_t> conv;
 		return conv.from_bytes(s);
 	}
 
@@ -620,16 +695,24 @@ namespace Chroma
 		return false;
 	}
 
-
-
 	void Renderer2D::DrawString(const std::string &string, const Ref<Font> &font, const Math::vec3 &position, float maxWidth, const glm::vec4 &color, float scale, float lineHeightOffset = 0.f, float kerningOffset = 0.f)
+	{
+		DrawString(To_UTF32(string), font, position, maxWidth, color, scale, lineHeightOffset, kerningOffset);
+	}
+
+	void Renderer2D::DrawString(const std::u16string &string, const Ref<Font> &font, const Math::vec3 &position, float maxWidth, const glm::vec4 &color, float scale, float lineHeightOffset = 0.f, float kerningOffset = 0.f)
+	{
+		DrawString(To_UTF32(string), font, position, maxWidth, color, scale, lineHeightOffset, kerningOffset);
+	}
+
+	void Renderer2D::DrawString(const std::u32string &string, const Ref<Font> &font, const Math::vec3 &position, float maxWidth, const glm::vec4 &color, float scale, float lineHeightOffset = 0.f, float kerningOffset = 0.f)
 	{
 		if (string.empty())
 			return;
 
 		float textureIndex = 0.0f;
 
-		std::u32string utf32string = To_UTF32(string);
+		
 
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::scale(glm::mat4(1.0f), glm::vec3(scale, scale, 0));
 		
@@ -659,9 +742,9 @@ namespace Chroma
 			double fsScale = 1 / (font->m_Atlas.ascender_y - font->m_Atlas.decender_y);
 			double y = -fsScale * font->m_Atlas.ascender_y;
 			int lastSpace = -1;
-			for (int i = 0; i < utf32string.size(); i++)
+			for (int i = 0; i < string.size(); i++)
 			{
-				char32_t character = utf32string[i];
+				char32_t character = string[i];
 				if (character == '\n')
 				{
 					x = 0;
@@ -699,7 +782,7 @@ namespace Chroma
 					lastSpace = i;
 				}
 
-				double advance = font->m_Atlas.kerning[std::pair(character, utf32string[i + 1])];
+				double advance = font->m_Atlas.kerning[std::pair(character, string[i + 1])];
 				x += fsScale * advance + kerningOffset;
 			}
 		}
@@ -708,9 +791,9 @@ namespace Chroma
 			double x = 0.0;
 			double fsScale = 1 / (font->m_Atlas.ascender_y - font->m_Atlas.decender_y);
 			double y = 0.0; // -fsScale * metrics.ascenderY;
-			for (int i = 0; i < utf32string.size(); i++)
+			for (int i = 0; i < string.size(); i++)
 			{
-				char32_t character = utf32string[i];
+				char32_t character = string[i];
 				if (character == '\n' || NextLine(i, nextLines))
 				{
 					x = 0;
@@ -769,7 +852,7 @@ namespace Chroma
 
 				s_Data.QuadIndexCount += 6;
 
-				double advance = font->m_Atlas.kerning[std::pair(character, utf32string[i + 1])];
+				double advance = font->m_Atlas.kerning[std::pair(character, string[i + 1])];
 				x += fsScale * advance + kerningOffset;
 			}
 		}

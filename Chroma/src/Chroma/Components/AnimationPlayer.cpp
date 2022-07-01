@@ -52,7 +52,7 @@ namespace Chroma
 
 	void AnimationPlayer::CreateReflectionModel()
 	{
-		Reflection::RegisterComponent<AnimationPlayer>();
+		Reflection::RegisterComponent<AnimationPlayer, Component>();
 	}
 }
 

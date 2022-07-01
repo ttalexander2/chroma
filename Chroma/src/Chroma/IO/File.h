@@ -38,7 +38,7 @@ namespace Chroma
 		template<typename T, typename = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
 		T Read(Endian endian)
 		{
-			T result;
+			T result{};
 			Read(&result, sizeof(T)/sizeof(char));
 			if (!Chroma::SystemIsEndian(endian))
 				Chroma::SwapEndian(&result);
@@ -80,7 +80,7 @@ namespace Chroma
 		template <typename T, typename = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
 		int Write(T val)
 		{
-			return Write(reinterpret_cast<void *>(&val), sizeof(T));
+			return Write(reinterpret_cast<void*>(&val), sizeof(T));
 		}
 
 		int Write(std::string& string);

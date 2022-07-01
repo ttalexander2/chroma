@@ -3,7 +3,6 @@
 #include <string>
 #include <entt.hpp>
 
-#include <Chroma/Components/Transform.h>
 #include <Chroma/Scene/Component.h>
 #include <Chroma/Utilities/StringHash.h>
 
@@ -35,12 +34,12 @@ namespace Chroma
 			s_DataTypeNames[id] = type_name;
 		}
 
-		template <typename Type>
+		template <typename Type, typename Base>
 		static void RegisterComponent()
 		{
 			static_assert(std::is_base_of<Chroma::Component, Type>::value, "Type T is not derived from Component!");
 			size_t hash = StringHash::Hash(Type::GetTypeNameStatic());
-			auto meta = entt::meta<Type>().type(hash);
+			auto meta = entt::meta<Type>().base<Base>().type(hash);
 			size_t id = entt::resolve<Type>().id();
 			s_ComponentMeta[id] = meta;
 			s_ComponentNames[id] = Type::GetTypeNameStatic();
@@ -60,7 +59,7 @@ namespace Chroma
 
 			//Register component if not registered
 			if (s_ComponentMeta.find(id) == s_ComponentMeta.end())
-				RegisterComponent<ComponentType>();
+				RegisterComponent<ComponentType, Chroma::Component>();
 
 			//Obtain meta factory from component meta storage
 			auto meta_factory = entt::any_cast<entt::meta_factory<ComponentType>>(&s_ComponentMeta[id]);
@@ -77,6 +76,7 @@ namespace Chroma
 		static void RegisterComponentProperty(const std::string& property_name, bool serialize = true)
 		{
 			static_assert(std::is_base_of<Chroma::Component, ComponentType>::value, "Type T is not derived from Component!");
+			//static_assert(!std::is_same<Setter, Getter>::value, "Setter function cannot equal getter function!");
 
 			if (Setter == nullptr || Getter == nullptr)
 				serialize = false;
@@ -89,7 +89,7 @@ namespace Chroma
 
 			//Register component if not registered
 			if (s_ComponentMeta.find(id) == s_ComponentMeta.end())
-				RegisterComponent<ComponentType>();
+				RegisterComponent<ComponentType, Chroma::Component>();
 
 			//Obtain meta factory from component meta storage
 			auto meta_factory = entt::any_cast<entt::meta_factory<ComponentType>>(&s_ComponentMeta[id]);
@@ -115,7 +115,7 @@ namespace Chroma
 
 			//Register component if not registered
 			if (s_ComponentMeta.find(id) == s_ComponentMeta.end())
-				RegisterComponent<ComponentType>();
+				RegisterComponent<ComponentType, Chroma::Component>();
 
 			//Obtain meta factory from component meta storage
 			auto meta_factory = entt::any_cast<entt::meta_factory<ComponentType>>(&s_ComponentMeta[id]);

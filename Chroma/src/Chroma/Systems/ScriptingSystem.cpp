@@ -94,7 +94,6 @@ namespace Chroma
 			auto entityObj = Chroma::Entity(entity, m_Scene);
 			MonoScripting::EarlyUpdate(entityObj, time);
 		}
-
 	}
 
 	void ScriptingSystem::Update(Time time)
@@ -112,11 +111,12 @@ namespace Chroma
 
 				
 		}
-		
 	}
 
 	void ScriptingSystem::LateUpdate(Time time)
 	{
+		MonoScripting::SetDeltaTime(time, time);
+
 		auto view = m_Scene->Registry.view<CSharpScript>();
 		for (EntityID entity : view)
 		{
@@ -125,6 +125,51 @@ namespace Chroma
 				continue;
 			auto entityObj = Chroma::Entity(entity, m_Scene);
 			MonoScripting::LateUpdate(entityObj, time);
+		}
+	}
+
+	void ScriptingSystem::EarlyDraw(Time time)
+	{
+		MonoScripting::SetFixedDeltaTime(time, time);
+
+		auto view = m_Scene->Registry.view<CSharpScript>();
+		for (EntityID entity : view)
+		{
+			auto &script = view.get<CSharpScript>(entity);
+			if (!script.IsEnabled())
+				continue;
+			auto entityObj = Chroma::Entity(entity, m_Scene);
+			MonoScripting::EarlyDraw(entityObj, time);
+		}
+	}
+
+	void ScriptingSystem::Draw(Time time)
+	{
+		MonoScripting::SetFixedDeltaTime(time, time);
+
+		auto view = m_Scene->Registry.view<CSharpScript>();
+		for (EntityID entity : view)
+		{
+			auto &script = view.get<CSharpScript>(entity);
+			if (!script.IsEnabled())
+				continue;
+			auto entityObj = Chroma::Entity(entity, m_Scene);
+			MonoScripting::Draw(entityObj, time);
+		}
+	}
+
+	void ScriptingSystem::LateDraw(Time time)
+	{
+		MonoScripting::SetFixedDeltaTime(time, time);
+
+		auto view = m_Scene->Registry.view<CSharpScript>();
+		for (EntityID entity : view)
+		{
+			auto &script = view.get<CSharpScript>(entity);
+			if (!script.IsEnabled())
+				continue;
+			auto entityObj = Chroma::Entity(entity, m_Scene);
+			MonoScripting::LateDraw(entityObj, time);
 		}
 	}
 

@@ -33,7 +33,6 @@ namespace Chroma
 		bool Exists();
 		bool IsFile();
 		bool IsDirectory();
-
 		bool HasExtension(const std::string& extension);
 
 

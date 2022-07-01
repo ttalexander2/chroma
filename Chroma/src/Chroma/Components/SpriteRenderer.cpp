@@ -325,6 +325,8 @@ namespace Chroma
 
 	std::string SpriteRenderer::GetSpritePath()
 	{
+		if (!sprite)
+			return "";
 		return sprite->GetPath();
 	}
 
@@ -349,7 +351,7 @@ namespace Chroma
 	void SpriteRenderer::CreateReflectionModel()
 	{	
 
-		Reflection::RegisterComponent<SpriteRenderer>();
+		Reflection::RegisterComponent<SpriteRenderer, Component>();
 		Reflection::RegisterComponentProperty<SpriteRenderer, &SpriteRenderer::Color>("Color");
 		Reflection::RegisterComponentProperty<SpriteRenderer, &SpriteRenderer::Offset>("Offset");
 		Reflection::RegisterComponentProperty<SpriteRenderer, &SpriteRenderer::SortingPoint>("SortingPoint");

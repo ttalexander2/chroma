@@ -9,6 +9,7 @@
 #include "Chroma/Core/Core.h"
 #include "Chroma/Assets/AssetManager.h"
 #include <Chroma/Scene/EntityID.h>
+#include <cute_c2.h>
 
 namespace YAML
 {
@@ -138,6 +139,50 @@ namespace YAML
 		}
 	};
 
+	template <>
+	struct convert<c2Poly>
+	{
+		static Node encode(const c2Poly &value)
+		{
+			Node node;
+			node.push_back(value.count);
+			for (int i = 0; i < value.count; i++)
+			{
+				node.push_back(value.norms[i].x);
+				node.push_back(value.norms[i].y);
+			}
+
+			for (int i = 0; i < value.count; i++)
+			{
+				node.push_back(value.verts[i].x);
+				node.push_back(value.verts[i].y);
+			}
+			
+			return node;
+		}
+
+		static bool decode(const Node &node, c2Poly &value)
+		{
+			if (!node.IsDefined() || !node.IsNull())
+				return false;
+
+			value.count = node[1].as<int>();
+			for (int i = 0; i < value.count; i++)
+			{
+				value.norms[i].x = node[3 + i * 2].as<float>();
+				value.norms[i].y = node[4 + i * 2].as<float>();
+			}
+
+			for (int i = 0; i < value.count; i++)
+			{
+				value.verts[i].x = node[4 + value.count * 2 + i * 2].as<float>();
+				value.verts[i].y = node[5 + value.count * 2 + i * 2].as<float>();
+			}
+			return true;
+		}
+	};
+
+	Emitter &operator<<(Emitter &out, const c2Poly &v);
 	Emitter& operator<<(Emitter& out, const Chroma::GUID& v);
 	Emitter& operator<<(Emitter& out, const Chroma::EntityID& v);
 	Emitter& operator<<(Emitter& out, const Math::vec2& v);

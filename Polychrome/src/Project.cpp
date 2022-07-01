@@ -160,7 +160,7 @@ namespace Polychrome
 				if (!result)
 					CHROMA_CORE_ERROR("Failed to load {}", file);
 			}
-			else if (Chroma::FileSystem::HasFileExtension(file, ".ttf"))
+			else if (Chroma::FileSystem::HasFileExtension(file, ".ttf") || Chroma::FileSystem::HasFileExtension(file, ".otf"))
 			{
 				bool result = Chroma::AssetManager::Load(Chroma::AssetManager::GetID(file));
 				if (!result)

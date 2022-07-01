@@ -44,7 +44,7 @@ namespace Chroma
 
 	void Camera::CreateReflectionModel()
 	{
-		Reflection::RegisterComponent<Camera>();
+		Reflection::RegisterComponent<Camera, Component>();
 		Reflection::RegisterComponentProperty<Camera, &Camera::SetSize, &Camera::GetSize>("Size");
 		Reflection::RegisterComponentProperty<Camera, &Camera::SetPosition, &Camera::GetPosition>("Position", false);
 		Reflection::RegisterComponentProperty<Camera, nullptr, &Camera::GetProjectionMatrix>("ProjectionMatrix");

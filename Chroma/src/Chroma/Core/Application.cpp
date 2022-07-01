@@ -15,9 +15,6 @@
 #include "Chroma/Components/Transform.h"
 #include "Chroma/Components/SpriteRenderer.h"
 #include "Chroma/Components/AudioSource.h"
-#include "Chroma/Components/BoxCollider.h"
-#include "Chroma/Components/CircleCollider.h"
-#include "Chroma/Components/Relationship.h"
 #include "Chroma/Scripting/MonoScripting.h"
 #include "Chroma/Scripting/ScriptEngineRegistry.h"
 #include "Chroma/Components/CSharpScript.h"
@@ -29,6 +26,8 @@
 #include "Chroma/Assets/AssetManager.h"
 #include "Chroma/Assets/Sprite.h"
 #include "Chroma/Reflection/Reflection.h"
+#include "Chroma/Components/Collider.h"
+#include "Chroma/Components/RigidBody.h"
 
 #include <entt.hpp>
 #include "Chroma/Utilities/StringHash.h"
@@ -75,16 +74,15 @@ namespace Chroma
 			Reflection::InitializeDataTypes();
 
 			Scene::RegisterComponent<AudioSource>();
-			Scene::RegisterComponent<BoxCollider>();
+			Scene::RegisterComponent<Collider>();
 			Scene::RegisterComponent<Camera>();
-			Scene::RegisterComponent<CircleCollider>();
 			Scene::RegisterComponent<CSharpScript>();
 			Scene::RegisterComponent<ParticleEmitter>();
-			Scene::RegisterComponent<Relationship>();
 			Scene::RegisterComponent<SpriteRenderer>();
 			Scene::RegisterComponent<Tag>();
 			Scene::RegisterComponent<Transform>();
 			Scene::RegisterComponent<AnimationPlayer>();
+			Scene::RegisterComponent<RigidBody>();
 
 			AssetManager::Register<Sprite>();
 			AssetManager::Register<FMODBank>();
@@ -139,28 +137,54 @@ namespace Chroma
 		m_ImGuiLayer->OnAttach();
 		m_Window->OnUpdate();
 
-		this->EarlyInit();
 		this->Init();
-		this->LateInit();
+
+		const int updateFPS = 60;
+		const double dt = 1.0 / updateFPS;
+
+		double elapsedTime = 0.0;
+		double accumulator = 0.0;
+
+
+		double currentTime = glfwGetTime();
 
 
 		while (m_Running)
 		{
-			double time = glfwGetTime(); // Platform::GetTime
-			m_Time = time - m_LastFrameTime;
-			m_LastFrameTime = time;
+			//system events
 
-			this->EarlyUpdate(m_Time);
-			this->Update(m_Time);
-			this->LateUpdate(m_Time);
+			const double newTime = glfwGetTime();
+			double frameTime = newTime - currentTime;
 
-			this->PreDraw(m_Time);
-			this->Draw(m_Time);
-			this->PostDraw(m_Time);
+			if (frameTime > 0.25)
+			{
+				frameTime = 0.25;
+			}
+
+			currentTime = newTime;
+			accumulator += frameTime;
+
+			//Logic update
+			while (accumulator >= dt)
+			{
+				elapsedTime += dt;
+				accumulator -= dt;
+
+				m_Time = dt;
+				
+				//Fixed Update
+				this->Update(dt);
+
+			}
+			
+			m_VariableTime = frameTime;
+
+			//this->Update(frameTime);
+			this->Draw(frameTime);
 
 			m_ImGuiLayer->Begin();
 
-			this->ImGuiDraw(m_Time);
+			this->ImGuiDraw(frameTime);
 
 			m_ImGuiLayer->End();
 

@@ -52,32 +52,16 @@ namespace Chroma
 		/// @param e Event to process.
 		void ProcessEvents(Event& e);
 
-		/// @brief Early initialization phase, called before the main update loop begins, before Init().
-		virtual void EarlyInit() {};
 		/// @brief Initialization phase, called before the main update loop, after EarlyInit() and before LateInit().
 		virtual void Init() {};
-		/// @brief Late initialization phase, called before the main update loop, after Init().
-		virtual void LateInit() {};
 
-		/// @brief Early Update Step. Called once per frame.
-		/// @param time Current delta time in seconds.
-		virtual void EarlyUpdate(Time time) {};
 		/// @brief Update Step. Called once per frame.
 		/// @param time Current delta time in seconds.
 		virtual void Update(Time time) {};
-		/// @brief Late Update Step. Called once per frame.
-		/// @param time Current delta time in seconds.
-		virtual void LateUpdate(Time time) {};
 
-		/// @brief Pre Draw Step. Called once per frame, before Draw().
-		/// @param time Current delta time in seconds.
-		virtual void PreDraw(Time time) {};
 		/// @brief Draw Step. Called once per frame
 		/// @param time Current delta time in seconds.
 		virtual void Draw(Time time) {};
-		/// @brief Post Draw Step. Called once per frame, after Draw().
-		/// @param time Current delta time in seconds.
-		virtual void PostDraw(Time time) {};
 
 		/// @brief ImGui draw Step. Called once per frame, draws all ImGui needed for the
 		/// @param time Current delta time in seconds.
@@ -113,8 +97,8 @@ namespace Chroma
 
 		static Application* s_Instance;
 
-		double m_LastFrameTime = 0.0f;
 		Time m_Time;
+		Time m_VariableTime;
 
 		bool OnWindowClose(WindowCloseEvent& e);
 		bool OnWindowResize(WindowResizeEvent& e);

@@ -118,7 +118,7 @@ namespace Polychrome
 
 		for (Chroma::Component* c : comps)
 		{
-			if (c->IsTypeOf<Chroma::Relationship>() || c->IsTypeOf<Chroma::Tag>())
+			if (c->IsTypeOf<Chroma::Tag>())
 			{
 				i++;
 				continue;
@@ -271,7 +271,7 @@ namespace Polychrome
 		{
 			for (auto name : Chroma::Scene::GetComponentTypes())
 			{
-				if (name->IsTypeOf<Chroma::Transform>() || name->IsTypeOf<Chroma::Tag>() || name->IsTypeOf<Chroma::Relationship>())
+				if (name->IsTypeOf<Chroma::Transform>() || name->IsTypeOf<Chroma::Tag>())
 					continue;
 				bool enabled = true;
 				if (scene->HasComponent(name->GetTypeName(), Hierarchy::SelectedEntity))

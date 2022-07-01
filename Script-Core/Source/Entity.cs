@@ -200,26 +200,47 @@ namespace Chroma
         /// </summary>
         public virtual void PostInit() { }
 
-        // TODO: Remove start functions?
-        public virtual void EarlyStart() { }
-        public virtual void Start() { }
-        public virtual void LateStart() { }
-
 
         /// <summary>
-        /// Early-Update function. Called once per frame at the begining of the frame.
+        /// Early-Update function. Called at a rate of 60FPS.
         /// </summary>
         public virtual void EarlyUpdate() { }
 
         /// <summary>
-        /// Update function. Called once per frame, directly after <c cref="EarlyUpdate">EarlyUpdate()</c>.
+        /// Update function. Called at a rate of 60FPS, directly after <c cref="EarlyUpdate">EarlyUpdate()</c>.
         /// </summary>
         public virtual void Update() { }
 
         /// <summary>
-        /// Late-Update function. Called once per frame, directly after <c cref="Update">Update()</c>.
+        /// Late-Update function. Called at a rate of 60FPS, directly after <c cref="Update">Update()</c>.
         /// </summary>
         public virtual void LateUpdate() { }
+
+        /// <summary>
+        /// Early-Update function. Called once per frame.
+        /// </summary>
+        public virtual void EarlyDraw() { }
+
+        /// <summary>
+        /// Update function. Called once per frame, directly after <c cref="EarlyDraw">EarlyDraw()</c>.
+        /// </summary>
+        public virtual void Draw() { }
+
+        /// <summary>
+        /// Late-Update function. Called once per frame, directly after <c cref="Draw">Draw()</c>.
+        /// </summary>
+        public virtual void LateDraw() { }
+
+        /// <summary>
+        /// Function called when this entity collides with another. Called every frame an overlap takes place.
+        /// </summary>
+        /// <param name="collisionEntity">The entity this object is colliding with.</param>
+        public virtual void OnCollide(Entity collisionEntity) { }
+
+        internal void Internal_OnCollide(ulong id) 
+        {
+            OnCollide(new Entity(id));
+        }
 
         //This was public before so it might break something
         internal void InternalUpdate()

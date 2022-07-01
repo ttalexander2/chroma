@@ -48,18 +48,19 @@ layout(location = 6) in flat float v_TexIndex;
 
 layout(binding = 0) uniform sampler2D u_Textures[32];
 
-float median(float r, float g, float b)
+float msdf_median(float r, float g, float b, float a) 
 {
-    return max(min(r, g), min(max(r, g), b));
+	return min(max(min(r, g), min(max(r, g), b)), a);
 }
 
-/**
+/** 2D
 float ScreenPxRange()
 {
-	float pixRange = 2.0f;
-	float geoSize = 48.0f;
-	return geoSize / 24.0f * pixRange;
-}*/
+	float pixRange = 8.0f;
+	float geoSize = 128.0f;
+	return geoSize / 32.0f * pixRange;
+}
+*/
 
 
 float ScreenPxRange()
@@ -70,10 +71,18 @@ float ScreenPxRange()
     return max(0.5*dot(unitRange, screenTexSize), 1.0);
 }
 
+
 void main()
 {
+	vec4 bgColor = vec4(Input.Color.rgb, 0.0);
+	vec4 fgColor = Input.Color;
+
 	vec4 msdf = texture(u_Textures[int(v_TexIndex)], Input.TexCoord);
-    float distance = ScreenPxRange() * (median(msdf.r, msdf.g, msdf.b) - 0.5);
-	float glyphAlpha = clamp(distance + 0.5, 0.0, 1.0);
-	color = vec4(Input.Color.rgb, glyphAlpha * Input.Color.a);
+	vec2 msdf_size = vec2(textureSize(u_Textures[int(v_TexIndex)], 0));
+	vec2 dest_size = vec2(1.0) / fwidth(Input.TexCoord);
+	float px_size = max(0.5 * dot((vec2(2.0) / msdf_size), dest_size), 1.0);
+	float d = msdf_median(msdf.r, msdf.g, msdf.b, msdf.a) - 0.5;
+
+	float a = clamp(d * px_size + 0.5, 0.0, 1.0);
+	color = mix(bgColor, fgColor, a);
 }

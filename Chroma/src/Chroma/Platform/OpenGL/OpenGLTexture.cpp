@@ -124,4 +124,40 @@ namespace Chroma
 		}
 	}
 
+	void OpenGLTexture2D::SetFiltering(FilterMethod method, FilterType type)
+	{
+		int gl_method = GL_LINEAR;
+		int gl_type = GL_TEXTURE_MIN_FILTER;
+
+		switch (method)
+		{
+			case FilterMethod::LINEAR:
+			{
+				gl_method = GL_LINEAR;
+				break;
+			}
+			case FilterMethod::NEAREST:
+			{
+				gl_method = GL_NEAREST;
+				break;
+			}
+		}
+
+		switch (type)
+		{
+			case FilterType::MIN:
+			{
+				gl_type = GL_TEXTURE_MIN_FILTER;
+				break;
+			}
+			case FilterType::MAG:
+			{
+				gl_type = GL_TEXTURE_MAG_FILTER;
+				break;
+			}
+		}
+
+		glTextureParameteri(m_RendererID, gl_type, gl_method);
+	}
+
 }

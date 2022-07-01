@@ -4,6 +4,7 @@
 #include "Chroma/Core/Log.h"
 #include <string>
 #include <map>
+#include <concepts>
 #include "Chroma/Utilities/Yaml.h"
 #include "yaml-cpp/node/convert.h"
 #include "yaml-cpp/node/node.h"
@@ -14,6 +15,7 @@
 #include "Chroma/Scene/EntityID.h"
 #include "Chroma/Utilities/StringHash.h"
 #include <entt.hpp>
+#include "Chroma/Utilities/ComponentDataType.h"
 
 
 namespace Polychrome
@@ -26,6 +28,7 @@ namespace Polychrome
 namespace Chroma
 {
 	class Scene;
+	class Collider;
 
 
 
@@ -33,9 +36,10 @@ namespace Chroma
 		public: \
 			using ClassName = typeName; \
 			using BaseClass = baseTypeName; \
-			typeName() = default; \
-			typeName(EntityID id) : baseTypeName(id) {} \
+			typeName() : baseTypeName() { Initialize(); } \
+			typeName(EntityID id) : baseTypeName(id){ Initialize(); } \
 			typeName(const typeName&) = default; \
+			typeName &operator=(const typeName&) = default; \
 			virtual StringHash GetType() const override { return GetTypeInfoStatic()->GetType(); } \
 			virtual const std::string& GetTypeName() const override { return GetTypeInfoStatic()->GetTypeName(); } \
 			virtual const TypeInfo* GetTypeInfo() const override { return GetTypeInfoStatic(); } \
@@ -47,6 +51,7 @@ namespace Chroma
 			static void CreateReflectionModel(); \
 			inline entt::meta_handle GetMetaHandle() override { return entt::meta_handle(*this); } \
 			inline entt::meta_type GetMetaType() override { return entt::resolve<typeName>();} \
+			template <typename T, StringLiteral S> using Data = ComponentData<ClassName, T, S>; \
 		private: \
 			virtual void NOTYPEINFO() override {} \
 		public: \
@@ -55,9 +60,10 @@ namespace Chroma
 		public:\
 			using ClassName = typeName; \
 			using BaseClass = baseTypeName; \
-			typeName() = default; \
+			typeName() : baseTypeName() {} \
 			typeName(EntityID id) : baseTypeName(id) {} \
 			typeName(const typeName&) = default; \
+			typeName &operator=(const typeName &) = default; \
 			virtual StringHash GetType() const override { return GetTypeInfoStatic()->GetType(); } \
 			virtual const std::string& GetTypeName() const override { return GetTypeInfoStatic()->GetTypeName(); } \
 			virtual const TypeInfo* GetTypeInfo() const override { return GetTypeInfoStatic(); } \
@@ -66,20 +72,33 @@ namespace Chroma
 			static const std::string& GetTypeNameStatic() { return GetTypeInfoStatic()->GetTypeName(); } \
 			static const TypeInfo* GetTypeInfoStatic () { static const TypeInfo typeInfoStatic(#typeName, baseTypeName::GetTypeInfoStatic()); return &typeInfoStatic; } \
 			static const size_t GetTypeSizeStatic() { return sizeof(#typeName); } \
+			static void CreateReflectionModel();                                                                   \
+			inline entt::meta_handle GetMetaHandle() override { return entt::meta_handle(*this); }                 \
+			inline entt::meta_type GetMetaType() override { return entt::resolve<typeName>(); } \
 		public: \
 		
 
 	struct Component
 	{
-		//Delete base class constructors
-		//Component() = delete;
-		Component() : m_EntityID(ENTITY_NULL) { comparison_id = comparison_counter++; };
+		friend class Collider;
+		friend class RigidBody;
+
+		
+		Component() :
+				m_EntityID(ENTITY_NULL)
+		{
+			comparison_id = comparison_counter++;
+		};
+
 		Component(EntityID id) : m_EntityID(id) 
 		{
 			comparison_id = comparison_counter++;
 		}
 		Component(const Component&) = default;
 		virtual ~Component() = default;
+
+		virtual void Initialize() {};
+
 
 		virtual StringHash GetType() const { return GetTypeInfoStatic()->GetType(); }
 		virtual const std::string& GetTypeName() const { return GetTypeInfoStatic()->GetTypeName(); }
@@ -127,6 +146,9 @@ namespace Chroma
 
 		virtual void NOTYPEINFO() = 0;
 
+
+
+
 	private:
 
 		void BeginSerialize(YAML::Emitter& out);
@@ -158,6 +180,8 @@ namespace Chroma
 
 	template<typename T>
 	concept ComponentType = std::is_base_of_v<Chroma::Component, T>;
+
+
 				
 }
 

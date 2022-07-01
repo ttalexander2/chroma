@@ -52,13 +52,15 @@ namespace Chroma
 		MonoMethod* InitMethod = nullptr;
 		MonoMethod* PostInitMethod = nullptr;
 
-		MonoMethod* EarlyStartMethod = nullptr;
-		MonoMethod* StartMethod = nullptr;
-		MonoMethod* LateStartMethod = nullptr;
-
 		MonoMethod* EarlyUpdateMethod = nullptr;
 		MonoMethod* UpdateMethod = nullptr; 
 		MonoMethod* LateUpdateMethod = nullptr;
+
+		MonoMethod *EarlyDrawMethod = nullptr;
+		MonoMethod *DrawMethod = nullptr;
+		MonoMethod *LateDrawMethod = nullptr;
+
+		MonoMethod* OnCollideMethod = nullptr;
 
 		MonoMethod* InternalUpdateMethod = nullptr;
 
@@ -70,15 +72,31 @@ namespace Chroma
 			InitMethod = GetMethod(image, FullName + ":Init()");
 			PostInitMethod = GetMethod(image, FullName + ":PostInit()");
 
-			EarlyStartMethod = GetMethod(image, FullName + ":EarlyStart()");
-			StartMethod = GetMethod(image, FullName + ":Start()");
-			LateStartMethod = GetMethod(image, FullName + ":LateStart()");
-
 			EarlyUpdateMethod = GetMethod(image, FullName + ":EarlyUpdate()");
 			UpdateMethod = GetMethod(image, FullName + ":Update()");
 			LateUpdateMethod = GetMethod(image, FullName + ":LateUpdate()");
 
+			EarlyDrawMethod = GetMethod(image, FullName + ":EarlyDraw()");
+			DrawMethod = GetMethod(image, FullName + ":Draw()");
+			LateDrawMethod = GetMethod(image, FullName + ":LateDraw()");
+
+			OnCollideMethod = GetMethod(coreAssemblyImage, "Chroma.Entity:Internal_OnCollide(ulong)");
+
 			InternalUpdateMethod = GetMethod(coreAssemblyImage, "Chroma.Entity:InternalUpdate()");
+
+			//void *ptr = 0;
+			//MonoMethod *iter;
+			//
+			//while ((iter = mono_class_get_methods(Class, &ptr)) != NULL)
+			//{
+			//	const char *name = mono_method_get_name(iter);
+			//	MonoMethodDesc *methodDesc = mono_method_desc_from_method(iter);
+			//
+			//	const char *paramNames = "";
+			//	mono_method_get_param_names(iter, &paramNames);
+			//
+			//	CHROMA_CORE_INFO("Full name: {0}", mono_method_full_name(iter, true));
+			//}
 
 		}
 
@@ -936,6 +954,18 @@ namespace Chroma
 		
 	}
 
+	void MonoScripting::SetFixedDeltaTime(double dtime, float ftime)
+	{
+		MonoClass *c = mono_class_from_name(coreAssemblyImage, "Chroma", "Time");
+		MonoProperty *prop = mono_class_get_property_from_name(c, "FixedDelta");
+		void *data[] = { &dtime };
+		mono_property_set_value(prop, nullptr, data, nullptr);
+
+		MonoProperty *prop2 = mono_class_get_property_from_name(c, "FixedDeltaF");
+		void *data2[] = { &ftime };
+		mono_property_set_value(prop2, nullptr, data2, nullptr);
+	}
+
 	EntityInstanceData& MonoScripting::GetEntityInstanceData(GUID sceneID, EntityID entityID)
 	{
 		auto& entityIDMap = entityInstanceMap.at(sceneID);
@@ -977,30 +1007,7 @@ namespace Chroma
 			CallMethod(entityInstance.Instance.GetInstance(), entityInstance.Instance.ScriptClass->PostInitMethod);
 		}
 	}
-	void MonoScripting::EarlyStart(Entity entity)
-	{
-		EntityInstanceData& entityInstance = GetEntityInstanceData(entity.GetScene().GetID(), entity.GetID());
-		if (entityInstance.Instance.ScriptClass->EarlyStartMethod)
-		{
-			CallMethod(entityInstance.Instance.GetInstance(), entityInstance.Instance.ScriptClass->EarlyStartMethod);
-		}
-	}
-	void MonoScripting::Start(Entity entity)
-	{
-		EntityInstanceData& entityInstance = GetEntityInstanceData(entity.GetScene().GetID(), entity.GetID());
-		if (entityInstance.Instance.ScriptClass->StartMethod)
-		{
-			CallMethod(entityInstance.Instance.GetInstance(), entityInstance.Instance.ScriptClass->StartMethod);
-		}
-	}
-	void MonoScripting::LateStart(Entity entity)
-	{
-		EntityInstanceData& entityInstance = GetEntityInstanceData(entity.GetScene().GetID(), entity.GetID());
-		if (entityInstance.Instance.ScriptClass->LateStartMethod)
-		{
-			CallMethod(entityInstance.Instance.GetInstance(), entityInstance.Instance.ScriptClass->LateStartMethod);
-		}
-	}
+
 	void MonoScripting::EarlyUpdate(Entity entity, Time t)
 	{
 		EntityInstanceData& entityInstance = GetEntityInstanceData(entity.GetScene().GetID(), entity.GetID());
@@ -1027,6 +1034,40 @@ namespace Chroma
 		if (entityInstance.Instance.ScriptClass->LateUpdateMethod)
 		{
 			CallMethod(entityInstance.Instance.GetInstance(), entityInstance.Instance.ScriptClass->LateUpdateMethod);
+		}
+	}
+
+	void MonoScripting::EarlyDraw(Entity entity, Time t)
+	{
+		EntityInstanceData &entityInstance = GetEntityInstanceData(entity.GetScene().GetID(), entity.GetID());
+		if (entityInstance.Instance.ScriptClass->EarlyDrawMethod)
+		{
+			CallMethod(entityInstance.Instance.GetInstance(), entityInstance.Instance.ScriptClass->EarlyDrawMethod);
+		}
+	}
+	void MonoScripting::Draw(Entity entity, Time t)
+	{
+		EntityInstanceData &entityInstance = GetEntityInstanceData(entity.GetScene().GetID(), entity.GetID());
+		if (entityInstance.Instance.ScriptClass->DrawMethod)
+		{
+			CallMethod(entityInstance.Instance.GetInstance(), entityInstance.Instance.ScriptClass->DrawMethod);
+		}
+	}
+	void MonoScripting::LateDraw(Entity entity, Time t)
+	{
+		EntityInstanceData &entityInstance = GetEntityInstanceData(entity.GetScene().GetID(), entity.GetID());
+		if (entityInstance.Instance.ScriptClass->LateDrawMethod)
+		{
+			CallMethod(entityInstance.Instance.GetInstance(), entityInstance.Instance.ScriptClass->LateDrawMethod);
+		}
+	}
+	void MonoScripting::OnCollide(Entity entity, EntityID collisionEntity)
+	{
+		EntityInstanceData &entityInstance = GetEntityInstanceData(entity.GetScene().GetID(), entity.GetID());
+		if (entityInstance.Instance.ScriptClass->OnCollideMethod)
+		{
+			void *param[] = { &collisionEntity };
+			CallMethod(entityInstance.Instance.GetInstance(), entityInstance.Instance.ScriptClass->OnCollideMethod, param);
 		}
 	}
 

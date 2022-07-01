@@ -3,7 +3,6 @@
 #include "Chroma/Scene/System.h"
 #include "Chroma/Components/SpriteRenderer.h"
 #include "Chroma/Components/Transform.h"
-#include "Chroma/Components/Relationship.h"
 
 namespace Polychrome
 {

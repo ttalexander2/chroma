@@ -9,8 +9,7 @@
 #include "Utilities/VecWithLabels.h"
 #include <Chroma/Components/CSharpScript.h>
 #include <Chroma/Scripting/ScriptModuleField.h>
-#include <Chroma/Components/BoxCollider.h>
-#include <Chroma/Components/CircleCollider.h>
+#include <Chroma/Components/Collider.h>
 #include <Chroma/Scripting/MonoScripting.h>
 #include <Chroma/Components/SpriteRenderer.h>
 #include <Chroma/Components/ParticleEmitter.h>
@@ -45,8 +44,7 @@ namespace Polychrome
 		if (c->IsTypeOf<Chroma::Transform>()) DrawTransform(c);
 		if (c->IsTypeOf<Chroma::CSharpScript>()) DrawCSharpScript(c);
 		if (c->IsTypeOf<Chroma::AudioSource>()) DrawAudioSource(c);
-		if (c->IsTypeOf<Chroma::BoxCollider>()) DrawBoxCollider(c);
-		if (c->IsTypeOf<Chroma::CircleCollider>()) DrawCircleCollider(c);
+		if (c->IsTypeOf<Chroma::Collider>()) DrawCollider(c);
 		if (c->IsTypeOf<Chroma::SpriteRenderer>()) DrawSpriteRenderer(c);
 		if (c->IsTypeOf<Chroma::Camera>()) DrawCameraComponent(c);
 		if (c->IsTypeOf<Chroma::ParticleEmitter>()) DrawParticleEmitter(c);
@@ -208,9 +206,9 @@ namespace Polychrome
 		ImGui::PopItemWidth();
 	}
 
-	void ComponentWidgets::DrawBoxCollider(Chroma::Component* c)
+	void ComponentWidgets::DrawCollider(Chroma::Component* c)
 	{
-		Chroma::BoxCollider* b = reinterpret_cast<Chroma::BoxCollider*>(c);
+		Chroma::Collider* b = reinterpret_cast<Chroma::Collider*>(c);
 
 		std::vector<std::string> names;
 		for (int i = 0; i < 32; i++)
@@ -224,10 +222,10 @@ namespace Polychrome
 			{
 				for (int i = 0; i < 32; i++)
 				{
-					bool is_selected = (b->m_Layer >> i) & 1U;
+					bool is_selected = (b->Layer >> i) & 1U;
 					if (ImGui::Selectable(names[i].c_str(), &is_selected))
 					{
-						b->m_Layer ^= 1UL << i;
+						b->Layer ^= 1UL << i;
 					}
 				}
 				ImGui::EndListBox();
@@ -240,196 +238,18 @@ namespace Polychrome
 			{
 				for (int i = 0; i < 32; i++)
 				{
-					bool is_selected = (b->m_Mask >> i) & 1U;
+					bool is_selected = (b->Mask >> i) & 1U;
 					if (ImGui::Selectable(names[i].c_str(), &is_selected))
 					{
-						b->m_Mask ^= 1UL << i;
+						b->Mask ^= 1UL << i;
 					}
 				}
 				ImGui::EndListBox();
 			}
 		}
 
-
-
-		DrawComponentValue(c, "Min");
-		{
-			std::string hash = "box_collider_min";
-
-			bool changed = false;
-			ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 0, 0 });
-
-			float inputWidth = (ImGui::GetContentRegionAvailWidth() - ImGui::CalcTextSize("X").x * 2.0f - (4.0f * 6)) / 2;
-
-			Math::vec2& val = b->Min;
-
-			Math::vec2 oldVal = val;
-
-			ImGui::PushStyleColor(ImGuiCol_Button, { 0.8f, 0.1f, 0.1f, 0.8f });
-			if (ImGui::Button(("X##vec3_x_label" + std::string(hash)).c_str()))
-			{
-				changed = true;
-				val.x = 1;
-			}
-
-			Polychrome::UndoRedo::ImGuiRegister<Math::vec2>(&val, oldVal, "Reset Vec2.X");
-
-			ImGui::PopStyleColor();
-			if (ImGui::IsItemHovered())
-			{
-				ImGui::BeginTooltip();
-				ImGui::Text("Click to reset value.");
-				ImGui::EndTooltip();
-			}
-			ImGui::SameLine();
-
-			ImGui::SetNextItemWidth(inputWidth);
-
-			int pos = (int)val.x;
-			if (ImGui::DragInt(("##vec3_x" + std::string(hash)).c_str(), &pos))
-			{
-				changed = true;
-				val.x = pos;
-			}
-
-			Polychrome::UndoRedo::ImGuiRegister<Math::vec2>(&val, oldVal, "Modify Vec2.X");
-
-			ImGui::SameLine(0.0f, 6.0f);
-
-			ImGui::PushStyleColor(ImGuiCol_Button, { 0.1f, 0.8f, 0.1f, 0.8f });
-			if (ImGui::Button(("Y##vec3_y_label" + std::string(hash)).c_str()))
-			{
-				changed = true;
-				val.y = 1;
-			}
-
-			Polychrome::UndoRedo::ImGuiRegister<Math::vec2>(&val, oldVal, "Reset Vec2.Y");
-
-			ImGui::PopStyleColor();
-			if (ImGui::IsItemHovered())
-			{
-				ImGui::BeginTooltip();
-				ImGui::Text("Click to reset value.");
-				ImGui::EndTooltip();
-			}
-			ImGui::SameLine();
-
-			ImGui::SetNextItemWidth(inputWidth);
-
-			pos = val.y;
-			if (ImGui::DragInt(("##vec3_y" + std::string(hash)).c_str(), &pos))
-			{
-				changed = true;
-				val.y = pos;
-			}
-
-			Polychrome::UndoRedo::ImGuiRegister<Math::vec2>(&val, oldVal, "Modify Vec2.Y");
-
-			ImGui::PopStyleVar();
-
-			ImGui::SameLine(0.0f, 6.0f);
-			ImGui::NewLine();
-		}
-
-		
-
-
-		//MAX
-
-		DrawComponentValue(c, "Max");
-
-		{
-			std::string hash = "box_collider_max";
-
-			bool changed = false;
-			ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 0, 0 });
-
-			float inputWidth = (ImGui::GetContentRegionAvailWidth() - ImGui::CalcTextSize("X").x * 2.0f - (4.0f * 6)) / 2;
-
-			Math::vec2& val = b->Max;
-
-			Math::vec2 oldVal = val;
-
-			ImGui::PushStyleColor(ImGuiCol_Button, { 0.8f, 0.1f, 0.1f, 0.8f });
-			if (ImGui::Button(("X##vec3_x_label" + std::string(hash)).c_str()))
-			{
-				changed = true;
-				val.x = 1;
-			}
-
-			Polychrome::UndoRedo::ImGuiRegister<Math::vec2>(&val, oldVal, "Reset Vec2.X");
-
-			ImGui::PopStyleColor();
-			if (ImGui::IsItemHovered())
-			{
-				ImGui::BeginTooltip();
-				ImGui::Text("Click to reset value.");
-				ImGui::EndTooltip();
-			}
-			ImGui::SameLine();
-
-			ImGui::SetNextItemWidth(inputWidth);
-
-			int pos = (int)val.x;
-			if (ImGui::DragInt(("##vec3_x" + std::string(hash)).c_str(), &pos))
-			{
-				changed = true;
-				val.x = pos;
-			}
-
-			Polychrome::UndoRedo::ImGuiRegister<Math::vec2>(&val, oldVal, "Modify Vec2.X");
-
-			ImGui::SameLine(0.0f, 6.0f);
-
-			ImGui::PushStyleColor(ImGuiCol_Button, { 0.1f, 0.8f, 0.1f, 0.8f });
-			if (ImGui::Button(("Y##vec3_y_label" + std::string(hash)).c_str()))
-			{
-				changed = true;
-				val.y = 1;
-			}
-
-			Polychrome::UndoRedo::ImGuiRegister<Math::vec2>(&val, oldVal, "Reset Vec2.Y");
-
-			ImGui::PopStyleColor();
-			if (ImGui::IsItemHovered())
-			{
-				ImGui::BeginTooltip();
-				ImGui::Text("Click to reset value.");
-				ImGui::EndTooltip();
-			}
-			ImGui::SameLine();
-
-			ImGui::SetNextItemWidth(inputWidth);
-
-			pos = val.y;
-			if (ImGui::DragInt(("##vec3_y" + std::string(hash)).c_str(), &pos))
-			{
-				changed = true;
-				val.y = pos;
-			}
-
-			Polychrome::UndoRedo::ImGuiRegister<Math::vec2>(&val, oldVal, "Modify Vec2.Y");
-
-			ImGui::PopStyleVar();
-
-			ImGui::SameLine(0.0f, 6.0f);
-			ImGui::NewLine();
-		}
-
 		
 		
-	}
-
-	void ComponentWidgets::DrawCircleCollider(Chroma::Component* c)
-	{
-		Chroma::CircleCollider* b = reinterpret_cast<Chroma::CircleCollider*>(c);
-		DrawComponentValue(c, "Radius");
-		ImGui::InputFloat("##circle_collider_2d_bounds", &b->Radius);
-
-		DrawComponentValue(c, "Offset");
-		ImGui::Vec2IntWithLabels("##transform_rotation", b->Offset);
-
-
 	}
 
 	void ComponentWidgets::DrawCameraComponent(Chroma::Component* c)
@@ -648,9 +468,9 @@ namespace Polychrome
 
 
 
-		if (Chroma::AssetManager::Exists(spr->GetSpriteID()))
+		if (spr->sprite)
 		{
-			Chroma::Ref<Chroma::Sprite> s = Chroma::AssetManager::Get<Chroma::Sprite>(spr->GetSpriteID());
+			Chroma::Ref<Chroma::Sprite> s = spr->sprite;
 
 			DrawComponentValue(c, "Size");
 			ImGui::Text(("[" + std::to_string(s->Frames[spr->GetCurrentFrame()].Texture->GetWidth()) + ", " + std::to_string(s->Frames[spr->GetCurrentFrame()].Texture->GetHeight()) + "]").c_str());

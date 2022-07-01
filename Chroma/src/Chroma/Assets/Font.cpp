@@ -1,4 +1,4 @@
-#include "chromapch.h"
+﻿#include "chromapch.h"
 #include "Font.h"
 
 #include "Chroma/IO/FileSystem.h"
@@ -8,6 +8,7 @@
 #include <msdf-atlas-gen/image-encode.h>
 #include <msdf-atlas-gen/json-export.h>
 #include <stb_image.h>
+#include <codecvt>
 
 #define CHROMA_FONT_MAGIC_NUMBER 124908323
 
@@ -85,7 +86,29 @@ namespace Chroma
 				// The second argument can be ignored unless you mix different font sizes in one atlas.
 				// In the last argument, you can specify a charset other than ASCII.
 				// To load specific glyph indices, use loadGlyphs instead.
-				fontGeometry.loadCharset(font, 1.0, Charset::ASCII, true, true);
+				Charset charset = Charset::ASCII;
+
+				
+
+				//Hiragana and katakana
+				for (char32_t c = (char32_t)0x3040; c <= (char32_t)0x30FF; ++c)
+				{
+					charset.add(c);
+				}
+				
+				charset.add(U'私');
+				charset.add(U'冷');
+				charset.add(U'醸');
+				charset.add(U'造');
+				charset.add(U'飲');
+				charset.add(U'好');
+
+
+
+
+
+				fontGeometry.loadCharset(font, 1.0, charset);
+
 				fontGeometry.loadMetrics(font, 1.0);
 				fontGeometry.loadKerning(font);
 				// Apply MSDF edge coloring. See edge-coloring.h for other coloring strategies.
@@ -98,9 +121,9 @@ namespace Chroma
 				// setDimensions or setDimensionsConstraint to find the best value
 				packer.setDimensionsConstraint(TightAtlasPacker::DimensionsConstraint::SQUARE);
 				// setScale for a fixed size or setMinimumScale to use the largest that fits
-				packer.setMinimumScale(48.0);
+				packer.setMinimumScale(64);
 				// setPixelRange or setUnitRange
-				packer.setPixelRange(2.0);
+				packer.setPixelRange(2);
 				packer.setMiterLimit(1.0);
 				// Compute atlas layout - pack glyphs
 				packer.pack(glyphs.data(), glyphs.size());
@@ -110,6 +133,10 @@ namespace Chroma
 				// The ImmediateAtlasGenerator class facilitates the generation of the atlas bitmap.
 
 				ImmediateAtlasGenerator<float, 4, msdf_atlas::mtsdfGenerator, BitmapAtlasStorage<byte, 4>> generator(width, height);
+
+				DynamicAtlas<ImmediateAtlasGenerator<float, 4, msdf_atlas::mtsdfGenerator, BitmapAtlasStorage<byte, 4>>> dynamic_atlas;
+				//dynamic_atlas.
+
 				// GeneratorAttributes can be modified to change the generator's default settings.
 				GeneratorAttributes attributes;
 				generator.setAttributes(attributes);
@@ -158,16 +185,26 @@ namespace Chroma
 				}
 
 				m_Atlas.texture = Texture2D::Create(width, height);
-				byte *bitmap = (msdfgen::Bitmap<byte, 4>)generator.atlasStorage();
-				m_Atlas.texture->SetData(bitmap, width * height * 4);
+				m_Atlas.texture->SetFiltering(Texture::FilterMethod::LINEAR, Texture::FilterType::MIN);
+				m_Atlas.texture->SetFiltering(Texture::FilterMethod::LINEAR, Texture::FilterType::MAG);
 
 				std::vector<byte> png_data;
 				if (encodePng(png_data, generator.atlasStorage()))
 				{
+					stbi_set_flip_vertically_on_load(1);
+					int t_x, t_y, t_c;
+					unsigned char *rawData = stbi_load_from_memory(png_data.data(), png_data.size(), &t_x, &t_y, &t_c, 0);
+					m_Atlas.texture->SetData(rawData, width * height * 4);
+					stbi_image_free(rawData);
+
 					if (CreateCacheDirectoryIfNeeded())
 					{
 						Path cacheDir = GetCacheDirectory();
 						cacheDir /= this->GetID().ToString() + GetCacheExtension();
+
+						Chroma::File test_png = Chroma::File::Open("test_atlas.png", Chroma::FileMode::Write);
+						test_png.Write(png_data.data(), png_data.size());
+						test_png.Close();
 
 						bool write_success = WriteAtlas(cacheDir, png_data);
 						if (!write_success)
@@ -332,7 +369,10 @@ namespace Chroma
 
 			unsigned char *rawData = stbi_load_from_memory(buffer.data(), buffer.size(), &out->width, &out->height, &out->channels, 0);
 			out->texture = Texture2D::Create(out->width, out->height);
+			out->texture->SetFiltering(Texture::FilterMethod::LINEAR, Texture::FilterType::MIN);
+			out->texture->SetFiltering(Texture::FilterMethod::LINEAR, Texture::FilterType::MAG);
 			out->texture->SetData(rawData, out->width * out->height * 4);
+			stbi_image_free(rawData);
 
 		}
 

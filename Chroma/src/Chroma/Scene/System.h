@@ -6,10 +6,11 @@
 namespace Chroma
 {
 
-
 	class System
 	{
 	public:
+		System() = default;
+		virtual ~System() = default;
 
 		virtual void PreLoad() {};
 		virtual void Load() {};

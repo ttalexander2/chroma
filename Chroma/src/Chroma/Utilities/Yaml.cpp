@@ -4,6 +4,37 @@
 namespace YAML
 {
 
+	Emitter &YAML::operator<<(Emitter &out, const c2Poly &v)
+	{
+		out << YAML::Flow;
+		out << YAML::BeginMap << YAML::Key << "Count" << YAML::Value << v.count;
+
+		out << YAML::Key << "Norms" << YAML::Value;
+		out << YAML::BeginSeq;
+		for (int i = 0; i < v.count; i++)
+		{
+			out << YAML::BeginSeq;
+			out << v.norms[i].x;
+			out << v.norms[i].y;
+			out << YAML::EndSeq;
+		}
+		out << YAML::EndSeq;
+
+		out << YAML::Key << "Verts" << YAML::Value;
+		out << YAML::BeginSeq;
+		for (int i = 0; i < v.count; i++)
+		{
+			out << YAML::BeginSeq;
+			out << v.verts[i].x;
+			out << v.verts[i].y;
+			out << YAML::EndSeq;
+		}
+		out << YAML::EndSeq;
+
+		out << YAML::EndMap;
+		return out;
+	}
+
 	Emitter& YAML::operator<<(Emitter& out, const Chroma::GUID& v) 
 	{
 		out << v.ToString();

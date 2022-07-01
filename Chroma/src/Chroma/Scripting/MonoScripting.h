@@ -79,19 +79,21 @@ namespace Chroma
 		static void CopyFieldsFromRuntime(Entity entity);
 
 		static void SetDeltaTime(double dtime, float ftime);
-
+		static void SetFixedDeltaTime(double dtime, float ftime);
 
 		static void PreInit(Entity entity);
 		static void Init(Entity entity);
 		static void PostInit(Entity entity);
 
-		static void EarlyStart(Entity entity);
-		static void Start(Entity entity);
-		static void LateStart(Entity entity);
-
 		static void EarlyUpdate(Entity entity, Time t);
 		static void Update(Entity entity, Time t);
 		static void LateUpdate(Entity entity, Time t);
+
+		static void EarlyDraw(Entity entity, Time t);
+		static void Draw(Entity entity, Time t);
+		static void LateDraw(Entity entity, Time t);
+
+		static void OnCollide(Entity entity, EntityID collisionEntity);
 
 		static bool IsEntityModuleValid(Entity entity);
 

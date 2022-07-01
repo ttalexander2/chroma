@@ -44,7 +44,7 @@ namespace Chroma
 		else
 		{
 			glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, GL_UNSIGNED_BYTE, nullptr);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		}
 
@@ -61,7 +61,7 @@ namespace Chroma
 		else
 		{
 			glTexStorage2D(GL_TEXTURE_2D, 1, format, width, height);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		}
 
@@ -105,7 +105,7 @@ namespace Chroma
 
 		if (width == 0 || height == 0 || width > s_MaxFramebufferSize || height > s_MaxFramebufferSize)
 		{
-			CHROMA_CORE_WARN("Framebuffer resized to [{0}, {1}]", width, height);
+			CHROMA_CORE_WARN("Framebuffer could not be resized to [{0}, {1}]", width, height);
 			return;
 		}
 		m_Specification.Width = width;

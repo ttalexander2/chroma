@@ -9,7 +9,7 @@
 #include <Chroma/Scene/Component.h>
 #include "Inspector.h"
 #include "imgui_stdlib.h"
-#include <Chroma/Components/Relationship.h>
+#include <Chroma/Components/Transform.h>
 #include <Chroma/Utilities/ContainerHelpers.h>
 #include "Project.h"
 
@@ -104,10 +104,10 @@ namespace Polychrome
 	{
 		if (e == Chroma::ENTITY_NULL)
 			return;
-		auto& relationship = scene->GetComponent<Chroma::Relationship>(e);
+		auto& transform = scene->GetComponent<Chroma::Transform>(e);
 		Chroma::Tag& t = scene->GetComponent<Chroma::Tag>(e);
 
-		if (root && relationship.IsChild())
+		if (root && transform.IsChild())
 			return;
 
 		static bool valid = true;
@@ -163,7 +163,7 @@ namespace Polychrome
 
 
 			ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_DefaultOpen;
-			if (!relationship.HasChildren())
+			if (!transform.HasChildren())
 				flags |= ImGuiTreeNodeFlags_Leaf;
 			if (SelectedEntity == e)
 				flags |= ImGuiTreeNodeFlags_Selected;
@@ -182,7 +182,7 @@ namespace Polychrome
 			bool hover_push = (hovered == e) && drop != nullptr && drop->IsDataType("Entity") && (*((Chroma::EntityID*)drop->Data)) != e && !valid_root;
 			if (hover_push)
 			{
-				if (relationship.HasChildren())
+				if (transform.HasChildren())
 					ImGui::PushStyleColor(ImGuiCol_HeaderHovered, ImVec4{ 0.2f, 0.8f, 0.3f, .7f });
 				else
 					ImGui::PushStyleColor(ImGuiCol_Header, ImVec4{ 0.2f, 0.8f, 0.3f, .7f });
@@ -190,7 +190,7 @@ namespace Polychrome
 			}
 			else if (ImGui::IsMouseDragging(ImGuiMouseButton_Left) && ImGui::IsWindowFocused())
 			{
-				if (relationship.HasChildren())
+				if (transform.HasChildren())
 					ImGui::PushStyleColor(ImGuiCol_HeaderHovered, ImVec4{ 0,0,0,0 });
 				else
 					ImGui::PushStyleColor(ImGuiCol_Header, ImVec4{ 0,0,0,0 });
@@ -245,7 +245,7 @@ namespace Polychrome
 					//CHROMA_CORE_TRACE("DROPPED AT {}. ACCEPTED {}", e, data);
 
 					//Get payload's parent
-					auto p = scene->GetComponent<Chroma::Relationship>(data).Parent;
+					auto p = scene->GetComponent<Chroma::Transform>(data).Parent;
 
 					if (p == Chroma::ENTITY_NULL)
 					{
@@ -254,13 +254,13 @@ namespace Polychrome
 					else
 					{
 						//Remove payload from parent's child list
-						Chroma::PopValue(scene->GetComponent<Chroma::Relationship>(p).Children, data);
+						Chroma::PopValue(scene->GetComponent<Chroma::Transform>(p).Children, data);
 					}
 						
 					//Add to target's children
-					relationship.Children.push_back(data);
+					transform.Children.push_back(data);
 					//Set payload's parent
-					scene->GetComponent<Chroma::Relationship>(data).Parent = e;
+					scene->GetComponent<Chroma::Transform>(data).Parent = e;
 					
 				}
 				ImGui::EndDragDropTarget();
@@ -375,7 +375,7 @@ namespace Polychrome
 					scene->DestroyEntity(e);
 					Hierarchy::SelectedEntity = Chroma::ENTITY_NULL;
 				}
-				if (relationship.HasChildren())
+				if (transform.HasChildren())
 				{
 					ImGui::SameLine();
 					if (ImGui::Button("Delete (include children)"))
@@ -395,11 +395,11 @@ namespace Polychrome
 
 			if (opened)
 			{
-				if (relationship.HasChildren())
+				if (transform.HasChildren())
 				{
-					DragDropSeparator(scene, e, relationship.Children[0], 7.0f);
+					DragDropSeparator(scene, e, transform.Children[0], 7.0f);
 
-					std::vector<Chroma::EntityID> children_copy(relationship.Children);
+					std::vector<Chroma::EntityID> children_copy(transform.Children);
 					size_t i = 0;
 					for (Chroma::EntityID child : children_copy)
 					{
@@ -413,7 +413,7 @@ namespace Polychrome
 				ImGui::TreePop();
 			}
 
-			if (relationship.Parent == Chroma::ENTITY_NULL || next != Chroma::ENTITY_NULL)
+			if (transform.Parent == Chroma::ENTITY_NULL || next != Chroma::ENTITY_NULL)
 				DragDropSeparator(scene, e, next);
 
 		}
@@ -424,14 +424,14 @@ namespace Polychrome
 		if (parent == Chroma::ENTITY_NULL || child == Chroma::ENTITY_NULL || scene == nullptr)
 			return false;
 
-		auto& p_rel = scene->GetComponent<Chroma::Relationship>(parent);
-		auto& c_rel = scene->GetComponent<Chroma::Relationship>(child);
+		auto& p_rel = scene->GetComponent<Chroma::Transform>(parent);
+		auto &c_rel = scene->GetComponent<Chroma::Transform>(child);
 
 		auto& cp = child;
 
 		while (cp != Chroma::ENTITY_NULL)
 		{
-			auto rpp = scene->GetComponent<Chroma::Relationship>(cp).Parent;
+			auto rpp = scene->GetComponent<Chroma::Transform>(cp).Parent;
 			if (rpp == parent)
 				return true;
 			cp = rpp;
@@ -449,7 +449,7 @@ namespace Polychrome
 		{
 			//CHROMA_CORE_INFO("Current: {}, Next: {}", curr, next);
 			auto id = (*((Chroma::EntityID*)paydrop->Data));
-			if (next != Chroma::ENTITY_NULL && scene->GetComponent<Chroma::Relationship>(next).Parent == id)
+			if (next != Chroma::ENTITY_NULL && scene->GetComponent<Chroma::Transform>(next).Parent == id)
 			{
 				ImGui::Dummy({ ImGui::GetContentRegionAvailWidth(), size });
 				return;
@@ -498,7 +498,7 @@ namespace Polychrome
 		if (ImGui::BeginDragDropTarget() && ImGui::IsMouseReleased(ImGuiMouseButton_Left) && hover_push)
 		{
 			Chroma::EntityID drop_id = (*((Chroma::EntityID*)payload->Data));
-			auto& drop_rel = scene->GetComponent<Chroma::Relationship>(drop_id);
+			auto &drop_rel = scene->GetComponent<Chroma::Transform>(drop_id);
 			auto& drop_parent = drop_rel.Parent;
 
 
@@ -511,7 +511,7 @@ namespace Polychrome
 				}
 				else
 				{
-					auto& dp = scene->GetComponent<Chroma::Relationship>(drop_parent).Children;
+					auto &dp = scene->GetComponent<Chroma::Transform>(drop_parent).Children;
 					Chroma::PopValue(dp, drop_id);
 					int x = 0;
 				}
@@ -530,8 +530,8 @@ namespace Polychrome
 				}
 				else if (curr != Chroma::ENTITY_NULL && next != Chroma::ENTITY_NULL)
 				{
-					auto& curr_rel = scene->GetComponent<Chroma::Relationship>(curr);
-					auto& next_rel = scene->GetComponent<Chroma::Relationship>(next);
+					auto &curr_rel = scene->GetComponent<Chroma::Transform>(curr);
+					auto &next_rel = scene->GetComponent<Chroma::Transform>(next);
 
 					//curr is parent of next
 					if (next_rel.Parent == curr)
@@ -548,7 +548,7 @@ namespace Polychrome
 						}
 						else
 						{
-							auto& children = scene->GetComponent<Chroma::Relationship>(next_rel.Parent).Children;
+							auto &children = scene->GetComponent<Chroma::Transform>(next_rel.Parent).Children;
 							children.insert(std::find(children.begin(), children.end(), next), drop_id);
 							drop_rel.Parent = next_rel.Parent;
 						}

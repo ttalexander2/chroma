@@ -23,7 +23,7 @@ namespace Chroma
 
 	void CSharpScript::CreateReflectionModel()
 	{
-		Reflection::RegisterComponent<CSharpScript>();
+		Reflection::RegisterComponent<CSharpScript, Component>();
 		Reflection::RegisterComponentProperty<CSharpScript, &CSharpScript::ModuleName>("Module");
 	}
 }

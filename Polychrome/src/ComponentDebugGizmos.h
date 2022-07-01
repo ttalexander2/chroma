@@ -23,7 +23,7 @@ namespace Polychrome
 		static bool DrawParticleEmtiters;
 
 	private:
-		static void DrawBoxColliderGizmos(Chroma::EntityID entity);
+		static void DrawColliderGizmos(Chroma::EntityID entity);
 		static void DrawSpriteBoundryGizmos(Chroma::EntityID entity);
 
 	};

@@ -23,7 +23,7 @@ namespace Chroma
 
 	void Tag::CreateReflectionModel()
 	{
-		Reflection::RegisterComponent<Tag>();
+		Reflection::RegisterComponent<Tag, Component>();
 		Reflection::RegisterComponentProperty<Tag, &Tag::EntityName>("Name");
 	}
 

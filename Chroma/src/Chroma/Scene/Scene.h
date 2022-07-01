@@ -12,7 +12,8 @@
 #include "Chroma/Profiler/Instrumentor.h"
 #include <Chroma/Components/Camera.h>
 #include "World.h"
-#include "Chroma/Components/ParticleEmitter.h">
+#include "Chroma/Components/Transform.h">
+
 
 namespace Polychrome
 {
@@ -25,6 +26,12 @@ namespace Chroma
 	//Forward Declaration
 	class Entity;
 	class System;
+	class PhysicsSystem;
+	class ScriptingSystem;
+	class AudioSystem;
+	class SpriteRendererSystem;
+	class ParticleSystem;
+	class CameraSystem;
 
 
 	//This entire class is a template-caused mess
@@ -37,7 +44,7 @@ namespace Chroma
 
 		Scene();
 		Scene(const Scene&) {}
-		~Scene() = default;
+		~Scene();
 
 		Scene* Copy();
 
@@ -69,23 +76,6 @@ namespace Chroma
 		size_t NumChildren(EntityID entity);
 
 		Entity FindEntityByName(const std::string& name);
-		
-
-
-		template <typename T>
-		void RegisterSystem()
-		{
-			bool result = std::is_base_of<System, T>();
-			CHROMA_ASSERT(result, std::string(typeid(T).name()) + " must inherrit System to register as a system.");
-
-			if (!result)
-			{
-				return;
-			}
-			System* system = (System*)new T();
-			system->m_Scene = this;
-			Systems.push_back(system);
-		}
 
 		template <ComponentType T>
 		static void RegisterComponent()
@@ -234,17 +224,11 @@ namespace Chroma
 
 		void OnLoad();
 
-		void EarlyInit();
+
 		void Init();
-		void LateInit();
-
-		void EarlyUpdate(Time delta);
 		void Update(Time delta);
-		void LateUpdate(Time delta);
-
-		void PreDraw(Time delta);
 		void Draw(Time delta);
-		void PostDraw(Time delta);
+
 
 		Camera& GetPrimaryCamera();
 		EntityID GetPrimaryCameraEntity() { return PrimaryCameraEntity; }
@@ -260,7 +244,15 @@ namespace Chroma
 		std::vector<Layer> Layers;
 
 	private:
-		std::vector<System*> Systems;
+		
+		PhysicsSystem* physics_system;
+		ScriptingSystem* scripting_system;
+		AudioSystem* audio_system;
+		SpriteRendererSystem* sprite_renderer_system;
+		ParticleSystem* particle_system;
+		CameraSystem* camera_system;
+
+
 		std::vector<EntityID> EntityOrder;
 		EntityID PrimaryCameraEntity = ENTITY_NULL;
 
@@ -275,8 +267,8 @@ namespace Chroma
 		static std::list<const TypeInfo*> s_Types;
 
 
-
 		friend class Entity;
+		friend class MonoScripting;
 		friend class Polychrome::Hierarchy;
 		friend class Polychrome::Inspector;
 

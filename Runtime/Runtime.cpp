@@ -123,22 +123,22 @@ void Runtime::Init()
 
 void Runtime::Update(Time delta)
 {
-	
 		Engine::CurrentScene->Update(delta);
+}
 
-		Renderer2D::Clear();
+void Runtime::Draw(Time delta)
+{
+	Renderer2D::Clear();
 
-		Renderer2D::Begin(Engine::CurrentScene->GetPrimaryCamera());
+	Renderer2D::Begin(Engine::CurrentScene->GetPrimaryCamera());
 
-		Engine::CurrentScene->Draw(delta);
+	Engine::CurrentScene->Draw(delta);
 
-		Renderer2D::End();
+	Renderer2D::End();
 
-		//Renderer2D::Begin(Engine::CurrentScene->GetPrimaryCamera());
-		//Chroma::Renderer2D::DrawString("Among Us 2: Sussy Baka", test_font, Math::vec3(90, 0, 0), 5, Math::vec4(1, 1, 1, 1), 24.f, 0, 0);
-		//Renderer2D::Flush(test_shader);
-
-
+	//Renderer2D::Begin(Engine::CurrentScene->GetPrimaryCamera());
+	//Chroma::Renderer2D::DrawString("Among Us 2: Sussy Baka", test_font, Math::vec3(90, 0, 0), 5, Math::vec4(1, 1, 1, 1), 24.f, 0, 0);
+	//Renderer2D::Flush(test_shader);
 }
 
 

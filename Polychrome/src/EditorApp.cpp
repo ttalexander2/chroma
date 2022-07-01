@@ -1,4 +1,4 @@
-#include "EditorApp.h"
+﻿#include "EditorApp.h"
 
 #include "Viewport.h"
 #include "Hierarchy.h"
@@ -15,8 +15,7 @@
 #include <random>
 #include "../../Chroma/third_party/GLFW/include/GLFW/glfw3.h"
 #include <Chroma/Components/AudioSource.h>
-#include <Chroma/Components/CircleCollider.h>
-#include <Chroma/Components/BoxCollider.h>
+#include <Chroma/Components/Collider.h>
 #include "Fonts/IconsForkAwesome.h"
 #include <Chroma/Utilities/FileDialogs.h>
 #include <filesystem>
@@ -497,7 +496,7 @@ namespace Polychrome
 
 
 
-		test_font = Chroma::AssetManager::Get<Chroma::Font>(Chroma::GUID::Parse("85519709-783D-4406-BCA3-C69A95030087"));
+		test_font = Chroma::AssetManager::Get<Chroma::Font>(Chroma::GUID::Parse("85519709-783D-4406-BCA3-C69A9503A088"));
 		
 	}
 
@@ -602,7 +601,7 @@ namespace Polychrome
 		Chroma::Renderer2D::End();
 
 		Chroma::Renderer2D::Begin(Camera.GetViewProjectionMatrix());
-		Chroma::Renderer2D::DrawString("Among Us 2: Sussy Baka", test_font, Math::vec3(90, 0, 0), 5, Math::vec4(1, 1, 1, 1), 24.f, 0, 0);
+		Chroma::Renderer2D::DrawString(U"私は冷たい醸造アイスコーヒーを飲むのが好きです\nI like to drink cold brewed iced coffee.", test_font, Math::vec3(90, 0, 0), 5, Math::vec4(1, 1, 1, 1), 24.f, 0, 0);
 		Chroma::Renderer2D::Flush(m_FontShader);
 		
 
@@ -738,7 +737,7 @@ namespace Polychrome
 			{
 				for (auto& component : Chroma::Scene::GetComponentTypes())
 				{
-					if (component->IsTypeOf<Chroma::Transform>() || component->IsTypeOf<Chroma::Relationship>() || component->IsTypeOf<Chroma::Tag>())
+					if (component->IsTypeOf<Chroma::Transform>() || component->IsTypeOf<Chroma::Tag>())
 						continue;
 
 					if (ImGui::MenuItem(component->GetTypeName().c_str()))
@@ -1145,7 +1144,6 @@ namespace Polychrome
 
 		Chroma::Transform& transform = EditorApp::CurrentScene->Registry.get<Chroma::Transform>(Hierarchy::SelectedEntity);
 		Chroma::SpriteRenderer& spriteRenderer = EditorApp::CurrentScene->Registry.get<Chroma::SpriteRenderer>(Hierarchy::SelectedEntity);
-		Chroma::Relationship& relationship = EditorApp::CurrentScene->Registry.get<Chroma::Relationship>(Hierarchy::SelectedEntity);
 		
 		const Math::vec2& origin = spriteRenderer.GetSpriteOriginVector();
 		
@@ -1154,7 +1152,7 @@ namespace Polychrome
 			Chroma::Ref<Chroma::Sprite> s = Chroma::AssetManager::Get<Chroma::Sprite>(spriteRenderer.GetSpriteID());
 			int w = s->Frames[spriteRenderer.GetCurrentFrame()].Texture->GetWidth();
 			int h = s->Frames[spriteRenderer.GetCurrentFrame()].Texture->GetHeight();
-			if (!relationship.IsChild())
+			if (!transform.IsChild())
 			{
 				Math::vec2 size = transform.Scale * Math::vec2((float)w, (float)h);
 				Math::vec2 originAdjustment = { Math::abs(size.x) / 2.f - origin.x, -Math::abs(size.y) / 2.f + origin.y };
@@ -1168,14 +1166,14 @@ namespace Polychrome
 				Math::vec2 parentPos { 0, 0 };
 				float parentRot = 0;
 				float rotation = transform.Rotation;
-				Chroma::EntityID parent = relationship.Parent;
+				Chroma::EntityID parent = transform.Parent;
 				while (parent != Chroma::ENTITY_NULL)
 				{
 					Chroma::Transform& parentTransform = EditorApp::CurrentScene->GetComponent<Chroma::Transform>(parent);
 					parentPos += parentTransform.Position;
 					scale *= parentTransform.Scale;
 					parentRot += parentTransform.Rotation;
-					parent = EditorApp::CurrentScene->GetComponent<Chroma::Relationship>(parent).Parent;
+					parent = EditorApp::CurrentScene->GetComponent<Chroma::Transform>(parent).Parent;
 				}
 
 				Math::vec2 adjusted = { pos.x * Math::cos(parentRot) - pos.y * Math::sin(parentRot), pos.x * Math::sin(parentRot) + pos.y * Math::cos(parentRot) };

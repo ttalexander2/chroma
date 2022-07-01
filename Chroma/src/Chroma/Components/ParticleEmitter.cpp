@@ -193,7 +193,7 @@ namespace Chroma
 
 	void ParticleEmitter::CreateReflectionModel()
 	{
-		Reflection::RegisterComponent<ParticleEmitter>();
+		Reflection::RegisterComponent<ParticleEmitter, Component>();
 		Reflection::RegisterComponentProperty<ParticleEmitter, &ParticleEmitter::PositionVariance>("PositionVariance");
 		Reflection::RegisterComponentProperty<ParticleEmitter, &ParticleEmitter::StartColor>("StartColor");
 		Reflection::RegisterComponentProperty<ParticleEmitter, &ParticleEmitter::EndColor>("EndColor");

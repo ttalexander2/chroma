@@ -5,9 +5,9 @@
 #include "imgui_internal.h"
 #include "Viewport.h"
 #include <math.h>
-#include <Chroma/Components/BoxCollider.h>
 #include <Chroma/Components/ParticleEmitter.h>
 #include <Chroma/Assets/AssetManager.h>
+#include <Chroma/Components/Collider.h>
 #include <imgui.h>
 
 namespace Polychrome
@@ -45,14 +45,14 @@ namespace Polychrome
 		//COMPONENTS
 		if (!DrawAllEntities && Hierarchy::SelectedEntity != Chroma::ENTITY_NULL)
 		{
-			DrawBoxColliderGizmos(Hierarchy::SelectedEntity);
+			DrawColliderGizmos(Hierarchy::SelectedEntity);
 			DrawSpriteBoundryGizmos(Hierarchy::SelectedEntity);
 		}
 		else if (DrawAllEntities)
 		{
-			for (auto entity : EditorApp::CurrentScene->Registry.view<Chroma::BoxCollider>())
+			for (auto entity : EditorApp::CurrentScene->Registry.view<Chroma::Collider>())
 			{
-				DrawBoxColliderGizmos(entity);
+				DrawColliderGizmos(entity);
 			}
 
 			for (auto entity : EditorApp::CurrentScene->Registry.view<Chroma::SpriteRenderer>())
@@ -62,20 +62,12 @@ namespace Polychrome
 		}
 	}
 
-	void ComponentDebugGizmos::DrawBoxColliderGizmos(Chroma::EntityID entity)
+	void ComponentDebugGizmos::DrawColliderGizmos(Chroma::EntityID entity)
 	{
-		if (DrawBoxCollider && EditorApp::CurrentScene->HasComponent<Chroma::BoxCollider>(entity))
+		if (DrawBoxCollider && EditorApp::CurrentScene->HasComponent<Chroma::Collider>(entity))
 		{
-			auto& collider = EditorApp::CurrentScene->GetComponent<Chroma::BoxCollider>(entity);
+			auto& collider = EditorApp::CurrentScene->GetComponent<Chroma::Collider>(entity);
 			const Math::vec2 absolutePos = EditorApp::CurrentScene->GetTransformAbsolutePosition(entity);
-
-			glm::vec2 offset = { (collider.Max.x + collider.Min.x) / 2.f, (collider.Max.y + collider.Min.y) / 2.f };
-			glm::vec2 size = collider.Max - collider.Min;
-
-			if (collider.IsColliding())
-				Chroma::Renderer2D::DrawRect(absolutePos + offset, size, 1.f / EditorApp::Camera.GetZoom(), { 0.9f,  0.2f , 0.2f , 1.f });
-			else
-				Chroma::Renderer2D::DrawRect(absolutePos + offset, size, 1.f / EditorApp::Camera.GetZoom(), { 0.2f, 0.9f , 0.3f , 1.f });
 		}
 	}
 
@@ -87,7 +79,6 @@ namespace Polychrome
 		{
 			Chroma::Transform& transform = EditorApp::CurrentScene->Registry.get<Chroma::Transform>(entity);
 			Chroma::SpriteRenderer& spriteRenderer = EditorApp::CurrentScene->Registry.get<Chroma::SpriteRenderer>(entity);
-			Chroma::Relationship& relationship = EditorApp::CurrentScene->Registry.get<Chroma::Relationship>(entity);
 
 			const Math::vec2& origin = spriteRenderer.GetSpriteOriginVector();
 
@@ -96,7 +87,7 @@ namespace Polychrome
 				Chroma::Ref<Chroma::Sprite> s = Chroma::AssetManager::Get<Chroma::Sprite>(spriteRenderer.GetSpriteID());
 				int w = s->Frames[spriteRenderer.GetCurrentFrame()].Texture->GetWidth();
 				int h = s->Frames[spriteRenderer.GetCurrentFrame()].Texture->GetHeight();
-				if (!relationship.IsChild())
+				if (!transform.IsChild())
 				{
 					Math::vec2 size = transform.Scale * Math::vec2((float)w, (float)h);
 					Math::vec2 originAdjustment = { Math::abs(size.x) / 2.f - origin.x, -Math::abs(size.y) / 2.f + origin.y };
@@ -114,14 +105,14 @@ namespace Polychrome
 					Math::vec2 parentPos{ 0,0 };
 					float parentRot = 0;
 					float rotation = transform.Rotation;
-					Chroma::EntityID parent = relationship.Parent;
+					Chroma::EntityID parent = transform.Parent;
 					while (parent != Chroma::ENTITY_NULL)
 					{
 						Chroma::Transform& parentTransform = EditorApp::CurrentScene->GetComponent<Chroma::Transform>(parent);
 						parentPos += parentTransform.Position;
 						scale *= parentTransform.Scale;
 						parentRot += parentTransform.Rotation;
-						parent = EditorApp::CurrentScene->GetComponent<Chroma::Relationship>(parent).Parent;
+						parent = EditorApp::CurrentScene->GetComponent<Chroma::Transform>(parent).Parent;
 					}
 
 					Math::vec2 adjusted = { pos.x * Math::cos(parentRot) - pos.y * Math::sin(parentRot), pos.x * Math::sin(parentRot) + pos.y * Math::cos(parentRot) };

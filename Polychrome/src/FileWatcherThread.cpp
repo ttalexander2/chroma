@@ -67,7 +67,7 @@ namespace Polychrome
 							const Chroma::Ref<Chroma::Asset> asset = Chroma::AssetManager::Create(Chroma::GUID::CreateGUID(), std::filesystem::path(relative).lexically_relative(std::filesystem::path(Project::AssetDirectory)).string(), Chroma::FMODBank::GetTypeNameStatic());
 							Chroma::AssetManager::Load(asset->GetID());
 						}
-						else if (extension == ".ttf" || extension == ".oft")
+						else if (extension == ".ttf" || extension == ".otf")
 						{
 							const Chroma::Ref<Chroma::Asset> asset = Chroma::AssetManager::Create(Chroma::GUID::CreateGUID(), std::filesystem::path(relative).lexically_relative(std::filesystem::path(Project::AssetDirectory)).string(), Chroma::Font::GetTypeNameStatic());
 							Chroma::AssetManager::Load(asset->GetID());
@@ -115,7 +115,7 @@ namespace Polychrome
 								Chroma::AssetManager::Load(Chroma::AssetManager::GetID(std::filesystem::path(relative).lexically_relative(std::filesystem::path(Project::AssetDirectory)).string()));
 							}
 						}
-						else if (extension == ".ttf" || extension == ".oft")
+						else if (extension == ".ttf" || extension == ".otf")
 						{
 							if (Chroma::AssetManager::Exists(Chroma::AssetManager::GetID(std::filesystem::path(relative).lexically_relative(std::filesystem::path(Project::AssetDirectory)).string())))
 							{
@@ -162,7 +162,7 @@ namespace Polychrome
 								Chroma::AssetManager::Unload(Chroma::AssetManager::GetID(std::filesystem::path(relative).lexically_relative(std::filesystem::path(Project::AssetDirectory)).string()));
 							}
 						}
-						else if (extension == ".ttf" || extension == ".oft")
+						else if (extension == ".ttf" || extension == ".otf")
 						{
 							if (Chroma::AssetManager::Exists(Chroma::AssetManager::GetID(std::filesystem::path(relative).lexically_relative(std::filesystem::path(Project::AssetDirectory)).string())))
 							{

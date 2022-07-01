@@ -12,7 +12,7 @@ namespace Chroma
 	{
 		glm::mat4 rotation = glm::toMat4(glm::quat({0,0,Rotation}));
 
-		return Math::translate(glm::mat4(1.0f), { Position, 0 })
+		return Math::translate(glm::mat4(1.0f), Math::vec3(Position.x, Position.y, 0.f))
 			* rotation * glm::scale(glm::mat4(1.0f), {Scale, 0});
 	}
 
@@ -26,6 +26,25 @@ namespace Chroma
 
 		out << YAML::Key << "Scale";
 		out << YAML::Value << Scale;
+
+		if (Parent != ENTITY_NULL)
+		{
+			out << YAML::Key << "Parent";
+			out << YAML::Value << (uint32_t)Parent;
+		}
+
+		if (HasChildren())
+		{
+			out << YAML::Key << "Children";
+			out << YAML::Value << YAML::Flow << YAML::BeginSeq;
+
+			for (EntityID id : Children)
+			{
+				out << (uint32_t)id;
+			}
+
+			out << YAML::EndSeq;
+		}
 	}
 
 	void Transform::Deserialize(YAML::Node& node)
@@ -48,15 +67,35 @@ namespace Chroma
 			Scale = val.as<Math::vec2>();
 		}
 
+		val = node["Parent"];
+		if (val)
+		{
+			Parent = (EntityID)val.as<uint32_t>();
+		}
+
+		val = node["Children"];
+		if (val && val.IsSequence())
+		{
+			for (auto it = val.begin(); it != val.end(); it++)
+			{
+				const auto &item = *it;
+				Children.push_back((EntityID)item.as<uint32_t>());
+			}
+		}
+
 	}
 
 	void Transform::CreateReflectionModel()
 	{
-		Reflection::RegisterComponent<Transform>();
+		Reflection::RegisterComponent<Transform, Component>();
 		Reflection::RegisterComponentProperty<Transform, &Transform::Position>("Position");
 		Reflection::RegisterComponentProperty<Transform, &Transform::Rotation>("Rotation");
 		Reflection::RegisterComponentProperty<Transform, &Transform::Scale>("Scale");
 		Reflection::RegisterComponentFunction<Transform, &Transform::GetTransform>("GetTransform");
+		Reflection::RegisterComponentProperty<Transform, &Transform::Parent>("Parent");
+		Reflection::RegisterComponentProperty<Transform, &Transform::Children>("Children");
+		Reflection::RegisterComponentFunction<Transform, &Transform::HasChild>("HasChild");
+		Reflection::RegisterComponentFunction<Transform, &Transform::HasChildren>("HasChildren");
 	}
 }
 

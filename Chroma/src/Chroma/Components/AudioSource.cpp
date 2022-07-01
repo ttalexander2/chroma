@@ -22,7 +22,7 @@ namespace Chroma
 	}
 	void AudioSource::CreateReflectionModel()
 	{
-		Reflection::RegisterComponent<AudioSource>();
+		Reflection::RegisterComponent<AudioSource, Component>();
 		Reflection::RegisterComponentProperty<AudioSource, &AudioSource::SetEvent, &AudioSource::GetEvent>("Event");
 		Reflection::RegisterComponentProperty<AudioSource, &AudioSource::Mute>("Mute");
 		Reflection::RegisterComponentProperty<AudioSource, &AudioSource::PlayOnInit>("PlayOnInit");

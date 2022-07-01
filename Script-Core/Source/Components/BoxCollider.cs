@@ -7,8 +7,8 @@ namespace Chroma
     /// <summary>
     /// 2D Box Collider component.
     /// </summary>
-    public class BoxCollider : Component
+    public class Collider : Component
     {
-        public BoxCollider() { }
+        public Collider() { }
     }
 }

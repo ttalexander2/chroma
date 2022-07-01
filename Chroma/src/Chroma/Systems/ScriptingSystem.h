@@ -21,6 +21,10 @@ namespace Chroma
 		void Update(Time time) override;
 		void LateUpdate(Time time) override;
 
+		void EarlyDraw(Time time) override;
+		void Draw(Time time) override;
+		void LateDraw(Time time) override;
+
 
 	};
 }

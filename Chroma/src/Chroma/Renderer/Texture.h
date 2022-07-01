@@ -15,6 +15,18 @@ namespace Chroma
 			RGBA8
 		};
 
+		enum class FilterMethod
+		{
+			LINEAR,
+			NEAREST
+		};
+
+		enum class FilterType
+		{
+			MIN,
+			MAG
+		};
+
 		virtual ~Texture() = default;
 
 		virtual uint32_t GetWidth() const = 0;
@@ -28,6 +40,7 @@ namespace Chroma
 		virtual uint32_t GetTextureID() const = 0;
 
 		virtual void SetTextureFormat(TextureFormat format) = 0;
+		virtual void SetFiltering(FilterMethod method, FilterType type) = 0;
 	};
 
 	class Texture2D : public Texture

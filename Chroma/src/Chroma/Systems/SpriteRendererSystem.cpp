@@ -46,9 +46,9 @@ namespace Chroma
 			if (!spriteRenderer.IsEnabled())
 				continue;
 
-			if (spriteRenderer.sprite->IsLoaded())
+			if (spriteRenderer.sprite && spriteRenderer.sprite->IsLoaded())
 			{
-				auto sprite = spriteRenderer.sprite;
+				auto& sprite = spriteRenderer.sprite;
 					if (spriteRenderer.Playing && sprite->Animated())
 					{
 						
@@ -120,7 +120,7 @@ namespace Chroma
 				continue;
 
 			Math::vec2 absPos = m_Scene->GetTransformAbsolutePosition(e);
-			if (!s.sprite->IsLoaded())
+			if (!s.sprite || !s.sprite->IsLoaded())
 				continue;
 			float y = -1.f*(absPos.y + s.Offset.y + s.SortingPoint);
 			if (sprites.find(y) == sprites.end())
@@ -138,7 +138,6 @@ namespace Chroma
 				SpriteRenderer& spriteRenderer = m_Scene->Registry.get<SpriteRenderer>(e);
 				if (!spriteRenderer.IsEnabled())
 					continue;
-				Relationship& relationship = m_Scene->Registry.get<Relationship>(e);
 
 				const Math::vec2& origin = spriteRenderer.GetSpriteOriginVector();
 
@@ -150,7 +149,7 @@ namespace Chroma
 					auto sprite = spriteRenderer.sprite;
 					int w = sprite->Frames[spriteRenderer.CurrentFrame].Texture->GetWidth();
 					int h = sprite->Frames[spriteRenderer.CurrentFrame].Texture->GetHeight();
-					if (!relationship.IsChild())
+					if (!transform.IsChild())
 					{
 						Math::vec2 size = transform.Scale * Math::vec2((float)w, (float)h);
 						Math::vec2 originAdjustment = { Math::abs(size.x) / 2.f - origin.x, -Math::abs(size.y) / 2.f + origin.y};
@@ -164,14 +163,14 @@ namespace Chroma
 						Math::vec2 parentPos{ 0,0 };
 						float parentRot = 0;
 						float rotation = transform.Rotation;
-						EntityID parent = relationship.Parent;
+						EntityID parent = transform.Parent;
 						while (parent != ENTITY_NULL)
 						{
 							const Transform& parentTransform = m_Scene->GetComponent<Transform>(parent);
 							parentPos += parentTransform.Position;
 							scale *= parentTransform.Scale;
 							parentRot += parentTransform.Rotation;
-							parent = m_Scene->GetComponent<Relationship>(parent).Parent;
+							parent = parentTransform.Parent;
 						}
 
 						Math::vec2 adjusted = { pos.x * Math::cos(parentRot) - pos.y * Math::sin(parentRot), pos.x * Math::sin(parentRot) + pos.y * Math::cos(parentRot) };
