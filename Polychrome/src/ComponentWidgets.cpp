@@ -44,7 +44,7 @@ namespace Polychrome
 		if (c->IsTypeOf<Chroma::Transform>()) DrawTransform(c);
 		if (c->IsTypeOf<Chroma::CSharpScript>()) DrawCSharpScript(c);
 		if (c->IsTypeOf<Chroma::AudioSource>()) DrawAudioSource(c);
-		if (c->IsTypeOf<Chroma::Collider>()) DrawCollider(c);
+		//if (c->IsTypeOf<Chroma::Collider>()) DrawCollider(c);
 		if (c->IsTypeOf<Chroma::SpriteRenderer>()) DrawSpriteRenderer(c);
 		if (c->IsTypeOf<Chroma::Camera>()) DrawCameraComponent(c);
 		if (c->IsTypeOf<Chroma::ParticleEmitter>()) DrawParticleEmitter(c);

@@ -139,8 +139,8 @@ namespace Chroma
 		static bool SerializeValue(YAML::Emitter& emitter, entt::meta_any& value);
 		static entt::meta_any DeserializeValue(YAML::Node& node);
 
-		//static bool SerializeComponent(YAML::Emitter& emitter, entt::id_type component_type, entt::meta_handle component_handle);
-		//static entt::meta_any DeserializeComponent(YAML::Node& node);
+		static bool SerializeComponent(YAML::Emitter& emitter, entt::id_type component_type, entt::meta_handle component_handle);
+		static entt::meta_any DeserializeComponent(YAML::Node& node);
 
 
 

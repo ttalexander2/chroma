@@ -98,6 +98,8 @@ namespace Chroma
 			
 			i++;
 		}
+
+		return descriptions;
 	}
 
 	void VulkanVertexBuffer::CreateBuffer()

@@ -149,4 +149,19 @@ namespace Chroma
 		return s_DeserializeValueFunctions[type_id](val);
 	}
 
+	bool Reflection::SerializeComponent(YAML::Emitter &emitter, entt::id_type component_type, entt::meta_handle component_handle)
+	{
+		auto meta = entt::resolve(component_type);
+		for (auto& [id, name] : s_ComponentPropertyNames[component_type])
+		{
+			entt::meta_any value = component_handle->get(id);
+			SerializeProperty(emitter, name, value);
+		}
+	}
+
+	entt::meta_any Reflection::DeserializeComponent(YAML::Node &node)
+	{
+		return entt::meta_any();
+	}
+
 }

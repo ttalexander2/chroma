@@ -7,6 +7,7 @@
 #include <queue>
 
 
+
 namespace Chroma
 {
 
@@ -33,6 +34,22 @@ namespace Chroma
 		{
 		public:
 			bool ShouldCollide(b2Fixture *fixtureA, b2Fixture *fixtureB) override;
+		private:
+			Scene *m_Scene;
+			friend class PhysicsSystem;
+		};
+
+		class PhysicsContactListener : public b2ContactListener
+		{
+		public:
+			void BeginContact(b2Contact *contact);
+			void EndContact(b2Contact *contact);
+			void PreSolve(b2Contact *contact, const b2Manifold *oldManifold);
+			void PostSolve(b2Contact *contact, const b2ContactImpulse *impulse);
+
+		private:
+			Scene *m_Scene;
+			friend class PhysicsSystem;
 		};
 
 		class PhysicsSystemDebugDraw : public b2Draw
@@ -51,11 +68,12 @@ namespace Chroma
 		void CreateFixture(EntityID entity, RigidBody* rigidBody);
 
 		b2World *m_World;
-		b2Vec2 m_Gravity = { 0.f, -9.8f };
+		b2Vec2 m_Gravity = { 0.f, 0.f };
 		PhysicsContactFilter m_ContactFilter;
+		PhysicsContactListener m_ContactListener;
 
-		int32_t m_VelocityIterations = 6;
-		int32_t m_PositionIterations = 2;
+		int32_t m_VelocityIterations = 8;
+		int32_t m_PositionIterations = 3;
 
 		PhysicsSystemDebugDraw m_DebugDraw;
 

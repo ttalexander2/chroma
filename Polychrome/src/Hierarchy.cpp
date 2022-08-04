@@ -11,7 +11,10 @@
 #include "imgui_stdlib.h"
 #include <Chroma/Components/Transform.h>
 #include <Chroma/Utilities/ContainerHelpers.h>
-#include "Project.h"
+#include "Project.h" 
+#include "Fonts/IconsForkAwesome.h"
+#include "FuzzyFileSearch.h"
+#include "thid_party/edlib/edlib.h"
 
 
 namespace Polychrome
@@ -29,6 +32,9 @@ namespace Polychrome
 
 	static std::vector<Chroma::EntityID> to_remove_from_order;
 
+	static std::string search_string;
+	const size_t threshold = 10;
+
 	void Hierarchy::Draw()
 	{
 
@@ -40,6 +46,11 @@ namespace Polychrome
 				ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
 			}
 			ImGui::Begin("Scene", &Hierarchy::Open);
+
+
+			ImGui::InputText(ICON_FK_SEARCH "##hierarchy_search", &search_string);
+			ImGui::Separator();
+			
 
 			Chroma::Scene* scene = EditorApp::CurrentScene;
 
@@ -60,14 +71,75 @@ namespace Polychrome
 
 			std::vector<Chroma::EntityID> entities(scene->EntityOrder);
 
-			int i = 0;
+			//TODO: Add entity search (by name)
+
+			std::map<size_t, std::vector<Chroma::EntityID>> search_entities;
+
+			size_t i = 0;
 			for (Chroma::EntityID e : entities)
 			{
-				if (entities.size() > i + 1)
-					DrawEntity(scene, e, entities[i + 1]);
+				if (!search_string.empty())
+				{
+					Chroma::Tag tag = view.get<Chroma::Tag>(e);
+					std::string entity_name(tag.EntityName);
+					std::transform(entity_name.begin(), entity_name.end(), entity_name.begin(), 
+						[](unsigned char c)
+							{ return std::tolower(c); }
+					);
+
+					std::string term(search_string);
+					std::transform(term.begin(), term.end(), term.begin(), [](unsigned char c)
+							{ return std::tolower(c); }
+					);
+
+					size_t distance = 0;
+					auto result = edlibAlign(term.c_str(), term.length(), entity_name.c_str(), entity_name.length(), edlibDefaultAlignConfig());
+					if (result.status == EDLIB_STATUS_OK)
+					{
+						if (result.editDistance != -1)
+							distance = result.editDistance;
+					}
+					edlibFreeAlignResult(result);
+
+					int j = 0;
+					for (char c : term)
+					{
+						if (entity_name.length() >= j || c != entity_name[j])
+							break;
+					}
+
+					distance -= j;
+
+					distance += Math::abs(term.length() - entity_name.length());
+
+					if (distance <= threshold)
+					{
+						if (search_entities.find(distance) == search_entities.end())
+							search_entities.emplace(distance, std::vector<Chroma::EntityID>());
+						search_entities[distance].push_back(e);
+					}
+				}
 				else
-					DrawEntity(scene, e, Chroma::ENTITY_NULL);
+				{
+					if (entities.size() > i + 1)
+						DrawEntity(scene, e, entities[i + 1]);
+					else
+						DrawEntity(scene, e, Chroma::ENTITY_NULL);
+				}
+
 				i++;
+			}
+
+			std::vector<Chroma::EntityID> sorted;
+			for (auto &[distance, entities] : search_entities)
+			{
+				sorted.insert(sorted.end(), entities.begin(), entities.end());
+			}
+
+
+			for (Chroma::EntityID e : sorted)
+			{
+				DrawEntity(scene, e, Chroma::ENTITY_NULL);
 			}
 
 			if (!any_hovered)

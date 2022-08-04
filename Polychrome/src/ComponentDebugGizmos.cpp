@@ -50,10 +50,10 @@ namespace Polychrome
 		}
 		else if (DrawAllEntities)
 		{
-			for (auto entity : EditorApp::CurrentScene->Registry.view<Chroma::Collider>())
-			{
-				DrawColliderGizmos(entity);
-			}
+			//for (auto entity : EditorApp::CurrentScene->Registry.view<Chroma::Collider>())
+			//{
+			//	DrawColliderGizmos(entity);
+			//}
 
 			for (auto entity : EditorApp::CurrentScene->Registry.view<Chroma::SpriteRenderer>())
 			{
@@ -64,11 +64,7 @@ namespace Polychrome
 
 	void ComponentDebugGizmos::DrawColliderGizmos(Chroma::EntityID entity)
 	{
-		if (DrawBoxCollider && EditorApp::CurrentScene->HasComponent<Chroma::Collider>(entity))
-		{
-			auto& collider = EditorApp::CurrentScene->GetComponent<Chroma::Collider>(entity);
-			const Math::vec2 absolutePos = EditorApp::CurrentScene->GetTransformAbsolutePosition(entity);
-		}
+		
 	}
 
 

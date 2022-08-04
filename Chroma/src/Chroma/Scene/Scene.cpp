@@ -23,6 +23,11 @@
 #include <Chroma/Systems/CameraSystem.h>
 #include <Chroma/Systems/ParticleSystem.h>
 #include <Chroma/Systems/PhysicsSystem.h>
+#include <Chroma/Components/CircleCollider.h>
+#include <Chroma/Components/EdgeCollider.h>
+#include <Chroma/Components/PolygonCollider.h>
+#include <Chroma/Components/RectangleCollider.h>
+#include <Chroma/Reflection/Reflection.h>
 
 
 
@@ -557,7 +562,7 @@ namespace Chroma
 			}
 			else
 			{
-				comp->DoSerialize(out);
+				//comp->DoSerialize(out);
 			}
 
 		}
@@ -592,22 +597,22 @@ namespace Chroma
 
 	void Scene::Init()
 	{
-		physics_system->EarlyInit();
 		scripting_system->EarlyInit();
+		physics_system->EarlyInit();
 		audio_system->EarlyInit();
 		sprite_renderer_system->EarlyInit();
 		particle_system->EarlyInit();
 		camera_system->EarlyInit();
 
-		physics_system->Init();
 		scripting_system->Init();
+		physics_system->Init();
 		audio_system->Init();
 		sprite_renderer_system->Init();
 		particle_system->Init();
 		camera_system->Init();
 
-		physics_system->LateInit();
 		scripting_system->LateInit();
+		physics_system->LateInit();
 		audio_system->LateInit();
 		sprite_renderer_system->LateInit();
 		particle_system->LateInit();
@@ -616,22 +621,22 @@ namespace Chroma
 
 	void Scene::Update(Time delta)
 	{
-		physics_system->EarlyUpdate(delta);
 		scripting_system->EarlyUpdate(delta);
+		physics_system->EarlyUpdate(delta);
 		audio_system->EarlyUpdate(delta);
 		sprite_renderer_system->EarlyUpdate(delta);
 		particle_system->EarlyUpdate(delta);
 		camera_system->EarlyUpdate(delta);
 
-		physics_system->Update(delta);
 		scripting_system->Update(delta);
+		physics_system->Update(delta);
 		audio_system->Update(delta);
 		sprite_renderer_system->Update(delta);
 		particle_system->Update(delta);
 		camera_system->Update(delta);
 
-		physics_system->LateUpdate(delta);
 		scripting_system->LateUpdate(delta);
+		physics_system->LateUpdate(delta);
 		audio_system->LateUpdate(delta);
 		sprite_renderer_system->LateUpdate(delta);
 		particle_system->LateUpdate(delta);
@@ -683,6 +688,29 @@ namespace Chroma
 		PrimaryCameraEntity = entity;
 		Registry.get_or_emplace<Camera>(PrimaryCameraEntity, PrimaryCameraEntity);
 		return true;
+	}
+
+	std::vector<Collider*> Scene::GetColliders(EntityID entity)
+	{
+		std::vector<Collider*> colliders;
+
+		CircleCollider* circleCollider = Registry.try_get<CircleCollider>(entity);
+		if (circleCollider != nullptr)
+			colliders.push_back(dynamic_cast<Chroma::Collider*>(circleCollider));
+		EdgeCollider *edgeCollider = Registry.try_get<EdgeCollider>(entity);
+		if (edgeCollider != nullptr)
+			colliders.push_back(dynamic_cast<Chroma::Collider*>(edgeCollider));
+		PolygonCollider *polygonCollider = Registry.try_get<PolygonCollider>(entity);
+		if (polygonCollider != nullptr)
+			colliders.push_back(dynamic_cast<Chroma::Collider*>(polygonCollider));
+		RectangleCollider *rectangleCollider = Registry.try_get<RectangleCollider>(entity);
+		if (rectangleCollider != nullptr)
+			colliders.push_back(dynamic_cast<Chroma::Collider*>(rectangleCollider));
+
+		return colliders;
+
+
+
 	}
 
 }

@@ -7,6 +7,8 @@
 #include "ScriptModuleField.h"
 #include "Chroma/Scene/Entity.h"
 #include "Chroma/Core/Time.h"
+#include <box2d.h>
+#include <Chroma/Components/Collider.h>
 
 namespace Polychrome
 {
@@ -94,6 +96,10 @@ namespace Chroma
 		static void LateDraw(Entity entity, Time t);
 
 		static void OnCollide(Entity entity, EntityID collisionEntity);
+		static void OnBeginContact(const Collider *colliderA, const Collider *colliderB, b2Contact *contact);
+		static void OnEndContact(Entity entity);
+		static void OnPreSolve(Entity entity);
+		static void OnPostSolve(Entity entity);
 
 		static bool IsEntityModuleValid(Entity entity);
 

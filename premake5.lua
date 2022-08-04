@@ -412,7 +412,7 @@ project "Runtime"
 
 project "Chroma.Mono"
     location "Script-Core"
-    kind "Makefile"
+    kind "MakeFile"
 
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("obj/" .. outputdir .. "/%{prj.name}")

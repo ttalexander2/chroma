@@ -29,9 +29,6 @@ namespace Chroma
 		bool Component_GetEnabled(EntityID id, void* type);
 		void Component_SetEnabled(EntityID id, void* type, bool value);
 
-
-
-
 		//Log
 		void Log_Message(Log::LogLevel level, MonoString* message);
 
@@ -86,6 +83,76 @@ namespace Chroma
 		float Audio_GetEventParameter(MonoString* event_name, MonoString* parameter);
 		void Audio_SetEventParameter(MonoString* event_name, MonoString* parameter, float value);
 		bool Audio_IsEventPlaying(MonoString* event_name);
+
+		//RigidBody
+		int RigidBody_GetBodyType(EntityID id);
+		void RigidBody_SetBodyType(EntityID id, int val);
+		void RigidBody_GetLinearVelocity(EntityID id, Math::vec2 *vec);
+		void RigidBody_SetLinearVelocity(EntityID id, Math::vec2 *vec);
+		float RigidBody_GetAngularVelocity(EntityID id);
+		void RigidBody_SetAngularVelocity(EntityID id, float val);
+		float RigidBody_GetLinearDamping(EntityID id);
+		void RigidBody_SetLinearDamping(EntityID id, float val);
+		float RigidBody_GetAngularDamping(EntityID id);
+		void RigidBody_SetAngularDamping(EntityID id, float val);
+		bool RigidBody_GetSleepingAllowed(EntityID id);
+		void RigidBody_SetSleepingAllowed(EntityID id, bool val);
+		bool RigidBody_GetAwake(EntityID id);
+		void RigidBody_SetAwake(EntityID id, bool val);
+		bool RigidBody_GetFixedRotation(EntityID id);
+		void RigidBody_SetFixedRotation(EntityID id, bool val);
+		bool RigidBody_GetBullet(EntityID id);
+		void RigidBody_SetBullet(EntityID id, bool val);
+		float RigidBody_GetGravityScale(EntityID id);
+		void RigidBody_SetGravityScale(EntityID id, float val);
+		void RigidBody_ApplyForce(EntityID id, Math::vec2 *force, Math::vec2 *point, bool wake);
+		void RigidBody_ApplyForceToCenter(EntityID id, Math::vec2 *force, bool wake);
+		void RigidBody_ApplyTorque(EntityID id, float torque, bool wake);
+		void RigidBody_ApplyLinearImpulse(EntityID id, Math::vec2 *impulse, Math::vec2 *point, bool wake);
+		void RigidBody_ApplyLinearImpulseToCenter(EntityID id, Math::vec2 *impulse, bool wake);
+		void RigidBody_ApplyAngularImpulse(EntityID id, float impulse, bool wake);
+
+
+		//Collider
+		unsigned int Collider_GetMask(EntityID id, void* type);
+		void Collider_SetMask(EntityID id, unsigned int mask, void* type);
+		unsigned int Collider_GetLayer(EntityID id, void *type);
+		void Collider_SetLayer(EntityID id, unsigned int layer, void *type);
+		float Collider_GetFriction(EntityID id, void *type);
+		void Collider_SetFriction(EntityID id, float friction, void *type);
+		float Collider_GetRestitution(EntityID id, void *type);
+		void Collider_SetRestitution(EntityID id, float restitution, void *type);
+		float Collider_GetRestitutionThreshold(EntityID id, void *type);
+		void Collider_SetRestitutionThreshold(EntityID id, float threshold, void *type);
+		float Collider_GetDensity(EntityID id, void *type);
+		void Collider_SetDensity(EntityID id, float density, void *type);
+		bool Collider_GetSensor(EntityID id, void *type);
+		void Collider_SetSensor(EntityID id, bool sensor, void *type);
+
+		//CircleCollider
+		float CircleCollider_GetRadius(EntityID id);
+		void CircleCollider_SetRadius(EntityID id, float radius);
+
+		//EdgeCollider
+		bool EdgeCollider_GetOneSided(EntityID id);
+		void EdgeCollider_SetOneSided(EntityID id, bool oneSided);
+		void EdgeCollider_GetV0(EntityID id, Math::vec2* vec);
+        void EdgeCollider_SetV0(EntityID id, Math::vec2* vec);
+		void EdgeCollider_GetV1(EntityID id, Math::vec2* vec);
+        void EdgeCollider_SetV1(EntityID id, Math::vec2* vec);
+		void EdgeCollider_GetV2(EntityID id, Math::vec2* vec);
+        void EdgeCollider_SetV2(EntityID id, Math::vec2* vec);
+		void EdgeCollider_GetV3(EntityID id, Math::vec2* vec);
+        void EdgeCollider_SetV3(EntityID id, Math::vec2* vec);
+
+		//PolygonCollider
+		MonoArray* PolygonCollider_GetVertices(EntityID id);
+
+		//RectangleCollider
+		void RectangleCollider_SetSize(EntityID id, Math::vec2 *vec);
+		void RectangleCollider_GetSize(EntityID id, Math::vec2 *vec);
+		float RectangleCollider_GetRotation(EntityID id);
+		void RectangleCollider_SetRotation(EntityID id, float val);
 
 
 

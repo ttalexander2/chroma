@@ -26,7 +26,10 @@
 #include "Chroma/Assets/AssetManager.h"
 #include "Chroma/Assets/Sprite.h"
 #include "Chroma/Reflection/Reflection.h"
-#include "Chroma/Components/Collider.h"
+#include "Chroma/Components/CircleCollider.h"
+#include "Chroma/Components/EdgeCollider.h"
+#include "Chroma/Components/PolygonCollider.h"
+#include "Chroma/Components/RectangleCollider.h"
 #include "Chroma/Components/RigidBody.h"
 
 #include <entt.hpp>
@@ -74,7 +77,10 @@ namespace Chroma
 			Reflection::InitializeDataTypes();
 
 			Scene::RegisterComponent<AudioSource>();
-			Scene::RegisterComponent<Collider>();
+			Scene::RegisterComponent<CircleCollider>();
+			Scene::RegisterComponent<EdgeCollider>();
+			Scene::RegisterComponent<PolygonCollider>();
+			Scene::RegisterComponent<RectangleCollider>();
 			Scene::RegisterComponent<Camera>();
 			Scene::RegisterComponent<CSharpScript>();
 			Scene::RegisterComponent<ParticleEmitter>();

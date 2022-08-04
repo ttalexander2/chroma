@@ -61,6 +61,10 @@ namespace Chroma
 		MonoMethod *LateDrawMethod = nullptr;
 
 		MonoMethod* OnCollideMethod = nullptr;
+		MonoMethod* OnBeginContact = nullptr;
+		MonoMethod *OnEndContact = nullptr;
+		MonoMethod *OnPreSolve = nullptr;
+		MonoMethod *OnPostSolve = nullptr;
 
 		MonoMethod* InternalUpdateMethod = nullptr;
 
@@ -81,6 +85,10 @@ namespace Chroma
 			LateDrawMethod = GetMethod(image, FullName + ":LateDraw()");
 
 			OnCollideMethod = GetMethod(coreAssemblyImage, "Chroma.Entity:Internal_OnCollide(ulong)");
+			OnBeginContact = GetMethod(coreAssemblyImage, "Chroma.Entity:OnBeginContact(Chroma.CollisionContact)");
+			//OnEndContact = GetMethod(coreAssemblyImage, "Chroma.Entity:Internal_OnEndContact(ulong)");
+			//OnPreSolve = GetMethod(coreAssemblyImage, "Chroma.Entity:Internal_OnPreSolve(ulong)");
+			//OnPostSolve = GetMethod(coreAssemblyImage, "Chroma.Entity:Internal_OnPostSolve(ulong)");
 
 			InternalUpdateMethod = GetMethod(coreAssemblyImage, "Chroma.Entity:InternalUpdate()");
 
@@ -1069,6 +1077,131 @@ namespace Chroma
 			void *param[] = { &collisionEntity };
 			CallMethod(entityInstance.Instance.GetInstance(), entityInstance.Instance.ScriptClass->OnCollideMethod, param);
 		}
+	}
+
+	void MonoScripting::OnBeginContact(const Collider* colliderA, const Collider* colliderB, b2Contact *contact)
+	{
+		void *collisionManifoldParams[] = {
+			&contact->GetManifold()->localNormal,
+			&contact->GetManifold()->localPoint,
+			&contact->GetManifold()->type
+		};
+		MonoObject *collisionManifold = Construct("Chroma.CollisionManifold", true, collisionManifoldParams);
+
+		MonoClass *manifoldPointClass = mono_class_from_name(coreAssemblyImage, "Chroma", "ManifoldPoint");
+
+		MonoArray *pointArray = mono_array_new(mono_domain_get(), manifoldPointClass, contact->GetManifold()->pointCount);
+			
+		for (int i = 0; i < contact->GetManifold()->pointCount; i++)
+		{
+			void *manifoldPointParams[] = {
+				&contact->GetManifold()->points[i].localPoint,
+				&contact->GetManifold()->points[i].normalImpulse,
+				&contact->GetManifold()->points[i].tangentImpulse,
+				&contact->GetManifold()->points[i].id
+			};
+
+			MonoObject *manifoldPoint = Construct("Chroma.ManifoldPoint", true, manifoldPointParams);
+			mono_array_set(pointArray, MonoObject *, i, manifoldPoint);
+		}
+
+		MonoClass* collisionManifoldClass = mono_class_from_name(coreAssemblyImage, "Chroma", "CollisionManifold");
+		void *listData[] = { pointArray };
+		mono_property_set_value(mono_class_get_property_from_name(collisionManifoldClass, "Points"), collisionManifold, listData, nullptr); 
+
+
+		MonoClass *worldManifoldClass = mono_class_from_name(coreAssemblyImage, "Chroma", "WorldManifold");
+		MonoObject *worldManifold = Construct("Chroma.WorldManifold");
+
+		b2WorldManifold *worldManifoldB2 = nullptr;
+		contact->GetWorldManifold(worldManifoldB2);
+		void *worldManifoldNormalParams[] = {
+			&worldManifoldB2->normal
+		};
+		mono_property_set_value(mono_class_get_property_from_name(worldManifoldClass, "Normal"), worldManifold, worldManifoldNormalParams, nullptr);
+
+		MonoClass *vector2Class = mono_class_from_name(coreAssemblyImage, "Chroma", "Vector2");
+		MonoArray *worldPointArray = mono_array_new(mono_domain_get(), vector2Class, b2_maxManifoldPoints);
+		MonoArray *worldSeparationArray = mono_array_new(mono_domain_get(), mono_get_single_class(), b2_maxManifoldPoints);
+
+		for (int i = 0; i < b2_maxManifoldPoints; i++)
+		{
+			mono_array_set(worldPointArray, b2Vec2, i, worldManifoldB2->points[i]);
+			mono_array_set(worldSeparationArray, float, i, worldManifoldB2->separations[i]);
+		}
+
+		void *worldManifoldPointsParams[] = {
+			&worldPointArray
+		};
+		mono_property_set_value(mono_class_get_property_from_name(worldManifoldClass, "Points"), worldManifold, worldManifoldPointsParams, nullptr);
+
+		void *worldManifoldSeparationsParams[] = {
+			&worldSeparationArray
+		};
+		mono_property_set_value(mono_class_get_property_from_name(worldManifoldClass, "Separations"), worldManifold, worldManifoldSeparationsParams, nullptr);
+		
+
+		bool isTouching = contact->IsTouching();
+
+		EntityID entityA = colliderA->GetEntityID();
+		EntityID entityB = colliderB->GetEntityID();
+		Collider::ColliderType typeA = colliderA->GetColliderType();
+		Collider::ColliderType typeB = colliderB->GetColliderType();
+
+		void *collisionContactParams[] = {
+			&contact,
+			&entityA,
+			&entityB,
+			&typeA,
+			&typeB,
+			&collisionManifold,
+			&worldManifold,
+			&isTouching,
+		};
+
+		MonoObject *collisionContact = Construct("Chroma.CollisionContact", true, collisionContactParams);
+
+		void *onCollideParams[] = {
+			&collisionContact
+		};
+
+		CSharpScript *scriptA = sceneContext->Registry.try_get<CSharpScript>(colliderA->GetEntityID());
+		CSharpScript *scriptB = sceneContext->Registry.try_get<CSharpScript>(colliderB->GetEntityID());
+		if (scriptA)
+		{
+			if (scriptA->IsEnabled())
+			{
+				EntityInstanceData &entityInstance = GetEntityInstanceData(sceneContext->GetID(), entityA);
+				if (entityInstance.Instance.ScriptClass->OnCollideMethod)
+				{
+					CallMethod(entityInstance.Instance.GetInstance(), entityInstance.Instance.ScriptClass->OnCollideMethod, onCollideParams);
+				}
+			}
+		}
+		if (scriptB)
+		{
+			if (scriptB->IsEnabled())
+			{
+				EntityInstanceData &entityInstance = GetEntityInstanceData(sceneContext->GetID(), entityA);
+				if (entityInstance.Instance.ScriptClass->OnCollideMethod)
+				{
+					CallMethod(entityInstance.Instance.GetInstance(), entityInstance.Instance.ScriptClass->OnCollideMethod, onCollideParams);
+				}
+			}
+		}
+
+	}
+
+	void MonoScripting::OnEndContact(Entity entity)
+	{
+	}
+
+	void MonoScripting::OnPreSolve(Entity entity)
+	{
+	}
+
+	void MonoScripting::OnPostSolve(Entity entity)
+	{
 	}
 
 	PublicField::PublicField(const std::string& name, const std::string& typeName, FieldType type, bool isReadOnly)

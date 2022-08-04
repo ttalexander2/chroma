@@ -99,7 +99,7 @@ namespace Chroma
             }
             return null;
         }
-        
+
         /// <summary>
         /// Gets an entity its name. Returns <c>null</c> if an entity with the given name does not exist.
         /// </summary>
@@ -237,6 +237,14 @@ namespace Chroma
         /// <param name="collisionEntity">The entity this object is colliding with.</param>
         public virtual void OnCollide(Entity collisionEntity) { }
 
+        public virtual void OnBeginContact(CollisionContact contact) { }
+
+        public virtual void OnEndContact(CollisionContact contact) { }
+
+        public virtual void OnPreSolve(CollisionContact contact, CollisionManifold oldManifold) { }
+
+        public virtual void OnPostSolve(CollisionContact contact, ContactImpulse impulse) { }
+
         internal void Internal_OnCollide(ulong id) 
         {
             OnCollide(new Entity(id));
@@ -261,7 +269,6 @@ namespace Chroma
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern ulong FindEntityByName_Native(string name);
-
 
 
         [MethodImpl(MethodImplOptions.InternalCall)]

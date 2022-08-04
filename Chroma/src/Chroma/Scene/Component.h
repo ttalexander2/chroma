@@ -60,8 +60,8 @@ namespace Chroma
 		public:\
 			using ClassName = typeName; \
 			using BaseClass = baseTypeName; \
-			typeName() : baseTypeName() {} \
-			typeName(EntityID id) : baseTypeName(id) {} \
+			typeName() : baseTypeName(){ Initialize(); } \
+			typeName(EntityID id) : baseTypeName(id){ Initialize(); } \
 			typeName(const typeName&) = default; \
 			typeName &operator=(const typeName &) = default; \
 			virtual StringHash GetType() const override { return GetTypeInfoStatic()->GetType(); } \

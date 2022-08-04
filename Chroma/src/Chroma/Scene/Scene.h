@@ -234,6 +234,8 @@ namespace Chroma
 		EntityID GetPrimaryCameraEntity() { return PrimaryCameraEntity; }
 		bool SetPrimaryCamera(EntityID entity);
 
+		std::vector<Collider*> GetColliders(EntityID entity);
+
 #pragma endregion
 		entt::registry Registry;
 

@@ -2,6 +2,7 @@
 #include "RigidBody.h"
 
 #include "Chroma/Reflection/Reflection.h"
+#include "Chroma/Physics/Physics.h"
 
 namespace Chroma
 {
@@ -23,36 +24,34 @@ namespace Chroma
 		Reflection::RegisterComponentProperty<RigidBody, &RigidBody::m_CenterOfMass>("Center");
 		Reflection::RegisterComponentProperty<RigidBody, &RigidBody::m_Inertia>("Inertia");
 
+
 	}
 
 	void RigidBody::Initialize()
 	{
 		m_BodyDefinition.userData.pointer = reinterpret_cast<uintptr_t>(&m_EntityID);
 		m_BodyDefinition.type = b2_dynamicBody;
-		m_BodyDefinition.allowSleep = true;
+		m_BodyDefinition.allowSleep = false;
 		m_BodyDefinition.angle = 0;
 		m_BodyDefinition.bullet = false;
 		m_BodyDefinition.enabled = true;
 		m_BodyDefinition.fixedRotation = false;
 		m_BodyDefinition.gravityScale = 1.f;
 		m_BodyDefinition.linearDamping = 0.f;
-		m_BodyDefinition.linearVelocity = { 0.f, 0.f };
+		m_BodyDefinition.angularDamping = 0.f;
 	}
 
 	const void RigidBody::SetBodyType(BodyType type)
 	{
 		switch (type)
 		{
-			case BodyType::DYNAMIC:
+			case BodyType::Dynamic:
 				m_BodyDefinition.type = b2_dynamicBody;
 				break;
-			case BodyType::KINEMATIC:
+			case BodyType::Kinematic:
 				m_BodyDefinition.type = b2_kinematicBody;
 				break;
-			case BodyType::STATIC:
-				m_BodyDefinition.type = b2_staticBody;
-				break;
-			default:
+			case BodyType::Static:
 				m_BodyDefinition.type = b2_staticBody;
 				break;
 		}
@@ -64,24 +63,24 @@ namespace Chroma
 		switch (m_BodyDefinition.type)
 		{
 			case b2_dynamicBody:
-				return BodyType::DYNAMIC;
+				return BodyType::Dynamic;
 			case b2_kinematicBody:
-				return BodyType::KINEMATIC;
+				return BodyType::Kinematic;
 			case b2_staticBody:
-				return BodyType::STATIC;
+				return BodyType::Static;
 		}
-		return BodyType::STATIC;
+		return BodyType::Static;
 	}
 
 	void RigidBody::SetLinearVelocity(const Math::vec2 &velocity)
 	{
 		if (m_Body)
 		{
-			m_Body->SetLinearVelocity({ velocity.x, velocity.y });
+			m_Body->SetLinearVelocity({ velocity.x * Physics::GetScale(), velocity.y * Physics::GetScale() });
 		}
 		else
 		{
-			m_BodyDefinition.linearVelocity = { velocity.x, velocity.y };
+			m_BodyDefinition.linearVelocity = { velocity.x * Physics::GetScale(), velocity.y * Physics::GetScale() };
 		}
 	}
 
@@ -90,11 +89,11 @@ namespace Chroma
 		if (m_Body)
 		{
 			b2Vec2 v = m_Body->GetLinearVelocity();
-			return { v.x, v.y };
+			return { v.x / Physics::GetScale(), v.y / Physics::GetScale() };
 		}
 		else
 		{
-			return { m_BodyDefinition.linearVelocity.x, m_BodyDefinition.linearVelocity.y };
+			return { m_BodyDefinition.linearVelocity.x / Physics::GetScale(), m_BodyDefinition.linearVelocity.y / Physics::GetScale() };
 		}
 	}
 
@@ -347,6 +346,42 @@ namespace Chroma
 		data.center = m_CenterOfMass;
 		data.inertia = m_Inertia;
 		return data;
+	}
+
+	void RigidBody::ApplyForce(const Math::vec2 &force, const Math::vec2 &point, bool wake)
+	{
+		if (m_Body)
+			m_Body->ApplyForce(b2Vec2(force.x * Physics::GetScale(), force.y * Physics::GetScale()), b2Vec2(point.x * Physics::GetScale(), point.y * Physics::GetScale()), wake);
+	}
+
+	void RigidBody::ApplyForce(const Math::vec2 &force, bool wake)
+	{
+		if (m_Body)
+			m_Body->ApplyForceToCenter(b2Vec2(force.x * Physics::GetScale(), force.y * Physics::GetScale()), wake);
+	}
+
+	void RigidBody::ApplyTorque(float torque, bool wake)
+	{
+		if (m_Body)
+			m_Body->ApplyTorque(torque, wake);
+	}
+
+	void RigidBody::ApplyLinearImpulse(const Math::vec2 &impulse, const Math::vec2 &point, bool wake)
+	{
+		if (m_Body)
+			m_Body->ApplyLinearImpulse(b2Vec2(impulse.x * Physics::GetScale(), impulse.y * Physics::GetScale()), b2Vec2(point.x * Physics::GetScale(), point.y * Physics::GetScale()), wake);
+	}
+
+	void RigidBody::ApplyLinearImpulse(const Math::vec2 &impulse, bool wake)
+	{
+		if (m_Body)
+			m_Body->ApplyLinearImpulseToCenter(b2Vec2(impulse.x * Physics::GetScale(), impulse.y * Physics::GetScale()), wake);
+	}
+
+	void RigidBody::ApplyAngularImpulse(float impulse, bool wake)
+	{
+		if (m_Body)
+			m_Body->ApplyAngularImpulse(impulse, wake);
 	}
 }
 

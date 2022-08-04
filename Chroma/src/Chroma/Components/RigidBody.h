@@ -16,11 +16,11 @@ namespace Chroma
 		void Initialize() override;
 
 
-		enum class BodyType
+		enum class BodyType : int
 		{
-			STATIC,
-			KINEMATIC,
-			DYNAMIC
+			Static = 0,
+			Kinematic = 1,
+			Dynamic = 2
 		};
 
 		struct MassData
@@ -32,7 +32,6 @@ namespace Chroma
 
 		const void SetBodyType(BodyType type);
 		BodyType GetBodyType() const;
-
 
 		void SetLinearVelocity(const Math::vec2 &velocity);
 		Math::vec2 GetLinearVelocity() const;
@@ -65,6 +64,13 @@ namespace Chroma
 		void SetCustomMassData(MassData data);
 		void ResetMassData();
 		MassData GetMassData();
+
+		void ApplyForce(const Math::vec2 &force, const Math::vec2 &point, bool wake = true);
+		void ApplyForce(const Math::vec2 &force, bool wake = true);
+		void ApplyTorque(float torque, bool wake = true);
+		void ApplyLinearImpulse(const Math::vec2 &impulse, const Math::vec2 &point, bool wake = true);
+		void ApplyLinearImpulse(const Math::vec2 &impulse, bool wake = true);
+		void ApplyAngularImpulse(float impulse, bool wake = true);
 
 
 	private:
