@@ -10,7 +10,6 @@ namespace Chroma
     struct Camera : public Component
     {
 		CHROMA_COMPONENT(Camera, Component);
-
 		const Math::vec2& GetPosition() const { return position; }
 		void SetPosition(const Math::vec2& pos) { if (position != pos) dirty = true; position = pos; }
 
@@ -21,12 +20,6 @@ namespace Chroma
 		const Math::mat4& GetProjectionMatrix() const { return projectionMatrix; }
 		const Math::mat4& GetViewMatrix() const { return viewMatrix; }
 		const Math::mat4& GetViewProjectionMatrix() const { return viewProjectionMatrix; }
-
-
-		void Serialize(YAML::Emitter& out) override;
-		void Deserialize(YAML::Node& node) override;
-
-
 
 	private:
 		void RecalculateViewMatrix();

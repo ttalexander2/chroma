@@ -561,7 +561,7 @@ namespace Chroma
 		RigidBody *rigidBody = scene->Registry.try_get<RigidBody>(id);
 		if (rigidBody)
 		{
-			rigidBody->SetBodyType((Chroma::RigidBody::BodyType)val);
+			rigidBody->SetBodyType((RigidBody::BodyType)val);
 		}
 	}
 

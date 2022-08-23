@@ -5,12 +5,6 @@
 
 namespace Chroma
 {
-	void RectangleCollider::CreateReflectionModel()
-	{
-		Reflection::RegisterComponent<RectangleCollider, Collider>();
-		Reflection::RegisterComponentProperty<RectangleCollider, static_cast<void (RectangleCollider::*)(const Math::vec2 &)>(&RectangleCollider::SetSize), &RectangleCollider::GetSize>("Size");
-		Reflection::RegisterComponentProperty<RectangleCollider, &RectangleCollider::SetRotation, &RectangleCollider::GetRotation>("Rotation");
-	}
 	void RectangleCollider::Initialize()
 	{
 		m_Shape.SetAsBox(10 * Physics::GetScale(), 10 * Physics::GetScale());
@@ -50,6 +44,14 @@ namespace Chroma
 	float RectangleCollider::GetRotation() const
 	{
 		return m_Rotation;
+	}
+
+	Reflection::TypeFactory<RectangleCollider> RectangleCollider::RegisterType()
+	{
+		return Reflection::Register<RectangleCollider>("RectangleCollider")
+				.Base<Collider>()
+				.Data<static_cast<void (RectangleCollider::*)(const Math::vec2 &)>(&RectangleCollider::SetSize), &RectangleCollider::GetSize>("Size")
+				.Data<&RectangleCollider::SetRotation, &RectangleCollider::GetRotation>("Rotation");
 	}
 
 }

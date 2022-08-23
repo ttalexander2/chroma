@@ -70,7 +70,7 @@ namespace Chroma
 		static inline VkDevice GetDevice() { return s_Instance->m_Device; }
 		static inline VkPhysicalDevice GetPhysicalDevice() { return s_Instance->m_PhysicalDevice; }
 		static inline std::vector<VkCommandBuffer>& GetCommandBuffers() { return s_Instance->m_CommandBuffers; }
-		static inline uint32_t GetFrameIndex() { return s_Instance->m_CurrentFrame; }
+		static inline size_t GetFrameIndex() { return s_Instance->m_CurrentFrame; }
 
 		static uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
 		static void CreateBuffer(VkDevice device, VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);

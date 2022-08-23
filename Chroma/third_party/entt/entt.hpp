@@ -1959,7 +1959,7 @@ class basic_any {
             } else {
                 if constexpr(sizeof...(Args) != 0u && std::is_aggregate_v<Type>) {
                     instance = new Type{std::forward<Args>(args)...};
-                } else {
+                } else if constexpr (!std::is_abstract<Type>()) {
                     instance = new Type(std::forward<Args>(args)...);
                 }
             }

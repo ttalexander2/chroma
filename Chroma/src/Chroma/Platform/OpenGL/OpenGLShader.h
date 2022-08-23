@@ -33,7 +33,7 @@ namespace Chroma
 
 		/// @brief Gets the name of the shader.
 		/// @return Shader's name.
-		virtual const std::string& GetName() const override { return m_Name; }
+		virtual std::string GetName() const override { return m_Name; }
 
 		/// @brief Sets a shader uniform value.
 		/// @param name Name of the uniform value.

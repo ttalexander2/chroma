@@ -9,9 +9,6 @@ namespace Chroma
 	{
 		CHROMA_COMPONENT(CSharpScript, Component);
 
-		void Serialize(YAML::Emitter& out) override;
-		void Deserialize(YAML::Node& node) override;
-
 		std::string ModuleName;
 		ScriptModuleFieldMap ModuleFieldMap;
 		int ExecutionOrder = 0;

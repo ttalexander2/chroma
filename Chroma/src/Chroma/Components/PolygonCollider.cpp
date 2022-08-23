@@ -5,12 +5,6 @@
 
 namespace Chroma
 {
-	void PolygonCollider::CreateReflectionModel()
-	{
-		Reflection::RegisterComponent<PolygonCollider, Collider>();
-		Reflection::RegisterComponentProperty<PolygonCollider, &PolygonCollider::SetVertices, &PolygonCollider::GetVertices>("Vertices");
-	}
-
 
 	bool PolygonCollider::ValidateConvexity()
 	{
@@ -111,6 +105,12 @@ namespace Chroma
 		out->vertex = { m_Shape.m_vertices[index].x / Physics::GetScale(), m_Shape.m_vertices[index].y / Physics::GetScale() };
 		out->normal = { m_Shape.m_normals[index].x, m_Shape.m_normals[index].y };
 		return true;
+	}
+
+	Reflection::TypeFactory<PolygonCollider> PolygonCollider::RegisterType()
+	{
+		return Reflection::Register<PolygonCollider>("PolygonCollider")
+				.Data<&PolygonCollider::SetVertices, &PolygonCollider::GetVertices>("Vertices");
 	}
 
 	void PolygonCollider::SetVertices(const std::vector<Vertex> &vertices)

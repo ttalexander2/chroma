@@ -80,22 +80,17 @@ namespace Chroma
 		template <ComponentType T>
 		static void RegisterComponent()
 		{
-			T::CreateReflectionModel();
-			StringHash hash = T::GetTypeInfoStatic()->GetType();
+			auto typeInfo = Reflection::Resolve<T>();
+			size_t hash = typeInfo.Id();
+
 			if (s_ComponentAdd.find(hash) != s_ComponentAdd.end())
 			{
-				CHROMA_CORE_WARN("Component [{}] already registered!", T::GetTypeNameStatic());
+				CHROMA_CORE_WARN("Component [{}] already registered!", typeInfo.GetName());
 				return;
 			}
-			const TypeInfo* type = T::GetTypeInfoStatic();
-			s_Types.push_back(type);
 
 			s_ComponentAdd[hash] = [](EntityID id, entt::registry* registry)
 			{
-				if (T::GetTypeNameStatic() == "ParticleEmitter")
-				{
-					CHROMA_CORE_INFO("added particle emitter");
-				}
 				registry->emplace<T>(id, id);
 				return registry->try_get<T>(id);
 			};
@@ -135,8 +130,6 @@ namespace Chroma
 
 		}
 
-		static std::list<const TypeInfo*> GetComponentTypes();
-
 
 		template<ComponentType T>
 		T& AddComponent(EntityID id)
@@ -147,7 +140,7 @@ namespace Chroma
 
 		Component* AddComponent(const std::string& component, EntityID entity)
 		{
-			StringHash hash = StringHash::Hash(component.c_str());
+			size_t hash = StringHash::Hash(component.c_str()).m_Hash;
 			if (!s_ComponentAdd.contains(hash))
 				return nullptr;
 			return s_ComponentAdd[hash](entity, &Registry);
@@ -161,7 +154,7 @@ namespace Chroma
 
 		Component* GetComponent(const std::string& component, EntityID entity)
 		{
-			StringHash hash = StringHash::Hash(component.c_str());
+			size_t hash = StringHash::Hash(component.c_str()).m_Hash;
 			if (!s_ComponentGet.contains(hash))
 				return nullptr;
 			return s_ComponentGet[hash](entity, &Registry);
@@ -175,25 +168,11 @@ namespace Chroma
 
 		bool HasComponent(const std::string& component, EntityID entity)
 		{
-			StringHash hash = StringHash::Hash(component.c_str());
+			size_t hash = StringHash::Hash(component.c_str()).m_Hash;
 			if (!s_ComponentHas.contains(hash))
 				return false;
 			return s_ComponentHas[hash](entity, &Registry);
 		}
-
-		/*
-		template<ComponentType T>
-		void RemoveComponents(EntityID id)
-		{
-			//Recursively check
-		}
-
-		template<ComponentType T>
-		void RemoveComponents(Entity id)
-		{
-			RemoveComponents<T>((EntityID)id);
-		}
-		*/
 
 		template<ComponentType T>
 		size_t RemoveComponent(EntityID entity)
@@ -203,7 +182,7 @@ namespace Chroma
 
 		size_t RemoveComponent(const std::string& component, EntityID entity)
 		{
-			StringHash hash = StringHash::Hash(component.c_str());
+			size_t hash = StringHash::Hash(component.c_str()).m_Hash;
 			if (!s_ComponentHas.contains(hash))
 				return false;
 			s_ComponentRemove[hash](entity, &Registry);
@@ -214,13 +193,6 @@ namespace Chroma
 
 
 
-
-		//template<ComponentType... Types>
-		//auto View() { return Registry.view<Types>(); }
-
-#pragma region UpdateLoop
-
-		//TODO: Load & Unload Functions
 
 		void OnLoad();
 
@@ -236,7 +208,6 @@ namespace Chroma
 
 		std::vector<Collider*> GetColliders(EntityID entity);
 
-#pragma endregion
 		entt::registry Registry;
 
 		std::unordered_map<size_t, EntityID> Tags;
@@ -260,13 +231,11 @@ namespace Chroma
 
 		GUID ID;
 
-		static std::unordered_map<StringHash, std::function<Component* (EntityID, entt::registry*)>> s_ComponentAdd;
-		static std::unordered_map<StringHash, std::function<Component* (EntityID, entt::registry*)>> s_ComponentGet;
-		static std::unordered_map<StringHash, std::function<bool(EntityID, entt::registry*)>> s_ComponentHas;
-		static std::unordered_map<StringHash, std::function<void(EntityID, entt::registry*)>> s_ComponentRemove;
-		static std::unordered_map<StringHash, std::function<void(EntityID, entt::registry*, entt::registry*)>> s_CopyComponent;
-
-		static std::list<const TypeInfo*> s_Types;
+		static std::unordered_map<size_t, std::function<Component* (EntityID, entt::registry*)>> s_ComponentAdd;
+		static std::unordered_map<size_t, std::function<Component* (EntityID, entt::registry*)>> s_ComponentGet;
+		static std::unordered_map<size_t, std::function<bool(EntityID, entt::registry*)>> s_ComponentHas;
+		static std::unordered_map<size_t, std::function<void(EntityID, entt::registry*)>> s_ComponentRemove;
+		static std::unordered_map<size_t, std::function<void(EntityID, entt::registry*, entt::registry*)>> s_CopyComponent;
 
 
 		friend class Entity;

@@ -46,12 +46,12 @@ namespace Chroma
 		}
 
 		template<typename T, typename = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
-		inline int Read(T* buffer, size_t count)
+		inline int64_t Read(T* buffer, size_t count)
 		{
 			return Read(reinterpret_cast<void*>(buffer), count);
 		}
 
-		inline int Read(unsigned char* buffer, size_t count)
+		inline int64_t Read(unsigned char* buffer, size_t count)
 		{
 			return Read(reinterpret_cast<void*>(buffer), count);
 		}

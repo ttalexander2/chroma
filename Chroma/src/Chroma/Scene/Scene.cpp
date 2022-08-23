@@ -36,13 +36,11 @@
 namespace Chroma
 {
 
-	std::unordered_map<StringHash, std::function<Component* (EntityID, entt::registry*)>> Scene::s_ComponentAdd;
-	std::unordered_map<StringHash, std::function<Component* (EntityID, entt::registry*)>> Scene::s_ComponentGet;
-	std::unordered_map<StringHash, std::function<bool(EntityID, entt::registry*)>> Scene::s_ComponentHas;
-	std::unordered_map<StringHash, std::function<void(EntityID, entt::registry*)>> Scene::s_ComponentRemove;
-	std::unordered_map<StringHash, std::function<void(EntityID, entt::registry*, entt::registry*)>> Scene::s_CopyComponent;
-
-	std::list<const TypeInfo*> Scene::s_Types;
+	std::unordered_map<size_t, std::function<Component* (EntityID, entt::registry*)>> Scene::s_ComponentAdd;
+	std::unordered_map<size_t, std::function<Component* (EntityID, entt::registry*)>> Scene::s_ComponentGet;
+	std::unordered_map<size_t, std::function<bool(EntityID, entt::registry*)>> Scene::s_ComponentHas;
+	std::unordered_map<size_t, std::function<void(EntityID, entt::registry*)>> Scene::s_ComponentRemove;
+	std::unordered_map<size_t, std::function<void(EntityID, entt::registry*, entt::registry*)>> Scene::s_CopyComponent;
 
 	Scene::Scene()
 		: ID(GUID::CreateGUID())
@@ -87,7 +85,7 @@ namespace Chroma
 			auto newEntity = out->Registry.create(oldEntity);
 			for (Component* c : GetAllComponents(oldEntity))
 			{
-				s_CopyComponent[c->GetType()](newEntity, &out->Registry, &Registry);
+				s_CopyComponent[c->TypeId()](newEntity, &out->Registry, &Registry);
 			}
 		}
 		return out;
@@ -306,17 +304,16 @@ namespace Chroma
 		}
 	}
 
-	std::list<const TypeInfo*> Scene::GetComponentTypes()
-	{
-		return Scene::s_Types;
-	}
-
 	std::string Scene::Serialize()
 	{
 		YAML::Emitter out;
 		out << YAML::BeginMap;
 		out << YAML::Key << "Scene" << YAML::Value << this->Name;
 		out << YAML::Key << "GUID" << YAML::Value << this->ID.ToString();
+
+		out << YAML::Key << "Primary Camera";
+		out << YAML::Value << PrimaryCameraEntity;
+
 		out << YAML::Key << "Entities" << YAML::Value << YAML::BeginSeq;
 
 		auto view = Registry.view<Transform>();
@@ -357,109 +354,109 @@ namespace Chroma
 
 	bool Scene::Deserialize(Scene* out, const std::string& yaml, bool load_assets)
 	{
-		uint64_t maxId = 0;
-		auto data = YAML::Load(yaml);
-		if (!data["Scene"])
-			return false;
-
-		std::string sceneName = data["Scene"].as<std::string>();
-		//CHROMA_CORE_TRACE("Deserializing Scene '{}'", sceneName);
-
-		std::string guid_string = data["GUID"].as<std::string>();
-		GUID guid = GUID::Parse(guid_string);
-
-		if (guid == GUID::Zero())
-			guid = GUID::CreateGUID();
-
-		out->ID = guid;
-
-		out->Name = sceneName;
-
-		auto entities = data["Entities"];
-		if (entities)
-		{
-			for (auto entity : entities)
-			{
-
-				EntityID id = (EntityID)entity["Entity"].as<uint32_t>();
-				
-				EntityID newEntity = out->Registry.create(id);
-
-				auto name = entity["Name"];
-				Tag& tag = out->Registry.get_or_emplace<Tag>(newEntity);
-				if (name)
-					tag.EntityName = name.as<std::string>();
-
-				//CHROMA_CORE_TRACE("Deserialized Entity with ID = {0} (hint={1})", newEntity, id);
-				auto components = entity["Components"];
-				if (components)
-				{
-					int i = 1;
-					for (auto component : components)
-					{
-						std::string key = component.first.as<std::string>();
-
-						if (!Scene::IsComponentRegistered(key))
-						{
-							CHROMA_CORE_ERROR("Unable to construct component of type [{}]. No registered component found!", key);
-							continue;
-						}
-
-						auto created = out->AddComponent(key, newEntity);
-						if (key == "Transform")
-							created->order_id = 0;
-						else
-							created->order_id = i;
-
-						created->DoDeserialize(component.second);
-						if (key == Camera::GetTypeNameStatic())
-						{
-							auto val = component.second["Primary"];
-							if (val)
-							{
-								bool primary = val.as<bool>();
-								if (primary)
-									out->SetPrimaryCamera(newEntity);
-							}
-						}
-
-						i++;
-					}
-
-					out->Registry.get_or_emplace<Transform>(newEntity, newEntity);
-				}
-			}
-			auto view = out->Registry.view<Camera>();
-			if (view.size() == 0)
-			{
-				auto newCam = out->NewEntity();
-				out->AddComponent<Camera>(newCam.GetID());
-				out->PrimaryCameraEntity = newCam.GetID();
-				out->GetComponent<Tag>(newCam.GetID()).EntityName = "Camera";
-			}
-		}
-
-		auto order = data["RootEntities"];
-		if (order)
-		{
-			for (auto id : order)
-			{
-				out->EntityOrder.push_back((EntityID)id.as<uint32_t>());
-			}
-		}
-
-		out->Layers.clear();
-		auto layers = data["Layers"];
-		if (layers)
-		{
-			for (auto layer : layers)
-			{
-				Layer l = Layer("", 0);
-				l.Deserialize(layer);
-				out->Layers.push_back(l);
-			}
-		}
-
+		//uint64_t maxId = 0;
+		//auto data = YAML::Load(yaml);
+		//if (!data["Scene"])
+		//	return false;
+		//
+		//std::string sceneName = data["Scene"].as<std::string>();
+		////CHROMA_CORE_TRACE("Deserializing Scene '{}'", sceneName);
+		//
+		//std::string guid_string = data["GUID"].as<std::string>();
+		//GUID guid = GUID::Parse(guid_string);
+		//
+		//if (guid == GUID::Zero())
+		//	guid = GUID::CreateGUID();
+		//
+		//out->ID = guid;
+		//
+		//out->Name = sceneName;
+		//
+		//auto entities = data["Entities"];
+		//if (entities)
+		//{
+		//	for (auto entity : entities)
+		//	{
+		//
+		//		EntityID id = (EntityID)entity["Entity"].as<uint32_t>();
+		//		
+		//		EntityID newEntity = out->Registry.create(id);
+		//
+		//		auto name = entity["Name"];
+		//		Tag& tag = out->Registry.get_or_emplace<Tag>(newEntity);
+		//		if (name)
+		//			tag.EntityName = name.as<std::string>();
+		//
+		//		//CHROMA_CORE_TRACE("Deserialized Entity with ID = {0} (hint={1})", newEntity, id);
+		//		auto components = entity["Components"];
+		//		if (components)
+		//		{
+		//			int i = 1;
+		//			for (auto component : components)
+		//			{
+		//				std::string key = component.first.as<std::string>();
+		//
+		//				if (!Scene::IsComponentRegistered(key))
+		//				{
+		//					CHROMA_CORE_ERROR("Unable to construct component of type [{}]. No registered component found!", key);
+		//					continue;
+		//				}
+		//
+		//				auto created = out->AddComponent(key, newEntity);
+		//				if (key == "Transform")
+		//					created->order_id = 0;
+		//				else
+		//					created->order_id = i;
+		//
+		//				created->DoDeserialize(component.second);
+		//				if (key == Reflect::Resolve<Camera>()->GetName())
+		//				{
+		//					auto val = component.second["Primary"];
+		//					if (val)
+		//					{
+		//						bool primary = val.as<bool>();
+		//						if (primary)
+		//							out->SetPrimaryCamera(newEntity);
+		//					}
+		//				}
+		//
+		//				i++;
+		//			}
+		//
+		//			out->Registry.get_or_emplace<Transform>(newEntity, newEntity);
+		//		}
+		//	}
+		//	auto view = out->Registry.view<Camera>();
+		//	if (view.size() == 0)
+		//	{
+		//		auto newCam = out->NewEntity();
+		//		out->AddComponent<Camera>(newCam.GetID());
+		//		out->PrimaryCameraEntity = newCam.GetID();
+		//		out->GetComponent<Tag>(newCam.GetID()).EntityName = "Camera";
+		//	}
+		//}
+		//
+		//auto order = data["RootEntities"];
+		//if (order)
+		//{
+		//	for (auto id : order)
+		//	{
+		//		out->EntityOrder.push_back((EntityID)id.as<uint32_t>());
+		//	}
+		//}
+		//
+		//out->Layers.clear();
+		//auto layers = data["Layers"];
+		//if (layers)
+		//{
+		//	for (auto layer : layers)
+		//	{
+		//		Layer l = Layer("", 0);
+		//		l.Deserialize(layer);
+		//		out->Layers.push_back(l);
+		//	}
+		//}
+		//
 		return true;
 
 
@@ -537,37 +534,25 @@ namespace Chroma
 		Tag& tag = Registry.get_or_emplace<Tag>(entity);
 		out << YAML::Key << "Name" << YAML::Value << tag.EntityName;
 
-		out << YAML::Key << "Components" << YAML::Value << YAML::BeginMap;
+		out << YAML::Key << "Components" << YAML::Value << YAML::BeginSeq;
 
 		std::vector<Component*> components = this->GetAllComponents(entity);
 		std::sort(components.begin(), components.end(), [](Component* a, Component* b) { return a->order_id < b->order_id; });
 
 		for (Component* comp : components)
 		{
-			if (comp->IsTypeOf<Tag>())
+			if (comp->IsOfType<Tag>())
 			{
 				continue;
 			}
-			else if (comp->IsTypeOf<Camera>())
-			{
-				comp->BeginSerialize(out);
-				comp->Serialize(out);
-				if (PrimaryCameraEntity == entity)
-				{
-					out << YAML::Key << "Primary";
-					out << YAML::Value << true;
-				}
-				comp->EndSerialize(out);
-
-			}
 			else
 			{
-				//comp->DoSerialize(out);
+				Reflection::SerializeObjectYAML(out, comp->ToAny());
 			}
 
 		}
 
-		out << YAML::EndMap;
+		out << YAML::EndSeq;
 		out << YAML::EndMap;
 	}
 

@@ -23,9 +23,6 @@ namespace Chroma
 
 		inline bool IsPlaying() { return m_Playing; }
 
-		void Serialize(YAML::Emitter& out) override;
-		void Deserialize(YAML::Node& node) override;
-
 	private:
 		bool m_Playing = false;
 		float m_Time = 0.f;

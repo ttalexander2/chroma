@@ -39,7 +39,7 @@ namespace Chroma
 		{
 			float time;
 			Transition transition;
-			entt::meta_any value;
+			Reflection::Any value;
 		};
 
 		struct TimeSort
@@ -55,8 +55,8 @@ namespace Chroma
 			UpdateType update;
 			std::multiset<Keyframe, TimeSort> keyframes;
 			Chroma::EntityID entityID;
-			uint32_t componentID;
-			uint32_t propertyID;
+			std::string component;
+			std::string property;
 		};
 
 		float length;

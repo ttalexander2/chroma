@@ -9,102 +9,6 @@
 
 namespace Chroma
 {
-	
-	void SpriteRenderer::Serialize(YAML::Emitter& out)
-	{
-		out << YAML::Key << "Color";
-		out << YAML::Value << Color;
-
-		out << YAML::Key << "Offset";
-		out << YAML::Value << Offset;
-
-		out << YAML::Key << "PlayOnStart";
-		out << YAML::Value << PlayOnStart;
-
-		out << YAML::Key << "SpriteID";
-		out << YAML::Value << sprite->GetID().ToString();
-
-		out << YAML::Key << "Loop";
-		out << YAML::Value << Loop;
-
-		out << YAML::Key << "Animation";
-		out << YAML::Value << Animation;
-
-		if (Origin == SpriteOrigin::Custom)
-		{
-			out << YAML::Key << "CustomOrigin";
-			out << YAML::Value << OriginValue;
-		}
-		else
-		{
-			out << YAML::Key << "Origin";
-			out << YAML::Value << (int)Origin;
-		}
-
-		out << YAML::Key << "SortingPoint";
-		out << YAML::Value << SortingPoint;
-
-
-	}
-	void SpriteRenderer::Deserialize(YAML::Node& node)
-	{
-		auto val = node["Color"];
-		if (val)
-		{
-			Color = val.as<Math::vec4>();
-		}
-		val = node["Offset"];
-		if (val)
-		{
-			Offset = val.as<Math::vec2>();
-		}
-		val = node["PlayOnStart"];
-		if (val)
-		{
-			PlayOnStart = val.as<bool>();
-		}
-		val = node["SpriteID"];
-		if (val)
-		{
-			auto id = GUID::Parse(val.as<std::string>());
-			AssetManager::Load(id);
-			sprite = AssetManager::Get<Chroma::Sprite>(id);
-		}
-		val = node["Loop"];
-		if (val)
-		{
-			Loop = val.as<bool>();
-		}
-		val = node["Animation"];
-		if (val)
-		{
-			Animation = val.as<unsigned int>();
-		}
-		val = node["Origin"];
-		if (val)
-		{
-			Origin = (SpriteOrigin)Math::clamp(0, (int)SpriteOrigin::BottomRight, val.as<int>());
-		}
-		val = node["CustomOrigin"];
-		if (val)
-		{
-			Origin = SpriteOrigin::Custom;
-			OriginValue = val.as<Math::vec2>();
-		}
-		val = node["SortingPoint"];
-		if (val)
-		{
-			SortingPoint = val.as<float>();
-		}
-		else
-		{
-			if (sprite->IsLoaded())
-				SortingPoint = sprite->GetSize().y;
-
-		}
-
-	}
-
 	/// @brief Set the sprite to render.
 	/// 
 	/// Sprite must already be loaded.
@@ -347,26 +251,39 @@ namespace Chroma
 		}
 	}
 
+	Reflection::TypeFactory<SpriteRenderer> SpriteRenderer::RegisterType()
+	{
+		Reflection::Register<SpriteOrigin>("SpriteOrigin")
+				.Data<SpriteOrigin::Center>("Center")
+				.Data<SpriteOrigin::Left>("Left")
+				.Data<SpriteOrigin::Right>("Right")
+				.Data<SpriteOrigin::Top>("Top")
+				.Data<SpriteOrigin::Bottom>("Bottom")
+				.Data<SpriteOrigin::TopLeft>("TopLeft")
+				.Data<SpriteOrigin::TopRight>("TopRight")
+				.Data<SpriteOrigin::BottomLeft>("BottomLeft")
+				.Data<SpriteOrigin::BottomRight>("BottomRight")
+				.Data<SpriteOrigin::Custom>("Custom")
+				.Data<SpriteOrigin::Default>("Default");
 
-	void SpriteRenderer::CreateReflectionModel()
-	{	
-
-		Reflection::RegisterComponent<SpriteRenderer, Component>();
-		Reflection::RegisterComponentProperty<SpriteRenderer, &SpriteRenderer::Color>("Color");
-		Reflection::RegisterComponentProperty<SpriteRenderer, &SpriteRenderer::Offset>("Offset");
-		Reflection::RegisterComponentProperty<SpriteRenderer, &SpriteRenderer::SortingPoint>("SortingPoint");
-		Reflection::RegisterComponentProperty<SpriteRenderer, &SpriteRenderer::PlayOnStart>("PlayOnStart");
-		Reflection::RegisterComponentProperty<SpriteRenderer, &SpriteRenderer::Playing>("Playing");
-		Reflection::RegisterComponentProperty<SpriteRenderer, &SpriteRenderer::Loop>("Loop");
-		Reflection::RegisterComponentProperty<SpriteRenderer, &SpriteRenderer::SpeedMultiplier>("SpeedMultiplier");
-		Reflection::RegisterComponentProperty<SpriteRenderer, &SpriteRenderer::SetSprite, &SpriteRenderer::GetSpriteID>("SpriteID");
-		Reflection::RegisterComponentProperty<SpriteRenderer, &SpriteRenderer::SetCurrentFrame, &SpriteRenderer::GetCurrentFrame>("CurrentFrame");
-		Reflection::RegisterComponentProperty<SpriteRenderer, nullptr, &SpriteRenderer::GetSpritePath>("SpritePath");
-		Reflection::RegisterComponentFunction<SpriteRenderer, &SpriteRenderer::RestartAnimation>("RestartAnimation");
-		Reflection::RegisterComponentProperty<SpriteRenderer, static_cast<void (SpriteRenderer::*)(unsigned int)>(&SpriteRenderer::SetAnimation), &SpriteRenderer::GetAnimation>("Animation");
-		Reflection::RegisterComponentFunction<SpriteRenderer, static_cast<void (SpriteRenderer::*)(const std::string&)>(&SpriteRenderer::SetAnimation)>("SetAnimationFromName");
-		Reflection::RegisterComponentFunction<SpriteRenderer, static_cast<void (SpriteRenderer::*)(SpriteOrigin)>(&SpriteRenderer::SetSpriteOrigin)>("SetSpriteOrigin");
-		Reflection::RegisterComponentProperty<SpriteRenderer, &SpriteRenderer::OriginValue>("Origin");
+		return Reflection::Register<SpriteRenderer>("SpriteRenderer")
+				.Base<Component>()
+				.Data<&SpriteRenderer::Color>("Color")
+				.Data<&SpriteRenderer::Offset>("Offset")
+				.Data<&SpriteRenderer::SortingPoint>("SortingPoint")
+				.Data<&SpriteRenderer::PlayOnStart>("PlayOnStart")
+				.Data<&SpriteRenderer::Playing>("Playing")
+				.Data<&SpriteRenderer::Loop>("Loop")
+				.Data<&SpriteRenderer::SpeedMultiplier>("SpeedMultiplier")
+				.Data<&SpriteRenderer::SetSprite, &SpriteRenderer::GetSpriteID>("SpriteID")
+				.Data<&SpriteRenderer::SetCurrentFrame, &SpriteRenderer::GetCurrentFrame>("CurrentFrame", false)
+				.Data<static_cast<void (SpriteRenderer::*)(unsigned int)>(&SpriteRenderer::SetAnimation), &SpriteRenderer::GetAnimation>("Animation", false)
+				.Data<static_cast<void (SpriteRenderer::*)(SpriteOrigin)>(&SpriteRenderer::SetSpriteOrigin), &GetSpriteOrigin>("SpriteOrigin")
+				.Data<static_cast<void (SpriteRenderer::*)(SpriteOrigin)>(&SpriteRenderer::SetSpriteOrigin), &GetSpriteOrigin>("SpriteOrigin")
+				.Func<&SpriteRenderer::GetSpritePath>("GetSpritePath")
+				.Func<&SpriteRenderer::RestartAnimation>("RestartAnimation")
+				.Func<static_cast<void (SpriteRenderer::*)(const std::string&)>(&SpriteRenderer::SetAnimation)>("SetAnimation");
+				
 	}
 
 }

@@ -6,25 +6,13 @@
 namespace Chroma
 {
 
-	void AudioSource::Serialize(YAML::Emitter& out)
+	Reflection::TypeFactory<AudioSource> AudioSource::RegisterType()
 	{
-		out << YAML::Key << "Event";
-		out << YAML::Value << Event;
+		return Reflection::Register<AudioSource>("AudioSource")
+				.Base<Component>()
+				.Data<&AudioSource::SetEvent, &AudioSource::GetEvent>("Event")
+				.Data<&AudioSource::Mute>("Mute")
+				.Data<&AudioSource::PlayOnInit>("PlayOnInit");
 	}
-	void AudioSource::Deserialize(YAML::Node& node)
-	{
-		auto val = node["Event"];
-		if (val)
-		{
-			Event = val.as<std::string>();
-		}
 
-	}
-	void AudioSource::CreateReflectionModel()
-	{
-		Reflection::RegisterComponent<AudioSource, Component>();
-		Reflection::RegisterComponentProperty<AudioSource, &AudioSource::SetEvent, &AudioSource::GetEvent>("Event");
-		Reflection::RegisterComponentProperty<AudioSource, &AudioSource::Mute>("Mute");
-		Reflection::RegisterComponentProperty<AudioSource, &AudioSource::PlayOnInit>("PlayOnInit");
-	}
-}
+} //namespace Chroma

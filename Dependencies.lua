@@ -26,6 +26,7 @@ IncludeDir["miniz"] = "%{wks.location}/Chroma/third_party/miniz"
 IncludeDir["box2d"] = "%{wks.location}/Chroma/third_party/box2d/include/box2d"
 IncludeDir["msdfgen"] = "%{wks.location}/Chroma/third_party/msdf-atlas-gen/msdfgen"
 IncludeDir["msdf_atlasgen"] = "%{wks.location}/Chroma/third_party/msdf-atlas-gen"
+IncludeDir["better_enums"] = "%{wks.location}/Chroma/third_party/better-enums"
 
 LibraryDir = {}
 

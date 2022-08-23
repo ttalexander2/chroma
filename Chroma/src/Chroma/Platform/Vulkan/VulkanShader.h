@@ -34,7 +34,7 @@ namespace Chroma
 		virtual void SetUniformFloat3(const std::string& name, const glm::vec3& value) override;
 		virtual void SetUniformFloat4(const std::string& name, const glm::vec4& value) override;
 
-		virtual const std::string& GetName() const override;
+		virtual std::string GetName() const override;
 
 
 	private:

@@ -9,8 +9,6 @@ namespace Chroma
 	{
 		CHROMA_COMPONENT(PolygonCollider, Collider);
 
-		//PolygonCollider &operator=(const PolygonCollider &) = default;
-
 		inline b2Shape *GetShapeHandle() override { return &m_Shape; }
 
 		inline const ColliderType GetColliderType() const override { return ColliderType::Edge; }

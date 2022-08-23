@@ -26,32 +26,17 @@ namespace Chroma
 		viewProjectionMatrix = projectionMatrix * viewMatrix;
 	}
 
-	void Camera::Serialize(YAML::Emitter& out)
+	Reflection::TypeFactory<Camera> Camera::RegisterType()
 	{
-		out << YAML::Key << "Size";
-		out << YAML::Value << size;
+		return Reflection::Register<Camera>("Camera")
+				.Base<Component>()
+				.Data<&Camera::SetSize, &Camera::GetSize>("Size")
+				.Data<&Camera::SetPosition, &Camera::GetPosition>("Position", false)
+				.Func<&Camera::GetProjectionMatrix>("GetProjectionMatrix")
+				.Func<&Camera::GetViewMatrix>("ViewMatrix")
+				.Func<&Camera::GetViewProjectionMatrix>("ViewProjectionMatrix");
 	}
 
-	void Camera::Deserialize(YAML::Node& node)
-	{
-		auto val = node["Size"];
-		if (val)
-		{
-			size = val.as<Math::vec2>();
-		}
-	}
-
-
-	void Camera::CreateReflectionModel()
-	{
-		Reflection::RegisterComponent<Camera, Component>();
-		Reflection::RegisterComponentProperty<Camera, &Camera::SetSize, &Camera::GetSize>("Size");
-		Reflection::RegisterComponentProperty<Camera, &Camera::SetPosition, &Camera::GetPosition>("Position", false);
-		Reflection::RegisterComponentProperty<Camera, nullptr, &Camera::GetProjectionMatrix>("ProjectionMatrix");
-		Reflection::RegisterComponentProperty<Camera, nullptr, &Camera::GetViewMatrix>("ViewMatrix");
-		Reflection::RegisterComponentProperty<Camera, nullptr, &Camera::GetViewProjectionMatrix>("ViewProjectionMatrix");
-
-	}
 }
 
 

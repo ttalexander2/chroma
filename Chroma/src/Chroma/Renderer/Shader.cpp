@@ -48,7 +48,7 @@ namespace Chroma
 
 	void ShaderLibrary::Add(const Ref<Shader>& shader)
 	{
-		auto& name = shader->GetName();
+		auto name = shader->GetName();
 		Add(shader, name);
 	}
 

@@ -82,11 +82,11 @@ namespace Chroma
 					if (track->update == Chroma::Animation::UpdateType::continuous)
 					{
 
-						if (kf->value.type().id() == entt::resolve<Math::vec2>().id())
+						if (kf->value.IsType<Math::vec2>())
 						{
 
-							Math::vec2 a = kf->value.cast<Math::vec2>();
-							Math::vec2 b = next->value.cast<Math::vec2>();
+							Math::vec2 a = *kf->value.TryCast<Math::vec2>();
+							Math::vec2 b = *next->value.TryCast<Math::vec2>();
 
 							Chroma::Animation::Transition t = kf->transition;
 
@@ -94,11 +94,11 @@ namespace Chroma
 							float timeSinceStart = delta.GetSeconds() - kf->time;
 							Math::vec2 val = glm::cubic(a, t.a, t.b, b, timeSinceStart / transitionTime);
 
-							Chroma::Component* c = m_Scene->GetComponent(Chroma::Reflection::ResolveComponentID(track->componentID), track->entityID);
+							Chroma::Component *c = m_Scene->GetComponent(track->component, track->entityID);
 							if (c != nullptr)
 							{
-								auto meta_handle = c->GetMetaHandle();
-								meta_handle->set(track->propertyID, val);
+								auto meta_handle = c->GetType().Data(track->property);
+								meta_handle.Set(Reflection::Handle(c), val);
 							}
 
 						}
@@ -107,11 +107,11 @@ namespace Chroma
 					{
 						if (next->time >= aPlayer.m_Time)
 						{
-							Chroma::Component* c = m_Scene->GetComponent(Chroma::Reflection::ResolveComponentID(track->componentID), track->entityID);
+							Chroma::Component* c = m_Scene->GetComponent(track->component, track->entityID);
 							if (c != nullptr)
 							{
-								auto meta_handle = c->GetMetaHandle();
-								meta_handle->set(track->propertyID, kf->value);
+								auto meta_handle = c->GetType().Data(track->property);
+								meta_handle.Set(Reflection::Handle(c), kf->value);
 							}
 						}
 					}

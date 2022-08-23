@@ -6,27 +6,12 @@
 
 namespace Chroma
 {
-	void Tag::Serialize(YAML::Emitter& out)
+	Reflection::TypeFactory<Tag> Chroma::Tag::RegisterType()
 	{
-		out << YAML::Key << "EntityName";
-		out << YAML::Value << EntityName;
+		Reflection::Register<Tag>("Tag")
+				.Base<Component>()
+				.Data<&Tag::EntityName>("EntityName")
+				.Data<&Tag::Ordering>("Ordering");
 	}
-
-	void Tag::Deserialize(YAML::Node& node)
-	{
-		auto val = node["EntityName"];
-		if (val)
-		{
-			EntityName = val.as<std::string>();
-		}
-	}
-
-	void Tag::CreateReflectionModel()
-	{
-		Reflection::RegisterComponent<Tag, Component>();
-		Reflection::RegisterComponentProperty<Tag, &Tag::EntityName>("Name");
-	}
-
-
 }
 

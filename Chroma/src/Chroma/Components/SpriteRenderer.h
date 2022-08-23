@@ -6,11 +6,13 @@
 #include "Chroma/Assets/Sprite.h"
 #include "Chroma/Scene/World.h"
 
+#ifdef CHROMA_EDITOR
 namespace Polychrome
 {
 	class ComponentWidgets;
 	class EditorApp;
 }
+#endif
 
 
 namespace Chroma
@@ -20,13 +22,15 @@ namespace Chroma
 	/// @brief Component to render a sprite. Supports both animated and non-animated.
 	/// @see Sprite
 	/// @see Aseprite
-	struct SpriteRenderer : Component
+	struct SpriteRenderer : public Component
 	{
 		CHROMA_COMPONENT(SpriteRenderer, Component);
 
+		#ifdef CHROMA_EDITOR
 		friend class Polychrome::ComponentWidgets;
+		#endif
 
-		enum class SpriteOrigin
+		enum class SpriteOrigin : char
 		{
 			Center = 0,
 			Left = 1,
@@ -38,7 +42,6 @@ namespace Chroma
 			BottomLeft = 7,
 			BottomRight = 8,
 			Custom = 9,
-
 			Default = Center
 		};
 
@@ -104,10 +107,6 @@ namespace Chroma
 		void RestartAnimation();
 
 
-		void Serialize(YAML::Emitter& out) override;
-
-		void Deserialize(YAML::Node& node) override;
-
 	private:
 		unsigned int CurrentFrame = 0;
 		unsigned int Animation = 0;
@@ -123,7 +122,10 @@ namespace Chroma
 		Ref<Sprite> sprite;
 
 		friend class SpriteRendererSystem;
+
+	#ifdef CHROMA_EDITOR
 		friend class Polychrome::EditorApp;
+	#endif
 
 	};
 }

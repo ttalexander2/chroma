@@ -24,14 +24,9 @@ namespace Chroma
 
 		const bool HasChild(EntityID child) const { return std::find(Children.begin(), Children.end(), child) != Children.end(); }
 
-
 		/// @brief Get the transform as a 4x4 matrix.
 		/// @return mat4 transform.
 		Math::mat4 GetTransform() const;
-
-		void Serialize(YAML::Emitter &out) override;
-
-		void Deserialize(YAML::Node& node) override;
 
 		const inline void SetEnabled(bool enabled) override { m_Enabled = true; }
 		

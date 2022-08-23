@@ -5,16 +5,6 @@
 
 namespace Chroma
 {
-	void EdgeCollider::CreateReflectionModel()
-	{
-		Reflection::RegisterComponent<EdgeCollider, Collider>();
-		Reflection::RegisterComponentProperty<EdgeCollider, &EdgeCollider::SetOneSided, &EdgeCollider::IsOneSided>("OneSided");
-		Reflection::RegisterComponentProperty<EdgeCollider, &EdgeCollider::SetV0, &EdgeCollider::GetV0>("V0");
-		Reflection::RegisterComponentProperty<EdgeCollider, &EdgeCollider::SetV1, &EdgeCollider::GetV1>("V1");
-		Reflection::RegisterComponentProperty<EdgeCollider, &EdgeCollider::SetV2, &EdgeCollider::GetV2>("V2");
-		Reflection::RegisterComponentProperty<EdgeCollider, &EdgeCollider::SetV3, &EdgeCollider::GetV3>("V3");
-	}
-
 	Math::vec2 EdgeCollider::GetPosition() const
 	{
 		return Math::vec2(m_Shape.m_vertex2.x / Physics::GetScale(), m_Shape.m_vertex2.y / Physics::GetScale());
@@ -78,5 +68,16 @@ namespace Chroma
 	Math::vec2 EdgeCollider::GetV3() const
 	{
 		return Math::vec2(m_Shape.m_vertex3.x / Physics::GetScale(), m_Shape.m_vertex3.y / Physics::GetScale());
+	}
+
+	Reflection::TypeFactory<EdgeCollider> EdgeCollider::RegisterType()
+	{
+		return Reflection::Register<EdgeCollider>("EdgeCollider")
+				.Base<Collider>()
+				.Data<&EdgeCollider::SetV0, &EdgeCollider::GetV0>("V0")
+				.Data<&EdgeCollider::SetV1, &EdgeCollider::GetV1>("V1")
+				.Data<&EdgeCollider::SetV2, &EdgeCollider::GetV2>("V2")
+				.Data<&EdgeCollider::SetV3, &EdgeCollider::GetV3>("V3")
+				.Data<&EdgeCollider::SetOneSided, &EdgeCollider::IsOneSided>("OneSided");
 	}
 }

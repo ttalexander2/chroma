@@ -1,167 +1,133 @@
 #include "chromapch.h"
 
-#include "Reflection.h"
 #include "Chroma/Components/Collider.h"
-
+#include "Reflection.h"
 
 namespace Chroma
 {
-	std::unordered_map<size_t, entt::any> Reflection::s_ComponentMeta;
-	std::unordered_map<size_t, std::string> Reflection::s_ComponentNames;
-	std::unordered_map<size_t, std::string> Reflection::s_DataTypeNames;
-	std::unordered_map<size_t, std::unordered_map<size_t, std::string>> Reflection::s_ComponentPropertyNames;
-	std::unordered_map<size_t, std::unordered_map<size_t, bool>>  Reflection::s_ComponentPropertySerialize;
-	std::unordered_map<size_t, std::function<entt::meta_any(YAML::Node&)>> Reflection::s_DeserializeValueFunctions;
-	std::unordered_map<size_t, std::function<void(YAML::Emitter&, entt::meta_any&)>> Reflection::s_SerializeValueFunctions;
+	std::unordered_map<size_t, std::function<void(YAML::Emitter &, Reflection::Any &)>> Reflection::s_SerializeYAMLFunctions;
+	std::unordered_map<size_t, std::function<Reflection::Any(YAML::Node &)>> Reflection::s_DeserializeYAMLFunctions;
+	std::unordered_map<size_t, std::function<void(File &, Reflection::Any &)>> Reflection::s_SerializeBinaryFunctions;
+	std::unordered_map<size_t, std::function<Reflection::Any(File &)>> Reflection::s_DeserializeBinaryFunctions;
 
-#define REGISTER_TYPE_AUTO(type) RegisterDataType<type>(#type,\
-			[&](YAML::Emitter& emitter, entt::meta_any& value) {\
-				emitter << value.cast<type>();\
-			},\
-				[&](YAML::Node& node) {\
-				return node.as<type>();\
-			})
+	std::unordered_map<size_t, std::string> Reflection::s_TypeNames;
+	std::unordered_map<size_t, std::unordered_map<size_t, std::string>> Reflection::s_TypeDataNames;
+	std::unordered_map<size_t, std::unordered_map<size_t, std::string>> Reflection::s_TypeFunctionNames;
 
-#define REGISTER_TYPE(type, name) RegisterDataType<type>(name,\
-			[&](YAML::Emitter& emitter, entt::meta_any& value) {\
-				emitter << value.cast<type>();\
-			},\
-				[&](YAML::Node& node) {\
-				return node.as<type>();\
-			})
+	std::unordered_map<size_t, bool> Reflection::s_TypeAbstract;
 
+#define REGISTER_YAML_TYPE(type, name) RegisterYAMLSerializeFunctions<type>(    \
+		[&](YAML::Emitter &emitter, Reflection::Any &value) {					\
+			emitter << value.Cast<type>();										\
+		},																		\
+		[&](YAML::Node &node) {													\
+			return node.as<type>();												\
+		})
 
 	void Reflection::InitializeDataTypes()
 	{
-		REGISTER_TYPE_AUTO(bool);
-		REGISTER_TYPE_AUTO(float);
-		REGISTER_TYPE_AUTO(double);
-		REGISTER_TYPE(int32_t, "int32");
-		REGISTER_TYPE(uint32_t, "uint32");
-		REGISTER_TYPE(int64_t, "int64");
-		REGISTER_TYPE(uint64_t, "uint64");
-		REGISTER_TYPE_AUTO(char);
-		REGISTER_TYPE(unsigned char, "uchar");
-		REGISTER_TYPE(std::string, "string");
-		REGISTER_TYPE(Chroma::Ref<Chroma::Asset>, "asset");
-		REGISTER_TYPE(Math::vec2, "vec2");
-		REGISTER_TYPE(Math::vec3, "vec3");
-		REGISTER_TYPE(Math::vec4, "vec4");
-		REGISTER_TYPE(Chroma::EntityID, "entity_id");
-		REGISTER_TYPE(Chroma::GUID, "guid");
+		Reflection::Register<bool>("bool");
+		Reflection::Register<float>("float");
+		Reflection::Register<double>("double");
+		Reflection::Register<int32_t>("int32");
+		Reflection::Register<int64_t>("int64");
+		Reflection::Register<uint32_t>("uint32");
+		Reflection::Register<uint64_t>("uint64");
+		Reflection::Register<char>("char");
+		Reflection::Register<unsigned char>("uchar");
+		Reflection::Register<const char *>("cstring");
+		Reflection::Register<std::string>("string");
+
+		Reflection::Register<Chroma::Ref<Chroma::Asset>>("asset");
+
+		Reflection::Register<Math::vec2>("vec2");
+		Reflection::Register<Math::vec3>("vec3");
+		Reflection::Register<Math::vec4>("vec4");
+		Reflection::Register<Chroma::EntityID>("entity_id");
+		Reflection::Register<Chroma::GUID>("guid");
+
+		REGISTER_YAML_TYPE(bool);
+		REGISTER_YAML_TYPE(float);
+		REGISTER_YAML_TYPE(double);
+		REGISTER_YAML_TYPE(int32_t);
+		REGISTER_YAML_TYPE(uint32_t);
+		REGISTER_YAML_TYPE(int64_t);
+		REGISTER_YAML_TYPE(uint64_t);
+		REGISTER_YAML_TYPE(char);
+		REGISTER_YAML_TYPE(unsigned char);
+		REGISTER_YAML_TYPE(std::string);
+		REGISTER_YAML_TYPE(Chroma::Ref<Chroma::Asset>);
+		REGISTER_YAML_TYPE(Math::vec2);
+		REGISTER_YAML_TYPE(Math::vec3);
+		REGISTER_YAML_TYPE(Math::vec4);
+		REGISTER_YAML_TYPE(Chroma::EntityID);
+		REGISTER_YAML_TYPE(Chroma::GUID);
 	}
 
-	std::string Reflection::ResolveComponentID(entt::id_type component_type)
+	void Reflection::SerializeObjectYAML(YAML::Emitter &out, Reflection::Any object)
 	{
-		if (s_ComponentNames.find(component_type) == s_ComponentNames.end())
-			return std::string();
-
-		return s_ComponentNames[component_type];
-	}
-
-
-	std::string Reflection::ResolveComponentPropertyID(entt::id_type component_type, entt::id_type property_type)
-	{
-		if (s_ComponentNames.find(component_type) == s_ComponentNames.end() || s_ComponentPropertyNames.find(component_type) == s_ComponentPropertyNames.end() || s_ComponentPropertyNames[component_type].find(property_type) == s_ComponentPropertyNames[component_type].end())
-			return std::string();
-
-		return s_ComponentPropertyNames[component_type][property_type];
-	}
-
-
-	std::string Reflection::ResolveComponentPropertyID(const std::string& component_type, entt::id_type property_type)
-	{
-		size_t hash = entt::resolve(StringHash::Hash(component_type)).id();
-
-		if (s_ComponentNames.find(hash) == s_ComponentNames.end() || s_ComponentPropertyNames.find(hash) == s_ComponentPropertyNames.end() || s_ComponentPropertyNames[hash].find(property_type) == s_ComponentPropertyNames[hash].end())
-			return std::string();
-
-		return s_ComponentPropertyNames[hash][property_type];
-	}
-
-
-	bool Reflection::SerializeProperty(YAML::Emitter& emitter, const std::string& name, entt::meta_any& value)
-	{
-		emitter << YAML::Key << name;
-		emitter << YAML::Value;
-
-		return SerializeValue(emitter, value);
-	}
-
-	bool Reflection::SerializeValue(YAML::Emitter& emitter, entt::meta_any& value)
-	{
-
-		if (s_DataTypeNames.find(value.type().id()) != s_DataTypeNames.end() && s_SerializeValueFunctions.find(value.type().id()) != s_SerializeValueFunctions.end())
+		if (object)
 		{
-			//Its a registered type
-			//Call value serialization function
-			s_SerializeValueFunctions[value.type().id()](emitter, value);
-			return true;
-		}
-		else if (value.type().is_sequence_container())
-		{
-			//Its a known sequence container
-			if (auto view = value.as_sequence_container(); view)
-			{
-				emitter << YAML::BeginSeq;
-
-				bool result = true;
-
-				for (auto item : view)
-				{
-					result = result && SerializeValue(emitter, item);
-				}
-
-				emitter << YAML::EndSeq;
-
-				return result;
-			}
-			return false;
-		}
-		else if (value.type().is_enum())
-		{
-			//Its a non-registered enumeration (enum class not supported
-			value.allow_cast<int32_t>();
-			entt::meta_any int_any = value.cast<int32_t>();
-			s_SerializeValueFunctions[int_any.type().id()](emitter, int_any);
-			return true;
+			CHROMA_CORE_ERROR("Could not serialize object!");
+			return;
 		}
 
-		emitter << YAML::Null;
-		return false;
+		auto descriptor = Resolve<std::string>();
+		//out << YAML::BeginMap << YAML::Key;
+		//out << object.GetType()->GetName();
+		//out << YAML::Value;
+		//out << YAML::BeginMap;
+		//for (Reflect::DataMember* data : object.GetType()->GetDataMembers())
+		//{
+		//	if (!data->GetSerialize())
+		//		continue;
+		//
+		//	Reflect::Any value = data->Get(object);
+		//	std::vector<Reflect::Conversion *> conversions = value.GetType()->GetConversions();
+		//
+		//
+		//	size_t hash = data->GetType()->GetHash();
+		//	if (s_SerializeYAMLFunctions.contains(hash)) //If the type is a registered primitive
+		//	{
+		//		out << YAML::Key << data->GetName() << YAML::Value;
+		//		s_SerializeYAMLFunctions[hash](out, value);
+		//	}
+		//	else if (!conversions.empty()) //Else if there are known conversions for the type
+		//	{
+		//		for (Reflect::Conversion *conversion : conversions)
+		//		{
+		//			size_t conversion_hash = conversion->GetToType()->GetHash();
+		//			//Check if this type converts to a primitive
+		//			if (s_SerializeYAMLFunctions.contains(conversion_hash)) 
+		//			{
+		//				//Convert the value to a primitive type
+		//				Reflect::Any converted_value = conversion->Convert(value.Get());
+		//				out << YAML::Key << data->GetName() << YAML::Value;
+		//				s_SerializeYAMLFunctions[conversion_hash](out, converted_value);
+		//			}
+		//		}
+		//	}
+		//	else if (Reflect::Resolve(value.GetType()->GetName()) != nullptr) //Else if the value is a reflectable type (non-primitive)
+		//	{
+		//		SerializeObjectYAML(out, value);
+		//	}
+		//}
+		//out << YAML::EndMap;
+		//out << YAML::EndMap;
 	}
 
-	entt::meta_any Reflection::DeserializeValue(YAML::Node& node)
+	void Reflection::SerliazeObjectBinary(File &file, Reflection::Any object)
 	{
-		if (!node.IsMap())
-			return nullptr;
-		
-		auto val = node["Type"];
-		if (!val)
-			return nullptr;
-
-		entt::id_type type_id = entt::resolve(StringHash::Hash(val.as<std::string>())).id();
-		
-		val = node["Value"];
-		if (!val)
-			return nullptr;
-
-		return s_DeserializeValueFunctions[type_id](val);
 	}
 
-	bool Reflection::SerializeComponent(YAML::Emitter &emitter, entt::id_type component_type, entt::meta_handle component_handle)
+	Reflection::Any Reflection::DeserializeObjectYAML(YAML::Node &node)
 	{
-		auto meta = entt::resolve(component_type);
-		for (auto& [id, name] : s_ComponentPropertyNames[component_type])
-		{
-			entt::meta_any value = component_handle->get(id);
-			SerializeProperty(emitter, name, value);
-		}
+		return Reflection::Any();
 	}
 
-	entt::meta_any Reflection::DeserializeComponent(YAML::Node &node)
+	Reflection::Any Reflection::DeserializeObjectBinary(File &file)
 	{
-		return entt::meta_any();
+		return Reflection::Any();
 	}
 
-}
+} //namespace Chroma

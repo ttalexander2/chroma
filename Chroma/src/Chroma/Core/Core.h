@@ -3,6 +3,7 @@
 #include <memory>
 #include <glm/glm.hpp>
 #include <filesystem>
+#include <enum.h>
 
 
 #ifdef _WIN32
@@ -55,9 +56,10 @@
 
 #define BIT(x) (1 << x)
 
+#define CHROMA_ENUM(Enum, Underlying, ...) namespace Enums { BETTER_ENUM(Enum, Underlying, __VA_ARGS__); }
+
 namespace Chroma
 {
-
 
 	// TODO: Replace unique_ptr and shared_ptr with new reference counter class
 	template<typename T>
@@ -75,8 +77,6 @@ namespace Chroma
 	{
 		return std::make_shared<T>(std::forward<Args>(args)...);
 	}
-
-
 
 
 }

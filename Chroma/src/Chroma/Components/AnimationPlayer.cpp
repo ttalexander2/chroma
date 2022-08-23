@@ -7,14 +7,6 @@
 namespace Chroma
 {
 
-	void AnimationPlayer::Serialize(YAML::Emitter& out)
-	{
-	}
-
-	void AnimationPlayer::Deserialize(YAML::Node& node)
-	{
-	}
-
 	void AnimationPlayer::Start()
 	{
 		m_Time = 0.f;
@@ -48,12 +40,13 @@ namespace Chroma
 		m_Current = animation;
 	}
 
-
-
-	void AnimationPlayer::CreateReflectionModel()
+	Reflection::TypeFactory<AnimationPlayer> AnimationPlayer::RegisterType()
 	{
-		Reflection::RegisterComponent<AnimationPlayer, Component>();
+		return Reflection::Register<AnimationPlayer>("AnimationPlayer")
+				.Base<Component>()
+				.Data<&AnimationPlayer::PlayOnStart>("PlayOnStart");
 	}
+
 }
 
 

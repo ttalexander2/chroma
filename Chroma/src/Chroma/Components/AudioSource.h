@@ -12,8 +12,6 @@ namespace Chroma
 	struct AudioSource : public Component
 	{
 		CHROMA_COMPONENT(AudioSource, Component);
-
-
 		/// @brief Whether the event is currently muted.
 		bool Mute = false;
 		/// @brief Whether to play the event once the Scene is initialized.
@@ -24,15 +22,8 @@ namespace Chroma
 		/// @brief GUID of event.
 		FMOD_GUID GUID;
 
-		const std::string& GetEvent() { return Event; }
-		void SetEvent(const std::string& _event) { Event = _event; GUID = Chroma::Audio::GetEventGuid(Event);}
-
-		void Serialize(YAML::Emitter& out) override;
-
-		void Deserialize(YAML::Node& node) override;
-
-	private:
-
+		inline const std::string& GetEvent() const { return Event; }
+		inline void SetEvent(const std::string& _event) { Event = _event; GUID = Chroma::Audio::GetEventGuid(Event);}
 
 	};
 }

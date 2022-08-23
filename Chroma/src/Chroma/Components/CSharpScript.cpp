@@ -6,24 +6,11 @@
 namespace Chroma
 {
 
-	void CSharpScript::Serialize(YAML::Emitter& out)
+	Reflection::TypeFactory<CSharpScript> CSharpScript::RegisterType()
 	{
-		out << YAML::Key << "Module";
-		out << YAML::Value << ModuleName;
+		return Reflection::Register<CSharpScript>("CSharpScript")
+				.Base<CSharpScript>()
+				.Data<&CSharpScript::ModuleName>("Module");
 	}
 
-	void CSharpScript::Deserialize(YAML::Node& node)
-	{
-		auto val = node["Module"];
-		if (val)
-		{
-			ModuleName = val.as<std::string>();
-		}
-	}
-
-	void CSharpScript::CreateReflectionModel()
-	{
-		Reflection::RegisterComponent<CSharpScript, Component>();
-		Reflection::RegisterComponentProperty<CSharpScript, &CSharpScript::ModuleName>("Module");
-	}
-}
+} //namespace Chroma

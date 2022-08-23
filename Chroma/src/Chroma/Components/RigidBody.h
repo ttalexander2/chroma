@@ -11,12 +11,12 @@ namespace Chroma
 	struct RigidBody : public Component
 	{
 		CHROMA_COMPONENT(RigidBody, Component);
+
 		friend class PhysicsSystem;
 
 		void Initialize() override;
 
-
-		enum class BodyType : int
+		enum class BodyType : char
 		{
 			Static = 0,
 			Kinematic = 1,
@@ -65,13 +65,18 @@ namespace Chroma
 		void ResetMassData();
 		MassData GetMassData();
 
-		void ApplyForce(const Math::vec2 &force, const Math::vec2 &point, bool wake = true);
-		void ApplyForce(const Math::vec2 &force, bool wake = true);
-		void ApplyTorque(float torque, bool wake = true);
-		void ApplyLinearImpulse(const Math::vec2 &impulse, const Math::vec2 &point, bool wake = true);
-		void ApplyLinearImpulse(const Math::vec2 &impulse, bool wake = true);
-		void ApplyAngularImpulse(float impulse, bool wake = true);
-
+		void ApplyForce(const Math::vec2 &force, const Math::vec2 &point);
+		void ApplyForce(const Math::vec2 &force, const Math::vec2 &point, bool wake);
+		void ApplyForce(const Math::vec2 &force);
+		void ApplyForce(const Math::vec2 &force, bool wake);
+		void ApplyTorque(float torque);
+		void ApplyTorque(float torque, bool wake);
+		void ApplyLinearImpulse(const Math::vec2 &impulse, const Math::vec2 &point);
+		void ApplyLinearImpulse(const Math::vec2 &impulse, const Math::vec2 &point, bool wake);
+		void ApplyLinearImpulse(const Math::vec2 &impulse);
+		void ApplyLinearImpulse(const Math::vec2 &impulse, bool wake);
+		void ApplyAngularImpulse(float impulse);
+		void ApplyAngularImpulse(float impulse, bool wake);
 
 	private:
 

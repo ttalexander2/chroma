@@ -6,19 +6,6 @@
 
 namespace Chroma
 {
-	void Collider::CreateReflectionModel()
-	{
-		Reflection::RegisterComponent<Collider, Component>();
-		Reflection::RegisterComponentProperty<Collider, &Collider::Mask>("Mask");
-		Reflection::RegisterComponentProperty<Collider, &Collider::Layer>("Layer");
-		Reflection::RegisterComponentProperty<Collider, &Collider::SetFriction, &Collider::GetFriction>("Friction");
-		Reflection::RegisterComponentProperty<Collider, &Collider::SetRestitution, &Collider::GetRestitution>("Restitution");
-		Reflection::RegisterComponentProperty<Collider, &Collider::SetRestitutionThreshold, &Collider::GetRestitutionThreshold>("RestitutionThreshold");
-		Reflection::RegisterComponentProperty<Collider, &Collider::SetDensity, &Collider::GetDensity>("Density");
-		Reflection::RegisterComponentProperty<Collider, &Collider::SetSensor, &Collider::IsSensor>("Sensor");
-	}
-
-
 
 	void Collider::Initialize()
 	{
@@ -144,6 +131,33 @@ namespace Chroma
 		{
 			return m_FixtureDef.isSensor;
 		}
+	}
+
+	Reflection::TypeFactory<Collider> Collider::RegisterType()
+	{
+		Reflection::Register<Collider::Vertex>("Collider::Vertex")
+				.Data<&Collider::Vertex::vertex>("vertex")
+				.Data<&Collider::Vertex::normal>("normal");
+
+		Reflection::Register<ColliderType>("Collider::ColliderType")
+				.Data<ColliderType::Circle>("Circle")
+				.Data<ColliderType::Edge>("Edge")
+				.Data<ColliderType::Polygon>("Polygon")
+				.Data<ColliderType::Rectangle>("Rectangle");
+
+
+		return Reflection::Register<Collider>("Collider")
+				.Base<Component>()
+				.Data<&Collider::Mask>("Mask")
+				.Data<&Collider::Layer>("Layer")
+				.Data<&Collider::SetPosition, &Collider::GetPosition>("Position", false)
+				.Data<&Collider::SetFriction, &Collider::GetFriction>("Friction")
+				.Data<&Collider::SetRestitution, &Collider::GetRestitution>("Restitution")
+				.Data<&Collider::SetRestitutionThreshold, &Collider::GetRestitutionThreshold>("RestitutionThreshold")
+				.Data<&Collider::SetDensity, &Collider::GetDensity>("Density")
+				.Data<&Collider::SetSensor, &Collider::IsSensor>("Sensor")
+				.Data<nullptr, &Collider::GetColliderType>("ColliderType", false);
+
 	}
 
 

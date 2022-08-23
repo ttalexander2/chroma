@@ -21,6 +21,7 @@ namespace Chroma
 			return VK_SHADER_STAGE_FRAGMENT_BIT;
 
 		CHROMA_ASSERT(false, "Unknown shader type '{0}'", type);
+		return VK_SHADER_STAGE_VERTEX_BIT;
 	}
 
 	static shaderc_shader_kind ShaderStageToShaderC(VkShaderStageFlagBits stage)
@@ -144,7 +145,7 @@ namespace Chroma
 	{
 	}
 
-	const std::string& VulkanShader::GetName() const
+	std::string VulkanShader::GetName() const
 	{
 		return std::string();
 	}

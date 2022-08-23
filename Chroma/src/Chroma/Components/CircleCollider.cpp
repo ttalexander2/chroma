@@ -5,12 +5,6 @@
 
 namespace Chroma
 {
-	void CircleCollider::CreateReflectionModel()
-	{
-		Reflection::RegisterComponent<CircleCollider, Collider>();
-		Reflection::RegisterComponentProperty<CircleCollider, &CircleCollider::SetRadius, &CircleCollider::GetRadius>("Radius");
-	}
-
 	float CircleCollider::GetRadius() const
 	{
 		return m_Shape.m_radius;
@@ -29,6 +23,13 @@ namespace Chroma
 	void CircleCollider::SetPosition(const Math::vec2 &value)
 	{
 		m_Shape.m_p = { value.x * Physics::GetScale(), value.y * Physics::GetScale() };
+	}
+
+	Reflection::TypeFactory<CircleCollider> CircleCollider::RegisterType()
+	{
+		return Reflection::Register<CircleCollider>("CircleCollider")
+				.Base<Collider>()
+				.Data<&CircleCollider::SetRadius, &CircleCollider::GetRadius>("Radius");
 	}
 
 }

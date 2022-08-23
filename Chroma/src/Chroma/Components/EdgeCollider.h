@@ -8,7 +8,6 @@ namespace Chroma
 	struct EdgeCollider : public Collider
 	{
 		CHROMA_COMPONENT(EdgeCollider, Collider);
-
 		inline b2Shape *GetShapeHandle() override { return &m_Shape; }
 
 		inline const ColliderType GetColliderType() const override { return ColliderType::Edge; }

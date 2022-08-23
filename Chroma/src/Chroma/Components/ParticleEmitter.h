@@ -24,10 +24,6 @@ namespace Chroma
 	{
 		CHROMA_COMPONENT(ParticleEmitter, Component);
 
-
-		void Serialize(YAML::Emitter& out) override;
-		void Deserialize(YAML::Node& node) override;
-
 		glm::vec2 PositionVariance = { 0, 0 };
 
 		//Color

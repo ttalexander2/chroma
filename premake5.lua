@@ -47,13 +47,17 @@ project "Chroma"
     files
     {
         "%{prj.name}/src/**.h",
+        "%{prj.name}/src/**.hpp",
+        "%{prj.name}/src/**.inl",
         "%{prj.name}/src/**.cpp",
 
         "%{prj.name}/third_party/yaml-cpp/src/**.cpp",
 		"%{prj.name}/third_party/yaml-cpp/src/**.h",
 		"%{prj.name}/third_party/yaml-cpp/include/**.h",
 
-        "%{prj.name}/third_party/ImGuizmo/**.cpp"
+        "%{prj.name}/third_party/ImGuizmo/**.cpp",
+
+        "%{IncludeDir.better_enums}"
 
     }
 
@@ -92,7 +96,8 @@ project "Chroma"
         "%{IncludeDir.miniz}",
         "%{IncludeDir.box2d}",
         "%{IncludeDir.msdfgen}",
-        "%{IncludeDir.msdf_atlasgen}"
+        "%{IncludeDir.msdf_atlasgen}",
+        "%{IncludeDir.better_enums}"
 
     }
 
@@ -210,6 +215,7 @@ project "Polychrome"
         "%{prj.name}/src/**.c",
         "%{prj.name}/src/**.hpp",
         "%{prj.name}/src/**.cpp",
+        "%{IncludeDir.better_enums}"
     }
 
     includedirs
@@ -231,7 +237,8 @@ project "Polychrome"
         "%{IncludeDir.miniz}",
         "%{IncludeDir.box2d}",
         "%{IncludeDir.msdfgen}",
-        "%{IncludeDir.msdf_atlasgen}"
+        "%{IncludeDir.msdf_atlasgen}",
+        "%{IncludeDir.better_enums}"
     }
 
 
@@ -324,7 +331,8 @@ project "Runtime"
     files
     {
         "%{prj.name}/**.h",
-        "%{prj.name}/**.cpp"
+        "%{prj.name}/**.cpp",
+        "%{IncludeDir.better_enums}"
     }
 
     includedirs
@@ -346,7 +354,8 @@ project "Runtime"
         "%{IncludeDir.miniz}",
         "%{IncludeDir.box2d}",
         "%{IncludeDir.msdfgen}",
-        "%{IncludeDir.msdf_atlasgen}"
+        "%{IncludeDir.msdf_atlasgen}",
+        "%{IncludeDir.better_enums}"
     }
 
     links

@@ -16,12 +16,6 @@ namespace Chroma
 		/// @brief Editor Order
 		unsigned int Ordering = 0;
 
-
-		void Serialize(YAML::Emitter& out) override;
-
-		void Deserialize(YAML::Node& node) override;
-
 		const inline void SetEnabled(bool enabled) override { m_Enabled = true; }
-
 	};
 }

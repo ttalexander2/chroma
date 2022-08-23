@@ -1145,8 +1145,8 @@ namespace Chroma
 
 		EntityID entityA = colliderA->GetEntityID();
 		EntityID entityB = colliderB->GetEntityID();
-		Collider::ColliderType typeA = colliderA->GetColliderType();
-		Collider::ColliderType typeB = colliderB->GetColliderType();
+		Chroma::Collider::ColliderType typeA = colliderA->GetColliderType();
+		Chroma::Collider::ColliderType typeB = colliderB->GetColliderType();
 
 		void *collisionContactParams[] = {
 			&contact,
