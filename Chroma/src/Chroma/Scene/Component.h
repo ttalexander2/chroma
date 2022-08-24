@@ -18,13 +18,12 @@
 #include "Chroma/Reflection/Reflection.h"
 
 
-#ifdef CHROMA_EDITOR
+
 namespace Polychrome
 {
 	class Inspector;
 	class ComponentWidgets;
 }
-#endif
 
 namespace Chroma
 {
@@ -46,11 +45,11 @@ namespace Chroma
 		typeName(const typeName &) = default;																					\
 		typeName &operator=(const typeName &) = default;																		\
 		private:																												\
-			static inline Reflection::TypeData<typeName> TypeInfo{};															\
-			static Reflection::TypeFactory<typeName> RegisterType();															\
+		static inline Reflection::TypeData TypeInfo = Reflection::TypeData::Create<typeName>();									\
+	static Reflection::TypeFactory<typeName> RegisterType();																	\
 			virtual void NO_TYPE_INFO() override {}																				\
 	public:																														\
-		virtual inline const size_t TypeId() const override { return Reflection::Resolve<typeName>().Id(); }					\
+		virtual inline const uint32_t TypeId() const override { return Reflection::Resolve<typeName>().Id(); }					\
 		virtual inline const std::string TypeName() const override { return Reflection::Resolve<typeName>().GetName(); }		\
 		virtual inline const Reflection::Type GetType() const override { return Reflection::Resolve<typeName>(); }				\
 		virtual inline Reflection::Any ToAny() const override { return Reflection::Any(*this); }								\
@@ -67,11 +66,11 @@ namespace Chroma
 		typeName &operator=(const typeName &) = default;																		\
 																																\
 	private:																													\
-		static inline Reflection::TypeData<typeName> TypeInfo{};																\
+		static inline Reflection::TypeData TypeInfo = Reflection::TypeData::Create<typeName>();									\
 		static Reflection::TypeFactory<typeName> RegisterType();																\
 																																\
 	public:																														\
-		virtual inline const size_t TypeId() const override { return Reflection::Resolve<typeName>().Id(); }					\
+		virtual inline const uint32_t TypeId() const override { return Reflection::Resolve<typeName>().Id(); }					\
 		virtual inline const std::string TypeName() const override { return Reflection::Resolve<typeName>().GetName(); }		\
 		virtual inline const Reflection::Type GetType() const override { return Reflection::Resolve<typeName>(); }				\
 		virtual inline Reflection::Any ToAny() const override { return Reflection::Any(*this); }								\
@@ -107,24 +106,24 @@ namespace Chroma
 
 		inline int GetOrderID() const { return order_id; }
 
-		virtual inline const size_t TypeId() const { return Reflection::Resolve<Component>().Id(); }
+		virtual inline const uint32_t TypeId() const { return Reflection::Resolve<Component>().Id(); }
 		virtual inline const std::string TypeName() const { return Reflection::Resolve<Component>().GetName(); }
 		virtual inline const Reflection::Type GetType() const { return Reflection::Resolve<Component>(); }
 		virtual inline Reflection::Any ToAny() const { return Reflection::Any(this); }
 		virtual inline bool IsAbstract() const { return true; }
 
 		template <typename T> 
-		inline const bool IsOfType() const
+		inline const bool IsType() const
 		{
 			return Reflection::Resolve<T>().Id() == TypeId();
 		}
 		
-		inline const bool IsOfType(size_t id) const
+		inline const bool IsType(uint32_t id) const
 		{
 			return TypeId() == id;
 		}
 		
-		inline const bool IsOfType(const std::string& type_name) const
+		inline const bool IsType(const std::string &type_name) const
 		{
 			return type_name.compare(TypeName()) == 0;
 		}
@@ -133,7 +132,7 @@ namespace Chroma
 		virtual void NO_TYPE_INFO() = 0;
 
 	private:
-		static inline Reflection::TypeData<Component> TypeInfo{};
+		static inline Reflection::TypeData TypeInfo = Reflection::TypeData::Create<Component>();
 		static Reflection::TypeFactory<Component> RegisterType();
 
 		EntityID m_EntityID;
@@ -147,10 +146,8 @@ namespace Chroma
 		unsigned int comparison_id;
 		static unsigned int comparison_counter;
 
-#ifdef CHROMA_EDITOR
 		friend class Polychrome::ComponentWidgets;
 		friend class Polychrome::Inspector;
-#endif
 
 		friend class Scene;
 		friend class ECS;
@@ -162,8 +159,14 @@ namespace Chroma
 		friend class Reflection;
 	};
 
+#ifdef CHROMA_DEBUG
+
 	template <typename T>
 	concept ComponentType = std::is_base_of_v<Chroma::Component, T>;
+
+#else
+	#define ComponentType typename
+#endif
 				
 }
 

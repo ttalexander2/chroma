@@ -6,7 +6,6 @@
 
 namespace Chroma
 {
-
 	void AnimationPlayer::Start()
 	{
 		m_Time = 0.f;

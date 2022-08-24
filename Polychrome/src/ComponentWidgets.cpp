@@ -41,13 +41,14 @@ namespace Polychrome
 
 	void ComponentWidgets::Draw(Chroma::Component* c)
 	{
-		if (c->IsTypeOf<Chroma::Transform>()) DrawTransform(c);
-		if (c->IsTypeOf<Chroma::CSharpScript>()) DrawCSharpScript(c);
-		if (c->IsTypeOf<Chroma::AudioSource>()) DrawAudioSource(c);
+		if (c->IsType<Chroma::Transform>()) DrawTransform(c);
+		if (c->IsType<Chroma::CSharpScript>()) DrawCSharpScript(c);
+		if (c->IsType<Chroma::AudioSource>()) DrawAudioSource(c);
 		//if (c->IsTypeOf<Chroma::Collider>()) DrawCollider(c);
-		if (c->IsTypeOf<Chroma::SpriteRenderer>()) DrawSpriteRenderer(c);
-		if (c->IsTypeOf<Chroma::Camera>()) DrawCameraComponent(c);
-		if (c->IsTypeOf<Chroma::ParticleEmitter>()) DrawParticleEmitter(c);
+		if (c->IsType<Chroma::SpriteRenderer>()) DrawSpriteRenderer(c);
+		if (c->IsType<Chroma::Camera>()) DrawCameraComponent(c);
+		if (c->IsType<Chroma::ParticleEmitter>())
+			DrawParticleEmitter(c);
 	}
 
 	void ComponentWidgets::DrawTransform(Chroma::Component* c)
@@ -466,11 +467,9 @@ namespace Polychrome
 		*/
 
 
-
-
-		if (spr->sprite)
+		if (spr->GetSprite())
 		{
-			Chroma::Ref<Chroma::Sprite> s = spr->sprite;
+			Chroma::Ref<Chroma::Sprite> s = spr->GetSprite();
 
 			DrawComponentValue(c, "Size");
 			ImGui::Text(("[" + std::to_string(s->Frames[spr->GetCurrentFrame()].Texture->GetWidth()) + ", " + std::to_string(s->Frames[spr->GetCurrentFrame()].Texture->GetHeight()) + "]").c_str());

@@ -36,12 +36,6 @@
 namespace Chroma
 {
 
-	std::unordered_map<size_t, std::function<Component* (EntityID, entt::registry*)>> Scene::s_ComponentAdd;
-	std::unordered_map<size_t, std::function<Component* (EntityID, entt::registry*)>> Scene::s_ComponentGet;
-	std::unordered_map<size_t, std::function<bool(EntityID, entt::registry*)>> Scene::s_ComponentHas;
-	std::unordered_map<size_t, std::function<void(EntityID, entt::registry*)>> Scene::s_ComponentRemove;
-	std::unordered_map<size_t, std::function<void(EntityID, entt::registry*, entt::registry*)>> Scene::s_CopyComponent;
-
 	Scene::Scene()
 		: ID(GUID::CreateGUID())
 	{
@@ -79,13 +73,16 @@ namespace Chroma
 		out->EntityOrder = std::vector<Chroma::EntityID>(EntityOrder);
 		out->ID = ID;
 		out->Layers = std::vector<Chroma::Layer>(Layers);
-		out->PrimaryCameraEntity = PrimaryCameraEntity;
 		for (auto oldEntity : Registry.view<Chroma::Transform>())
 		{
 			auto newEntity = out->Registry.create(oldEntity);
 			for (Component* c : GetAllComponents(oldEntity))
 			{
-				s_CopyComponent[c->TypeId()](newEntity, &out->Registry, &Registry);
+				ComponentRegistry::ComponentCopyFunctions()[c->TypeId()](newEntity, &out->Registry, &Registry);
+			}
+			if (oldEntity == PrimaryCameraEntity)
+			{
+				out->PrimaryCameraEntity = newEntity;
 			}
 		}
 		return out;
@@ -93,7 +90,7 @@ namespace Chroma
 
 	Entity Scene::NewEntity()
 	{
-		auto entity = Registry.create();
+		const auto entity = Registry.create();
 		Entity e = { entity, this };
 		Registry.emplace<Tag>(entity, entity).EntityName = fmt::format("Entity_{}", entity);
 		Registry.emplace<Transform>(entity, entity);
@@ -457,6 +454,13 @@ namespace Chroma
 		//	}
 		//}
 		//
+
+
+		//Remove this
+		auto newCam = out->NewEntity();
+		out->AddComponent<Camera>(newCam.GetID());
+		out->PrimaryCameraEntity = newCam.GetID();
+		out->GetComponent<Tag>(newCam.GetID()).EntityName = "Camera";
 		return true;
 
 
@@ -513,10 +517,34 @@ namespace Chroma
 	}
 
 
+	std::vector<Chroma::Reflection::Type> Scene::GetComponentTypes()
+	{
+		std::vector<Chroma::Reflection::Type> types;
+
+		auto comp_type = Chroma::Reflection::Resolve<Component>();
+
+		for (auto type : Chroma::Reflection::Resolve())
+		{
+			if (type.Is<Component>())
+				continue;
+			if (type.IsAbstract())
+				continue;
+			CHROMA_CORE_TRACE("{}", type.GetName());
+			for (auto& base : type.BasesRecursive())
+			{
+				CHROMA_CORE_TRACE("\t{}", base.GetName());
+			}
+			//if (type.Base(comp_type.Id()).Valid())
+			//	types.push_back(type);
+		}
+
+		return types;
+	}
+
 	std::vector<Component*> Scene::GetAllComponents(EntityID entity)
 	{
 		std::vector<Component*> retval;
-		for (auto& [type, func] : s_ComponentGet)
+		for (auto& [type, func] : ComponentRegistry::ComponentGetFunctions())
 		{
 			Component* comp = func(entity, &Registry);
 			if (comp != nullptr)
@@ -541,7 +569,7 @@ namespace Chroma
 
 		for (Component* comp : components)
 		{
-			if (comp->IsOfType<Tag>())
+			if (comp->IsType<Tag>())
 			{
 				continue;
 			}

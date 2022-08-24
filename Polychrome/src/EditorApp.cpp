@@ -735,15 +735,15 @@ namespace Polychrome
 			}
 			if (ImGui::BeginMenu("New Entity...##MAIN_MENU_BAR"))
 			{
-				for (auto& component : Chroma::Scene::GetComponentTypes())
+				for (auto& component_type : Chroma::Scene::GetComponentTypes())
 				{
-					if (component->IsTypeOf<Chroma::Transform>() || component->IsTypeOf<Chroma::Tag>())
+					if (component_type.Is<Chroma::Transform>() || component_type.Is<Chroma::Tag>())
 						continue;
 
-					if (ImGui::MenuItem(component->GetTypeName().c_str()))
+					if (ImGui::MenuItem(component_type.GetName().c_str()))
 					{
 						Chroma::Entity ent = CurrentScene->NewEntity();
-						ent.AddComponent(component->GetTypeName());
+						ent.AddComponent(component_type.GetName());
 					}
 				}
 				ImGui::EndMenu();

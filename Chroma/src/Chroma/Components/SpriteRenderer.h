@@ -6,13 +6,13 @@
 #include "Chroma/Assets/Sprite.h"
 #include "Chroma/Scene/World.h"
 
-#ifdef CHROMA_EDITOR
+
 namespace Polychrome
 {
 	class ComponentWidgets;
 	class EditorApp;
 }
-#endif
+
 
 
 namespace Chroma
@@ -25,10 +25,10 @@ namespace Chroma
 	struct SpriteRenderer : public Component
 	{
 		CHROMA_COMPONENT(SpriteRenderer, Component);
-
-		#ifdef CHROMA_EDITOR
 		friend class Polychrome::ComponentWidgets;
-		#endif
+		friend class SpriteRendererSystem;
+		friend class Polychrome::EditorApp;
+
 
 		enum class SpriteOrigin : char
 		{
@@ -93,7 +93,7 @@ namespace Chroma
 
 		/// @brief Set the sprite's current frame.
 		/// @param Frame number to set.
-		void SetCurrentFrame(unsigned int);
+		void SetCurrentFrame(unsigned int frame);
 
 		void SetSpriteOrigin(SpriteOrigin origin);
 		void SetSpriteOrigin(const Math::vec2& custom_position);
@@ -102,6 +102,7 @@ namespace Chroma
 		const Math::vec2& GetSpriteOriginVector();
 
 		std::string GetSpritePath();
+		inline const Ref<Sprite> &GetSprite() { return sprite; }
 
 		/// @brief Restart the animation.
 		void RestartAnimation();
@@ -120,12 +121,6 @@ namespace Chroma
 		bool looping_forward = 0;
 		
 		Ref<Sprite> sprite;
-
-		friend class SpriteRendererSystem;
-
-	#ifdef CHROMA_EDITOR
-		friend class Polychrome::EditorApp;
-	#endif
 
 	};
 }

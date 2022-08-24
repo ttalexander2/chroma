@@ -6,6 +6,7 @@
 
 namespace Chroma
 {
+
 	Reflection::TypeFactory<Tag> Chroma::Tag::RegisterType()
 	{
 		Reflection::Register<Tag>("Tag")

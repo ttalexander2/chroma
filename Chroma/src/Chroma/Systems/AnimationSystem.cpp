@@ -94,10 +94,10 @@ namespace Chroma
 							float timeSinceStart = delta.GetSeconds() - kf->time;
 							Math::vec2 val = glm::cubic(a, t.a, t.b, b, timeSinceStart / transitionTime);
 
-							Chroma::Component *c = m_Scene->GetComponent(track->component, track->entityID);
+							Chroma::Component *c = m_Scene->GetComponent(track->componentID, track->entityID);
 							if (c != nullptr)
 							{
-								auto meta_handle = c->GetType().Data(track->property);
+								auto meta_handle = c->GetType().Data(track->propertyID);
 								meta_handle.Set(Reflection::Handle(c), val);
 							}
 
@@ -107,10 +107,10 @@ namespace Chroma
 					{
 						if (next->time >= aPlayer.m_Time)
 						{
-							Chroma::Component* c = m_Scene->GetComponent(track->component, track->entityID);
+							Chroma::Component* c = m_Scene->GetComponent(track->componentID, track->entityID);
 							if (c != nullptr)
 							{
-								auto meta_handle = c->GetType().Data(track->property);
+								auto meta_handle = c->GetType().Data(track->propertyID);
 								meta_handle.Set(Reflection::Handle(c), kf->value);
 							}
 						}

@@ -5,16 +5,10 @@
 
 namespace Chroma
 {
-	std::unordered_map<size_t, std::function<void(YAML::Emitter &, Reflection::Any &)>> Reflection::s_SerializeYAMLFunctions;
-	std::unordered_map<size_t, std::function<Reflection::Any(YAML::Node &)>> Reflection::s_DeserializeYAMLFunctions;
-	std::unordered_map<size_t, std::function<void(File &, Reflection::Any &)>> Reflection::s_SerializeBinaryFunctions;
-	std::unordered_map<size_t, std::function<Reflection::Any(File &)>> Reflection::s_DeserializeBinaryFunctions;
-
-	std::unordered_map<size_t, std::string> Reflection::s_TypeNames;
-	std::unordered_map<size_t, std::unordered_map<size_t, std::string>> Reflection::s_TypeDataNames;
-	std::unordered_map<size_t, std::unordered_map<size_t, std::string>> Reflection::s_TypeFunctionNames;
-
-	std::unordered_map<size_t, bool> Reflection::s_TypeAbstract;
+	std::unordered_map<uint32_t, std::function<void(YAML::Emitter &, Reflection::Any &)>> Reflection::s_SerializeYAMLFunctions;
+	std::unordered_map<uint32_t, std::function<Reflection::Any(YAML::Node &)>> Reflection::s_DeserializeYAMLFunctions;
+	std::unordered_map<uint32_t, std::function<void(File &, Reflection::Any &)>> Reflection::s_SerializeBinaryFunctions;
+	std::unordered_map<uint32_t, std::function<Reflection::Any(File &)>> Reflection::s_DeserializeBinaryFunctions;
 
 #define REGISTER_YAML_TYPE(type, name) RegisterYAMLSerializeFunctions<type>(    \
 		[&](YAML::Emitter &emitter, Reflection::Any &value) {					\

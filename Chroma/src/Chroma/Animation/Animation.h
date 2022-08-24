@@ -55,8 +55,8 @@ namespace Chroma
 			UpdateType update;
 			std::multiset<Keyframe, TimeSort> keyframes;
 			Chroma::EntityID entityID;
-			std::string component;
-			std::string property;
+			size_t componentID;
+			size_t propertyID;
 		};
 
 		float length;

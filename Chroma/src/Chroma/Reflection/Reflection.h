@@ -1,24 +1,20 @@
 #pragma once
 
-#define ENTT_ID_TYPE std::size_t
 #include <entt.hpp>
 #include <string>
 #include <type_traits>
 #include <concepts>
-
-#include <Chroma/Utilities/StringHash.h>
-
-
-
-#include <Chroma/IO/File.h>
+#include <unordered_map>
 #include <yaml-cpp/yaml.h>
+#include <Chroma/Utilities/StringHash.h>
+#include <Chroma/IO/File.h>
+#include <Chroma/Core/Log.h>
+#include <iostream>
+#include "Chroma/Scene/ComponentRegistry.h"
 
 namespace Chroma
 {
-
 	class Component;
-	class SpriteRenderer;
-
 
 	/// @brief This is the main class that controlls the runtime reflection system.
 	/// In order to register a type, use the CHROMA_REFLECT() macro, and implement the static
@@ -266,11 +262,13 @@ namespace Chroma
 			Any &operator=(const Any &other) 
 			{
 				m_Value = other.m_Value;
+				return *this;
 			}
 
 			Any &operator=(Any &&other)
 			{
 				m_Value = other.m_Value;
+				return *this;
 			}
 
 			template<typename T>
@@ -278,6 +276,7 @@ namespace Chroma
 			operator=(T &&value)
 			{
 				m_Value = value;
+				return *this;
 			}
 
 			inline Reflection::Type Type() const { return Reflection::Type(m_Value.type()); }
@@ -286,7 +285,7 @@ namespace Chroma
 			inline void *Data() { return m_Value.data(); }
 
 			template<typename... Args>
-			inline Any Invoke(const size_t id, Args &&...args) const
+			inline Any Invoke(const uint32_t id, Args &&...args) const
 			{
 				m_Value.invoke(id, std::forward<Args>(args)...);
 			}
@@ -294,12 +293,12 @@ namespace Chroma
 			template <typename... Args>
 			inline Any Invoke(const std::string& name, Args &&...args) const
 			{
-				size_t hash = StringHash::Hash(name);
+				uint32_t hash = BasicHash<uint32_t>::Hash(name);
 				m_Value.invoke(hash, std::forward<Args>(args)...);
 			}
 			
 			template<typename T>
-			inline bool Set(const size_t id, T &&value)
+			inline bool Set(const uint32_t id, T &&value)
 			{
 				return m_Value.set(id, std::move(value));
 			}
@@ -307,18 +306,18 @@ namespace Chroma
 			template <typename T>
 			inline bool Set(const std::string& name, T &&value)
 			{
-				size_t hash = StringHash::Hash(name);
+				uint32_t hash = BasicHash<uint32_t>::Hash(name);
 				return m_Value.set(hash, std::move(value));
 			}
 
-			inline Any Get(const size_t id)
+			inline Any Get(const uint32_t id)
 			{
 				return Any(m_Value.get(id));
 			}
 
 			inline Any Get(const std::string& name)
 			{
-				size_t hash = StringHash::Hash(name);
+				uint32_t hash = BasicHash<uint32_t>::Hash(name);
 				return Any(m_Value.get(hash));
 			}
 
@@ -428,18 +427,17 @@ namespace Chroma
 			entt::meta_any m_Value;
 		};
 
+
+
 		template <typename T>
 		struct TypeFactory
 		{
-			TypeFactory(const std::string &name) :
-					m_Factory(entt::meta<T>().type(StringHash::Hash(name).m_Hash))
-			{
-			}
-
+			friend class Reflection;
 
 			template <typename Base>
 			TypeFactory<T> &Base()
 			{
+				static_assert(!std::is_same<Base, T>(), "Warning, class cannot be base class of itself!");
 				m_Factory.base<Base>();
 				return *this;
 			}
@@ -461,7 +459,8 @@ namespace Chroma
 			template <auto Data>
 			TypeFactory<T> &Data(const std::string& name, bool serialize = true)
 			{
-				size_t hash = StringHash::Hash(name).m_Hash;
+				uint32_t hash = BasicHash<uint32_t>::Hash(name).m_Hash;
+				TypeData::GetTypeDataNames()[m_Hash][hash] = name;
 				m_Factory.data<Data>(hash);
 				return *this;
 			}
@@ -469,7 +468,8 @@ namespace Chroma
 			template <auto Setter, auto Getter>
 			TypeFactory<T> &Data(const std::string& name, bool serialize = true)
 			{
-				size_t hash = StringHash::Hash(name).m_Hash;
+				uint32_t hash = BasicHash<uint32_t>::Hash(name).m_Hash;
+				TypeData::GetTypeDataNames()[m_Hash][hash] = name;
 				m_Factory.data<Setter, Getter>(hash);
 				return *this;
 			}
@@ -484,13 +484,21 @@ namespace Chroma
 			template <auto Fn>
 			TypeFactory<T> &Func(const std::string& name)
 			{
-				size_t hash = StringHash::Hash(name).m_Hash;
+				uint32_t hash = BasicHash<uint32_t>::Hash(name).m_Hash;
+				TypeData::GetTypeFunctionNames()[m_Hash][hash] = name;
 				m_Factory.func<Fn>(hash);
 				return *this;
 			}
 
 		private:
+
+			TypeFactory(const std::string &name) :
+					m_Hash(BasicHash<uint32_t>::Hash(name).m_Hash), m_Factory(entt::meta<T>().type(BasicHash<uint32_t>::Hash(name).m_Hash))
+			{
+			}
+
 			entt::meta_factory<T, T> m_Factory;
+			uint32_t m_Hash;
 		};
 
 		template <typename T, typename InternalType, typename InternalNodeType = InternalType::node_type>
@@ -655,8 +663,8 @@ namespace Chroma
 
 			const inline std::string GetName() const
 			{
-				if (s_TypeDataNames.contains(m_Data.parent().id()) && s_TypeDataNames[m_Data.parent().id()].contains(m_Data.id()))
-					return s_TypeDataNames[m_Data.parent().id()][m_Data.id()];
+				if (TypeData::GetTypeDataNames().contains(m_Data.parent().id()) && TypeData::GetTypeDataNames()[m_Data.parent().id()].contains(m_Data.id()))
+					return TypeData::GetTypeDataNames()[m_Data.parent().id()][m_Data.id()];
 				return std::string();
 			}
 
@@ -696,8 +704,8 @@ namespace Chroma
 
 			const inline std::string GetName() const
 			{
-				if (s_TypeFunctionNames.contains(m_Func.parent().id()) && s_TypeFunctionNames[m_Func.parent().id()].contains(m_Func.id()))
-					return s_TypeFunctionNames[m_Func.parent().id()][m_Func.id()];
+				if (TypeData::GetTypeFunctionNames().contains(m_Func.parent().id()) && TypeData::GetTypeFunctionNames()[m_Func.parent().id()].contains(m_Func.id()))
+					return TypeData::GetTypeFunctionNames()[m_Func.parent().id()][m_Func.id()];
 				return std::string();
 			}
 
@@ -727,7 +735,6 @@ namespace Chroma
 			entt::meta_func m_Func;
 		};
 
-
 		struct Type
 		{
 			friend class Reflection;
@@ -741,8 +748,8 @@ namespace Chroma
 
 			const inline std::string GetName()
 			{
-				if (s_TypeNames.contains(m_Type.id()))
-					return s_TypeNames[m_Type.id()];
+				if (TypeData::GetTypeNames().contains(m_Type.id()))
+					return TypeData::GetTypeNames()[m_Type.id()];
 				return std::string();
 			}
 
@@ -761,13 +768,42 @@ namespace Chroma
 			const inline bool IsSequenceContainer() { return m_Type.is_sequence_container(); }
 			const inline bool IsAssociativeContainer() { return m_Type.is_associative_container(); }
 			const inline bool IsTemplateSpecialization() { return m_Type.is_template_specialization(); }
+			const inline bool IsAbstract()
+			{ 
+				if (TypeData::GetTypeAbstract().contains(m_Type.id()))
+					return TypeData::GetTypeAbstract()[m_Type.id()];
+				return true;
+			}
 
 
-			inline TypeRange<Type, entt::meta_type, entt::internal::meta_base_node> Base() 
+			inline TypeRange<Type, entt::meta_type, entt::internal::meta_base_node> Bases() 
 			{
 				return TypeRange<Type, entt::meta_type, entt::internal::meta_base_node>(m_Type.base());
 			}
-			inline Type Base(const std::string &name) { return Type(m_Type.base(StringHash::Hash(name))); }
+
+			inline std::vector<Type> BasesRecursive()
+			{
+				std::vector<Type> bases;
+				InternalRecurseBase(&bases, this);
+				return bases;
+			}
+
+		private:
+			
+			void InternalRecurseBase(std::vector<Type>* bases_list, Type *t)
+			{
+				for (auto base : t->Bases())
+				{
+					CHROMA_CORE_INFO("Base: {}", base.GetName());
+					bases_list->push_back(base);
+					InternalRecurseBase(bases_list, &base);
+				}
+			}
+
+		public:
+
+			inline Type Base(const std::string &name) { return Type(m_Type.base(BasicHash<uint32_t>::Hash(name))); }
+			inline Type Base(uint32_t id) { return Type(m_Type.base(id)); }
 
 			template <typename... Args>
 			inline Reflection::Any Construct(Args &&... args) const
@@ -794,11 +830,11 @@ namespace Chroma
 
 			inline Reflection::Data Data(const std::string& name) const
 			{
-				size_t hash = StringHash::Hash(name);
+				uint32_t hash = BasicHash<uint32_t>::Hash(name);
 				return Reflection::Data(m_Type.data(hash));
 			}
 
-			inline Reflection::Data Data(const size_t id) const
+			inline Reflection::Data Data(const uint32_t id) const
 			{
 				return Reflection::Data(m_Type.data(id));
 			}
@@ -815,22 +851,22 @@ namespace Chroma
 
 			inline Reflection::Function Function(const std::string& name) const
 			{
-				size_t hash = StringHash::Hash(name);
+				uint32_t hash = BasicHash<uint32_t>::Hash(name);
 				return Reflection::Function(m_Type.func(hash));
 			}
 
-			inline Reflection::Function Function(const size_t id) const
+			inline Reflection::Function Function(const uint32_t id) const
 			{
 				return Reflection::Function(m_Type.func(id));
 			}
 
 			inline Any Get(const std::string &name, Handle instance) const
 			{
-				size_t hash = StringHash::Hash(name);
+				uint32_t hash = BasicHash<uint32_t>::Hash(name);
 				return m_Type.get(hash, std::move(instance.m_Handle));
 			}
 
-			inline Any Get(const size_t id, Handle instance) const
+			inline Any Get(const uint32_t id, Handle instance) const
 			{
 				return m_Type.get(id, std::move(instance.m_Handle));
 			}
@@ -838,12 +874,12 @@ namespace Chroma
 			template <typename T>
 			inline T Get(const std::string &name, Handle instance) const
 			{
-				size_t hash = StringHash::Hash(name);
+				uint32_t hash = BasicHash<uint32_t>::Hash(name);
 				return m_Type.get(hash, std::move(instance.m_Handle)).cast<T>();
 			}
 
 			template <typename T>
-			inline T Get(const size_t id, Handle instance) const
+			inline T Get(const uint32_t id, Handle instance) const
 			{
 				return m_Type.get(id, std::move(instance.m_Handle)).cast<T>();
 			}
@@ -851,48 +887,48 @@ namespace Chroma
 			template <typename T>
 			inline bool Set(const std::string& name, Handle instance, T&& value) const
 			{
-				size_t hash = StringHash::Hash(name);
+				uint32_t hash = BasicHash<uint32_t>::Hash(name);
 				return m_Type.set(hash, std::move(instance.m_Handle), std::forward<T>(value));
 			}
 
 			template <typename T>
-			inline bool Set(const size_t id, Handle instance, T &&value) const
+			inline bool Set(const uint32_t id, Handle instance, T &&value) const
 			{
 				return m_Type.set(id, std::move(instance.m_Handle), std::forward<T>(value));
 			}
 
 			inline bool Set(const std::string& name, Handle instance, Any value)
 			{
-				size_t hash = StringHash::Hash(name);
+				uint32_t hash = BasicHash<uint32_t>::Hash(name);
 				return m_Type.set(hash, std::move(instance.m_Handle), value);
 			}
 
-			inline bool Set(const size_t id, Handle instance, Any value)
+			inline bool Set(const uint32_t id, Handle instance, Any value)
 			{
 				return m_Type.set(id, std::move(instance.m_Handle), value);
 			}
 
 			inline Reflection::Any Invoke(const std::string& name, Handle instance, Reflection::Any *const args, const size_t count) const 
 			{
-				size_t hash = StringHash::Hash(name);
+				uint32_t hash = BasicHash<uint32_t>::Hash(name);
 				return m_Type.invoke(hash, std::move(instance.m_Handle), args, count);
 			}
 
 			template <typename... Args>
 			inline Reflection::Any Invoke(const std::string &name, Handle instance, Args &&...args) const
 			{
-				size_t hash = StringHash::Hash(name);
+				uint32_t hash = BasicHash<uint32_t>::Hash(name);
 				Reflection::Any arguments[sizeof...(Args) + 1u]{ std::forward<Args>(args)... };
 				return m_Type.invoke(hash, std::move(instance.m_Handle), arguments, sizeof...(Args));
 			}
 
-			inline Reflection::Any Invoke(const size_t id, Handle instance, Reflection::Any *const args, const size_t count) const
+			inline Reflection::Any Invoke(const uint32_t id, Handle instance, Reflection::Any *const args, const size_t count) const
 			{
 				return m_Type.invoke(id, std::move(instance.m_Handle), args, count);
 			}
 
 			template <typename... Args>
-			inline Reflection::Any Invoke(const size_t id, Handle instance, Args &&...args) const
+			inline Reflection::Any Invoke(const uint32_t id, Handle instance, Args &&...args) const
 			{
 				Reflection::Any arguments[sizeof...(Args) + 1u]{ std::forward<Args>(args)... };
 				return m_Type.invoke(id, std::move(instance.m_Handle), arguments, sizeof...(Args));
@@ -914,6 +950,14 @@ namespace Chroma
 
 			inline Reflection::Type TemplateType() const { return Reflection::Type(m_Type.template_type()); }
 
+			template <typename T>
+			inline bool Is()
+			{
+				auto type = Reflection::Resolve<T>();
+				if (!type.Valid())
+					return false;
+				return Id() == type.Id();
+			}
 
 
 		private:
@@ -921,19 +965,26 @@ namespace Chroma
 			Type(entt::meta_type type) :
 					m_Type(type)
 			{
-				m_Type.base();
 			}
 
 			entt::meta_type m_Type;
 		};
 
+	private:
+		static inline bool s_InitializeMaps = true;
+
+	public:
+
 
 		template <typename T>
-		static inline TypeFactory<T> Register(const std::string& name)
+		static TypeFactory<T> Register(const std::string& name)
 		{
-			size_t hash = StringHash::Hash(name);
-			s_TypeAbstract[hash] = std::is_abstract<T>::value;
-			s_TypeNames[hash] = name;
+			uint32_t hash = BasicHash<uint32_t>::Hash(name);
+			bool is_abstract = std::is_abstract_v<T>; 
+			TypeData::GetTypeAbstract()[hash] = is_abstract;
+			TypeData::GetTypeNames()[hash] = name;
+			TypeData::GetTypeDataNames()[hash] = std::unordered_map<uint32_t, std::string>();
+			TypeData::GetTypeFunctionNames()[hash] = std::unordered_map<uint32_t, std::string>();
 			return TypeFactory<T>(name);
 		}
 
@@ -950,11 +1001,11 @@ namespace Chroma
 
 		static inline Type Resolve(const std::string& name)
 		{
-			size_t hash = StringHash::Hash(name).m_Hash;
+			uint32_t hash = BasicHash<uint32_t>::Hash(name).m_Hash;
 			return Type(entt::resolve(hash));
 		}
 
-		static inline Type Resolve(size_t hash)
+		static inline Type Resolve(uint32_t hash)
 		{
 			return Type(entt::resolve(hash));
 		}
@@ -966,14 +1017,66 @@ namespace Chroma
 		}
 
 
-		template <class T>
+		//An instance of this struct is automatically declared statically inlined into the reflected class
+		//This class is designed to automatically register the type of the reflected class, and call the RegisterType()
+		//function. All of the collection reflection information is stored as local static variables within
+		//static functions to ensure they are statically initialized BEFORE the RegisterType function is called.
+		//
+		//This entire thing is definitely hacky and only tested on the MSVC compiler, however it allows for the reflection
+		//registration function to be called automatically.
 		struct TypeData
 		{
+			template <class T>
+			static TypeData Create()
+			{
+				TypeData data;
+				T::RegisterType();
+				Type t = Reflection::Resolve<T>();
+				if constexpr (!std::is_abstract<T>::value)
+				{
+					if constexpr (!std::is_same<T, Component>::value && std::is_base_of<Component, T>::value)
+						Chroma::ComponentRegistry::RegisterComponent<T>(t.Id());
+				}
+				return data;
+			}
+
+			static std::unordered_map<uint32_t, std::string> &GetTypeNames()
+			{
+				static std::unordered_map<uint32_t, std::string> s_TypeNames;
+				return s_TypeNames;
+			}
+
+			static std::unordered_map<uint32_t, std::unordered_map<uint32_t, std::string>> &GetTypeDataNames()
+			{
+				static std::unordered_map<uint32_t, std::unordered_map<uint32_t, std::string>> s_TypeDataNames;
+				return s_TypeDataNames;
+			}
+
+			static std::unordered_map<uint32_t, std::unordered_map<uint32_t, bool>> &GetTypeDataSerialize()
+			{
+				static std::unordered_map<uint32_t, std::unordered_map<uint32_t, bool>> s_TypeDataSerialize;
+				return s_TypeDataSerialize;
+			}
+
+			static std::unordered_map<uint32_t, std::unordered_map<uint32_t, std::string>> &GetTypeFunctionNames()
+			{
+				static std::unordered_map<uint32_t, std::unordered_map<uint32_t, std::string>> s_TypeFunctionNames;
+				return s_TypeFunctionNames;
+			}
+
+			static std::unordered_map<uint32_t, bool> &GetTypeAbstract()
+			{
+				static std::unordered_map<uint32_t, bool> s_TypeAbstract;
+				return s_TypeAbstract;
+			}
+
+		private:
 			TypeData()
 			{
-				//static_assert(HasTypeMethod<T>, "Class implementing IReflect must contain a static function with the following signature: \"static Reflection::TypeFactory<T> RegisterType()\"");
-				CHROMA_CORE_INFO("Type registered for reflection: {}", typeid(T).name());
-				T::RegisterType();
+				GetTypeNames();
+				GetTypeDataNames();
+				GetTypeFunctionNames();
+				GetTypeAbstract();
 			}
 		};
 
@@ -992,7 +1095,7 @@ namespace Chroma
 		static void RegisterYAMLSerializeFunctions(std::function<void(YAML::Emitter &, Reflection::Any &)> serialize_function, std::function<Reflection::Any(YAML::Node &)> deserialize_function)
 		{
 			//auto description = Reflection::Resolve<T>();
-			//size_t hash = StringHash::Hash(description->GetName());
+			//uint32_t hash = BasicHash<uint32_t>::Hash(description->GetName());
 			//
 			//s_SerializeYAMLFunctions[hash] = serialize_function;
 			//s_DeserializeYAMLFunctions[hash] = deserialize_function;
@@ -1002,7 +1105,7 @@ namespace Chroma
 		static void RegisterBinarySerializeFunctions(std::function<void(File &, Reflection::Any &)> serialize_function, std::function<Reflection::Any(File &)> deserialize_function)
 		{
 			//auto description = Reflect::Resolve<T>();
-			//size_t hash = StringHash::Hash(description->GetName());
+			//uint32_t hash = BasicHash<uint32_t>::Hash(description->GetName());
 			//
 			//s_SerializeBinaryFunctions[hash] = serialize_function;
 			//s_DeserializeBinaryFunctions[hash] = deserialize_function;
@@ -1013,18 +1116,12 @@ namespace Chroma
 		static Reflection::Any DeserializeObjectYAML(YAML::Node &node);
 		static Reflection::Any DeserializeObjectBinary(File &file);
 
+
 	private:
-
-		static std::unordered_map<size_t, std::function<void(YAML::Emitter &, Reflection::Any &)>> s_SerializeYAMLFunctions;
-		static std::unordered_map<size_t, std::function<Reflection::Any(YAML::Node &)>> s_DeserializeYAMLFunctions;
-		static std::unordered_map<size_t, std::function<void(File &, Reflection::Any &)>> s_SerializeBinaryFunctions;
-		static std::unordered_map<size_t, std::function<Reflection::Any(File &)>> s_DeserializeBinaryFunctions;
-
-		static std::unordered_map<size_t, std::string> s_TypeNames;
-		static std::unordered_map<size_t, std::unordered_map<size_t, std::string>> s_TypeDataNames;
-		static std::unordered_map<size_t, std::unordered_map<size_t, std::string>> s_TypeFunctionNames;
-
-		static std::unordered_map<size_t, bool> s_TypeAbstract;
+		static std::unordered_map<uint32_t, std::function<void(YAML::Emitter &, Reflection::Any &)>> s_SerializeYAMLFunctions;
+		static std::unordered_map<uint32_t, std::function<Reflection::Any(YAML::Node &)>> s_DeserializeYAMLFunctions;
+		static std::unordered_map<uint32_t, std::function<void(File &, Reflection::Any &)>> s_SerializeBinaryFunctions;
+		static std::unordered_map<uint32_t, std::function<Reflection::Any(File &)>> s_DeserializeBinaryFunctions;
 	};
 
 
@@ -1032,9 +1129,9 @@ namespace Chroma
 
 #ifndef CHROMA_REFLECT
 	//Registers a class as a reflectable type. Requires the class to implement: Reflection::TypeFactory<T> RegisterType()
-	//Note: Should be defined in a private scope
+	//Note: If inherritance proves an issue, defined in a private scope
 	#define CHROMA_REFLECT(typeName) \
-	static inline Reflection::TypeData<typeName> _type_info{}; \
+	static Reflection::TypeData<typeName> TypeInfo; \
 	static Reflection::TypeFactory<typeName> RegisterType();
 #endif
 

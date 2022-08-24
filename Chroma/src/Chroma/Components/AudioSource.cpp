@@ -5,7 +5,6 @@
 
 namespace Chroma
 {
-
 	Reflection::TypeFactory<AudioSource> AudioSource::RegisterType()
 	{
 		return Reflection::Register<AudioSource>("AudioSource")

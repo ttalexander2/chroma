@@ -214,8 +214,7 @@ project "Polychrome"
         "%{prj.name}/src/**.h",
         "%{prj.name}/src/**.c",
         "%{prj.name}/src/**.hpp",
-        "%{prj.name}/src/**.cpp",
-        "%{IncludeDir.better_enums}"
+        "%{prj.name}/src/**.cpp"
     }
 
     includedirs
@@ -314,10 +313,108 @@ project "Polychrome"
             "{COPYFILE} \"%{LibraryDir.VulkanSDK_Bin}/SPIRV-Tools-shared.dll\" %{cfg.targetdir}"
         }
 
+        project "Runtime"
+        location "Runtime"
+        kind "ConsoleApp"
+        language "C++"
+        cppdialect "C++20"
+        staticruntime "off"
+    
+        targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+        objdir ("obj/" .. outputdir .. "/%{prj.name}")
+    
+        dependson { "Chroma.Mono" }
+    
+        files
+        {
+            "%{prj.name}/**.h",
+            "%{prj.name}/**.cpp"
+        }
+    
+        includedirs
+        {
+            "Chroma/src",
+            "Chroma/third_party/spdlog/include",
+            "%{IncludeDir.glm}",
+            "%{IncludeDir.Glad}",
+            "%{IncludeDir.ImGui}",
+            "%{IncludeDir.ImGui}/misc/cpp",
+            "%{IncludeDir.entt}",
+            "%{IncludeDir.FMOD}",
+            "%{IncludeDir.yaml}",
+            "%{IncludeDir.concurrentqueue}",
+            "%{IncludeDir.readerwriterqueue}",
+            "%{IncludeDir.ImGuizmo}",
+            "%{IncludeDir.mono}",
+            "%{IncludeDir.cute_headers}",
+            "%{IncludeDir.miniz}",
+            "%{IncludeDir.box2d}",
+            "%{IncludeDir.msdfgen}",
+            "%{IncludeDir.msdf_atlasgen}",
+            "%{IncludeDir.better_enums}"
+        }
+    
+        links
+        {
+            "Chroma"
+        }
+    
+    
+        postbuildcommands
+        {
+            "{ECHO} Copying ../Chroma/lib/Windows/x64/fmodstudioL.dll to %{cfg.targetdir}",
+            "{COPYFILE} ../Chroma/lib/Windows/x64/fmodstudioL.dll %{cfg.targetdir}",
+            "{ECHO} Copying ../Chroma/lib/Windows/x64/fmodL.dll to %{cfg.targetdir}",
+            "{COPYFILE} ../Chroma/lib/Windows/x64/fmodL.dll %{cfg.targetdir}",
+            "{ECHO} Copying assets to %{cfg.targetdir}/assets",
+            "{COPYDIR} assets %{cfg.targetdir}/assets",
+            "{ECHO} Copying ../Chroma/third_party/mono/bin/mono-2.0-sgen.dll to %{cfg.targetdir}",
+            '{COPYFILE} "../Chroma/third_party/mono/bin/mono-2.0-sgen.dll" "%{cfg.targetdir}"',
+            '{COPYDIR} "../third_party/mono/lib" "%{cfg.targetdir}/mono/lib"',
+            '{COPYFILE} \"%{wks.location}bin/' .. outputdir .. '/Chroma.Mono/Chroma.Mono.dll\" %{cfg.targetdir}',
+        }
+    
+    
+        filter "configurations:Debug"
+            defines "CHROMA_DEBUG"
+            runtime "Debug"
+            symbols "On"
+            optimize "Debug"
+            postbuildcommands{
+                "{COPYDIR} \"%{LibraryDir.VulkanSDK_DebugDLL}\" \"%{cfg.targetdir}\""
+            }
+    
+        filter "configurations:Release"
+            defines "CHROMA_RELEASE"
+            runtime "Release"
+            optimize "On"
+            postbuildcommands{
+                "{ECHO} Copying Vulkan dlls...",
+                "{ECHO} \"%{LibraryDir.VulkanSDK_Bin}/shaderc_shared.dll\" %{cfg.targetdir}",
+                "{COPYFILE} \"%{LibraryDir.VulkanSDK_Bin}/shaderc_shared.dll\" %{cfg.targetdir}",
+                "{ECHO} \"%{LibraryDir.VulkanSDK_Bin}/spirv-cross-c-shared.dll\" %{cfg.targetdir}",
+                "{COPYFILE} \"%{LibraryDir.VulkanSDK_Bin}/spirv-cross-c-shared.dll\" %{cfg.targetdir}",
+                "{ECHO} \"%{LibraryDir.VulkanSDK_Bin}/SPIRV-Tools-shared.dll\" %{cfg.targetdir}",
+                "{COPYFILE} \"%{LibraryDir.VulkanSDK_Bin}/SPIRV-Tools-shared.dll\" %{cfg.targetdir}"
+            }
+    
+        filter "configurations:Dist"
+            defines "CHROMA_DIST"
+            runtime "Release"
+            optimize "On"
+            postbuildcommands{
+                "{ECHO} Copying Vulkan dlls...",
+                "{ECHO} \"%{LibraryDir.VulkanSDK_Bin}/shaderc_shared.dll\" %{cfg.targetdir}",
+                "{COPYFILE} \"%{LibraryDir.VulkanSDK_Bin}/shaderc_shared.dll\" %{cfg.targetdir}",
+                "{ECHO} \"%{LibraryDir.VulkanSDK_Bin}/spirv-cross-c-shared.dll\" %{cfg.targetdir}",
+                "{COPYFILE} \"%{LibraryDir.VulkanSDK_Bin}/spirv-cross-c-shared.dll\" %{cfg.targetdir}",
+                "{ECHO} \"%{LibraryDir.VulkanSDK_Bin}/SPIRV-Tools-shared.dll\" %{cfg.targetdir}",
+                "{COPYFILE} \"%{LibraryDir.VulkanSDK_Bin}/SPIRV-Tools-shared.dll\" %{cfg.targetdir}"
+            }
 
 
-project "Runtime"
-    location "Runtime"
+project "Test"
+    location "Test"
     kind "ConsoleApp"
     language "C++"
     cppdialect "C++20"
@@ -331,8 +428,7 @@ project "Runtime"
     files
     {
         "%{prj.name}/**.h",
-        "%{prj.name}/**.cpp",
-        "%{IncludeDir.better_enums}"
+        "%{prj.name}/**.cpp"
     }
 
     includedirs
@@ -355,7 +451,8 @@ project "Runtime"
         "%{IncludeDir.box2d}",
         "%{IncludeDir.msdfgen}",
         "%{IncludeDir.msdf_atlasgen}",
-        "%{IncludeDir.better_enums}"
+        "%{IncludeDir.better_enums}",
+        "%{IncludeDir.Catch2}"
     }
 
     links
@@ -377,6 +474,12 @@ project "Runtime"
         '{COPYDIR} "../third_party/mono/lib" "%{cfg.targetdir}/mono/lib"',
         '{COPYFILE} \"%{wks.location}bin/' .. outputdir .. '/Chroma.Mono/Chroma.Mono.dll\" %{cfg.targetdir}',
     }
+
+    configuration "vs*"
+        buildoptions { 
+            "/Zc:hiddenFriend-"
+         }
+
 
 
     filter "configurations:Debug"

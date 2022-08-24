@@ -28,6 +28,9 @@ IncludeDir["msdfgen"] = "%{wks.location}/Chroma/third_party/msdf-atlas-gen/msdfg
 IncludeDir["msdf_atlasgen"] = "%{wks.location}/Chroma/third_party/msdf-atlas-gen"
 IncludeDir["better_enums"] = "%{wks.location}/Chroma/third_party/better-enums"
 
+
+IncludeDir["Catch2"] = "%{wks.location}/Test/third_party/Catch2"
+
 LibraryDir = {}
 
 LibraryDir["VulkanSDK"] = "%{VULKAN_SDK}/Lib"

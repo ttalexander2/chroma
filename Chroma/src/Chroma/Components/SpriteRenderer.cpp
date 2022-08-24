@@ -9,6 +9,7 @@
 
 namespace Chroma
 {
+
 	/// @brief Set the sprite to render.
 	/// 
 	/// Sprite must already be loaded.

@@ -76,20 +76,6 @@ namespace Chroma
 
 			Reflection::InitializeDataTypes();
 
-			Scene::RegisterComponent<AudioSource>();
-			Scene::RegisterComponent<CircleCollider>();
-			Scene::RegisterComponent<EdgeCollider>();
-			Scene::RegisterComponent<PolygonCollider>();
-			Scene::RegisterComponent<RectangleCollider>();
-			Scene::RegisterComponent<Camera>();
-			Scene::RegisterComponent<CSharpScript>();
-			Scene::RegisterComponent<ParticleEmitter>();
-			Scene::RegisterComponent<SpriteRenderer>();
-			Scene::RegisterComponent<Tag>();
-			Scene::RegisterComponent<Transform>();
-			Scene::RegisterComponent<AnimationPlayer>();
-			Scene::RegisterComponent<RigidBody>();
-
 			AssetManager::Register<Sprite>();
 			AssetManager::Register<FMODBank>();
 			AssetManager::Register<Font>();

@@ -8,7 +8,6 @@
 
 namespace Chroma
 {
-
 	void Camera::RecalculateViewMatrix()
 	{
 		float aspectRatio = (float)size.x / (float)size.y;

@@ -8,7 +8,6 @@
 
 namespace Chroma
 {
-
 	void RigidBody::Initialize()
 	{
 		m_BodyDefinition.userData.pointer = reinterpret_cast<uintptr_t>(&m_EntityID);

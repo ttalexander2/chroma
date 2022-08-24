@@ -5,7 +5,6 @@
 
 namespace Chroma
 {
-
 	bool PolygonCollider::ValidateConvexity()
 	{
 		return m_Shape.Validate();

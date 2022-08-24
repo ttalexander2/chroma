@@ -50,11 +50,8 @@ namespace Polychrome
 
 			ImGui::InputText(ICON_FK_SEARCH "##hierarchy_search", &search_string);
 			ImGui::Separator();
-			
 
-			Chroma::Scene* scene = EditorApp::CurrentScene;
-
-			auto view = scene->Registry.view<Chroma::Tag>();
+			auto view = EditorApp::CurrentScene->Registry.view<Chroma::Tag>();
 
 			std::vector<Chroma::EntityID> toRemove;
 
@@ -66,10 +63,10 @@ namespace Polychrome
 
 			has_entity_payload = ImGui::GetDragDropPayload() != nullptr && ImGui::GetDragDropPayload()->IsDataType("Entity");
 
-			if (scene->EntityOrder.size() > 0)
-				DragDropSeparator(scene, Chroma::ENTITY_NULL, scene->EntityOrder[0], 3.f);
+			if (EditorApp::CurrentScene->EntityOrder.size() > 0)
+				DragDropSeparator(EditorApp::CurrentScene, Chroma::ENTITY_NULL, EditorApp::CurrentScene->EntityOrder[0], 3.f);
 
-			std::vector<Chroma::EntityID> entities(scene->EntityOrder);
+			std::vector<Chroma::EntityID> entities(EditorApp::CurrentScene->EntityOrder);
 
 			//TODO: Add entity search (by name)
 
@@ -122,9 +119,9 @@ namespace Polychrome
 				else
 				{
 					if (entities.size() > i + 1)
-						DrawEntity(scene, e, entities[i + 1]);
+						DrawEntity(EditorApp::CurrentScene, e, entities[i + 1]);
 					else
-						DrawEntity(scene, e, Chroma::ENTITY_NULL);
+						DrawEntity(EditorApp::CurrentScene, e, Chroma::ENTITY_NULL);
 				}
 
 				i++;
@@ -139,7 +136,7 @@ namespace Polychrome
 
 			for (Chroma::EntityID e : sorted)
 			{
-				DrawEntity(scene, e, Chroma::ENTITY_NULL);
+				DrawEntity(EditorApp::CurrentScene, e, Chroma::ENTITY_NULL);
 			}
 
 			if (!any_hovered)
@@ -153,7 +150,7 @@ namespace Polychrome
 
 			for (Chroma::EntityID ent : to_remove_from_order)
 			{
-				Chroma::PopValue(scene->EntityOrder, ent);	
+				Chroma::PopValue(EditorApp::CurrentScene->EntityOrder, ent);	
 			}
 			to_remove_from_order.clear();
 
@@ -174,8 +171,9 @@ namespace Polychrome
 
 	void Hierarchy::DrawEntity(Chroma::Scene* scene, Chroma::EntityID e, Chroma::EntityID next, bool root)
 	{
-		if (e == Chroma::ENTITY_NULL)
+		if (e == Chroma::ENTITY_NULL || !scene->Registry.valid(e))
 			return;
+
 		auto& transform = scene->GetComponent<Chroma::Transform>(e);
 		Chroma::Tag& t = scene->GetComponent<Chroma::Tag>(e);
 
