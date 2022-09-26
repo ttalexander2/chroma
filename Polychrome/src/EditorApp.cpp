@@ -1147,7 +1147,7 @@ namespace Polychrome
 		
 		const Math::vec2& origin = spriteRenderer.GetSpriteOriginVector();
 		
-		if (spriteRenderer.sprite.get() != nullptr && spriteRenderer.sprite->IsLoaded())
+		if (spriteRenderer.GetSprite() && spriteRenderer.GetSprite()->IsLoaded())
 		{
 			Chroma::Ref<Chroma::Sprite> s = Chroma::AssetManager::Get<Chroma::Sprite>(spriteRenderer.GetSpriteID());
 			int w = s->Frames[spriteRenderer.GetCurrentFrame()].Texture->GetWidth();

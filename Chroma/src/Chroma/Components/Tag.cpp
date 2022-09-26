@@ -9,7 +9,7 @@ namespace Chroma
 
 	Reflection::TypeFactory<Tag> Chroma::Tag::RegisterType()
 	{
-		Reflection::Register<Tag>("Tag")
+		return Reflection::Register<Tag>("Tag")
 				.Base<Component>()
 				.Data<&Tag::EntityName>("EntityName")
 				.Data<&Tag::Ordering>("Ordering");

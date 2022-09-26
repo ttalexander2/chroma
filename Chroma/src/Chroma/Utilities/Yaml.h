@@ -85,6 +85,78 @@ namespace YAML
 		}
 	};
 
+	template <>
+	struct convert<Math::uvec2>
+	{
+		static Node encode(const Math::uvec2 &val)
+		{
+			Node node;
+			node.push_back(val.x);
+			node.push_back(val.y);
+			return node;
+		}
+
+		static bool decode(const Node &node, Math::uvec2 &val)
+		{
+			if (!node.IsSequence() || node.size() != 2)
+				return false;
+
+			val.x = node[0].as<unsigned int>();
+			val.y = node[1].as<unsigned int>();
+			return true;
+		}
+	};
+
+	template <>
+	struct convert<Math::uvec3>
+	{
+		static Node encode(const Math::uvec3 &val)
+		{
+			Node node;
+			node.push_back(val.x);
+			node.push_back(val.y);
+			node.push_back(val.z);
+			return node;
+		}
+
+		static bool decode(const Node &node, Math::uvec3 &val)
+		{
+			if (!node.IsSequence() || node.size() != 3)
+				return false;
+
+			val.x = node[0].as<unsigned int>();
+			val.y = node[1].as<unsigned int>();
+			val.z = node[2].as<unsigned int>();
+			return true;
+		}
+	};
+
+	template <>
+	struct convert<Math::uvec4>
+	{
+		static Node encode(const Math::uvec4 &val)
+		{
+			Node node;
+			node.push_back(val.x);
+			node.push_back(val.y);
+			node.push_back(val.z);
+			node.push_back(val.w);
+			return node;
+		}
+
+		static bool decode(const Node &node, Math::uvec4 &val)
+		{
+			if (!node.IsSequence() || node.size() != 4)
+				return false;
+
+			val.x = node[0].as<unsigned int>();
+			val.y = node[1].as<unsigned int>();
+			val.z = node[2].as<unsigned int>();
+			val.w = node[3].as<unsigned int>();
+			return true;
+		}
+	};
+
 	template<>
 	struct convert<Chroma::Ref<Chroma::Asset>>
 	{
@@ -96,7 +168,7 @@ namespace YAML
 
 		static bool decode(const Node& node, Chroma::Ref<Chroma::Asset>& asset)
 		{
-			if (!node.IsDefined() || !node.IsNull())
+			if (!node.IsDefined() || node.IsNull())
 				return false;
 			asset = Chroma::AssetManager::Get(Chroma::GUID::Parse(node.as<std::string>()));
 			return true;
@@ -114,7 +186,7 @@ namespace YAML
 
 		static bool decode(const Node& node, Chroma::EntityID& id)
 		{
-			if (!node.IsDefined() || !node.IsNull())
+			if (!node.IsDefined() || node.IsNull())
 				return false;
 			id = (Chroma::EntityID)node.as<uint32_t>();
 			return true;
@@ -132,7 +204,8 @@ namespace YAML
 
 		static bool decode(const Node& node, Chroma::GUID& guid)
 		{
-			if (!node.IsDefined() || !node.IsNull())
+			//CHROMA_CORE_TRACE("{}", node.Type());
+			if (!node.IsDefined() || node.IsNull())
 				return false;
 			guid = Chroma::GUID::Parse(node.as<std::string>());
 			return true;
@@ -163,7 +236,7 @@ namespace YAML
 
 		static bool decode(const Node &node, c2Poly &value)
 		{
-			if (!node.IsDefined() || !node.IsNull())
+			if (!node.IsDefined() || node.IsNull())
 				return false;
 
 			value.count = node[1].as<int>();
@@ -188,6 +261,9 @@ namespace YAML
 	Emitter& operator<<(Emitter& out, const Math::vec2& v);
 	Emitter& operator<<(Emitter& out, const Math::vec3& v);
 	Emitter& operator<<(Emitter& out, const Math::vec4& v);
+	Emitter &operator<<(Emitter &out, const Math::uvec2 &v);
+	Emitter &operator<<(Emitter &out, const Math::uvec3 &v);
+	Emitter &operator<<(Emitter &out, const Math::uvec4 &v);
 	Emitter& operator<<(Emitter& out, const Chroma::Ref<Chroma::Asset>& v);
 }
 

@@ -7,7 +7,7 @@
 namespace Chroma
 {
 
-    std::vector<std::string> FileSystem::_mounted;
+    std::vector<std::string> FileSystem::s_Mounted;
 
     void FileSystem::Mount(const std::string& path)
     {
@@ -16,7 +16,7 @@ namespace Chroma
         if (result == 0)
             throw FileSystemException(GetLastError());
         else
-            _mounted.push_back(path);
+            s_Mounted.push_back(path);
     }
 
     void FileSystem::Unmount(const std::string& path)
@@ -29,7 +29,7 @@ namespace Chroma
     void FileSystem::UnmountAll()
     {
         bool success = true;
-        for (auto& path : _mounted)
+        for (auto& path : s_Mounted)
         {
             int result = PHYSFS_unmount(path.c_str());
             if (result == 0)

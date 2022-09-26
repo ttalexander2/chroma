@@ -128,6 +128,9 @@ namespace Chroma
 
 	const Math::vec2 Scene::GetTransformAbsolutePosition(EntityID entity)
 	{
+		if (!Registry.valid(entity))
+			return Math::vec2();
+
 		Transform& transform = Registry.get<Transform>(entity);
 		if (!transform.IsChild())
 			return transform.Position;
@@ -144,6 +147,9 @@ namespace Chroma
 
 	void Scene::SetTransformAbsolutePosition(EntityID entity, const Math::vec2& position)
 	{
+		if (!Registry.valid(entity))
+			return;
+
 		Transform& transform = Registry.get<Transform>(entity);
 		if (!transform.IsChild())
 		{
@@ -351,116 +357,94 @@ namespace Chroma
 
 	bool Scene::Deserialize(Scene* out, const std::string& yaml, bool load_assets)
 	{
-		//uint64_t maxId = 0;
-		//auto data = YAML::Load(yaml);
-		//if (!data["Scene"])
-		//	return false;
-		//
-		//std::string sceneName = data["Scene"].as<std::string>();
-		////CHROMA_CORE_TRACE("Deserializing Scene '{}'", sceneName);
-		//
-		//std::string guid_string = data["GUID"].as<std::string>();
-		//GUID guid = GUID::Parse(guid_string);
-		//
-		//if (guid == GUID::Zero())
-		//	guid = GUID::CreateGUID();
-		//
-		//out->ID = guid;
-		//
-		//out->Name = sceneName;
-		//
-		//auto entities = data["Entities"];
-		//if (entities)
-		//{
-		//	for (auto entity : entities)
-		//	{
-		//
-		//		EntityID id = (EntityID)entity["Entity"].as<uint32_t>();
-		//		
-		//		EntityID newEntity = out->Registry.create(id);
-		//
-		//		auto name = entity["Name"];
-		//		Tag& tag = out->Registry.get_or_emplace<Tag>(newEntity);
-		//		if (name)
-		//			tag.EntityName = name.as<std::string>();
-		//
-		//		//CHROMA_CORE_TRACE("Deserialized Entity with ID = {0} (hint={1})", newEntity, id);
-		//		auto components = entity["Components"];
-		//		if (components)
-		//		{
-		//			int i = 1;
-		//			for (auto component : components)
-		//			{
-		//				std::string key = component.first.as<std::string>();
-		//
-		//				if (!Scene::IsComponentRegistered(key))
-		//				{
-		//					CHROMA_CORE_ERROR("Unable to construct component of type [{}]. No registered component found!", key);
-		//					continue;
-		//				}
-		//
-		//				auto created = out->AddComponent(key, newEntity);
-		//				if (key == "Transform")
-		//					created->order_id = 0;
-		//				else
-		//					created->order_id = i;
-		//
-		//				created->DoDeserialize(component.second);
-		//				if (key == Reflect::Resolve<Camera>()->GetName())
-		//				{
-		//					auto val = component.second["Primary"];
-		//					if (val)
-		//					{
-		//						bool primary = val.as<bool>();
-		//						if (primary)
-		//							out->SetPrimaryCamera(newEntity);
-		//					}
-		//				}
-		//
-		//				i++;
-		//			}
-		//
-		//			out->Registry.get_or_emplace<Transform>(newEntity, newEntity);
-		//		}
-		//	}
-		//	auto view = out->Registry.view<Camera>();
-		//	if (view.size() == 0)
-		//	{
-		//		auto newCam = out->NewEntity();
-		//		out->AddComponent<Camera>(newCam.GetID());
-		//		out->PrimaryCameraEntity = newCam.GetID();
-		//		out->GetComponent<Tag>(newCam.GetID()).EntityName = "Camera";
-		//	}
-		//}
-		//
-		//auto order = data["RootEntities"];
-		//if (order)
-		//{
-		//	for (auto id : order)
-		//	{
-		//		out->EntityOrder.push_back((EntityID)id.as<uint32_t>());
-		//	}
-		//}
-		//
-		//out->Layers.clear();
-		//auto layers = data["Layers"];
-		//if (layers)
-		//{
-		//	for (auto layer : layers)
-		//	{
-		//		Layer l = Layer("", 0);
-		//		l.Deserialize(layer);
-		//		out->Layers.push_back(l);
-		//	}
-		//}
-		//
+		uint64_t maxId = 0;
+		auto data = YAML::Load(yaml);
+		if (!data["Scene"])
+			return false;
+		
+		std::string sceneName = data["Scene"].as<std::string>();
+		//CHROMA_CORE_TRACE("Deserializing Scene '{}'", sceneName);
 
+		if (!data["GUID"])
+			return false;
+		
+		std::string guid_string = data["GUID"].as<std::string>();
+		GUID guid = GUID::Parse(guid_string);
+		
+		if (guid == GUID::Zero())
+			guid = GUID::CreateGUID();
 
-		//Remove this
-		auto newCam = out->NewEntity();
-		out->AddComponent<Camera>(newCam.GetID());
-		out->PrimaryCameraEntity = newCam.GetID();
-		out->GetComponent<Tag>(newCam.GetID()).EntityName = "Camera";
+		auto cam = data["Primary Camera"];
+		if (cam)
+		{
+			out->PrimaryCameraEntity = (EntityID)cam.as<uint32_t>();
+		}
+		else
+		{
+			auto newCam = out->NewEntity();
+			out->AddComponent<Camera>(newCam.GetID());
+			out->PrimaryCameraEntity = newCam.GetID();
+			out->GetComponent<Tag>(newCam.GetID()).EntityName = "Camera";
+		}
+		
+		out->ID = guid;
+		out->Name = sceneName;
+
+		
+		auto entities = data["Entities"];
+		if (entities)
+		{
+			for (auto entity : entities)
+			{
+				EntityID id = (EntityID)entity["Entity"].as<uint32_t>();
+				
+				EntityID newEntity = out->Registry.create(id);
+				auto name = entity["Name"];
+				Tag& tag = out->Registry.get_or_emplace<Tag>(newEntity);
+				if (name)
+					tag.EntityName = name.as<std::string>();
+		
+				CHROMA_CORE_TRACE("Deserialized Entity with ID = {0} (hint={1}) (name={2})", newEntity, id, tag.EntityName);
+				DeserializeEntity(id, entity, out);
+			}
+		}
+		//
+		auto order = data["RootEntities"];
+		if (order)
+		{
+			for (auto id : order)
+			{
+				out->EntityOrder.push_back((EntityID)id.as<uint32_t>());
+			}
+		}
+		
+		out->Layers.clear();
+		auto layers = data["Layers"];
+		if (layers)
+		{
+			for (auto layer : layers)
+			{
+				Layer l = Layer("", 0);
+				l.Deserialize(layer);
+				out->Layers.push_back(l);
+			}
+		}
+
+		for (auto e : out->Registry.view<Transform>())
+		{
+			Transform &transform = out->Registry.get<Transform>(e);
+			EntityID parent = transform.Parent;
+			if (out->Registry.valid(parent))
+			{
+				Transform *parent_transform = out->Registry.try_get<Transform>(parent);
+				if (parent_transform)
+				{
+					parent_transform->Children.push_back(e);
+				}
+			}
+
+		}
+		
 		return true;
 
 
@@ -529,10 +513,15 @@ namespace Chroma
 				continue;
 			if (type.IsAbstract())
 				continue;
-			CHROMA_CORE_TRACE("{}", type.GetName());
-			for (auto& base : type.BasesRecursive())
+			//CHROMA_CORE_TRACE("{}", type.GetName());
+			for (auto& base : type.Base())
 			{
-				CHROMA_CORE_TRACE("\t{}", base.GetName());
+				//CHROMA_CORE_TRACE("\t{}", base.GetName());
+				if (base.Is<Chroma::Component>())
+				{
+					types.push_back(type);
+					break;
+				}
 			}
 			//if (type.Base(comp_type.Id()).Valid())
 			//	types.push_back(type);
@@ -575,13 +564,71 @@ namespace Chroma
 			}
 			else
 			{
-				Reflection::SerializeObjectYAML(out, comp->ToAny());
+				out << YAML::BeginMap << YAML::Key;
+				out << comp->GetType().GetName();
+				out << YAML::Value;
+				Reflection::Any compAny = comp->ToAny();
+				Reflection::SerializeObjectYAML(out, compAny);
+				out << YAML::EndMap;
 			}
 
 		}
 
 		out << YAML::EndSeq;
 		out << YAML::EndMap;
+	}
+
+	void Scene::DeserializeEntity(EntityID id, YAML::Node &node, Scene *out)
+	{
+		auto components = node["Components"];
+		if (components)
+		{
+			for (auto component_map : components)
+			{
+				for (auto component : component_map)
+				{
+					std::string key = component.first.as<std::string>();
+					//CHROMA_CORE_INFO("{}", key);
+					auto type = Reflection::Resolve(key);
+					if (!type.Valid())
+						CHROMA_CORE_ERROR("Type {} not valid!", key);
+					Component* compPtr = ComponentRegistry::AddComponent(key, id, &out->Registry);
+
+					Reflection::Any comp = compPtr->ToAny();
+
+					if (!comp)
+						CHROMA_CORE_ERROR("Component construction with entity id failed!");
+
+					//CHROMA_CORE_INFO("{}", static_cast<void *>(comp.TryCast<Component *>()));
+
+					if (type.Id() == Reflection::Resolve<SpriteRenderer>().Id())
+					{
+						//comp = ((SpriteRenderer*)compPtr)->ToAnyRef();
+						Math::vec4 color = comp.Get("Color").Cast<Math::vec4>();
+						CHROMA_CORE_INFO("before set(reflection): {}, {}, {}, {}", color.r, color.g, color.b, color.a);
+						comp.Set("Color", Math::vec4(0, 0, 0, 0));
+						color = comp.Get("Color").Cast<Math::vec4>();
+						CHROMA_CORE_INFO("after set(reflection): {}, {}, {}, {}", color.r, color.g, color.b, color.a);
+					}				
+
+
+					Reflection::DeserializeObjectYAML(comp, type, component.second);
+
+					if (type.Id() == Reflection::Resolve<SpriteRenderer>().Id())
+					{
+						//comp = ((SpriteRenderer*)compPtr)->ToAnyRef();
+						Math::vec4 color = comp.Get("Color").Cast<Math::vec4>();
+						CHROMA_CORE_INFO("after deserialization(reflection): {}, {}, {}, {}", color.r, color.g, color.b, color.a);
+						color = dynamic_cast<SpriteRenderer *>(compPtr)->Color;
+						CHROMA_CORE_INFO("after deserialization: {}, {}, {}, {}", color.r, color.g, color.b, color.a);
+					}
+
+					Component* outPtr = comp.TryCast<Component>();
+					ComponentRegistry::EmplaceOrReplaceComponentFromPtr(key, id, outPtr, &out->Registry);
+
+				}
+			}
+		}
 	}
 
 	void Scene::OnLoad()
@@ -699,7 +746,7 @@ namespace Chroma
 		}
 
 		PrimaryCameraEntity = entity;
-		Registry.get_or_emplace<Camera>(PrimaryCameraEntity, PrimaryCameraEntity);
+		Camera& camera = Registry.get_or_emplace<Camera>(PrimaryCameraEntity, PrimaryCameraEntity);
 		return true;
 	}
 

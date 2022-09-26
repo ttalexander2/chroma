@@ -66,8 +66,9 @@ namespace Chroma
 			//(p^*n^) + d = c
 			if (glm::dot(center, { m_Planes[i].x, m_Planes[i].y, m_Planes[i].z }) + m_Planes[i].w + radius <= 0)
 				return false;
-			return true;
 		}
+
+		return true;
 	}
 	bool Frustum::CubeIntersects(const Math::vec3& min, const Math::vec3& max)
 	{

@@ -39,7 +39,7 @@ namespace Chroma
 		bool multisampled = samples > 1;
 		if (multisampled)
 		{
-			glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, internalFormat, width, height, GL_FALSE);
+			glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, internalFormat, static_cast<GLsizei>(width), static_cast<GLsizei>(height), GL_FALSE);
 		}
 		else
 		{
@@ -56,7 +56,7 @@ namespace Chroma
 		bool multisampled = samples > 1;
 		if (multisampled)
 		{
-			glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, format, width, height, GL_FALSE);
+			glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, static_cast<GLsizei>(samples), format, static_cast<GLsizei>(width), static_cast<GLsizei>(height), GL_FALSE);
 		}
 		else
 		{
@@ -96,7 +96,7 @@ namespace Chroma
 	OpenGLFramebuffer::~OpenGLFramebuffer()
 	{
 		glDeleteFramebuffers(1, &m_RendererID);
-		glDeleteTextures(m_ColorAttachments.size(), m_ColorAttachments.data());
+		glDeleteTextures(static_cast<GLsizei>(m_ColorAttachments.size()), m_ColorAttachments.data());
 		glDeleteTextures(1, &m_DepthAttachment);
 	}
 
@@ -128,7 +128,7 @@ namespace Chroma
 		if (m_RendererID)
 		{
 			glDeleteFramebuffers(1, &m_RendererID);
-			glDeleteTextures(m_ColorAttachments.size(), m_ColorAttachments.data());
+			glDeleteTextures(static_cast<GLsizei>(m_ColorAttachments.size()), m_ColorAttachments.data());
 			glDeleteTextures(1, &m_DepthAttachment);
 
 			m_ColorAttachments.clear();
@@ -146,7 +146,7 @@ namespace Chroma
 		if (m_ColorAttachmentSpecs.size())
 		{
 			m_ColorAttachments.resize(m_ColorAttachmentSpecs.size());
-			CreateTextures(multisample, m_ColorAttachments.data(), m_ColorAttachments.size());
+			CreateTextures(multisample, m_ColorAttachments.data(), static_cast<uint32_t>(m_ColorAttachments.size()));
 
 			for (size_t i = 0; i < m_ColorAttachments.size(); i++)
 			{
@@ -183,7 +183,7 @@ namespace Chroma
 		{
 			CHROMA_CORE_ASSERT("Color attachments greater than 4!", m_ColorAttachments.size() <= 4);
 			GLenum buffers[4] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3 };
-			glDrawBuffers(m_ColorAttachments.size(), buffers);
+			glDrawBuffers(static_cast<GLsizei>(m_ColorAttachments.size()), buffers);
 		}
 		else if (m_ColorAttachments.empty())
 		{

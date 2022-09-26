@@ -25,6 +25,7 @@ group "Dependencies"
     include "Chroma/third_party/glm"
     include "Chroma/third_party/physfs"
     include "Chroma/third_party/box2d"
+    include "Chroma/third_party/range-v3"
 group "Dependencies/msdf"
     include "Chroma/third_party/msdf-atlas-gen"
 group "" -- end of dependencies
@@ -97,7 +98,8 @@ project "Chroma"
         "%{IncludeDir.box2d}",
         "%{IncludeDir.msdfgen}",
         "%{IncludeDir.msdf_atlasgen}",
-        "%{IncludeDir.better_enums}"
+        "%{IncludeDir.better_enums}",
+        "%{IncludeDir.rangev3}"
 
     }
 
@@ -237,7 +239,8 @@ project "Polychrome"
         "%{IncludeDir.box2d}",
         "%{IncludeDir.msdfgen}",
         "%{IncludeDir.msdf_atlasgen}",
-        "%{IncludeDir.better_enums}"
+        "%{IncludeDir.better_enums}",
+        "%{IncludeDir.rangev3}"
     }
 
 
@@ -351,7 +354,8 @@ project "Polychrome"
             "%{IncludeDir.box2d}",
             "%{IncludeDir.msdfgen}",
             "%{IncludeDir.msdf_atlasgen}",
-            "%{IncludeDir.better_enums}"
+            "%{IncludeDir.better_enums}",
+            "%{IncludeDir.rangev3}"
         }
     
         links
@@ -452,7 +456,8 @@ project "Test"
         "%{IncludeDir.msdfgen}",
         "%{IncludeDir.msdf_atlasgen}",
         "%{IncludeDir.better_enums}",
-        "%{IncludeDir.Catch2}"
+        "%{IncludeDir.Catch2}",
+        "%{IncludeDir.rangev3}"
     }
 
     links

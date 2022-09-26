@@ -8,6 +8,7 @@
 #include "Chroma/Assets/Font.h"
 
 #include <yaml-cpp/yaml.h>
+#include "Chroma/Utilities/Yaml.h"
 
 namespace Chroma
 {
@@ -34,7 +35,7 @@ namespace Chroma
         {
             return (s_Assets[id]);
         }
-        CHROMA_CORE_ERROR("Asset {} does not exist!", id.ToString());
+        //CHROMA_CORE_ERROR("Asset {} does not exist!", id.ToString());
         return nullptr;
     }
 
@@ -60,16 +61,15 @@ namespace Chroma
     {
         if (!Exists(id))
         {
-            CHROMA_CORE_WARN("Asset cannot be loaded, as it does not yet exist! {}", id.ToString());
+            //CHROMA_CORE_WARN("Asset cannot be loaded, as it does not yet exist! {}", id.ToString());
             return false;
-        }
-            
+        } 
 
         auto& asset = s_Assets[id];
 
         if (asset->IsLoaded())
         {
-            CHROMA_CORE_WARN("Asset is already loaded! {}", id.ToString());
+            //CHROMA_CORE_WARN("Asset is already loaded! {}", id.ToString());
             return false;
         }
 
@@ -150,7 +150,7 @@ namespace Chroma
         {
             for (auto item : data)
             {
-                GUID id = GUID::Parse(item.first.as<std::string>());
+				GUID id = item.first.as<Chroma::GUID>();
                 if (item.second && item.second.IsMap())
                 {
                     std::string path;

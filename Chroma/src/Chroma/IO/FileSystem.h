@@ -145,7 +145,7 @@ namespace Chroma
         static void SetWriteDirectory(const std::string& directory);
 
     private:
-        static std::vector<std::string> _mounted;
+        static std::vector<std::string> s_Mounted;
     };
 }
 

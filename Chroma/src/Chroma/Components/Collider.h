@@ -8,9 +8,10 @@
 namespace Chroma
 {
 
-	struct Collider : public Component
+	struct Collider : Component
 	{
 		CHROMA_ABSTRACT_COMPONENT(Collider, Component);
+		
 		friend class PhysicsSystem;
 
 		enum class ColliderType : char

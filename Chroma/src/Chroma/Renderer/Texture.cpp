@@ -1,7 +1,7 @@
 #include "chromapch.h"
 #include "Texture.h"
 
-#include "Chroma/Core/Core.h";
+#include "Chroma/Core/Core.h"
 #include "RendererAPI.h"
 #include "Chroma/Platform/OpenGL/OpenGLTexture.h"
 #include "Chroma/Platform/Vulkan/VulkanTexture.h"

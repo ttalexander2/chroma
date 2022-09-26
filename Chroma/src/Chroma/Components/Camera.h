@@ -10,6 +10,8 @@ namespace Chroma
     struct Camera : public Component
     {
 		CHROMA_COMPONENT(Camera, Component);
+
+    	
 		const Math::vec2& GetPosition() const { return position; }
 		void SetPosition(const Math::vec2& pos) { if (position != pos) dirty = true; position = pos; }
 
@@ -24,9 +26,9 @@ namespace Chroma
 	private:
 		void RecalculateViewMatrix();
 
-		Math::mat4 projectionMatrix;
-		Math::mat4 viewMatrix;
-		Math::mat4 viewProjectionMatrix;
+		Math::mat4 projectionMatrix{};
+		Math::mat4 viewMatrix{};
+		Math::mat4 viewProjectionMatrix{};
 		glm::uvec2 size = { 1920, 1080 };
 		Math::vec2 position = { 0,0 };
 		bool dirty = true;

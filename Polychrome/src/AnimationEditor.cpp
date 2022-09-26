@@ -85,7 +85,7 @@ namespace Polychrome
 				{
 					if (TimeSelection < keyframe.time)
 					{
-						type.Set(track.propertyID, Chroma::Reflection::Handle(*comp), keyframe.value);
+						type.Set(track.propertyID, Chroma::Reflection::Handle(comp), keyframe.value);
 						break;
 					}
 						
@@ -773,7 +773,7 @@ namespace Polychrome
 											kf.time = TimeSelection;
 											Chroma::Component* component = EditorApp::CurrentScene->GetComponent(component_name, entity_id);
 											auto type = Chroma::Reflection::Resolve(component_id);
-											kf.value = type.Get(property_id, Chroma::Reflection::Handle(*component));
+											kf.value = type.Get(property_id, Chroma::Reflection::Handle(component));
 											track->keyframes.emplace(kf);
 											selectedKeyframe = const_cast<Chroma::Animation::Keyframe*>(&*std::prev(track->keyframes.end()));
 										}

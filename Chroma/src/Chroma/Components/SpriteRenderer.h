@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Chroma/Scene/Component.h"
-#include "Chroma/Math/Vec4.h";
+#include "Chroma/Math/Vec4.h"
 #include "Chroma/Renderer/Texture.h"
 #include "Chroma/Assets/Sprite.h"
 #include "Chroma/Scene/World.h"
@@ -22,7 +22,7 @@ namespace Chroma
 	/// @brief Component to render a sprite. Supports both animated and non-animated.
 	/// @see Sprite
 	/// @see Aseprite
-	struct SpriteRenderer : public Component
+	struct SpriteRenderer : Component
 	{
 		CHROMA_COMPONENT(SpriteRenderer, Component);
 		friend class Polychrome::ComponentWidgets;
@@ -62,7 +62,7 @@ namespace Chroma
 
 		/// @brief Gets the sprite ID/Path
 		/// @return Relative path/name of the sprite.
-		const GUID& GetSpriteID() const { return sprite->GetID(); }
+		const GUID &GetSpriteID() const { return m_SpriteID; }
 		/// @brief Set the sprite to render.
 		/// 
 		/// Sprite must already be loaded.
@@ -102,7 +102,7 @@ namespace Chroma
 		const Math::vec2& GetSpriteOriginVector();
 
 		std::string GetSpritePath();
-		inline const Ref<Sprite> &GetSprite() { return sprite; }
+		inline const Ref<Sprite> &GetSprite() { return AssetManager::Get<Chroma::Sprite>(m_SpriteID); }
 
 		/// @brief Restart the animation.
 		void RestartAnimation();
@@ -120,7 +120,7 @@ namespace Chroma
 		float time_till_next_frame = 0;
 		bool looping_forward = 0;
 		
-		Ref<Sprite> sprite;
+		GUID m_SpriteID;
 
 	};
 }

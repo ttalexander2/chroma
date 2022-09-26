@@ -9,7 +9,7 @@
 #include "yaml-cpp/node/convert.h"
 #include "yaml-cpp/node/node.h"
 #include "yaml-cpp/node/parse.h"
-#include <entt.hpp>
+#include <entt/entt.hpp>
 #include "Chroma/Utilities/StringHash.h"
 #include <Chroma/Core/TypeInfo.h>
 #include "Chroma/Scene/EntityID.h"
@@ -28,55 +28,57 @@ namespace Polychrome
 namespace Chroma
 {
 	class Scene;
-	class Collider;
+	struct Collider;
 
 	struct Component
 	{
-		friend class Collider;
-		friend class RigidBody;
+		friend struct Collider;
+		friend struct RigidBody;
 
-		//I don't like macros and i've tried everything I could to avoid this macro, but unfortunely it is the cleanest
+		//I don't like macros and i've tried everything I could to avoid this macro, but unfortunately it is the cleanest
 		//and simplest way to add reflection to components, and enforce how components behave.
-#define CHROMA_COMPONENT(typeName, baseTypeName)																				\
-		using ClassName = typeName;																								\
-		using BaseClass = baseTypeName;																							\
-		typeName() : baseTypeName() { Initialize(); }																			\
-		typeName(EntityID id) : baseTypeName(id) { Initialize(); }																\
-		typeName(const typeName &) = default;																					\
-		typeName &operator=(const typeName &) = default;																		\
-		private:																												\
-		static inline Reflection::TypeData TypeInfo = Reflection::TypeData::Create<typeName>();									\
-	static Reflection::TypeFactory<typeName> RegisterType();																	\
-			virtual void NO_TYPE_INFO() override {}																				\
-	public:																														\
-		virtual inline const uint32_t TypeId() const override { return Reflection::Resolve<typeName>().Id(); }					\
-		virtual inline const std::string TypeName() const override { return Reflection::Resolve<typeName>().GetName(); }		\
-		virtual inline const Reflection::Type GetType() const override { return Reflection::Resolve<typeName>(); }				\
-		virtual inline Reflection::Any ToAny() const override { return Reflection::Any(*this); }								\
-		inline bool IsAbstract() const override { return false; }																\
-		friend class Scene;																										\
-		friend class Reflection;
+#define CHROMA_COMPONENT(typeName, baseTypeName)																						\
+		using ClassName = typeName;																										\
+		using BaseClass = baseTypeName;																									\
+		typeName() : baseTypeName() { Initialize(); }																					\
+		typeName(EntityID id) : baseTypeName(id) { Initialize(); }																		\
+		typeName(const typeName &) = default;																							\
+		typeName &operator=(const typeName &) = default;																				\
+		private:																														\
+		static inline Reflection::TypeData TypeInfo = Reflection::TypeData::Create<typeName>();											\
+	static Reflection::TypeFactory<typeName> RegisterType();																			\
+			virtual void NO_TYPE_INFO() override {}																						\
+	public:																																\
+		virtual inline const uint32_t TypeId() const override { return Reflection::Resolve<typeName>().Id(); }							\
+		virtual inline const std::string TypeName() const override { return Reflection::Resolve<typeName>().GetName(); }				\
+		virtual inline const Reflection::Type GetType() const override { return Reflection::Resolve<typeName>(); }						\
+		virtual inline Reflection::AnyRef ToAnyRef() const override { return Reflection::AnyRef::Create(*this); }						\
+		virtual inline Reflection::Any ToAny() const override { return Reflection::Any(*this); }										\
+		virtual inline Reflection::Handle ToHandle() const { return Reflection::Handle(*this); }										\
+		inline bool IsAbstract() const override { return false; }																		\
+		friend class Scene;																												\
+		friend struct Reflection;
 
-#define CHROMA_ABSTRACT_COMPONENT(typeName, baseTypeName)																		\
-		using ClassName = typeName;																								\
-		using BaseClass = baseTypeName;																							\
-		typeName() : baseTypeName() { Initialize(); }																			\
-		typeName(EntityID id) : baseTypeName(id) { Initialize(); }																\
-		typeName(const typeName &) = default;																					\
-		typeName &operator=(const typeName &) = default;																		\
-																																\
-	private:																													\
-		static inline Reflection::TypeData TypeInfo = Reflection::TypeData::Create<typeName>();									\
-		static Reflection::TypeFactory<typeName> RegisterType();																\
-																																\
-	public:																														\
-		virtual inline const uint32_t TypeId() const override { return Reflection::Resolve<typeName>().Id(); }					\
-		virtual inline const std::string TypeName() const override { return Reflection::Resolve<typeName>().GetName(); }		\
-		virtual inline const Reflection::Type GetType() const override { return Reflection::Resolve<typeName>(); }				\
-		virtual inline Reflection::Any ToAny() const override { return Reflection::Any(*this); }								\
-		friend class Scene;																										\
-		friend class Reflection;
-
+#define CHROMA_ABSTRACT_COMPONENT(typeName, baseTypeName)																				\
+		using ClassName = typeName;																										\
+		using BaseClass = baseTypeName;																									\
+		typeName() : baseTypeName() { Initialize(); }																					\
+		typeName(EntityID id) : baseTypeName(id) { Initialize(); }																		\
+		typeName(const typeName &) = default;																							\
+		typeName &operator=(const typeName &) = default;																				\
+	private:																															\
+		static inline Reflection::TypeData TypeInfo = Reflection::TypeData::Create<typeName>();											\
+		static Reflection::TypeFactory<typeName> RegisterType();																		\
+																																		\
+	public:																																\
+		virtual inline const uint32_t TypeId() const override { return Reflection::Resolve<typeName>().Id(); }							\
+		virtual inline const std::string TypeName() const override { return Reflection::Resolve<typeName>().GetName(); }				\
+		virtual inline const Reflection::Type GetType() const override { return Reflection::Resolve<typeName>(); }						\
+		virtual inline Reflection::AnyRef ToAnyRef() const override { return Reflection::AnyRef::Create(*this); }						\
+		virtual inline Reflection::Any ToAny() const override { return Reflection::Any(*this); }										\
+		virtual inline Reflection::Handle ToHandle() const { return Reflection::Handle(*this); }										\
+		friend class Scene;																												\
+		friend struct Reflection;
 		
 		Component() :
 				m_EntityID(ENTITY_NULL)
@@ -109,7 +111,9 @@ namespace Chroma
 		virtual inline const uint32_t TypeId() const { return Reflection::Resolve<Component>().Id(); }
 		virtual inline const std::string TypeName() const { return Reflection::Resolve<Component>().GetName(); }
 		virtual inline const Reflection::Type GetType() const { return Reflection::Resolve<Component>(); }
-		virtual inline Reflection::Any ToAny() const { return Reflection::Any(this); }
+		virtual inline Reflection::AnyRef ToAnyRef() const { return Reflection::AnyRef::Create(*this); }
+		virtual inline Reflection::Any ToAny() const { return Reflection::Any(*this); }
+		virtual inline Reflection::Handle ToHandle() const { return Reflection::Handle(*this); }
 		virtual inline bool IsAbstract() const { return true; }
 
 		template <typename T> 
@@ -156,7 +160,8 @@ namespace Chroma
 		friend struct Transform;
 		friend struct Relationship;
 		friend struct EntityInfo;
-		friend class Reflection;
+		friend struct Reflection;
+		friend struct ComponentRegistry;
 	};
 
 #ifdef CHROMA_DEBUG

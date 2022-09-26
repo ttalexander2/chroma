@@ -39,7 +39,7 @@ namespace Chroma
 
 		file.Close();
 
-		stbi_uc* data = stbi_load_from_memory(raw_data.data(), len, &width, &height, &channels, 0);
+		stbi_uc* data = stbi_load_from_memory(raw_data.data(), static_cast<int>(len), &width, &height, &channels, 0);
 
 
 		CHROMA_ASSERT(data, "Failed to load image \'{0}\'", path);

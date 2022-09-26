@@ -48,7 +48,7 @@ namespace Chroma
 		f.Read(buffer.data(), f.Length());
 		f.Close();
 
-		Audio::ErrorCheck(s_FMOD->m_StudioSystem->loadBankMemory(buffer.data(), buffer.size(), FMOD_STUDIO_LOAD_MEMORY_MODE::FMOD_STUDIO_LOAD_MEMORY, flags, &bank));
+		Audio::ErrorCheck(s_FMOD->m_StudioSystem->loadBankMemory(buffer.data(), static_cast<int>(buffer.size()), FMOD_STUDIO_LOAD_MEMORY_MODE::FMOD_STUDIO_LOAD_MEMORY, flags, &bank));
 		if (bank)
 			s_FMOD->m_Banks[bankPath] = bank;
 	}
@@ -307,7 +307,7 @@ namespace Chroma
 	/// @return Decibels as float.
 	float Audio::volumeTodb(float volume)
 	{
-		return 20.0f * (Math::log(volume) / Math::log(10));
+		return 20.0f * (Math::log(volume) / Math::log(10.0f));
 	}
 
 	/// @brief Converts Chroma vec3 to FMOD_VECTOR
@@ -339,7 +339,7 @@ namespace Chroma
 
 			auto events = std::vector<FMOD::Studio::EventDescription*>(static_cast<size_t>(event_count), nullptr);
 
-			Audio::ErrorCheck(bank->getEventList(events.data(), events.size(), nullptr));
+			Audio::ErrorCheck(bank->getEventList(events.data(), static_cast<int>(events.size()), nullptr));
 
 			for (FMOD::Studio::EventDescription* e : events)
 			{

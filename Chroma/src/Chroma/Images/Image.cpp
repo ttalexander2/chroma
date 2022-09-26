@@ -299,13 +299,13 @@ namespace Chroma
 		if (source_rect.y + source_rect.w > Height) source_rect.w = Width - source_rect.y;
 
 		if (source_rect.z > dest_size.x - dest_pos.x)
-			source_rect.z = dest_size.x - dest_pos.x;
+			source_rect.z = static_cast<int>(dest_size.x - dest_pos.x);
 		if (source_rect.w > dest_size.y - dest_pos.y)
-			source_rect.w = dest_size.y - dest_pos.y;
+			source_rect.w = static_cast<int>(dest_size.y - dest_pos.y);
 
 		for (int y = 0; y < source_rect.w; y++)
 		{
-			int to = dest_pos.x + (dest_pos.y + y) * dest_size.x;
+			int to = static_cast<int>(dest_pos.x + (dest_pos.y + y) * dest_size.x);
 			int from = source_rect.x + (source_rect.y + y) * Width;
 			memcpy(dest + to, Pixels + from, sizeof(Color) * (int)source_rect.z);
 

@@ -65,6 +65,8 @@ namespace Chroma
 		void ResetMassData();
 		MassData GetMassData();
 
+		inline bool HasCustomMassData() const { return m_UseCustomMassData; }
+
 		void ApplyForce(const Math::vec2 &force, const Math::vec2 &point);
 		void ApplyForce(const Math::vec2 &force, const Math::vec2 &point, bool wake);
 		void ApplyForce(const Math::vec2 &force);

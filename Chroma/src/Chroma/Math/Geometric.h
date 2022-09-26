@@ -1,4 +1,5 @@
 #pragma once
 
-#include "glm/geometric.hpp";
+#include "glm/geometric.hpp"
+
 namespace Math = glm;

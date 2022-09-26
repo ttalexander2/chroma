@@ -10,12 +10,12 @@ namespace Chroma
 {
 
 
-	unsigned int RandomUnsignedChar()
+	uint8_t RandomUnsignedChar()
 	{
 		std::random_device random;
 		std::mt19937 gen(random());
 		std::uniform_int_distribution<> dis(0, 255);
-		return dis(gen);
+		return static_cast<uint8_t>(dis(gen));
 	}
 
 	const GUID GUID::CreateGUID()
@@ -57,12 +57,12 @@ namespace Chroma
 			return GUID::Zero();
 
 		GUID result{};
-		result.Data1 = std::stoll(s.substr(0, 8), nullptr, 16);
-		result.Data2 = std::stoll(s.substr(8, 4), nullptr, 16);
-		result.Data3 = std::stoll(s.substr(12, 4), nullptr, 16);
+		result.Data1 = static_cast<uint32_t>(std::stoll(s.substr(0, 8), nullptr, 16));
+		result.Data2 = static_cast<uint32_t>(std::stoll(s.substr(8, 4), nullptr, 16));
+		result.Data3 = static_cast<uint32_t>(std::stoll(s.substr(12, 4), nullptr, 16));
 		for (size_t i = 0; i < 8; i++)
 		{
-			result.Data4[i] = std::stoll(s.substr((2 * i) + 16, 2), nullptr, 16);
+			result.Data4[i] = static_cast<uint8_t>(std::stoll(s.substr((2 * i) + 16, 2), nullptr, 16));
 		}
 
 		return result;

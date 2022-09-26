@@ -57,7 +57,7 @@ namespace Chroma
 		}
 
 		template<typename T, typename = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
-		inline int Read(std::vector<T>& buffer)
+		inline int64_t Read(std::vector<T>& buffer)
 		{
 			return Read(reinterpret_cast<void*>(buffer.data()), buffer.size());
 		}
@@ -66,25 +66,25 @@ namespace Chroma
 		std::string ReadLine();
 
 		template<typename T, typename = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
-		int Write(T* buffer, size_t count)
+		int64_t Write(T* buffer, size_t count)
 		{
 			return Write(reinterpret_cast<void*>(buffer), count);
 		}
 
 		template<typename T, typename = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
-		int Write(std::vector<T>& buffer)
+		int64_t Write(std::vector<T>& buffer)
 		{
 			return Write(reinterpret_cast<void*>(buffer.data()), buffer.size());
 		}
 
 		template <typename T, typename = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
-		int Write(T val)
+		int64_t Write(T val)
 		{
 			return Write(reinterpret_cast<void*>(&val), sizeof(T));
 		}
 
-		int Write(std::string& string);
-		int Write(const char* string);
+		int64_t Write(std::string& string);
+		int64_t Write(const char* string);
 
 		const std::string& GetPath() const { return m_Path; }
 		

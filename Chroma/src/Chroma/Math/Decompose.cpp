@@ -32,7 +32,7 @@ bool Chroma::DecomposeTransform(const glm::mat4& transform, glm::vec3& translati
 	translation = vec3(LocalMatrix[3]);
 	LocalMatrix[3] = vec4(0, 0, 0, LocalMatrix[3].w);
 
-	vec3 Row[3], Pdum3;
+	vec3 Row[3];
 
 	// Now get scale and shear.
 	for (length_t i = 0; i < 3; ++i)
@@ -51,7 +51,7 @@ bool Chroma::DecomposeTransform(const glm::mat4& transform, glm::vec3& translati
 	// Check for a coordinate system flip.  If the determinant
 	// is -1, then negate the matrix and the scaling factors.
 #if 0
-	Pdum3 = cross(Row[1], Row[2]); // v3Cross(row[1], row[2], Pdum3);
+	vec3 Pdum3 = cross(Row[1], Row[2]); // v3Cross(row[1], row[2], Pdum3);
 	if (dot(Row[0], Pdum3) < 0)
 	{
 		for (length_t i = 0; i < 3; i++)

@@ -32,7 +32,7 @@
 #include "Chroma/Components/RectangleCollider.h"
 #include "Chroma/Components/RigidBody.h"
 
-#include <entt.hpp>
+#include <entt/entt.hpp>
 #include "Chroma/Utilities/StringHash.h"
 #include <any>
 #include <Chroma/Assets/FMODBank.h>

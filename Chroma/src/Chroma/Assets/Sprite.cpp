@@ -41,9 +41,9 @@ namespace Chroma
 				Frames.push_back(fr);
 
 				if (a.width > width)
-					width = a.width;
+					width = (float)a.width;
 				if (a.height > height)
-					height = a.height;
+					height = (float)a.height;
 			}
 
 			Size = { width, height };

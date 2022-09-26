@@ -261,10 +261,9 @@ namespace Chroma
 		/// @param opacity Opacity of the source.
 		static inline void BlendDarken(Color* backdrop, Color* src, int opacity)
 		{
-			int t;
-			src->r = blend_darken(backdrop->r, src->r, t);
-			src->g = blend_darken(backdrop->g, src->g, t);
-			src->b = blend_darken(backdrop->b, src->b, t);
+			src->r = blend_darken(backdrop->r, src->r);
+			src->g = blend_darken(backdrop->g, src->g);
+			src->b = blend_darken(backdrop->b, src->b);
 			BlendNormal(backdrop, src, opacity);
 		}
 
@@ -274,10 +273,9 @@ namespace Chroma
 		/// @param opacity Opacity of the source.
 		static inline void BlendLighten(Color* backdrop, Color* src, int opacity)
 		{
-			int t;
-			src->r = blend_lighten(backdrop->r, src->r, t);
-			src->g = blend_lighten(backdrop->g, src->g, t);
-			src->b = blend_lighten(backdrop->b, src->b, t);
+			src->r = blend_lighten(backdrop->r, src->r);
+			src->g = blend_lighten(backdrop->g, src->g);
+			src->b = blend_lighten(backdrop->b, src->b);
 			BlendNormal(backdrop, src, opacity);
 		}
 
@@ -299,7 +297,6 @@ namespace Chroma
 		/// @param opacity Opacity of the source.
 		static inline void BlendColorBurn(Color* backdrop, Color* src, int opacity)
 		{
-			int t;
 			src->r = blend_color_burn(backdrop->r, src->r);
 			src->g = blend_color_burn(backdrop->g, src->g);
 			src->b = blend_color_burn(backdrop->b, src->b);

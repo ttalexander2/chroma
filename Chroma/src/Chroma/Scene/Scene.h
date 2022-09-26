@@ -12,7 +12,7 @@
 #include "Chroma/Profiler/Instrumentor.h"
 #include <Chroma/Components/Camera.h>
 #include "World.h"
-#include "Chroma/Components/Transform.h">
+#include "Chroma/Components/Transform.h"
 #include "ComponentRegistry.h"
 
 
@@ -61,6 +61,7 @@ namespace Chroma
 		void DestroyEntity(EntityID id, bool destroy_children = false);
 
 		void SerializeEntity(YAML::Emitter& out, EntityID entity);
+		static void DeserializeEntity(EntityID id, YAML::Node &node, Scene *out);
 
 		std::string Serialize();
 		static bool Deserialize(Scene* out, const std::string& yaml, bool load_assets = false);
@@ -82,8 +83,7 @@ namespace Chroma
 		template<ComponentType T>
 		T& AddComponent(EntityID id)
 		{
-			auto& comp = Registry.emplace<T>(id, id);
-			return comp;
+			return static_cast<T &>(*ComponentRegistry::AddComponent(Reflection::Resolve<T>().Id(), id, &Registry));
 		}
 
 		Component* AddComponent(const std::string& component, EntityID entity)
@@ -105,7 +105,7 @@ namespace Chroma
 			return ComponentRegistry::GetComponent(component, entity, &Registry);
 		}
 
-		Component *GetComponent(size_t component_id, EntityID entity)
+		Component* GetComponent(size_t component_id, EntityID entity)
 		{
 			return ComponentRegistry::GetComponent(component_id, entity, &Registry);
 		}

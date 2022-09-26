@@ -1,6 +1,6 @@
 #pragma once
 
-#include <entt.hpp>
+#include <entt/entt.hpp>
 #include <string>
 #include <type_traits>
 #include <concepts>
@@ -10,11 +10,13 @@
 #include <Chroma/IO/File.h>
 #include <Chroma/Core/Log.h>
 #include <iostream>
+#include <utility>
+#include <range/v3/view/join.hpp>
 #include "Chroma/Scene/ComponentRegistry.h"
 
 namespace Chroma
 {
-	class Component;
+	struct Component;
 
 	/// @brief This is the main class that controlls the runtime reflection system.
 	/// In order to register a type, use the CHROMA_REFLECT() macro, and implement the static
@@ -30,6 +32,8 @@ namespace Chroma
 	struct Func;
 	template <typename T> struct TypeFactory;
 	struct Any;
+
+	struct Handle;
 
 
 	public:
@@ -104,16 +108,16 @@ namespace Chroma
 				return Iterator(m_Container.end());
 			}
 
-			inline std::pair<Iterator, bool> Insert(Iterator it, Any val)
+			inline Iterator Insert(Iterator it, Any val)
 			{
-				auto [its, result] = m_Container.insert(it.m_Iterator, val.m_Value);
-				return std::make_pair(Iterator(std::move(its)), result);
+				auto its = m_Container.insert(it.m_Iterator, val.m_Value);
+				return Iterator(std::move(its));
 			}
 
-			inline std::pair<Iterator, bool> Erase(Iterator it)
+			inline Iterator Erase(Iterator it)
 			{
-				auto [its, result] = m_Container.erase(it.m_Iterator);
-				return std::make_pair(Iterator(std::move(its)), result);
+				auto its = m_Container.erase(it.m_Iterator);
+				return Iterator(std::move(its));
 			}
 
 			inline Any operator[](size_t size)
@@ -249,7 +253,11 @@ namespace Chroma
 
 			Any() = default;
 
-			template <typename T, typename = std::enable_if_t<!std::is_same_v<std::decay_t<T>, Any>>>
+			/// @brief Assign by copy
+			/// @tparam T type of value
+			/// @tparam  
+			/// @param value 
+			template <typename T, typename = std::enable_if_t<!std::is_same_v<std::decay_t<T>, Any> && !std::is_same_v<std::decay_t<T>, entt::meta_any>>>
 			Any(T &&value) :
 					m_Value(std::forward<T>(value))
 			{
@@ -277,6 +285,12 @@ namespace Chroma
 			{
 				m_Value = value;
 				return *this;
+			}
+
+			template <typename T, typename = std::enable_if_t<!std::is_same_v<std::decay_t<T>, Any> && !std::is_same_v<std::decay_t<T>, entt::meta_any>>>
+			static Any CreateRef(T&& value)
+			{
+				return Any(std::move(entt::forward_as_meta(std::forward<T>(value))));
 			}
 
 			inline Reflection::Type Type() const { return Reflection::Type(m_Value.type()); }
@@ -397,16 +411,6 @@ namespace Chroma
 				return m_Value == other.m_Value;
 			}
 
-			Any AsRef()
-			{
-				return m_Value.as_ref();
-			}
-
-			Any AsRef() const
-			{
-				return m_Value.as_ref();
-			}
-
 			template <typename T>
 			inline bool IsType() const
 			{
@@ -419,11 +423,181 @@ namespace Chroma
 			}
 
 			operator entt::meta_any() { return m_Value; }
+			operator Reflection::Handle() { return Reflection::Handle(m_Value); }
+
+			Reflection::Handle Handle() { return Reflection::Handle(m_Value); }
+
+			const bool Valid() const { return m_Value.operator bool(); }
 			
-		private:
+
 			Any(entt::meta_any val) :
 					m_Value(val) {}
 
+		private:
+			entt::meta_any m_Value;
+		};
+
+		struct AnyRef
+		{
+			friend struct Reflection;
+			friend struct Reflection::Type;
+			friend struct Data;
+			friend struct Func;
+			template <typename T>
+			friend struct TypeFactory;
+
+			AnyRef() = delete;
+
+			AnyRef(const Any &) = delete;
+			AnyRef(AnyRef &&) = delete;
+
+			template <typename T>
+			std::enable_if_t<!std::is_same_v<std::decay_t<T>, Any>, Any &>
+			operator=(T &&value)
+			{
+				m_Value = value;
+				return *this;
+			}
+
+			template <typename T, typename = std::enable_if_t<!std::is_same_v<std::decay_t<T>, Any> && !std::is_same_v<std::decay_t<T>, entt::meta_any>>>
+			static AnyRef Create(T &&value)
+			{
+				return AnyRef(std::move(entt::forward_as_meta(std::forward<T>(value))));
+			}
+
+			inline Reflection::Type Type() const { return Reflection::Type(m_Value.type()); }
+
+			const inline void *Data() const { return m_Value.data(); }
+			inline void *Data() { return m_Value.data(); }
+
+			template <typename... Args>
+			inline Any Invoke(const uint32_t id, Args &&...args) const
+			{
+				m_Value.invoke(id, std::forward<Args>(args)...);
+			}
+
+			template <typename... Args>
+			inline Any Invoke(const std::string &name, Args &&...args) const
+			{
+				uint32_t hash = BasicHash<uint32_t>::Hash(name);
+				m_Value.invoke(hash, std::forward<Args>(args)...);
+			}
+
+			template <typename T>
+			inline bool Set(const uint32_t id, T &&value)
+			{
+				return m_Value.set(id, std::move(value));
+			}
+
+			template <typename T>
+			inline bool Set(const std::string &name, T &&value)
+			{
+				uint32_t hash = BasicHash<uint32_t>::Hash(name);
+				return m_Value.set(hash, std::move(value));
+			}
+
+			inline Any Get(const uint32_t id)
+			{
+				return Any(m_Value.get(id));
+			}
+
+			inline Any Get(const std::string &name)
+			{
+				uint32_t hash = BasicHash<uint32_t>::Hash(name);
+				return Any(m_Value.get(hash));
+			}
+
+			template <typename T>
+			inline const T *TryCast() const
+			{
+				return m_Value.try_cast<T>();
+			}
+
+			template <typename T>
+			inline T *TryCast()
+			{
+				return m_Value.try_cast<T>();
+			}
+
+			template <typename T>
+			inline T Cast() const
+			{
+				return m_Value.cast<T>();
+			}
+
+			template <typename T>
+			inline T Cast()
+			{
+				return m_Value.cast<T>();
+			}
+
+			template <typename T>
+			inline bool AllowCast()
+			{
+				return m_Value.allow_cast();
+			}
+
+			template <typename T, typename... Args>
+			inline void Emplace(Args &&...args)
+			{
+				return m_Value.emplace(std::forward<Args>(args)...);
+			}
+
+			inline void Reset()
+			{
+				m_Value.reset();
+			}
+
+			inline SequenceContainer AsSequenceContainer()
+			{
+				return SequenceContainer(m_Value.as_sequence_container());
+			}
+
+			inline SequenceContainer AsSequenceContainer() const
+			{
+				return SequenceContainer(m_Value.as_sequence_container());
+			}
+
+			inline AssociativeContainer AsAssociativeContainer()
+			{
+				return AssociativeContainer(m_Value.as_associative_container());
+			}
+
+			inline AssociativeContainer AsAssociativeContainer() const
+			{
+				return AssociativeContainer(m_Value.as_associative_container());
+			}
+
+			Any operator*() const { return m_Value.operator*(); }
+
+			explicit operator bool() const { return m_Value.operator bool(); }
+
+			bool operator==(const AnyRef &other) const
+			{
+				return m_Value == other.m_Value;
+			}
+
+			template <typename T>
+			inline bool IsType() const
+			{
+				return Reflection::Resolve<T>().Id() == m_Value.type().id();
+			}
+
+			inline bool IsType(const Reflection::Type &type) const
+			{
+				return type.Id() == m_Value.type().id();
+			}
+
+			operator entt::meta_any() { return m_Value; }
+			operator Reflection::Handle() { return Reflection::Handle(m_Value); }
+
+			Reflection::Handle Handle() { return Reflection::Handle(m_Value); }
+
+			const bool Valid() const { return m_Value.operator bool(); }
+
+		private:
+			AnyRef(entt::meta_any val) :
+					m_Value(std::move(val)) {}
 			entt::meta_any m_Value;
 		};
 
@@ -432,7 +606,7 @@ namespace Chroma
 		template <typename T>
 		struct TypeFactory
 		{
-			friend class Reflection;
+			friend struct Reflection;
 
 			template <typename Base>
 			TypeFactory<T> &Base()
@@ -461,6 +635,7 @@ namespace Chroma
 			{
 				uint32_t hash = BasicHash<uint32_t>::Hash(name).m_Hash;
 				TypeData::GetTypeDataNames()[m_Hash][hash] = name;
+				TypeData::GetTypeDataSerialize()[m_Hash][hash] = serialize;
 				m_Factory.data<Data>(hash);
 				return *this;
 			}
@@ -470,6 +645,27 @@ namespace Chroma
 			{
 				uint32_t hash = BasicHash<uint32_t>::Hash(name).m_Hash;
 				TypeData::GetTypeDataNames()[m_Hash][hash] = name;
+				TypeData::GetTypeDataSerialize()[m_Hash][hash] = serialize;
+				m_Factory.data<Setter, Getter>(hash);
+				return *this;
+			}
+
+			template <auto Data>
+			TypeFactory<T> &Data(const std::string &name, std::function<bool(Reflection::Any*)> callback)
+			{
+				uint32_t hash = BasicHash<uint32_t>::Hash(name).m_Hash;
+				TypeData::GetTypeDataNames()[m_Hash][hash] = name;
+				TypeData::GetTypeDataSerializeCallbacks()[m_Hash][hash] = callback;
+				m_Factory.data<Data>(hash);
+				return *this;
+			}
+
+			template <auto Setter, auto Getter>
+			TypeFactory<T> &Data(const std::string &name, std::function<bool(Reflection::Any*)> callback)
+			{
+				uint32_t hash = BasicHash<uint32_t>::Hash(name).m_Hash;
+				TypeData::GetTypeDataNames()[m_Hash][hash] = name;
+				TypeData::GetTypeDataSerializeCallbacks()[m_Hash][hash] = callback;
 				m_Factory.data<Setter, Getter>(hash);
 				return *this;
 			}
@@ -487,6 +683,15 @@ namespace Chroma
 				uint32_t hash = BasicHash<uint32_t>::Hash(name).m_Hash;
 				TypeData::GetTypeFunctionNames()[m_Hash][hash] = name;
 				m_Factory.func<Fn>(hash);
+				return *this;
+			}
+
+			template <typename = std::enable_if_t<std::is_base_of_v<Component, T>>>
+			TypeFactory<T> &Require(const std::string& componentName)
+			{
+				uint32_t hash = BasicHash<uint32_t>::Hash(componentName).m_Hash;
+				//std::cout << TypeData::GetTypeNames()[m_Hash] << " requires " << componentName << " [" << hash << "]\n";
+				TypeData::GetTypeRequirements()[m_Hash].push_back(hash);
 				return *this;
 			}
 
@@ -518,8 +723,8 @@ namespace Chroma
 
 
 				RangeIterator() = default;
-				RangeIterator(entt::meta_range<InternalType, InternalNodeType>::iterator iterator) :
-						m_Iterator(iterator)
+				RangeIterator(entt::meta_range<InternalType, InternalNodeType>::iterator iterator, uint32_t parent) :
+						m_Iterator(iterator), m_Parent(parent)
 				{
 				}
 
@@ -538,7 +743,7 @@ namespace Chroma
 				reference operator*() const
 				{
 					auto type = m_Iterator.operator*();
-					return T(type);
+					return T(type, m_Parent);
 				}
 
 				bool operator==(const RangeIterator &other) const
@@ -553,11 +758,11 @@ namespace Chroma
 
 			private:
 				entt::meta_range<InternalType, InternalNodeType>::iterator m_Iterator;
-
+				uint32_t m_Parent;
 			};
 
-			TypeRange(entt::meta_range<InternalType, InternalNodeType> type) :
-					m_Type(type) {}
+			TypeRange(entt::meta_range<InternalType, InternalNodeType> type, uint32_t parent) :
+					m_Type(type), m_Parent(parent) {}
 
 			const inline std::vector<T> ToVector() 
 			{
@@ -571,7 +776,7 @@ namespace Chroma
 
 			RangeIterator begin() const
 			{
-				return RangeIterator(m_Type.begin());
+				return RangeIterator(m_Type.begin(), m_Parent);
 			}
 
 			RangeIterator end() const
@@ -579,81 +784,26 @@ namespace Chroma
 				return RangeIterator{};
 			}
 
+			size_t Count() const
+			{
+				//I don't know if there's an easier way to do this, and i'm too lazy to find out.
+				size_t count = 0;
+				for (auto val : *this)
+				{
+					count++;
+				}
+				return count;
+			}
+
 		private:
 			entt::meta_range<InternalType, InternalNodeType> m_Type;
-		};
-
-		struct Constructor
-		{
-			friend class Reflection;
-			friend class Type;
-
-			const inline bool Valid() { return m_Constructor.operator bool(); }
-			operator bool() const { return m_Constructor.operator bool(); }
-
-			inline Type Parent() const { return Type(m_Constructor.parent()); }
-			inline size_t Arity() const { return m_Constructor.arity(); }
-			inline Type Arg(size_t index) const { return m_Constructor.arg(index); }
-
-			inline Reflection::Any Invoke(Reflection::Any *const args, const size_t count) const { return m_Constructor.invoke(args, count); }
-			
-			template <typename... Args>
-			inline Reflection::Any Invoke(Args &&... args) const
-			{
-				Reflection::Any arguments[sizeof...(Args) + 1u]{ std::forward<Args>(args)... };
-				return m_Constructor.invoke(arguments, sizeof...(Args));
-			}
-
-		private:
-			entt::meta_ctor m_Constructor;
-		};
-
-		struct Handle
-		{
-			friend class Reflection;
-			friend class Data;
-			friend class Type;
-			friend class Function;
-
-			Handle() = default;
-			Handle(const Handle &) = delete;
-			Handle(Handle &&) = default;
-			Handle &operator=(const Handle &) = delete;
-			Handle &operator=(Handle &&) = default;
-
-			template <typename Type, typename = std::enable_if_t<!std::is_same_v<std::decay_t<Type>, Handle>>>
-			Handle(Type &value) :
-					m_Handle(entt::meta_handle(value))
-			{
-			}
-
-			explicit operator bool() const
-			{
-				return m_Handle.operator bool();
-			}
-
-			Any operator->()
-			{
-				return Any(*m_Handle.operator->()).AsRef();
-			}
-
-			const Any operator->() const
-			{
-				return Any(*m_Handle.operator->()).AsRef();
-			}
-
-		
-			private:
-				Handle(entt::meta_handle handle) :
-						m_Handle(std::move(handle)) {}
-
-				entt::meta_handle m_Handle;
+			uint32_t m_Parent;
 		};
 
 		struct Data
 		{
-			friend class Reflection;
-			friend class Reflection::Type;
+			friend struct Reflection;
+			friend struct Reflection::Type;
 
 			Data() = delete;
 
@@ -663,32 +813,48 @@ namespace Chroma
 
 			const inline std::string GetName() const
 			{
-				if (TypeData::GetTypeDataNames().contains(m_Data.parent().id()) && TypeData::GetTypeDataNames()[m_Data.parent().id()].contains(m_Data.id()))
-					return TypeData::GetTypeDataNames()[m_Data.parent().id()][m_Data.id()];
+				if (TypeData::GetTypeDataNames().contains(m_Parent) && TypeData::GetTypeDataNames()[m_Parent].contains(m_Data.id()))
+					return TypeData::GetTypeDataNames()[m_Parent][m_Data.id()];
 				return std::string();
+			}
+
+			const inline bool Serialized(Reflection::Any* handle = nullptr)
+			{
+				if (handle && TypeData::GetTypeDataSerializeCallbacks().contains(m_Parent) && TypeData::GetTypeDataSerializeCallbacks()[m_Parent].contains(m_Data.id())) 
+					return TypeData::GetTypeDataSerializeCallbacks()[m_Parent][m_Data.id()](handle);
+				else if(TypeData::GetTypeDataSerialize().contains(m_Parent) && TypeData::GetTypeDataSerialize()[m_Parent].contains(m_Data.id())) 
+					return TypeData::GetTypeDataSerialize()[m_Parent][m_Data.id()];
+				return false;
 			}
 
 			const inline bool IsConst() const { return m_Data.is_const(); }
 			const inline bool IsStatic() const { return m_Data.is_static(); }
 			const inline Reflection::Type Type() const { return Reflection::Type(m_Data.type()); }
-			const inline Reflection::Type Parent() const { return Reflection::Type(m_Data.parent()); }
+			const inline Reflection::Type Parent() const { return Reflection::Resolve(m_Parent); }
 			
 			template <typename T>
-			bool Set(Handle handle, T&& value) const
+			bool Set(Handle& handle, T&& value) const
 			{
 				return m_Data.set<T>(std::move(handle.m_Handle), std::forward<T>(value));
 			}
 
-			Any Get(Handle handle) const
+			Any Get(Handle handle)
 			{
 				return m_Data.get(std::move(handle.m_Handle));
 			}
+
+			bool SetFromAny(Handle handle, Any value)
+			{
+				return m_Data.set(std::move(handle.m_Handle), value.m_Value);
+			}
+
 		private:
 
-			Data(entt::meta_data data) :
-					m_Data(data) {}
+			Data(entt::meta_data data, uint32_t parent) :
+					m_Data(data), m_Parent(parent) {}
 
 			entt::meta_data m_Data;
+			uint32_t m_Parent;
 		};
 
 		struct Function
@@ -704,14 +870,14 @@ namespace Chroma
 
 			const inline std::string GetName() const
 			{
-				if (TypeData::GetTypeFunctionNames().contains(m_Func.parent().id()) && TypeData::GetTypeFunctionNames()[m_Func.parent().id()].contains(m_Func.id()))
-					return TypeData::GetTypeFunctionNames()[m_Func.parent().id()][m_Func.id()];
+				if (TypeData::GetTypeFunctionNames().contains(m_Parent) && TypeData::GetTypeFunctionNames()[m_Parent].contains(m_Func.id()))
+					return TypeData::GetTypeFunctionNames()[m_Parent][m_Func.id()];
 				return std::string();
 			}
 
 			const inline bool IsConst() const { return m_Func.is_const(); }
 			const inline bool IsStatic() const { return m_Func.is_static(); }
-			const inline Reflection::Type Parent() const { return Reflection::Type(m_Func.parent()); }
+			const inline Reflection::Type Parent() const { return Reflection::Resolve(m_Parent); }
 
 			const inline size_t Arity() const { return m_Func.arity(); }
 			const inline Reflection::Type ReturnType() const { return Reflection::Type(m_Func.ret()); }
@@ -730,58 +896,60 @@ namespace Chroma
 			}
 
 		private:
-			Function(entt::meta_func func) :
-					m_Func(func) {}
+			Function(entt::meta_func func, uint32_t parent) :
+					m_Func(func), m_Parent(parent) {}
 			entt::meta_func m_Func;
+			uint32_t m_Parent;
 		};
 
 		struct Type
 		{
-			friend class Reflection;
-			friend class Reflection::Data;
-			friend class TypeRange<Type, entt::meta_type, entt::internal::meta_base_node>;
+			friend struct Reflection;
+			friend struct Reflection::Data;
+			friend struct TypeRange<Type, entt::meta_type, entt::internal::meta_base_node>;
 
-			const inline bool Valid() { return m_Type.operator bool(); }
+			Type(const Type &) = default;
+
+			const inline bool Valid() const { return m_Type.operator bool(); }
 			operator bool() const { return m_Type.operator bool(); }
 			
 			const inline uint32_t Id() const { return m_Type.id(); }
 
-			const inline std::string GetName()
+			const inline std::string GetName() const 
 			{
 				if (TypeData::GetTypeNames().contains(m_Type.id()))
 					return TypeData::GetTypeNames()[m_Type.id()];
 				return std::string();
 			}
 
-			const inline bool IsVoid() { return m_Type.is_void(); }
-			const inline bool IsIntegral() { return m_Type.is_integral(); }
-			const inline bool IsFloatingPoint() { return m_Type.is_floating_point(); }
-			const inline bool IsArray() { return m_Type.is_array(); }
-			const inline bool IsEnum() { return m_Type.is_enum(); }
-			const inline bool IsUnion() { return m_Type.is_union(); }
-			const inline bool IsClass() { return m_Type.is_class(); }
-			const inline bool IsPointer() { return m_Type.is_pointer(); }
-			const inline bool IsFunctionPointer() { return m_Type.is_function_pointer(); }
-			const inline bool IsMemberObjectPointer() { return m_Type.is_member_object_pointer(); }
-			const inline bool IsMemberFunctionPointer() { return m_Type.is_member_function_pointer(); }
-			const inline bool IsPointerLike() { return m_Type.is_pointer_like(); }
-			const inline bool IsSequenceContainer() { return m_Type.is_sequence_container(); }
-			const inline bool IsAssociativeContainer() { return m_Type.is_associative_container(); }
-			const inline bool IsTemplateSpecialization() { return m_Type.is_template_specialization(); }
-			const inline bool IsAbstract()
+			const inline bool IsIntegral() const { return m_Type.is_integral(); }
+			const inline bool IsArray() const { return m_Type.is_array(); }
+			const inline bool IsEnum() const { return m_Type.is_enum(); }
+			const inline bool IsClass() const { return m_Type.is_class(); }
+			const inline bool IsPointer() const { return m_Type.is_pointer(); }
+			const inline bool IsPointerLike() const { return m_Type.is_pointer_like(); }
+			const inline bool IsSequenceContainer() const { return m_Type.is_sequence_container(); }
+			const inline bool IsAssociativeContainer() const { return m_Type.is_associative_container(); }
+			const inline bool IsTemplateSpecialization() const { return m_Type.is_template_specialization(); }
+			const inline bool IsAbstract() const
 			{ 
 				if (TypeData::GetTypeAbstract().contains(m_Type.id()))
 					return TypeData::GetTypeAbstract()[m_Type.id()];
 				return true;
 			}
 
-
-			inline TypeRange<Type, entt::meta_type, entt::internal::meta_base_node> Bases() 
+			/// @brief Gets a list of top-level base classes
+			/// @return 
+			inline TypeRange<Type, entt::meta_type, entt::internal::meta_base_node> TopLevelBases()  const
 			{
-				return TypeRange<Type, entt::meta_type, entt::internal::meta_base_node>(m_Type.base());
+				return TypeRange<Type, entt::meta_type, entt::internal::meta_base_node>(m_Type.base(), m_Type.id());
 			}
 
-			inline std::vector<Type> BasesRecursive()
+			/// @brief Gets a list of all base classes (breadth-first recursive search)
+			/// For now, this has a hard limit to attempt to mitigate potential circular references.
+			/// TODO: Prevent base classes from being registered if it creates a circular reference.
+			/// @return List of all base classes for this type
+			inline std::vector<Type> Base() const
 			{
 				std::vector<Type> bases;
 				InternalRecurseBase(&bases, this);
@@ -789,129 +957,200 @@ namespace Chroma
 			}
 
 		private:
-			
-			void InternalRecurseBase(std::vector<Type>* bases_list, Type *t)
+
+			const uint8_t BaseSearchMaxDepth = 64;
+
+			void InternalRecurseBase(std::vector<Type> *bases_list, const Type *t) const
 			{
-				for (auto base : t->Bases())
+				InternalRecurseBase(bases_list, t, 0);
+			}
+			
+			void InternalRecurseBase(std::vector<Type>* bases_list, const Type *t, uint8_t depth) const
+			{
+				depth++;
+				for (auto base : t->TopLevelBases())
 				{
-					CHROMA_CORE_INFO("Base: {}", base.GetName());
 					bases_list->push_back(base);
-					InternalRecurseBase(bases_list, &base);
+					if (depth <= BaseSearchMaxDepth)
+						InternalRecurseBase(bases_list, &base);
 				}
+				depth--;
 			}
 
 		public:
-
+			/// @brief Gets the top-level base class of this type
+			/// @param name Name of the base class
+			/// @return The type of the base class
 			inline Type Base(const std::string &name) { return Type(m_Type.base(BasicHash<uint32_t>::Hash(name))); }
 			inline Type Base(uint32_t id) { return Type(m_Type.base(id)); }
 
 			template <typename... Args>
 			inline Reflection::Any Construct(Args &&... args) const
 			{
-				Reflection::Any arguments[sizeof...(Args) + 1u]{ std::forward<Args>(args)... };
+				if (sizeof...(Args) == 0)
+					return m_Type.construct();
+				entt::meta_any arguments[sizeof...(Args) + 1u]{ std::forward<Args>(args)... };
 				return m_Type.construct(arguments, sizeof...(Args));
 			}
 
-			inline TypeRange<Constructor, entt::meta_ctor> Ctor() const
+			inline TypeRange<Reflection::Data, entt::meta_data> TopLevelData() const
 			{
-				return TypeRange<Constructor, entt::meta_ctor>(m_Type.ctor());
+				return TypeRange<Reflection::Data, entt::meta_data>(m_Type.data(), m_Type.id());
 			}
 
-			template <typename... Args>
-			inline Constructor Ctor() const
+			inline std::vector<Reflection::Data> Data() const
 			{
-				return m_Type.ctor<Args>();
-			}
-
-			inline TypeRange<Reflection::Data, entt::meta_data> Data() const
-			{
-				return TypeRange<Reflection::Data, entt::meta_data>(m_Type.data());
+				std::vector<Reflection::Data> all_data;
+				for (Reflection::Data data : TopLevelData())
+				{
+					all_data.push_back(data);
+				}
+				for (Type base : Base())
+				{
+					for (Reflection::Data data : base.TopLevelData())
+					{
+						all_data.push_back(data);
+					}
+				}
+				return all_data;
 			}
 
 			inline Reflection::Data Data(const std::string& name) const
 			{
 				uint32_t hash = BasicHash<uint32_t>::Hash(name);
-				return Reflection::Data(m_Type.data(hash));
+				auto data = Reflection::Data(m_Type.data(hash), m_Type.id());
+				if (!data.Valid())
+				{
+					for (auto& base : Base())
+					{
+						auto base_data = base.Data(hash);
+						if (base_data.Valid())
+							return base_data;
+					}
+				}
+				return data;
 			}
 
 			inline Reflection::Data Data(const uint32_t id) const
 			{
-				return Reflection::Data(m_Type.data(id));
-			}
-			
-			inline const size_t Extent(size_t dim = {}) const
-			{
-				return m_Type.extent(dim);
+				auto data = Reflection::Data(m_Type.data(id), m_Type.id());
+				if (!data.Valid())
+				{
+					for (auto& base : Base())
+					{
+						auto base_data = base.Data(id);
+						if (base_data.Valid())
+							return base_data;
+					}
+				}
+				return data;
 			}
 
-			inline TypeRange<Reflection::Function, entt::meta_func> Function() const
+			inline TypeRange<Reflection::Function, entt::meta_func> TopLevelFunctions() const
 			{
-				return TypeRange<Reflection::Function, entt::meta_func>(m_Type.func());
+				return TypeRange<Reflection::Function, entt::meta_func>(m_Type.func(), m_Type.id());
+			}
+
+			inline std::vector<Reflection::Function> Function() const
+			{
+				std::vector<Reflection::Function> all_functions;
+				for (Reflection::Function func : TopLevelFunctions())
+				{
+					all_functions.push_back(func);
+				}
+				for (Type base : Base())
+				{
+					for (Reflection::Function func : base.TopLevelFunctions())
+					{
+						all_functions.push_back(func);
+					}
+				}
+				return all_functions;
 			}
 
 			inline Reflection::Function Function(const std::string& name) const
 			{
 				uint32_t hash = BasicHash<uint32_t>::Hash(name);
-				return Reflection::Function(m_Type.func(hash));
+				auto func = Reflection::Function(m_Type.func(hash), m_Type.id());
+				if (!func.Valid())
+				{
+					for (auto &base : Base())
+					{
+						auto base_func = base.Function(hash);
+						if (base_func.Valid())
+							return base_func;
+					}
+				}
+				return func;
 			}
 
 			inline Reflection::Function Function(const uint32_t id) const
 			{
-				return Reflection::Function(m_Type.func(id));
+				auto func = Reflection::Function(m_Type.func(id), m_Type.id());
+				if (!func.Valid())
+				{
+					for (auto &base : Base())
+					{
+						auto base_func = base.Function(id);
+						if (base_func.Valid())
+							return base_func;
+					}
+				}
+				return func;
 			}
 
 			inline Any Get(const std::string &name, Handle instance) const
 			{
 				uint32_t hash = BasicHash<uint32_t>::Hash(name);
-				return m_Type.get(hash, std::move(instance.m_Handle));
+				return m_Type.get(hash, std::move(std::move(instance.m_Handle)));
 			}
 
 			inline Any Get(const uint32_t id, Handle instance) const
 			{
-				return m_Type.get(id, std::move(instance.m_Handle));
+				return m_Type.get(id, std::move(std::move(instance.m_Handle)));
 			}
 
 			template <typename T>
 			inline T Get(const std::string &name, Handle instance) const
 			{
 				uint32_t hash = BasicHash<uint32_t>::Hash(name);
-				return m_Type.get(hash, std::move(instance.m_Handle)).cast<T>();
+				return m_Type.get(hash, std::move(std::move(instance.m_Handle))).cast<T>();
 			}
 
 			template <typename T>
 			inline T Get(const uint32_t id, Handle instance) const
 			{
-				return m_Type.get(id, std::move(instance.m_Handle)).cast<T>();
+				return m_Type.get(id, std::move(std::move(instance.m_Handle))).cast<T>();
 			}
 
 			template <typename T>
 			inline bool Set(const std::string& name, Handle instance, T&& value) const
 			{
 				uint32_t hash = BasicHash<uint32_t>::Hash(name);
-				return m_Type.set(hash, std::move(instance.m_Handle), std::forward<T>(value));
+				return m_Type.set(hash, std::move(std::move(instance.m_Handle)), std::forward<T>(value));
 			}
 
 			template <typename T>
 			inline bool Set(const uint32_t id, Handle instance, T &&value) const
 			{
-				return m_Type.set(id, std::move(instance.m_Handle), std::forward<T>(value));
+				return m_Type.set(id, std::move(std::move(instance.m_Handle)), std::forward<T>(value));
 			}
 
 			inline bool Set(const std::string& name, Handle instance, Any value)
 			{
 				uint32_t hash = BasicHash<uint32_t>::Hash(name);
-				return m_Type.set(hash, std::move(instance.m_Handle), value);
+				return m_Type.set(hash, std::move(std::move(instance.m_Handle)), value);
 			}
 
 			inline bool Set(const uint32_t id, Handle instance, Any value)
 			{
-				return m_Type.set(id, std::move(instance.m_Handle), value);
+				return m_Type.set(id, std::move(std::move(instance.m_Handle)), value);
 			}
 
 			inline Reflection::Any Invoke(const std::string& name, Handle instance, Reflection::Any *const args, const size_t count) const 
 			{
 				uint32_t hash = BasicHash<uint32_t>::Hash(name);
-				return m_Type.invoke(hash, std::move(instance.m_Handle), args, count);
+				return m_Type.invoke(hash, std::move(std::move(instance.m_Handle)), args, count);
 			}
 
 			template <typename... Args>
@@ -919,28 +1158,22 @@ namespace Chroma
 			{
 				uint32_t hash = BasicHash<uint32_t>::Hash(name);
 				Reflection::Any arguments[sizeof...(Args) + 1u]{ std::forward<Args>(args)... };
-				return m_Type.invoke(hash, std::move(instance.m_Handle), arguments, sizeof...(Args));
+				return m_Type.invoke(hash, std::move(std::move(instance.m_Handle)), arguments, sizeof...(Args));
 			}
 
 			inline Reflection::Any Invoke(const uint32_t id, Handle instance, Reflection::Any *const args, const size_t count) const
 			{
-				return m_Type.invoke(id, std::move(instance.m_Handle), args, count);
+				return m_Type.invoke(id, std::move(std::move(instance.m_Handle)), args, count);
 			}
 
 			template <typename... Args>
 			inline Reflection::Any Invoke(const uint32_t id, Handle instance, Args &&...args) const
 			{
 				Reflection::Any arguments[sizeof...(Args) + 1u]{ std::forward<Args>(args)... };
-				return m_Type.invoke(id, std::move(instance.m_Handle), arguments, sizeof...(Args));
+				return m_Type.invoke(id, std::move(std::move(instance.m_Handle)), arguments, sizeof...(Args));
 			}
 
-			inline size_t Rank() const { return m_Type.rank(); }
-
-			inline Reflection::Type RemoveExtent() const { return Reflection::Type(m_Type.remove_extent()); }
-
 			inline Reflection::Type RemovePointer() { return Reflection::Type(m_Type.remove_pointer()); }
-
-			inline void Reset() { m_Type.reset(); }
 
 			inline size_t Size() const { return m_Type.size_of(); }
 
@@ -967,8 +1200,61 @@ namespace Chroma
 			{
 			}
 
+			Type(entt::meta_type type, uint32_t parent) :
+					m_Type(type)
+			{
+			}
+
+			Type() = default;
+
 			entt::meta_type m_Type;
 		};
+
+
+		struct Handle
+		{
+			friend struct Reflection;
+			friend struct Data;
+			friend struct Type;
+			friend struct Function;
+
+			Handle(const Handle &other) = delete;
+			Handle(Handle &&) = default;
+			Handle &operator=(const Handle &) = delete;
+			Handle &operator=(Handle &&) = default;
+
+			template <typename Type, typename = std::enable_if_t<!std::is_same_v<std::decay_t<Type>, Handle>>>
+			Handle(Type& value) :
+					m_Type(Reflection::Resolve<Type>()), m_Handle(value)
+			{
+			}
+
+			explicit operator bool() const
+			{
+				return m_Handle.operator bool();
+			}
+
+			//Any operator->()
+			//{
+			//	return Any(*m_Handle.operator->()).AsRef();
+			//}
+			//
+			//const Any operator->() const
+			//{
+			//	return Any(*m_Handle.operator->()).AsRef();
+			//}
+
+			inline Reflection::Type Type() { return m_Type; }
+			const inline Reflection::Type Type() const { return m_Type; }
+
+		private:
+			Handle() = default;
+			
+
+			entt::meta_handle m_Handle;
+			Reflection::Type m_Type;
+		};
+
 
 	private:
 		static inline bool s_InitializeMaps = true;
@@ -985,6 +1271,9 @@ namespace Chroma
 			TypeData::GetTypeNames()[hash] = name;
 			TypeData::GetTypeDataNames()[hash] = std::unordered_map<uint32_t, std::string>();
 			TypeData::GetTypeFunctionNames()[hash] = std::unordered_map<uint32_t, std::string>();
+			TypeData::GetTypeDataSerialize()[hash] = std::unordered_map<uint32_t, bool>();
+			TypeData::GetTypeDataSerializeCallbacks()[hash] = std::unordered_map<uint32_t, std::function<bool(Reflection::Any *)>>();
+			TypeData::GetTypeRequirements()[hash] = std::vector<uint32_t>();
 			return TypeFactory<T>(name);
 		}
 
@@ -994,9 +1283,15 @@ namespace Chroma
 			return Type(entt::resolve<T>());
 		}
 
+		template <typename T>
+		static inline uint32_t ResolveID()
+		{
+			return entt::resolve<T>().id();
+		}
+
 		static inline TypeRange<Type, entt::meta_type> Resolve()
 		{
-			return TypeRange<Type, entt::meta_type>(entt::resolve());
+			return TypeRange<Type, entt::meta_type>(entt::resolve(), 0);
 		}
 
 		static inline Type Resolve(const std::string& name)
@@ -1015,7 +1310,6 @@ namespace Chroma
 		{
 			return Any(entt::forward_as_meta(std::forward<Type>(type)));
 		}
-
 
 		//An instance of this struct is automatically declared statically inlined into the reflected class
 		//This class is designed to automatically register the type of the reflected class, and call the RegisterType()
@@ -1058,6 +1352,12 @@ namespace Chroma
 				return s_TypeDataSerialize;
 			}
 
+			static std::unordered_map<uint32_t, std::unordered_map<uint32_t, std::function<bool(Reflection::Any*)>>> &GetTypeDataSerializeCallbacks()
+			{
+				static std::unordered_map<uint32_t, std::unordered_map<uint32_t, std::function<bool(Reflection::Any *)>>> s_TypeDataSerializeCallbacks;
+				return s_TypeDataSerializeCallbacks;
+			}
+
 			static std::unordered_map<uint32_t, std::unordered_map<uint32_t, std::string>> &GetTypeFunctionNames()
 			{
 				static std::unordered_map<uint32_t, std::unordered_map<uint32_t, std::string>> s_TypeFunctionNames;
@@ -1070,13 +1370,22 @@ namespace Chroma
 				return s_TypeAbstract;
 			}
 
+			static std::unordered_map<uint32_t, std::vector<uint32_t>> &GetTypeRequirements()
+			{
+				static std::unordered_map<uint32_t, std::vector<uint32_t>> s_TypeRequirements;
+				return s_TypeRequirements;
+			}
+
 		private:
 			TypeData()
 			{
 				GetTypeNames();
 				GetTypeDataNames();
 				GetTypeFunctionNames();
+				GetTypeDataSerialize();
+				GetTypeDataSerializeCallbacks();
 				GetTypeAbstract();
+				GetTypeRequirements();
 			}
 		};
 
@@ -1094,30 +1403,36 @@ namespace Chroma
 		template <typename T>
 		static void RegisterYAMLSerializeFunctions(std::function<void(YAML::Emitter &, Reflection::Any &)> serialize_function, std::function<Reflection::Any(YAML::Node &)> deserialize_function)
 		{
-			//auto description = Reflection::Resolve<T>();
-			//uint32_t hash = BasicHash<uint32_t>::Hash(description->GetName());
-			//
-			//s_SerializeYAMLFunctions[hash] = serialize_function;
-			//s_DeserializeYAMLFunctions[hash] = deserialize_function;
+			auto type = Reflection::Resolve<T>();
+			uint32_t hash = type.Id();
+			
+			s_SerializeYAMLFunctions[hash] = serialize_function;
+			s_DeserializeYAMLFunctions[hash] = deserialize_function;
 		}
 
 		template <typename T>
 		static void RegisterBinarySerializeFunctions(std::function<void(File &, Reflection::Any &)> serialize_function, std::function<Reflection::Any(File &)> deserialize_function)
 		{
-			//auto description = Reflect::Resolve<T>();
-			//uint32_t hash = BasicHash<uint32_t>::Hash(description->GetName());
-			//
-			//s_SerializeBinaryFunctions[hash] = serialize_function;
-			//s_DeserializeBinaryFunctions[hash] = deserialize_function;
+			auto type = Reflection::Resolve<T>();
+			uint32_t hash = type.Id();
+			
+			s_SerializeBinaryFunctions[hash] = serialize_function;
+			s_DeserializeBinaryFunctions[hash] = deserialize_function;
 		}
 
-		static void SerializeObjectYAML(YAML::Emitter &out, Reflection::Any object);
-		static void SerliazeObjectBinary(File &file, Reflection::Any object);
-		static Reflection::Any DeserializeObjectYAML(YAML::Node &node);
-		static Reflection::Any DeserializeObjectBinary(File &file);
 
+		static void SerializeObjectYAML(YAML::Emitter &out, Reflection::Any& object) { SerializeObjectYAML(out, object, 0); }
+		static void SerliazeObjectBinary(File &file, Reflection::Any& object) { SerliazeObjectBinary(file, object, 0); }
+		static void DeserializeObjectYAML(Any& object, Type type, YAML::Node &node) { DeserializeObjectYAML(object, type, node, 0); }
+		static void DeserializeObjectBinary(Any& object, Type type, File &file) { DeserializeObjectBinary(object, type, file, 0); }
 
 	private:
+
+		static void SerializeObjectYAML(YAML::Emitter &out, Reflection::Any& object, int depth);
+		static void SerliazeObjectBinary(File &file, Reflection::Any& object, int depth);
+		static void DeserializeObjectYAML(Any& object, Type type, YAML::Node &node, int depth);
+		static void DeserializeObjectBinary(Any& object, Type type, File &file, int depth);
+
 		static std::unordered_map<uint32_t, std::function<void(YAML::Emitter &, Reflection::Any &)>> s_SerializeYAMLFunctions;
 		static std::unordered_map<uint32_t, std::function<Reflection::Any(YAML::Node &)>> s_DeserializeYAMLFunctions;
 		static std::unordered_map<uint32_t, std::function<void(File &, Reflection::Any &)>> s_SerializeBinaryFunctions;
@@ -1129,7 +1444,7 @@ namespace Chroma
 
 #ifndef CHROMA_REFLECT
 	//Registers a class as a reflectable type. Requires the class to implement: Reflection::TypeFactory<T> RegisterType()
-	//Note: If inherritance proves an issue, defined in a private scope
+	//Note: If inheritance proves an issue, define in a private scope
 	#define CHROMA_REFLECT(typeName) \
 	static Reflection::TypeData<typeName> TypeInfo; \
 	static Reflection::TypeFactory<typeName> RegisterType();

@@ -16,21 +16,21 @@ namespace Chroma
 	void OrthographicCameraController::OnUpdate(Time ts)
 	{
 		if (Input::IsKeyPressed(CHROMA_KEY_A))
-			m_CameraPosition.x -= m_CameraTranslationSpeed * ts;
+			m_CameraPosition.x -= m_CameraTranslationSpeed * static_cast<float>(ts);
 		else if (Input::IsKeyPressed(CHROMA_KEY_D))
-			m_CameraPosition.x += m_CameraTranslationSpeed * ts;
+			m_CameraPosition.x += m_CameraTranslationSpeed * static_cast<float>(ts);
 
 		if (Input::IsKeyPressed(CHROMA_KEY_W))
-			m_CameraPosition.y += m_CameraTranslationSpeed * ts;
+			m_CameraPosition.y += m_CameraTranslationSpeed * static_cast<float>(ts);
 		else if (Input::IsKeyPressed(CHROMA_KEY_S))
-			m_CameraPosition.y -= m_CameraTranslationSpeed * ts;
+			m_CameraPosition.y -= m_CameraTranslationSpeed * static_cast<float>(ts);
 
 		if (m_Rotation)
 		{
 			if (Input::IsKeyPressed(CHROMA_KEY_Q))
-				m_CameraRotation -= m_CameraRotationSpeed * ts;
+				m_CameraRotation -= m_CameraRotationSpeed * static_cast<float>(ts);
 			if (Input::IsKeyPressed(CHROMA_KEY_E))
-				m_CameraRotation += m_CameraRotationSpeed * ts;
+				m_CameraRotation += m_CameraRotationSpeed * static_cast<float>(ts);
 			m_Camera.SetRotation(m_CameraRotation);
 		}
 

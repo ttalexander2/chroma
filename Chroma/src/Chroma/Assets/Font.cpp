@@ -75,7 +75,7 @@ namespace Chroma
 			font_file.Read<msdfgen::byte>(data);
 			font_file.Close();
 
-			if (msdfgen::FontHandle *font = msdfgen::loadFontData(ft, data.data(), data.size()))
+			if (msdfgen::FontHandle *font = msdfgen::loadFontData(ft, data.data(), static_cast<int>(data.size())))
 			{
 				// Storage for glyph geometry and their coordinates in the atlas
 				std::vector<GlyphGeometry> glyphs;
@@ -126,7 +126,7 @@ namespace Chroma
 				packer.setPixelRange(2);
 				packer.setMiterLimit(1.0);
 				// Compute atlas layout - pack glyphs
-				packer.pack(glyphs.data(), glyphs.size());
+				packer.pack(glyphs.data(), static_cast<int>(glyphs.size()));
 				// Get final atlas dimensions
 				int width = 0, height = 0;
 				packer.getDimensions(width, height);
@@ -142,7 +142,7 @@ namespace Chroma
 				generator.setAttributes(attributes);
 				generator.setThreadCount(4);
 				// Generate atlas bitmap
-				generator.generate(glyphs.data(), glyphs.size());
+				generator.generate(glyphs.data(), static_cast<int>(glyphs.size()));
 				// The atlas bitmap can now be retrieved via atlasStorage as a BitmapConstRef.
 				// The glyphs array (or fontGeometry) contains positioning data for typesetting text.
 
@@ -193,7 +193,7 @@ namespace Chroma
 				{
 					stbi_set_flip_vertically_on_load(1);
 					int t_x, t_y, t_c;
-					unsigned char *rawData = stbi_load_from_memory(png_data.data(), png_data.size(), &t_x, &t_y, &t_c, 0);
+					unsigned char *rawData = stbi_load_from_memory(png_data.data(), static_cast<int>(png_data.size()), &t_x, &t_y, &t_c, 0);
 					m_Atlas.texture->SetData(rawData, width * height * 4);
 					stbi_image_free(rawData);
 
@@ -367,7 +367,7 @@ namespace Chroma
 
 			stbi_set_flip_vertically_on_load(1);
 
-			unsigned char *rawData = stbi_load_from_memory(buffer.data(), buffer.size(), &out->width, &out->height, &out->channels, 0);
+			unsigned char *rawData = stbi_load_from_memory(buffer.data(), static_cast<int>(buffer.size()), &out->width, &out->height, &out->channels, 0);
 			out->texture = Texture2D::Create(out->width, out->height);
 			out->texture->SetFiltering(Texture::FilterMethod::LINEAR, Texture::FilterType::MIN);
 			out->texture->SetFiltering(Texture::FilterMethod::LINEAR, Texture::FilterType::MAG);

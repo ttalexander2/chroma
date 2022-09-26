@@ -17,28 +17,27 @@ namespace Chroma
 	/// @param spriteID Name/Path of the sprite.
 	void SpriteRenderer::SetSprite(const GUID& spriteID)
 	{
+		m_SpriteID = spriteID;
+		if (AssetManager::Exists(spriteID) && !AssetManager::IsLoaded(spriteID))
+		{
+			AssetManager::Load(spriteID);
+		}
 		if (AssetManager::Exists(spriteID) && AssetManager::IsLoaded(spriteID))
 		{
-			sprite = AssetManager::Get<Chroma::Sprite>(spriteID);
-			//CHROMA_CORE_INFO("SET SPRITE: {}", spriteID);
 			Animation = 0;
 			CurrentFrame = 0;
-			//SetSpriteOrigin(SpriteOrigin::Default);
-			//SortingPoint = sprite->GetSize().y;
 		}
-			
-		else
-			CHROMA_CORE_WARN("Attempted to set sprite. Sprite [{}] could not be found or is not loaded.", spriteID.ToString());
 	}
 
 	void SpriteRenderer::SetAnimation(unsigned int animation)
 	{
-		if (sprite->IsLoaded())
+		auto sprite = AssetManager::Get<Chroma::Sprite>(m_SpriteID);
+		if (sprite && sprite->IsLoaded())
 		{
 			if (animation >= sprite->Animations.size())
 			{
 				CHROMA_CORE_WARN("Attempted to set sprite animation number. Sprite [{}] does not contain animation [{}].", sprite->GetPath(), animation);
-				Animation = sprite->Animations.size() - 1;
+				Animation = static_cast<unsigned int>(sprite->Animations.size()) - 1;
 				return;
 			}
 			bool restart = Animation != animation;
@@ -49,15 +48,15 @@ namespace Chroma
 		}
 		else
 		{
-			CHROMA_CORE_WARN("Attempted to set sprite animation. Sprite [{}] could not be found or is not loaded.", sprite->GetID().ToString());
+			CHROMA_CORE_WARN("Attempted to set sprite animation. Sprite could not be found or is not loaded.");
 		}
 			
 	}
 
 	void SpriteRenderer::SetAnimation(const std::string& animation_name)
 	{
-
-		if (sprite->IsLoaded())
+		auto sprite = AssetManager::Get<Chroma::Sprite>(m_SpriteID);
+		if (sprite && sprite->IsLoaded())
 		{
 			bool exists = false;
 			unsigned int i = 0;
@@ -80,7 +79,7 @@ namespace Chroma
 		}
 		else
 		{
-			CHROMA_CORE_WARN("Attempted to set sprite animation. Sprite [{}] could not be found or is not loaded.",sprite->GetID().ToString());
+			CHROMA_CORE_WARN("Attempted to set sprite animation. Sprite could not be found or is not loaded.");
 		}
 	}
 
@@ -91,7 +90,8 @@ namespace Chroma
 
 	std::string SpriteRenderer::GetAnimationName(unsigned int animation)
 	{
-		if (sprite->IsLoaded())
+		auto sprite = AssetManager::Get<Chroma::Sprite>(m_SpriteID);
+		if (sprite && sprite->IsLoaded())
 		{
 			if (animation >= sprite->Animations.size())
 				CHROMA_CORE_WARN("Attempted to get sprite animation name. Sprite [{}] does not contain animation [{}]", sprite->GetID().ToString(), animation);
@@ -112,11 +112,13 @@ namespace Chroma
 		if (frame == 0)
 			CurrentFrame = 0;
 
-		if (sprite->IsLoaded())
+		auto sprite = AssetManager::Get<Chroma::Sprite>(m_SpriteID);
+
+		if (sprite && sprite->IsLoaded())
 		{
 			if (frame >= sprite->Frames.size())
 			{
-				frame = sprite->Frames.size() - 1;
+				frame = static_cast<unsigned int>(sprite->Frames.size()) - 1;
 				CHROMA_CORE_WARN("Attempted to set sprite frame. Frame [{}] is an invalid frame for Sprite [{}].", frame, sprite->GetPath());
 			}
 			else
@@ -125,7 +127,7 @@ namespace Chroma
 		}
 		else
 		{
-			CHROMA_CORE_WARN("Attempted to set sprite frame. Sprite [{}] could not be found or is not loaded.", sprite->GetID().ToString());
+			CHROMA_CORE_WARN("Attempted to set sprite frame. Sprite could not be found or is not loaded.");
 		}
 
 		
@@ -134,8 +136,10 @@ namespace Chroma
 
 	void SpriteRenderer::SetSpriteOrigin(SpriteOrigin origin)
 	{
+		auto sprite = AssetManager::Get<Chroma::Sprite>(m_SpriteID);
+
 		Origin = origin;
-		if (sprite->IsLoaded())
+		if (sprite && sprite->IsLoaded())
 		{
 			const Math::vec2 size = sprite->GetSize();
 			switch (origin)
@@ -199,22 +203,23 @@ namespace Chroma
 		}
 		else
 		{
-			CHROMA_CORE_WARN("Attempted to set sprite origin. Sprite [{}] could not be found or is not loaded.", sprite->GetID().ToString());
+			CHROMA_CORE_WARN("Attempted to set sprite origin. Sprite could not be found or is not loaded.");
 		}
 	}
 
 	void SpriteRenderer::SetSpriteOrigin(const Math::vec2& custom_position)
 	{
+		auto sprite = AssetManager::Get<Chroma::Sprite>(m_SpriteID);
 
 		Origin = SpriteOrigin::Custom;
-		if (sprite->IsLoaded())
+		if (sprite && sprite->IsLoaded())
 		{
 			const Math::vec2 size = sprite->GetSize();
 			OriginValue = { Math::clamp(0.f, size.x, custom_position.x), Math::clamp(0.f, size.y, custom_position.y) };
 		}
 		else
 		{
-			CHROMA_CORE_WARN("Attempted to set sprite origin. Sprite [{}] could not be found or is not loaded.", sprite->GetID().ToString());
+			CHROMA_CORE_WARN("Attempted to set sprite origin. Sprite could not be found or is not loaded.");
 		}
 	}
 
@@ -230,6 +235,7 @@ namespace Chroma
 
 	std::string SpriteRenderer::GetSpritePath()
 	{
+		auto sprite = AssetManager::Get<Chroma::Sprite>(m_SpriteID);
 		if (!sprite)
 			return "";
 		return sprite->GetPath();
@@ -237,13 +243,13 @@ namespace Chroma
 
 	void SpriteRenderer::RestartAnimation()
 	{
-
-		if (sprite->IsLoaded())
+		auto sprite = AssetManager::Get<Chroma::Sprite>(m_SpriteID);
+		if (sprite && sprite->IsLoaded())
 		{
 			if (sprite->Animated())
 			{
 				if (Animation >= sprite->Animations.size())
-					Animation = sprite->Animations.size() - 1;
+					Animation = static_cast<unsigned int>(sprite->Animations.size()) - 1;
 				else if (Animation < 0)
 					Animation = 0;
 				CurrentFrame = sprite->Animations[Animation].Start;
@@ -279,7 +285,6 @@ namespace Chroma
 				.Data<&SpriteRenderer::SetSprite, &SpriteRenderer::GetSpriteID>("SpriteID")
 				.Data<&SpriteRenderer::SetCurrentFrame, &SpriteRenderer::GetCurrentFrame>("CurrentFrame", false)
 				.Data<static_cast<void (SpriteRenderer::*)(unsigned int)>(&SpriteRenderer::SetAnimation), &SpriteRenderer::GetAnimation>("Animation", false)
-				.Data<static_cast<void (SpriteRenderer::*)(SpriteOrigin)>(&SpriteRenderer::SetSpriteOrigin), &GetSpriteOrigin>("SpriteOrigin")
 				.Data<static_cast<void (SpriteRenderer::*)(SpriteOrigin)>(&SpriteRenderer::SetSpriteOrigin), &GetSpriteOrigin>("SpriteOrigin")
 				.Func<&SpriteRenderer::GetSpritePath>("GetSpritePath")
 				.Func<&SpriteRenderer::RestartAnimation>("RestartAnimation")

@@ -29,7 +29,7 @@ namespace Chroma
 
 			if (aPlayer.m_Playing)
 			{
-				aPlayer.m_Time += delta.GetSeconds();
+				aPlayer.m_Time += static_cast<float>(delta.GetSeconds());
 
 				if (aPlayer.m_Time >= aPlayer.m_Current->length)
 				{
@@ -91,15 +91,16 @@ namespace Chroma
 							Chroma::Animation::Transition t = kf->transition;
 
 							float transitionTime = (next->time - kf->time);
-							float timeSinceStart = delta.GetSeconds() - kf->time;
+							float timeSinceStart = static_cast<float>(delta.GetSeconds()) - kf->time;
 							Math::vec2 val = glm::cubic(a, t.a, t.b, b, timeSinceStart / transitionTime);
 
-							Chroma::Component *c = m_Scene->GetComponent(track->componentID, track->entityID);
-							if (c != nullptr)
-							{
-								auto meta_handle = c->GetType().Data(track->propertyID);
-								meta_handle.Set(Reflection::Handle(c), val);
-							}
+							Chroma::Component* c = m_Scene->GetComponent(track->componentID, track->entityID);
+
+							auto meta_handle = c->GetType().Data(track->propertyID);
+							Reflection::Handle cHandle = c;
+							meta_handle.Set(cHandle, val);
+
+	
 
 						}
 					}
@@ -108,11 +109,11 @@ namespace Chroma
 						if (next->time >= aPlayer.m_Time)
 						{
 							Chroma::Component* c = m_Scene->GetComponent(track->componentID, track->entityID);
-							if (c != nullptr)
-							{
-								auto meta_handle = c->GetType().Data(track->propertyID);
-								meta_handle.Set(Reflection::Handle(c), kf->value);
-							}
+
+							auto meta_handle = c->GetType().Data(track->propertyID);
+							Reflection::Handle cHandle = c;
+							meta_handle.Set(cHandle, kf->value);
+
 						}
 					}
 				}

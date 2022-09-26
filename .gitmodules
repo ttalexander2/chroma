@@ -44,3 +44,9 @@
 [submodule "Chroma/third_party/box2d"]
 	path = Chroma/third_party/box2d
 	url = https://github.com/ttalexander2/box2d.git
+[submodule "Chroma/third_party/range-v3"]
+	path = Chroma/third_party/range-v3
+	url = https://github.com/ttalexander2/range-v3.git
+[submodule "Chroma/third_party/entt"]
+	path = Chroma/third_party/entt
+	url = https://github.com/ttalexander2/entt.git

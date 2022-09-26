@@ -589,7 +589,7 @@ namespace Chroma
 	void Renderer2D::DrawLine(const Math::vec2& p1, const Math::vec2& p2, float line_width, const Math::vec4& color)
 	{
 		Math::vec2 midpoint = { (p1.x + p2.x) / 2.f, (p1.y + p2.y) / 2.f };
-		float length = Math::sqrt(Math::pow((p2.x - p1.x), 2) + Math::pow((p2.y - p1.y), 2));
+		float length = static_cast<float>(Math::sqrt(Math::pow((p2.x - p1.x), 2) + Math::pow((p2.y - p1.y), 2)));
 		float rotation = Math::atan((p2.y - p1.y) / (p2.x - p1.x));
 		//CHROMA_CORE_INFO("Midpoint: ({}, {}), Length: {}, Rotation: {}, LineWidth: {}", midpoint.x, midpoint.y, length, rotation, line_width);
 		DrawQuad(midpoint, { length, line_width }, color, rotation);

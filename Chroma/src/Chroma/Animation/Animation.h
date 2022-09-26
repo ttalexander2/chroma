@@ -5,7 +5,7 @@
 #include "Chroma/Math/Vec2.h"
 #include "Chroma/Assets/Asset.h"
 
-#include <entt.hpp>
+#include <entt/entt.hpp>
 
 
 namespace Chroma
@@ -56,7 +56,7 @@ namespace Chroma
 			std::multiset<Keyframe, TimeSort> keyframes;
 			Chroma::EntityID entityID;
 			size_t componentID;
-			size_t propertyID;
+			uint32_t propertyID;
 		};
 
 		float length;

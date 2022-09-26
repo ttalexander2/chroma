@@ -429,8 +429,8 @@ namespace Chroma
 			auto& slice = slices.back();
 			slice.name = name;
 			slice.frame = stream.Read<uint32_t>(Endian::Little);
-			slice.origin.x = stream.Read<int32_t>(Endian::Little);
-			slice.origin.y = stream.Read<int32_t>(Endian::Little);
+			slice.origin.x = static_cast<float>(stream.Read<int32_t>(Endian::Little));
+			slice.origin.y = static_cast<float>(stream.Read<int32_t>(Endian::Little));
 			slice.width = stream.Read<uint32_t>(Endian::Little);
 			slice.height = stream.Read<uint32_t>(Endian::Little);
 
@@ -448,8 +448,8 @@ namespace Chroma
 			if (flags & (1 << 1))
 			{
 				slice.has_pivot = true;
-				slice.pivot.x = stream.Read<uint32_t>(Endian::Little);
-				slice.pivot.y = stream.Read<uint32_t>(Endian::Little);
+				slice.pivot.x = static_cast<float>(stream.Read<uint32_t>(Endian::Little));
+				slice.pivot.y = static_cast<float>(stream.Read<uint32_t>(Endian::Little));
 			}
 
 			slice.userdata.color = 0xffffff;

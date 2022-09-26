@@ -46,9 +46,9 @@ namespace Chroma
 			if (!spriteRenderer.IsEnabled())
 				continue;
 
-			if (spriteRenderer.sprite && spriteRenderer.sprite->IsLoaded())
+			if (spriteRenderer.GetSprite() && spriteRenderer.GetSprite()->IsLoaded())
 			{
-				auto& sprite = spriteRenderer.sprite;
+				auto &sprite = spriteRenderer.GetSprite();
 					if (spriteRenderer.Playing && sprite->Animated())
 					{
 						
@@ -120,7 +120,7 @@ namespace Chroma
 				continue;
 
 			Math::vec2 absPos = m_Scene->GetTransformAbsolutePosition(e);
-			if (!s.sprite || !s.sprite->IsLoaded())
+			if (!s.GetSprite() || !s.GetSprite()->IsLoaded())
 				continue;
 			float y = -1.f*(absPos.y + s.Offset.y + s.SortingPoint);
 			if (sprites.find(y) == sprites.end())
@@ -143,10 +143,10 @@ namespace Chroma
 
 				
 
-				if (spriteRenderer.sprite->IsLoaded())
+				if (spriteRenderer.GetSprite()->IsLoaded())
 				{
 
-					auto sprite = spriteRenderer.sprite;
+					auto sprite = spriteRenderer.GetSprite();
 					int w = sprite->Frames[spriteRenderer.CurrentFrame].Texture->GetWidth();
 					int h = sprite->Frames[spriteRenderer.CurrentFrame].Texture->GetHeight();
 					if (!transform.IsChild())

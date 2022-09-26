@@ -56,12 +56,12 @@ namespace Chroma
 	}
 
 
-	int File::Write(std::string& string)
+	int64_t File::Write(std::string& string)
 	{
 		return Write(reinterpret_cast<void*>(string.data()), string.size());
 	}
 
-	int File::Write(const char* string)
+	int64_t File::Write(const char* string)
 	{
 		size_t len = strlen(string);
 		return Write((void*)reinterpret_cast<const void*>(string), len);
@@ -103,7 +103,7 @@ namespace Chroma
 		std::vector<uint8_t> buffer;
 		buffer.resize(length);
 
-		int result = PHYSFS_readBytes(m_Handle, buffer.data(), length);
+		int64_t result = PHYSFS_readBytes(m_Handle, buffer.data(), length);
 		if (length <= 0)
 		{
 			return "";

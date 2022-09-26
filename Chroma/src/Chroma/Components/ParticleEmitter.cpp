@@ -7,7 +7,7 @@ namespace Chroma
 {
 	std::random_device ParticleEmitter::sRd;
 	std::default_random_engine ParticleEmitter::sEngine { sRd() };
-	std::uniform_int_distribution<long long> ParticleEmitter::sDist{ std::numeric_limits<long long>::min(), std::numeric_limits<long long>::max() };
+	std::uniform_int_distribution<unsigned int> ParticleEmitter::sDist{ std::numeric_limits<unsigned int>::min(), std::numeric_limits<unsigned int>::max() };
 	
 	void ParticleEmitter::GenerateRandomSeed()
 	{

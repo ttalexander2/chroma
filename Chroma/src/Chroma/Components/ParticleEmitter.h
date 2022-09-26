@@ -20,7 +20,7 @@ namespace Chroma
 	};
 
 
-	struct ParticleEmitter : public Component
+	struct ParticleEmitter : Component
 	{
 		CHROMA_COMPONENT(ParticleEmitter, Component);
 
@@ -53,8 +53,8 @@ namespace Chroma
 		float PreWarmSeconds = 2.f;
 		
 
-		const long long GetSeed() { return _seed; }
-		void SetSeed(long long seed) { _seed = seed; engine.seed(_seed); }
+		const unsigned int GetSeed() { return _seed; }
+		void SetSeed(unsigned int seed) { _seed = seed; engine.seed(_seed); }
 
 		void GenerateRandomSeed();
 		void Emit(const Math::vec2& position);
@@ -70,7 +70,7 @@ namespace Chroma
 
 		double timeSinceLastEmit = 0;
 
-		long long _seed;
+		unsigned int _seed;
 
 		std::default_random_engine engine;
 		std::uniform_real_distribution<float> dist{ 0, 1 };
@@ -79,7 +79,7 @@ namespace Chroma
 
 		static std::random_device sRd;
 		static std::default_random_engine sEngine;
-		static std::uniform_int_distribution<long long> sDist;
+		static std::uniform_int_distribution<unsigned int> sDist;
 		
 
 		friend class ParticleSystem;
