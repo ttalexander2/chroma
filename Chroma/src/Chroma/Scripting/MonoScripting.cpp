@@ -14,30 +14,30 @@
 
 namespace Chroma
 {
-	static MonoDomain* currentMonoDomain = nullptr;
-	static MonoDomain* newMonoDomain = nullptr;
-	static Scene* sceneContext;
+	static MonoDomain *currentMonoDomain = nullptr;
+	static MonoDomain *newMonoDomain = nullptr;
+	static Scene *sceneContext;
 
-	static MonoImage* appAssemblyImage = nullptr;
-	static MonoImage* coreAssemblyImage = nullptr;
+	static MonoImage *appAssemblyImage = nullptr;
+	static MonoImage *coreAssemblyImage = nullptr;
 
-	static MonoAssembly* appAssembly = nullptr;
-	static MonoAssembly* coreAssembly = nullptr;
+	static MonoAssembly *appAssembly = nullptr;
+	static MonoAssembly *coreAssembly = nullptr;
 	static std::string appAssemblyPath;
 	static std::string coreAssemblyPath;
 
-	static MonoClass* entityClass = nullptr;
+	static MonoClass *entityClass = nullptr;
 
 	static EntityInstanceMap entityInstanceMap;
 	static std::unordered_map<std::string, EntityScriptClass> entityClassMap;
 
 	std::unordered_map<std::string, std::string> MonoScripting::publicFieldStringValue;
 
-	static std::unordered_map<std::string, MonoClass*> classes;
+	static std::unordered_map<std::string, MonoClass *> classes;
 
-	static MonoMethod* exceptionMethod;
+	static MonoMethod *exceptionMethod;
 
-	MonoMethod* GetMethod(MonoImage* image, const std::string& methodDesc);
+	MonoMethod *GetMethod(MonoImage *image, const std::string &methodDesc);
 
 	struct EntityScriptClass
 	{
@@ -45,30 +45,30 @@ namespace Chroma
 		std::string ClassName;
 		std::string NamespaceName;
 
-		MonoClass* Class = nullptr;
-		MonoMethod* Constructor = nullptr;
+		MonoClass *Class = nullptr;
+		MonoMethod *Constructor = nullptr;
 
-		MonoMethod* PreInitMethod = nullptr;
-		MonoMethod* InitMethod = nullptr;
-		MonoMethod* PostInitMethod = nullptr;
+		MonoMethod *PreInitMethod = nullptr;
+		MonoMethod *InitMethod = nullptr;
+		MonoMethod *PostInitMethod = nullptr;
 
-		MonoMethod* EarlyUpdateMethod = nullptr;
-		MonoMethod* UpdateMethod = nullptr; 
-		MonoMethod* LateUpdateMethod = nullptr;
+		MonoMethod *EarlyUpdateMethod = nullptr;
+		MonoMethod *UpdateMethod = nullptr;
+		MonoMethod *LateUpdateMethod = nullptr;
 
 		MonoMethod *EarlyDrawMethod = nullptr;
 		MonoMethod *DrawMethod = nullptr;
 		MonoMethod *LateDrawMethod = nullptr;
 
-		MonoMethod* OnCollideMethod = nullptr;
-		MonoMethod* OnBeginContact = nullptr;
+		MonoMethod *OnCollideMethod = nullptr;
+		MonoMethod *OnBeginContact = nullptr;
 		MonoMethod *OnEndContact = nullptr;
 		MonoMethod *OnPreSolve = nullptr;
 		MonoMethod *OnPostSolve = nullptr;
 
-		MonoMethod* InternalUpdateMethod = nullptr;
+		MonoMethod *InternalUpdateMethod = nullptr;
 
-		void InitClassMethods(MonoImage* image)
+		void InitClassMethods(MonoImage *image)
 		{
 			Constructor = GetMethod(coreAssemblyImage, "Chroma.Entity:.ctor(ulong)");
 
@@ -105,12 +105,10 @@ namespace Chroma
 			//
 			//	CHROMA_CORE_INFO("Full name: {0}", mono_method_full_name(iter, true));
 			//}
-
 		}
-
 	};
 
-	MonoObject* EntityInstance::GetInstance()
+	MonoObject *EntityInstance::GetInstance()
 	{
 		CHROMA_CORE_ASSERT(Handle, "Entity has not been instantiated!");
 		return mono_gchandle_get_target(Handle);
@@ -122,8 +120,7 @@ namespace Chroma
 	}
 
 
-
-	void MonoScripting::Init(const std::string& assemblyPath)
+	void MonoScripting::Init(const std::string &assemblyPath)
 	{
 		InitMono();
 		LoadChromaRuntimeAssembly(assemblyPath);
@@ -150,14 +147,14 @@ namespace Chroma
 		//mono_jit_cleanup(domain);
 	}
 
-	MonoDomain* MonoScripting::GetCurrentDomain()
+	MonoDomain *MonoScripting::GetCurrentDomain()
 	{
 		return currentMonoDomain;
 	}
 
-	MonoAssembly* MonoScripting::LoadAssemblyFromFile(const std::string& path)
+	MonoAssembly *MonoScripting::LoadAssemblyFromFile(const std::string &path)
 	{
-		if (path.empty() || !std::filesystem::exists(std::filesystem::path(path)))
+		if (path.empty() || !exists(std::filesystem::path(path)))
 		{
 			CHROMA_CORE_WARN("Failed to load assembly [{}]: File not found.", path);
 			return nullptr;
@@ -172,29 +169,29 @@ namespace Chroma
 		}
 
 		std::streampos fileSize;
-		
+
 		//Get Size
 		stream.seekg(0, std::ios::end);
 		fileSize = stream.tellg();
 		stream.seekg(0, std::ios::beg);
 
 		std::vector<std::byte> data(fileSize);
-		stream.read((char*)&data[0], fileSize);
-		
+		stream.read((char *)&data[0], fileSize);
+
 		stream.close();
 
 		MonoImageOpenStatus status;
-		MonoImage* image = mono_image_open_from_data_full(reinterpret_cast<char*>(&data[0]), fileSize, 1, &status, 0);
+		MonoImage *image = mono_image_open_from_data_full(reinterpret_cast<char *>(&data[0]), fileSize, 1, &status, 0);
 		if (status != MONO_IMAGE_OK)
 			return nullptr;
 
-		MonoAssembly* assembly = mono_assembly_load_from_full(image, path.c_str(), &status, 0);
+		MonoAssembly *assembly = mono_assembly_load_from_full(image, path.c_str(), &status, 0);
 		mono_image_close(image);
 
 		return assembly;
 	}
 
-	MonoObject* MonoScripting::Construct(const std::string& fullName, bool callConstructor, void** parameters)
+	MonoObject *MonoScripting::Construct(const std::string &fullName, bool callConstructor, void **parameters)
 	{
 		std::string namespaceName;
 		std::string className;
@@ -211,24 +208,24 @@ namespace Chroma
 			parameterList = fullName.substr(fullName.find_first_of(':'));
 		}
 
-		MonoClass* clazz = mono_class_from_name(coreAssemblyImage, namespaceName.c_str(), className.c_str());
+		MonoClass *clazz = mono_class_from_name(coreAssemblyImage, namespaceName.c_str(), className.c_str());
 		CHROMA_CORE_ASSERT(clazz, "Could not find class!");
-		MonoObject* obj = mono_object_new(mono_domain_get(), clazz);
+		MonoObject *obj = mono_object_new(mono_domain_get(), clazz);
 
 		if (callConstructor)
 		{
-			MonoMethodDesc* desc = mono_method_desc_new(parameterList.c_str(), NULL);
-			MonoMethod* constructor = mono_method_desc_search_in_class(desc, clazz);
-			MonoObject* exception = nullptr;
+			MonoMethodDesc *desc = mono_method_desc_new(parameterList.c_str(), NULL);
+			MonoMethod *constructor = mono_method_desc_search_in_class(desc, clazz);
+			MonoObject *exception = nullptr;
 			mono_runtime_invoke(constructor, obj, parameters, &exception);
 		}
 
 		return obj;
 	}
 
-	MonoClass* MonoScripting::GetCoreClass(const std::string& fullName)
+	MonoClass *MonoScripting::GetCoreClass(const std::string &fullName)
 	{
-		if (classes.find(fullName) != classes.end())
+		if (classes.contains(fullName))
 			return classes[fullName];
 
 		std::string namespaceName = "";
@@ -244,7 +241,7 @@ namespace Chroma
 			className = fullName;
 		}
 
-		MonoClass* monoClass = mono_class_from_name(coreAssemblyImage, namespaceName.c_str(), className.c_str());
+		MonoClass *monoClass = mono_class_from_name(coreAssemblyImage, namespaceName.c_str(), className.c_str());
 		if (!monoClass)
 			std::cout << "mono_class_from_name failed" << std::endl;
 
@@ -254,17 +251,15 @@ namespace Chroma
 	}
 
 
-
-	static uint32_t Instantiate(EntityScriptClass& scriptClass)
+	static uint32_t Instantiate(EntityScriptClass &scriptClass)
 	{
 		//CHROMA_CORE_INFO("Instantiate: {}, scriptClass: {}, currentMonoDomain: {}", scriptClass.ClassName, scriptClass.Class != nullptr, currentMonoDomain != nullptr);
-		MonoObject* instance = mono_object_new(currentMonoDomain, scriptClass.Class);
+		MonoObject *instance = mono_object_new(currentMonoDomain, scriptClass.Class);
 		if (!instance)
 		{
 			CHROMA_CORE_ERROR("mono_object_new failed. {}", scriptClass.FullName);
 			return 0;
 		}
-			
 
 		mono_runtime_object_init(instance);
 		uint32_t handle = mono_gchandle_new(instance, false);
@@ -277,48 +272,46 @@ namespace Chroma
 	}
 
 
-	static MonoClass* GetClass(MonoImage* image, const EntityScriptClass& scriptClass)
+	static MonoClass *GetClass(MonoImage *image, const EntityScriptClass &scriptClass)
 	{
-		MonoClass* monoClass = mono_class_from_name(image, scriptClass.NamespaceName.c_str(), scriptClass.ClassName.c_str());
+		MonoClass *monoClass = mono_class_from_name(image, scriptClass.NamespaceName.c_str(), scriptClass.ClassName.c_str());
 		if (!monoClass)
 			CHROMA_CORE_WARN("mono_class_from_name failed");
 
 		return monoClass;
 	}
 
-	static std::string GetStringProperty(const char* propertyName, MonoClass* classType, MonoObject* object)
+	static std::string GetStringProperty(const char *propertyName, MonoClass *classType, MonoObject *object)
 	{
-		MonoProperty* property = mono_class_get_property_from_name(classType, propertyName);
-		MonoMethod* getterMethod = mono_property_get_get_method(property);
-		MonoString* string = (MonoString*)mono_runtime_invoke(getterMethod, object, NULL, NULL);
+		MonoProperty *property = mono_class_get_property_from_name(classType, propertyName);
+		MonoMethod *getterMethod = mono_property_get_get_method(property);
+		auto string = (MonoString *)mono_runtime_invoke(getterMethod, object, nullptr, nullptr);
 		return string != nullptr ? std::string(mono_string_to_utf8(string)) : "";
 	}
 
 
-	static MonoObject* CallMethod(MonoObject* object, MonoMethod* method, void** params = nullptr)
+	static MonoObject *CallMethod(MonoObject *object, MonoMethod *method, void **params = nullptr)
 	{
-		MonoObject* pException = nullptr;
-		MonoObject* result = mono_runtime_invoke(method, object, params, &pException);
+		MonoObject *pException = nullptr;
+		MonoObject *result = mono_runtime_invoke(method, object, params, &pException);
 		if (pException)
 		{
-			MonoClass* exceptionClass = mono_object_get_class(pException);
-			MonoType* exceptionType = mono_class_get_type(exceptionClass);
-			const char* typeName = mono_type_get_name(exceptionType);
+			MonoClass *exceptionClass = mono_object_get_class(pException);
+			MonoType *exceptionType = mono_class_get_type(exceptionClass);
+			const char *typeName = mono_type_get_name(exceptionType);
 			std::string message = GetStringProperty("Message", exceptionClass, pException);
 			std::string stackTrace = GetStringProperty("StackTrace", exceptionClass, pException);
 
 			CHROMA_CORE_ERROR("{0}: {1}. Stack Trace: {2}", typeName, message, stackTrace);
 
-			void* args[] = { pException };
-			MonoObject* result = mono_runtime_invoke(exceptionMethod, nullptr, args, nullptr);
+			void *args[] = { pException };
+			MonoObject *result = mono_runtime_invoke(exceptionMethod, nullptr, args, nullptr);
 		}
 		return result;
 	}
 
 
-
-
-	MonoMethod* GetMethod(MonoImage* image, const std::string& methodDesc)
+	MonoMethod *GetMethod(MonoImage *image, const std::string &methodDesc)
 	{
 		if (!image)
 		{
@@ -326,17 +319,16 @@ namespace Chroma
 			return nullptr;
 		}
 
-		MonoMethodDesc* desc = mono_method_desc_new(methodDesc.c_str(), NULL);
+		MonoMethodDesc *desc = mono_method_desc_new(methodDesc.c_str(), NULL);
 		if (!desc)
 			CHROMA_CORE_ERROR("mono_method_desc_new failed ({})", methodDesc);
 
-		MonoMethod* method = mono_method_desc_search_in_image(desc, image);
+		MonoMethod *method = mono_method_desc_search_in_image(desc, image);
 		if (!method)
 		{
 			//CHROMA_CORE_ERROR("mono_method_desc_search_in_image failed ({})", methodDesc);
 			return nullptr;
 		}
-			
 
 		return method;
 	}
@@ -346,37 +338,44 @@ namespace Chroma
 	{
 		switch (type)
 		{
-		case FieldType::Float:       return 4;
-		case FieldType::Int:         return 4;
-		case FieldType::UnsignedInt: return 4;
-		case FieldType::String:      return 8;
-		case FieldType::Vec2:        return 4 * 2;
-		case FieldType::Vec3:        return 4 * 3;
-		case FieldType::Vec4:        return 4 * 4;
-		case FieldType::Asset:       return 8;
-		case FieldType::Entity:		 return 8;
+			case FieldType::Float:
+				return 4;
+			case FieldType::Int:
+				return 4;
+			case FieldType::UnsignedInt:
+				return 4;
+			case FieldType::String:
+				return 8;
+			case FieldType::Vec2:
+				return 4 * 2;
+			case FieldType::Vec3:
+				return 4 * 3;
+			case FieldType::Vec4:
+				return 4 * 4;
+			case FieldType::Asset:
+				return 8;
+			case FieldType::Entity:
+				return 8;
 		}
-		;		CHROMA_CORE_ASSERT(false, "Unknown field type!");
+		CHROMA_CORE_ASSERT(false, "Unknown field type!");
 		return 0;
 	}
-
-	
 
 
 	static bool postLoadCleanup = false;
 
-	bool MonoScripting::LoadChromaRuntimeAssembly(const std::string& path)
+	bool MonoScripting::LoadChromaRuntimeAssembly(const std::string &path)
 	{
 		coreAssemblyPath = path;
 		if (currentMonoDomain)
 		{
-			newMonoDomain = mono_domain_create_appdomain((char*)"Chroma Runtime", nullptr);
+			newMonoDomain = mono_domain_create_appdomain((char *)"Chroma Runtime", nullptr);
 			mono_domain_set(newMonoDomain, false);
 			postLoadCleanup = true;
 		}
 		else
 		{
-			currentMonoDomain = mono_domain_create_appdomain((char*)"Chroma Runtime", nullptr);
+			currentMonoDomain = mono_domain_create_appdomain((char *)"Chroma Runtime", nullptr);
 			mono_domain_set(currentMonoDomain, false);
 			postLoadCleanup = false;
 		}
@@ -396,10 +395,9 @@ namespace Chroma
 		if (!entityClass)
 			return false;
 		return true;
-
 	}
 
-	bool MonoScripting::LoadAppAssembly(const std::string& path)
+	bool MonoScripting::LoadAppAssembly(const std::string &path)
 	{
 		CHROMA_CORE_INFO("Loading: {}", path);
 		if (appAssembly)
@@ -415,7 +413,6 @@ namespace Chroma
 			CHROMA_CORE_ERROR("Failed to load App assembly: {}", path);
 			return false;
 		}
-			
 
 		auto app_assembly_image = mono_assembly_get_image(app_assembly);
 		if (!app_assembly_image)
@@ -423,7 +420,6 @@ namespace Chroma
 			CHROMA_CORE_ERROR("Failed to load App assembly: {}", path);
 			return false;
 		}
-			
 
 		//ScriptEngineRegistry::RegisterAll();
 
@@ -439,7 +435,7 @@ namespace Chroma
 		return true;
 	}
 
-	bool MonoScripting::ReloadAssembly(const std::string& path)
+	bool MonoScripting::ReloadAssembly(const std::string &path)
 	{
 		if (!LoadChromaRuntimeAssembly(coreAssemblyPath))
 			return false;
@@ -449,64 +445,74 @@ namespace Chroma
 
 		if (entityInstanceMap.size())
 		{
-			Scene* scene = GetCurrentSceneContext();
+			Scene *scene = GetCurrentSceneContext();
 			CHROMA_CORE_ASSERT(scene, "No active scene!");
-			const auto& map = entityInstanceMap.find(scene->GetID());
+			const auto &map = entityInstanceMap.find(scene->GetID());
 			if (map != entityInstanceMap.end())
 			{
-				for (auto& [entityID, data] : map->second)
+				for (auto &[entityID, data] : map->second)
 				{
 					CHROMA_CORE_ASSERT(scene->Registry.valid(entityID), "Invalid entity ID");
 					InitScriptEntity(Entity(entityID, scene));
 				}
 			}
 		}
+		return true;
 	}
 
-	void MonoScripting::SetSceneContext(Scene* scene)
+	void MonoScripting::SetSceneContext(Scene *scene)
 	{
 		classes.clear();
 		sceneContext = scene;
 		entityInstanceMap[scene->GetID()] = std::unordered_map<EntityID, EntityInstanceData>();
 	}
 
-	Scene* MonoScripting::GetCurrentSceneContext()
+	Scene *MonoScripting::GetCurrentSceneContext()
 	{
 		return sceneContext;
 	}
 
 	void MonoScripting::OnSceneDestruct(GUID sceneID)
 	{
-		if (entityInstanceMap.find(sceneID) != entityInstanceMap.end())
+		if (entityInstanceMap.contains(sceneID))
 		{
 			entityInstanceMap.at(sceneID).clear();
 			entityInstanceMap.erase(sceneID);
 		}
 	}
 
-	static FieldType GetChromaFieldType(MonoType* monoType)
+	static FieldType GetChromaFieldType(MonoType *monoType)
 	{
 		//CHROMA_CORE_INFO("TypeName: {}", mono_type_get_name(monoType));
 		int type = mono_type_get_type(monoType);
 		switch (type)
 		{
-			case MONO_TYPE_R4: return FieldType::Float;
-			case MONO_TYPE_I4: return FieldType::Int;
-			case MONO_TYPE_U4: return FieldType::UnsignedInt;
-			case MONO_TYPE_STRING: return FieldType::String;
+			case MONO_TYPE_R4:
+				return FieldType::Float;
+			case MONO_TYPE_I4:
+				return FieldType::Int;
+			case MONO_TYPE_U4:
+				return FieldType::UnsignedInt;
+			case MONO_TYPE_STRING:
+				return FieldType::String;
 			case MONO_TYPE_CLASS:
 			{
-				char* name = mono_type_get_name(monoType);
-				if (strcmp(name, "Chroma.Prefab") == 0) return FieldType::Asset;
-				if (strcmp(name, "Chroma.Entity") == 0) return FieldType::Entity;
+				char *name = mono_type_get_name(monoType);
+				if (strcmp(name, "Chroma.Prefab") == 0)
+					return FieldType::Asset;
+				if (strcmp(name, "Chroma.Entity") == 0)
+					return FieldType::Entity;
 				return FieldType::ClassReference;
 			}
 			case MONO_TYPE_VALUETYPE:
 			{
-				char* name = mono_type_get_name(monoType);
-				if (strcmp(name, "Chroma.Vector2") == 0) return FieldType::Vec2;
-				if (strcmp(name, "Chroma.Vector3") == 0) return FieldType::Vec3;
-				if (strcmp(name, "Chroma.Vector4") == 0) return FieldType::Vec4;
+				char *name = mono_type_get_name(monoType);
+				if (strcmp(name, "Chroma.Vector2") == 0)
+					return FieldType::Vec2;
+				if (strcmp(name, "Chroma.Vector3") == 0)
+					return FieldType::Vec3;
+				if (strcmp(name, "Chroma.Vector4") == 0)
+					return FieldType::Vec4;
 			}
 		}
 		return FieldType::None;
@@ -525,23 +531,21 @@ namespace Chroma
 		if (!appAssemblyImage)
 			return std::vector<std::string>();
 
-		MonoMethod* method = GetMethod(coreAssemblyImage, "Chroma.ReflectionHelper:GetEntityTypes");
+		MonoMethod *method = GetMethod(coreAssemblyImage, "Chroma.ReflectionHelper:GetEntityTypes");
 
 		if (!method)
 			return std::vector<std::string>();
-		
-		MonoArray* arr = (MonoArray*)mono_runtime_invoke(method, nullptr, nullptr, nullptr);
+
+		auto arr = (MonoArray *)mono_runtime_invoke(method, nullptr, nullptr, nullptr);
 		uintptr_t length = mono_array_length(arr);
-		std::vector<std::string> vec = std::vector<std::string>();
+		auto vec = std::vector<std::string>();
 		vec.reserve(length);
 		for (int i = 0; i < length; i++)
 		{
-			MonoString* type = mono_array_get(arr, MonoString*, i);
+			MonoString *type = mono_array_get(arr, MonoString*, i);
 			vec.push_back(mono_string_to_utf8(type));
 		}
 		return vec;
-
-		
 	}
 
 	std::vector<std::string> MonoScripting::GetModuleHierarchy()
@@ -552,26 +556,24 @@ namespace Chroma
 		if (!appAssemblyImage)
 			return std::vector<std::string>();
 
-		MonoMethod* method = GetMethod(coreAssemblyImage, "Chroma.ReflectionHelper:GetEntityTypeHierarchy");
+		MonoMethod *method = GetMethod(coreAssemblyImage, "Chroma.ReflectionHelper:GetEntityTypeHierarchy");
 
 		if (!method)
 			return std::vector<std::string>();
 
-		MonoArray* arr = (MonoArray*)mono_runtime_invoke(method, nullptr, nullptr, nullptr);
+		auto arr = (MonoArray *)mono_runtime_invoke(method, nullptr, nullptr, nullptr);
 		uintptr_t length = mono_array_length(arr);
-		std::vector<std::string> vec = std::vector<std::string>();
+		auto vec = std::vector<std::string>();
 		vec.reserve(length);
 		for (int i = 0; i < length; i++)
 		{
-			MonoString* type = mono_array_get(arr, MonoString*, i);
+			MonoString *type = mono_array_get(arr, MonoString*, i);
 			vec.push_back(mono_string_to_utf8(type));
 		}
 		return vec;
-
-
 	}
 
-	bool MonoScripting::ModuleExists(const std::string& moduleName)
+	bool MonoScripting::ModuleExists(const std::string &moduleName)
 	{
 		if (!appAssemblyImage) // No assembly loaded
 			return false;
@@ -587,7 +589,7 @@ namespace Chroma
 			ClassName = moduleName;
 		}
 
-		MonoClass* monoClass = mono_class_from_name(appAssemblyImage, NamespaceName.c_str(), ClassName.c_str());
+		MonoClass *monoClass = mono_class_from_name(appAssemblyImage, NamespaceName.c_str(), ClassName.c_str());
 		if (!monoClass)
 			return false;
 
@@ -595,7 +597,7 @@ namespace Chroma
 		return isEntitySubclass;
 	}
 
-	std::string MonoScripting::StripNamespace(const std::string& nameSpace, const std::string& moduleName)
+	std::string MonoScripting::StripNamespace(const std::string &nameSpace, const std::string &moduleName)
 	{
 		std::string name = moduleName;
 		size_t pos = name.find(nameSpace + ".");
@@ -608,7 +610,7 @@ namespace Chroma
 		return name;
 	}
 
-	int MonoScripting::GetModuleExecutionOrder(const std::string& moduleName)
+	int MonoScripting::GetModuleExecutionOrder(const std::string &moduleName)
 	{
 		if (!coreAssemblyImage)
 			return 0;
@@ -616,86 +618,81 @@ namespace Chroma
 		if (!appAssemblyImage)
 			return 0;
 
-		MonoMethod* method = GetMethod(coreAssemblyImage, "Chroma.ExecutionOrderHelper:GetOrderFromTypeName");
+		MonoMethod *method = GetMethod(coreAssemblyImage, "Chroma.ExecutionOrderHelper:GetOrderFromTypeName");
 
 		if (!method)
 
-		if (!ModuleExists(moduleName))
-			return 0;
-		
+			if (!ModuleExists(moduleName))
+				return 0;
 
-		void* str = (void*)mono_string_new(mono_domain_get(), moduleName.c_str());
-		void* params[] = {str};
-		MonoObject* result = CallMethod(nullptr, method, params);
+		auto str = mono_string_new(mono_domain_get(), moduleName.c_str());
+		void *params[] = { str };
+		MonoObject *result = CallMethod(nullptr, method, params);
 		if (result == nullptr)
 			return 0;
-		int order = *(int*)mono_object_unbox(result);
+		int order = *static_cast<int *>(mono_object_unbox(result));
 		return order;
-
 	}
 
-	bool MonoScripting::ValidateClassName(const std::string& className)
+	bool MonoScripting::ValidateClassName(const std::string &className)
 	{
 		if (!coreAssemblyImage)
 			return false;
-		
+
 		if (!appAssemblyImage)
 			return false;
 
-		MonoMethod* method = GetMethod(coreAssemblyImage, "Chroma.Engine.ScriptCreationHelper:ValidateClassName");
+		MonoMethod *method = GetMethod(coreAssemblyImage, "Chroma.Engine.ScriptCreationHelper:ValidateClassName");
 
 		if (!method)
 			return false;
 
-		void* str = (void*)mono_string_new(mono_domain_get(), className.c_str());
-		void* params[] = {str};
-		MonoObject* result = CallMethod(nullptr, method, params);
+		auto str = mono_string_new(mono_domain_get(), className.c_str());
+		void *params[] = { str };
+		MonoObject *result = CallMethod(nullptr, method, params);
 		if (result == nullptr)
 			return false;
-		return *(bool*)mono_object_unbox(result);
+		return *static_cast<bool *>(mono_object_unbox(result));
 	}
 
-	bool MonoScripting::ValidateIdentifier(const std::string& className)
+	bool MonoScripting::ValidateIdentifier(const std::string &className)
 	{
 		if (!coreAssemblyImage)
 			return false;
-		
+
 		if (!appAssemblyImage)
 			return false;
 
-		MonoMethod* method = GetMethod(coreAssemblyImage, "Chroma.Engine.ScriptCreationHelper:ValidateIdentifier");
+		MonoMethod *method = GetMethod(coreAssemblyImage, "Chroma.Engine.ScriptCreationHelper:ValidateIdentifier");
 
 		if (!method)
 			return false;
 
-		void* str = (void*)mono_string_new(mono_domain_get(), className.c_str());
-		void* params[] = {str};
-		MonoObject* result = CallMethod(nullptr, method, params);
+		auto str = mono_string_new(mono_domain_get(), className.c_str());
+		void *params[] = { str };
+		MonoObject *result = CallMethod(nullptr, method, params);
 		if (result == nullptr)
 			return false;
-		return *(bool*)mono_object_unbox(result);
+		return *static_cast<bool *>(mono_object_unbox(result));
 	}
 
 	void MonoScripting::OnScriptComponentDestroyed(GUID sceneID, EntityID entityID)
 	{
-		if (entityInstanceMap.find(sceneID) != entityInstanceMap.end())
+		if (entityInstanceMap.contains(sceneID))
 		{
-			auto& entityMap = entityInstanceMap.at(sceneID);
+			auto &entityMap = entityInstanceMap.at(sceneID);
 			//HZ_CORE_ASSERT(entityMap.find(entityID) != entityMap.end());
-			if (entityMap.find(entityID) != entityMap.end())
+			if (entityMap.contains(entityID))
 				entityMap.erase(entityID);
 		}
 	}
 
 
-
-
-
 	void MonoScripting::InitScriptEntity(Entity entity)
 	{
-		Scene& scene = entity.GetScene();
+		Scene &scene = entity.GetScene();
 		EntityID id = entity.GetID();
-		auto& moduleName = entity.GetComponent<CSharpScript>().ModuleName;
+		auto &moduleName = entity.GetComponent<CSharpScript>().ModuleName;
 		if (moduleName.empty())
 			return;
 
@@ -705,7 +702,7 @@ namespace Chroma
 			return;
 		}
 
-		EntityScriptClass& scriptClass = entityClassMap[moduleName];
+		EntityScriptClass &scriptClass = entityClassMap[moduleName];
 		scriptClass.FullName = moduleName;
 		if (moduleName.find('.') != std::string::npos)
 		{
@@ -720,39 +717,39 @@ namespace Chroma
 		scriptClass.Class = GetClass(appAssemblyImage, scriptClass);
 		scriptClass.InitClassMethods(appAssemblyImage);
 
-		EntityInstanceData& entityInstanceData = entityInstanceMap[scene.GetID()][id];
-		EntityInstance& entityInstance = entityInstanceData.Instance;
+		EntityInstanceData &entityInstanceData = entityInstanceMap[scene.GetID()][id];
+		EntityInstance &entityInstance = entityInstanceData.Instance;
 		entityInstance.ScriptClass = &scriptClass;
 
-		CSharpScript& scriptComponent = entity.GetComponent<CSharpScript>();
-		ScriptModuleFieldMap& moduleFieldMap = scriptComponent.ModuleFieldMap;
-		auto& fieldMap = moduleFieldMap[moduleName];
+		CSharpScript &scriptComponent = entity.GetComponent<CSharpScript>();
+		ScriptModuleFieldMap &moduleFieldMap = scriptComponent.ModuleFieldMap;
+		auto &fieldMap = moduleFieldMap[moduleName];
 
 		//Save old fields
 		std::unordered_map<std::string, PublicField> oldFields;
 		oldFields.reserve(fieldMap.size());
-		for (auto& [fieldName, field] : fieldMap)
+		for (auto &[fieldName, field] : fieldMap)
 			oldFields.emplace(fieldName, std::move(field));
 
 		entityInstance.Handle = Instantiate(*entityInstance.ScriptClass);
 
-		void* param[] = { &id };
+		void *param[] = { &id };
 		CallMethod(entityInstance.GetInstance(), entityInstance.ScriptClass->Constructor, param);
 
 		fieldMap.clear();
 		{
-			MonoClassField* iter;
-			void* ptr = 0;
-			while ((iter = mono_class_get_fields(scriptClass.Class, &ptr)) != NULL)
+			MonoClassField *iter;
+			void *ptr = nullptr;
+			while ((iter = mono_class_get_fields(scriptClass.Class, &ptr)) != nullptr)
 			{
-				const char* name = mono_field_get_name(iter);
+				const char *name = mono_field_get_name(iter);
 				uint32_t flags = mono_field_get_flags(iter);
 				if ((flags & MONO_FIELD_ATTR_PUBLIC) == 0)
 					continue;
 
-				MonoType* fieldType = mono_field_get_type(iter);
+				MonoType *fieldType = mono_field_get_type(iter);
 				int intType = mono_type_get_type(fieldType);
-				
+
 				//if (intType == MONO_TYPE_CLASS | MONO_TYPE_ENUM)
 				//{
 				//	//bool class_is_enum = mono_class(mono_class_from_mono_type(fieldType));
@@ -770,13 +767,13 @@ namespace Chroma
 
 				FieldType chromaFieldType = GetChromaFieldType(fieldType);
 
-				char* typeName = mono_type_get_name(fieldType);
+				char *typeName = mono_type_get_name(fieldType);
 
 				auto old = oldFields.find(name);
 				if ((old != oldFields.end()) && (old->second.TypeName == typeName))
 				{
 					fieldMap.emplace(name, std::move(oldFields.at(name)));
-					PublicField& field = fieldMap.at(name);
+					PublicField &field = fieldMap.at(name);
 					field.m_MonoClassField = iter;
 					continue;
 				}
@@ -785,8 +782,8 @@ namespace Chroma
 					continue;
 
 				// TODO: Attributes
-				MonoCustomAttrInfo* attr = mono_custom_attrs_from_field(scriptClass.Class, iter);
-				
+				MonoCustomAttrInfo *attr = mono_custom_attrs_from_field(scriptClass.Class, iter);
+
 				PublicField field = { name, typeName, chromaFieldType };
 
 				field.m_MonoClassField = iter;
@@ -796,33 +793,33 @@ namespace Chroma
 		}
 
 		{
-			MonoProperty* iter;
-			void* ptr = 0;
-			while ((iter = mono_class_get_properties(scriptClass.Class, &ptr)) != NULL)
+			MonoProperty *iter;
+			void *ptr = nullptr;
+			while ((iter = mono_class_get_properties(scriptClass.Class, &ptr)) != nullptr)
 			{
-				const char* propertyName = mono_property_get_name(iter);
+				const char *propertyName = mono_property_get_name(iter);
 
-				if (oldFields.find(propertyName) != oldFields.end())
+				if (oldFields.contains(propertyName))
 				{
 					fieldMap.emplace(propertyName, std::move(oldFields.at(propertyName)));
-					PublicField& field = fieldMap.at(propertyName);
+					PublicField &field = fieldMap.at(propertyName);
 					field.m_MonoProperty = iter;
 					continue;
 				}
 
-				MonoMethod* propertySetter = mono_property_get_set_method(iter);
-				MonoMethod* propertyGetter = mono_property_get_get_method(iter);
+				MonoMethod *propertySetter = mono_property_get_set_method(iter);
+				MonoMethod *propertyGetter = mono_property_get_get_method(iter);
 
 				uint32_t setterFlags = 0;
 				uint32_t getterFlags = 0;
 
 				bool isReadOnly = false;
-				MonoType* monoType = nullptr;
+				MonoType *monoType = nullptr;
 
 				if (propertySetter)
 				{
-					void* i = nullptr;
-					MonoMethodSignature* sig = mono_method_signature(propertySetter);
+					void *i = nullptr;
+					MonoMethodSignature *sig = mono_method_signature(propertySetter);
 					setterFlags = mono_method_get_flags(propertySetter, nullptr);
 					isReadOnly = (setterFlags & MONO_METHOD_ATTR_PRIVATE) != 0;
 					monoType = mono_signature_get_params(sig, &i);
@@ -830,7 +827,7 @@ namespace Chroma
 
 				if (propertyGetter)
 				{
-					MonoMethodSignature* sig = mono_method_signature(propertyGetter);
+					MonoMethodSignature *sig = mono_method_signature(propertyGetter);
 					getterFlags = mono_method_get_flags(propertyGetter, nullptr);
 
 					if (monoType != nullptr)
@@ -847,7 +844,7 @@ namespace Chroma
 				if (type == FieldType::ClassReference)
 					continue;
 
-				char* typeName = mono_type_get_name(monoType);
+				char *typeName = mono_type_get_name(monoType);
 
 				PublicField field = { propertyName, typeName, type, isReadOnly };
 				field.m_MonoProperty = iter;
@@ -857,24 +854,22 @@ namespace Chroma
 		}
 
 		Destroy(entityInstance.Handle);
-
-
 	}
 
 
-	void MonoScripting::ShutdownScriptEntity(Entity entity, const std::string& moduleName)
+	void MonoScripting::ShutdownScriptEntity(Entity entity, const std::string &moduleName)
 	{
 		{
-			EntityInstanceData& entityInstanceData = GetEntityInstanceData(entity.GetScene().GetID(), entity.GetID());
-			ScriptModuleFieldMap& moduleFieldMap = entityInstanceData.ModuleFieldMap;
-			if (moduleFieldMap.find(moduleName) != moduleFieldMap.end())
+			EntityInstanceData &entityInstanceData = GetEntityInstanceData(entity.GetScene().GetID(), entity.GetID());
+			ScriptModuleFieldMap &moduleFieldMap = entityInstanceData.ModuleFieldMap;
+			if (moduleFieldMap.contains(moduleName))
 				moduleFieldMap.erase(moduleName);
 		}
 
 		{
-			CSharpScript& scriptComponent = entity.GetComponent<CSharpScript>();
-			ScriptModuleFieldMap& moduleFieldMap = scriptComponent.ModuleFieldMap;
-			if (moduleFieldMap.find(moduleName) != moduleFieldMap.end())
+			CSharpScript &scriptComponent = entity.GetComponent<CSharpScript>();
+			ScriptModuleFieldMap &moduleFieldMap = scriptComponent.ModuleFieldMap;
+			if (moduleFieldMap.contains(moduleName))
 				moduleFieldMap.erase(moduleName);
 		}
 	}
@@ -882,18 +877,18 @@ namespace Chroma
 
 	void MonoScripting::InstantiateEntityClass(Entity entity)
 	{
-		Scene& scene = entity.GetScene();
+		Scene &scene = entity.GetScene();
 		EntityID id = entity.GetID();
 
-		CSharpScript& scriptComponent = entity.GetComponent<CSharpScript>();
-		auto& moduleName = scriptComponent.ModuleName;
+		CSharpScript &scriptComponent = entity.GetComponent<CSharpScript>();
+		auto &moduleName = scriptComponent.ModuleName;
 
-		EntityInstanceData& entityInstanceData = GetEntityInstanceData(scene.GetID(), id);
-		EntityInstance& entityInstance = entityInstanceData.Instance;
+		EntityInstanceData &entityInstanceData = GetEntityInstanceData(scene.GetID(), id);
+		EntityInstance &entityInstance = entityInstanceData.Instance;
 		CHROMA_CORE_ASSERT(entityInstance.ScriptClass, "");
 		entityInstance.Handle = Instantiate(*entityInstance.ScriptClass);
 
-		void* param[] = { &id };
+		void *param[] = { &id };
 		CallMethod(entityInstance.GetInstance(), entityInstance.ScriptClass->Constructor, param);
 
 		//Set public fields
@@ -908,42 +903,42 @@ namespace Chroma
 
 	void MonoScripting::CopyFieldsFromStored(Entity entity)
 	{
-		Scene& scene = entity.GetScene();
+		Scene &scene = entity.GetScene();
 		EntityID id = entity.GetID();
 
-		CSharpScript& scriptComponent = entity.GetComponent<CSharpScript>();
-		auto& moduleName = scriptComponent.ModuleName;
+		CSharpScript &scriptComponent = entity.GetComponent<CSharpScript>();
+		auto &moduleName = scriptComponent.ModuleName;
 
-		EntityInstanceData& entityInstanceData = GetEntityInstanceData(scene.GetID(), id);
-		EntityInstance& entityInstance = entityInstanceData.Instance;
+		EntityInstanceData &entityInstanceData = GetEntityInstanceData(scene.GetID(), id);
+		EntityInstance &entityInstance = entityInstanceData.Instance;
 
 		//Set public fields
-		ScriptModuleFieldMap& moduleFieldMap = scriptComponent.ModuleFieldMap;
-		if (moduleFieldMap.find(moduleName) != moduleFieldMap.end())
+		ScriptModuleFieldMap &moduleFieldMap = scriptComponent.ModuleFieldMap;
+		if (moduleFieldMap.contains(moduleName))
 		{
-			auto& publicFields = moduleFieldMap.at(moduleName);
-			for (auto& [name, field] : publicFields)
+			auto &publicFields = moduleFieldMap.at(moduleName);
+			for (auto &[name, field] : publicFields)
 				field.CopyStoredValueToRuntime(entityInstance);
 		}
 	}
 
 	void MonoScripting::CopyFieldsFromRuntime(Entity entity)
 	{
-		Scene& scene = entity.GetScene();
+		Scene &scene = entity.GetScene();
 		EntityID id = entity.GetID();
 
-		CSharpScript& scriptComponent = entity.GetComponent<CSharpScript>();
-		auto& moduleName = scriptComponent.ModuleName;
+		CSharpScript &scriptComponent = entity.GetComponent<CSharpScript>();
+		auto &moduleName = scriptComponent.ModuleName;
 
-		EntityInstanceData& entityInstanceData = GetEntityInstanceData(scene.GetID(), id);
-		EntityInstance& entityInstance = entityInstanceData.Instance;
+		EntityInstanceData &entityInstanceData = GetEntityInstanceData(scene.GetID(), id);
+		EntityInstance &entityInstance = entityInstanceData.Instance;
 
 		//Set public fields
-		ScriptModuleFieldMap& moduleFieldMap = scriptComponent.ModuleFieldMap;
-		if (moduleFieldMap.find(moduleName) != moduleFieldMap.end())
+		ScriptModuleFieldMap &moduleFieldMap = scriptComponent.ModuleFieldMap;
+		if (moduleFieldMap.contains(moduleName))
 		{
-			auto& publicFields = moduleFieldMap.at(moduleName);
-			for (auto& [name, field] : publicFields)
+			auto &publicFields = moduleFieldMap.at(moduleName);
+			for (auto &[name, field] : publicFields)
 				field.CopyStoredValueFromRuntime(entityInstance);
 		}
 	}
@@ -951,15 +946,14 @@ namespace Chroma
 
 	void MonoScripting::SetDeltaTime(double dtime, float ftime)
 	{
-		MonoClass* c = mono_class_from_name(coreAssemblyImage, "Chroma", "Time");
-		MonoProperty* prop = mono_class_get_property_from_name(c, "Delta");
-		void* data[] = { &dtime };
+		MonoClass *c = mono_class_from_name(coreAssemblyImage, "Chroma", "Time");
+		MonoProperty *prop = mono_class_get_property_from_name(c, "Delta");
+		void *data[] = { &dtime };
 		mono_property_set_value(prop, nullptr, data, nullptr);
 
-		MonoProperty* prop2 = mono_class_get_property_from_name(c, "DeltaF");
-		void* data2[] = { &ftime };
+		MonoProperty *prop2 = mono_class_get_property_from_name(c, "DeltaF");
+		void *data2[] = { &ftime };
 		mono_property_set_value(prop2, nullptr, data2, nullptr);
-		
 	}
 
 	void MonoScripting::SetFixedDeltaTime(double dtime, float ftime)
@@ -974,24 +968,24 @@ namespace Chroma
 		mono_property_set_value(prop2, nullptr, data2, nullptr);
 	}
 
-	EntityInstanceData& MonoScripting::GetEntityInstanceData(GUID sceneID, EntityID entityID)
+	EntityInstanceData &MonoScripting::GetEntityInstanceData(GUID sceneID, EntityID entityID)
 	{
-		auto& entityIDMap = entityInstanceMap.at(sceneID);
+		auto &entityIDMap = entityInstanceMap.at(sceneID);
 
-		if (entityIDMap.find(entityID) == entityIDMap.end())
-			MonoScripting::InitScriptEntity(Entity(entityID, sceneContext));
+		if (!entityIDMap.contains(entityID))
+			InitScriptEntity(Entity(entityID, sceneContext));
 
 		return entityIDMap.at(entityID);
 	}
 
-	EntityInstanceMap& MonoScripting::GetEntityInstanceMap()
+	EntityInstanceMap &MonoScripting::GetEntityInstanceMap()
 	{
 		return entityInstanceMap;
 	}
 
 	void MonoScripting::PreInit(Entity entity)
 	{
-		EntityInstanceData& entityInstance = GetEntityInstanceData(entity.GetScene().GetID(), entity.GetID());
+		EntityInstanceData &entityInstance = GetEntityInstanceData(entity.GetScene().GetID(), entity.GetID());
 		if (entityInstance.Instance.ScriptClass->PreInitMethod)
 		{
 			CallMethod(entityInstance.Instance.GetInstance(), entityInstance.Instance.ScriptClass->PreInitMethod);
@@ -1000,7 +994,7 @@ namespace Chroma
 
 	void MonoScripting::Init(Entity entity)
 	{
-		EntityInstanceData& entityInstance = GetEntityInstanceData(entity.GetScene().GetID(), entity.GetID());
+		EntityInstanceData &entityInstance = GetEntityInstanceData(entity.GetScene().GetID(), entity.GetID());
 		if (entityInstance.Instance.ScriptClass->InitMethod)
 		{
 			CallMethod(entityInstance.Instance.GetInstance(), entityInstance.Instance.ScriptClass->InitMethod);
@@ -1009,7 +1003,7 @@ namespace Chroma
 
 	void MonoScripting::PostInit(Entity entity)
 	{
-		EntityInstanceData& entityInstance = GetEntityInstanceData(entity.GetScene().GetID(), entity.GetID());
+		EntityInstanceData &entityInstance = GetEntityInstanceData(entity.GetScene().GetID(), entity.GetID());
 		if (entityInstance.Instance.ScriptClass->PostInitMethod)
 		{
 			CallMethod(entityInstance.Instance.GetInstance(), entityInstance.Instance.ScriptClass->PostInitMethod);
@@ -1018,15 +1012,16 @@ namespace Chroma
 
 	void MonoScripting::EarlyUpdate(Entity entity, Time t)
 	{
-		EntityInstanceData& entityInstance = GetEntityInstanceData(entity.GetScene().GetID(), entity.GetID());
+		EntityInstanceData &entityInstance = GetEntityInstanceData(entity.GetScene().GetID(), entity.GetID());
 		if (entityInstance.Instance.ScriptClass->EarlyUpdateMethod)
 		{
 			CallMethod(entityInstance.Instance.GetInstance(), entityInstance.Instance.ScriptClass->EarlyUpdateMethod);
 		}
 	}
+
 	void MonoScripting::Update(Entity entity, Time t)
 	{
-		EntityInstanceData& entityInstance = GetEntityInstanceData(entity.GetScene().GetID(), entity.GetID());
+		EntityInstanceData &entityInstance = GetEntityInstanceData(entity.GetScene().GetID(), entity.GetID());
 		if (entityInstance.Instance.ScriptClass->InternalUpdateMethod)
 		{
 			CallMethod(entityInstance.Instance.GetInstance(), entityInstance.Instance.ScriptClass->InternalUpdateMethod);
@@ -1036,9 +1031,10 @@ namespace Chroma
 			CallMethod(entityInstance.Instance.GetInstance(), entityInstance.Instance.ScriptClass->UpdateMethod);
 		}
 	}
+
 	void MonoScripting::LateUpdate(Entity entity, Time t)
 	{
-		EntityInstanceData& entityInstance = GetEntityInstanceData(entity.GetScene().GetID(), entity.GetID());
+		EntityInstanceData &entityInstance = GetEntityInstanceData(entity.GetScene().GetID(), entity.GetID());
 		if (entityInstance.Instance.ScriptClass->LateUpdateMethod)
 		{
 			CallMethod(entityInstance.Instance.GetInstance(), entityInstance.Instance.ScriptClass->LateUpdateMethod);
@@ -1053,6 +1049,7 @@ namespace Chroma
 			CallMethod(entityInstance.Instance.GetInstance(), entityInstance.Instance.ScriptClass->EarlyDrawMethod);
 		}
 	}
+
 	void MonoScripting::Draw(Entity entity, Time t)
 	{
 		EntityInstanceData &entityInstance = GetEntityInstanceData(entity.GetScene().GetID(), entity.GetID());
@@ -1061,6 +1058,7 @@ namespace Chroma
 			CallMethod(entityInstance.Instance.GetInstance(), entityInstance.Instance.ScriptClass->DrawMethod);
 		}
 	}
+
 	void MonoScripting::LateDraw(Entity entity, Time t)
 	{
 		EntityInstanceData &entityInstance = GetEntityInstanceData(entity.GetScene().GetID(), entity.GetID());
@@ -1069,6 +1067,7 @@ namespace Chroma
 			CallMethod(entityInstance.Instance.GetInstance(), entityInstance.Instance.ScriptClass->LateDrawMethod);
 		}
 	}
+
 	void MonoScripting::OnCollide(Entity entity, EntityID collisionEntity)
 	{
 		EntityInstanceData &entityInstance = GetEntityInstanceData(entity.GetScene().GetID(), entity.GetID());
@@ -1079,7 +1078,7 @@ namespace Chroma
 		}
 	}
 
-	void MonoScripting::OnBeginContact(const Collider* colliderA, const Collider* colliderB, b2Contact *contact)
+	void MonoScripting::OnBeginContact(const Collider *colliderA, const Collider *colliderB, b2Contact *contact)
 	{
 		void *collisionManifoldParams[] = {
 			&contact->GetManifold()->localNormal,
@@ -1091,7 +1090,7 @@ namespace Chroma
 		MonoClass *manifoldPointClass = mono_class_from_name(coreAssemblyImage, "Chroma", "ManifoldPoint");
 
 		MonoArray *pointArray = mono_array_new(mono_domain_get(), manifoldPointClass, contact->GetManifold()->pointCount);
-			
+
 		for (int i = 0; i < contact->GetManifold()->pointCount; i++)
 		{
 			void *manifoldPointParams[] = {
@@ -1105,10 +1104,9 @@ namespace Chroma
 			mono_array_set(pointArray, MonoObject *, i, manifoldPoint);
 		}
 
-		MonoClass* collisionManifoldClass = mono_class_from_name(coreAssemblyImage, "Chroma", "CollisionManifold");
+		MonoClass *collisionManifoldClass = mono_class_from_name(coreAssemblyImage, "Chroma", "CollisionManifold");
 		void *listData[] = { pointArray };
-		mono_property_set_value(mono_class_get_property_from_name(collisionManifoldClass, "Points"), collisionManifold, listData, nullptr); 
-
+		mono_property_set_value(mono_class_get_property_from_name(collisionManifoldClass, "Points"), collisionManifold, listData, nullptr);
 
 		MonoClass *worldManifoldClass = mono_class_from_name(coreAssemblyImage, "Chroma", "WorldManifold");
 		MonoObject *worldManifold = Construct("Chroma.WorldManifold");
@@ -1139,14 +1137,13 @@ namespace Chroma
 			&worldSeparationArray
 		};
 		mono_property_set_value(mono_class_get_property_from_name(worldManifoldClass, "Separations"), worldManifold, worldManifoldSeparationsParams, nullptr);
-		
 
 		bool isTouching = contact->IsTouching();
 
 		EntityID entityA = colliderA->GetEntityID();
 		EntityID entityB = colliderB->GetEntityID();
-		Chroma::Collider::ColliderType typeA = colliderA->GetColliderType();
-		Chroma::Collider::ColliderType typeB = colliderB->GetColliderType();
+		Collider::ColliderType typeA = colliderA->GetColliderType();
+		Collider::ColliderType typeB = colliderB->GetColliderType();
 
 		void *collisionContactParams[] = {
 			&contact,
@@ -1189,7 +1186,6 @@ namespace Chroma
 				}
 			}
 		}
-
 	}
 
 	void MonoScripting::OnEndContact(Entity entity)
@@ -1204,15 +1200,21 @@ namespace Chroma
 	{
 	}
 
-	PublicField::PublicField(const std::string& name, const std::string& typeName, FieldType type, bool isReadOnly)
-		: Name(name), TypeName(typeName), Type(type), IsReadOnly(isReadOnly)
+	PublicField::PublicField(const std::string &name, const std::string &typeName, FieldType type, bool isReadOnly) :
+		Name(name),
+		TypeName(typeName),
+		Type(type),
+		IsReadOnly(isReadOnly)
 	{
 		if (Type != FieldType::String)
 			m_StoredValueBuffer = AllocateBuffer(Type);
 	}
 
-	PublicField::PublicField(const PublicField& other)
-		: Name(other.Name), TypeName(other.TypeName), Type(other.Type), IsReadOnly(other.IsReadOnly)
+	PublicField::PublicField(const PublicField &other) :
+		Name(other.Name),
+		TypeName(other.TypeName),
+		Type(other.Type),
+		IsReadOnly(other.IsReadOnly)
 	{
 		if (Type != FieldType::String)
 		{
@@ -1228,7 +1230,7 @@ namespace Chroma
 		m_MonoProperty = other.m_MonoProperty;
 	}
 
-	PublicField& PublicField::operator=(const PublicField& other)
+	PublicField &PublicField::operator=(const PublicField &other)
 	{
 		if (&other != this)
 		{
@@ -1252,7 +1254,7 @@ namespace Chroma
 		return *this;
 	}
 
-	PublicField::PublicField(PublicField&& other)
+	PublicField::PublicField(PublicField &&other)
 	{
 		Name = std::move(other.Name);
 		TypeName = std::move(other.TypeName);
@@ -1274,32 +1276,30 @@ namespace Chroma
 			delete[] m_StoredValueBuffer;
 	}
 
-	void PublicField::CopyStoredValueToRuntime(EntityInstance& entityInstance)
+	void PublicField::CopyStoredValueToRuntime(EntityInstance &entityInstance)
 	{
 		CHROMA_CORE_ASSERT(entityInstance.GetInstance(), "");
 
 		if (IsReadOnly)
 			return;
 
-
 		if (Type == FieldType::ClassReference)
 		{
-
 			// Create Managed Object
-			void* params[] = {
+			void *params[] = {
 				&m_StoredValueBuffer
 			};
-			MonoObject* obj = MonoScripting::Construct(TypeName + ":.ctor(intptr)", true, params);
+			MonoObject *obj = MonoScripting::Construct(TypeName + ":.ctor(intptr)", true, params);
 			mono_field_set_value(entityInstance.GetInstance(), m_MonoClassField, obj);
 		}
 		else if (Type == FieldType::Asset || Type == FieldType::Entity)
 		{
 			// Create Managed Object
-			void* params[] = { m_StoredValueBuffer };
-			MonoObject* obj = MonoScripting::Construct(TypeName + ":.ctor(ulong)", true, params);
+			void *params[] = { m_StoredValueBuffer };
+			MonoObject *obj = MonoScripting::Construct(TypeName + ":.ctor(ulong)", true, params);
 			if (m_MonoProperty)
 			{
-				void* data[] = { obj };
+				void *data[] = { obj };
 				mono_property_set_value(m_MonoProperty, entityInstance.GetInstance(), data, nullptr);
 			}
 			else
@@ -1309,7 +1309,7 @@ namespace Chroma
 		}
 		else if (Type == FieldType::String)
 		{
-			SetRuntimeValue_Internal(entityInstance, *(std::string*)m_StoredValueBuffer);
+			SetRuntimeValue_Internal(entityInstance, *(std::string *)m_StoredValueBuffer);
 		}
 		else
 		{
@@ -1317,7 +1317,7 @@ namespace Chroma
 		}
 	}
 
-	void PublicField::CopyStoredValueFromRuntime(EntityInstance& entityInstance)
+	void PublicField::CopyStoredValueFromRuntime(EntityInstance &entityInstance)
 	{
 		CHROMA_CORE_ASSERT(entityInstance.GetInstance(), "");
 
@@ -1325,23 +1325,23 @@ namespace Chroma
 		{
 			if (m_MonoProperty)
 			{
-				MonoString* str = (MonoString*)mono_property_get_value(m_MonoProperty, entityInstance.GetInstance(), nullptr, nullptr);
+				auto str = (MonoString *)mono_property_get_value(m_MonoProperty, entityInstance.GetInstance(), nullptr, nullptr);
 				MonoScripting::publicFieldStringValue[Name] = mono_string_to_utf8(str);
-				m_StoredValueBuffer = (uint8_t*)&MonoScripting::publicFieldStringValue[Name];
+				m_StoredValueBuffer = (uint8_t *)&MonoScripting::publicFieldStringValue[Name];
 			}
 			else
 			{
-				MonoString* str;
+				MonoString *str;
 				mono_field_get_value(entityInstance.GetInstance(), m_MonoClassField, &str);
 				MonoScripting::publicFieldStringValue[Name] = mono_string_to_utf8(str);
-				m_StoredValueBuffer = (uint8_t*)&MonoScripting::publicFieldStringValue[Name];
+				m_StoredValueBuffer = (uint8_t *)&MonoScripting::publicFieldStringValue[Name];
 			}
 		}
 		else
 		{
 			if (m_MonoProperty)
 			{
-				MonoObject* result = mono_property_get_value(m_MonoProperty, entityInstance.GetInstance(), nullptr, nullptr);
+				MonoObject *result = mono_property_get_value(m_MonoProperty, entityInstance.GetInstance(), nullptr, nullptr);
 				memcpy(m_StoredValueBuffer, mono_object_unbox(result), GetFieldSize(Type));
 			}
 			else
@@ -1351,7 +1351,7 @@ namespace Chroma
 		}
 	}
 
-	void PublicField::SetStoredValueRaw(void* src)
+	void PublicField::SetStoredValueRaw(void *src)
 	{
 		if (IsReadOnly)
 			return;
@@ -1360,7 +1360,7 @@ namespace Chroma
 		memcpy(m_StoredValueBuffer, src, size);
 	}
 
-	void PublicField::SetRuntimeValueRaw(EntityInstance& entityInstance, void* src)
+	void PublicField::SetRuntimeValueRaw(EntityInstance &entityInstance, void *src)
 	{
 		CHROMA_CORE_ASSERT(entityInstance.GetInstance(), "");
 
@@ -1369,7 +1369,7 @@ namespace Chroma
 
 		if (m_MonoProperty)
 		{
-			void* data[] = { src };
+			void *data[] = { src };
 			mono_property_set_value(m_MonoProperty, entityInstance.GetInstance(), data, nullptr);
 		}
 		else
@@ -1378,24 +1378,24 @@ namespace Chroma
 		}
 	}
 
-	void* PublicField::GetRuntimeValueRaw(EntityInstance& entityInstance)
+	void *PublicField::GetRuntimeValueRaw(EntityInstance &entityInstance)
 	{
 		CHROMA_CORE_ASSERT(entityInstance.GetInstance(), "");
 
-		uint8_t* outValue = nullptr;
+		uint8_t *outValue = nullptr;
 		mono_field_get_value(entityInstance.GetInstance(), m_MonoClassField, outValue);
 		return outValue;
 	}
 
-	uint8_t* PublicField::AllocateBuffer(FieldType type)
+	uint8_t *PublicField::AllocateBuffer(FieldType type)
 	{
 		uint32_t size = GetFieldSize(type);
-		uint8_t* buffer = new uint8_t[size];
+		auto buffer = new uint8_t[size];
 		memset(buffer, 0, size);
 		return buffer;
 	}
 
-	void PublicField::SetStoredValue_Internal(void* value)
+	void PublicField::SetStoredValue_Internal(void *value)
 	{
 		if (IsReadOnly)
 			return;
@@ -1404,13 +1404,13 @@ namespace Chroma
 		memcpy(m_StoredValueBuffer, value, size);
 	}
 
-	void PublicField::GetStoredValue_Internal(void* outValue) const
+	void PublicField::GetStoredValue_Internal(void *outValue) const
 	{
 		uint32_t size = GetFieldSize(Type);
 		memcpy(outValue, m_StoredValueBuffer, size);
 	}
 
-	void PublicField::SetRuntimeValue_Internal(EntityInstance& entityInstance, void* value)
+	void PublicField::SetRuntimeValue_Internal(EntityInstance &entityInstance, void *value)
 	{
 		CHROMA_CORE_ASSERT(entityInstance.GetInstance(), "");
 
@@ -1419,7 +1419,7 @@ namespace Chroma
 
 		if (m_MonoProperty)
 		{
-			void* data[] = { value };
+			void *data[] = { value };
 			mono_property_set_value(m_MonoProperty, entityInstance.GetInstance(), data, nullptr);
 		}
 		else
@@ -1428,18 +1428,18 @@ namespace Chroma
 		}
 	}
 
-	void PublicField::SetRuntimeValue_Internal(EntityInstance& entityInstance, const std::string& value)
+	void PublicField::SetRuntimeValue_Internal(EntityInstance &entityInstance, const std::string &value)
 	{
 		if (IsReadOnly)
 			return;
 
 		CHROMA_CORE_ASSERT(entityInstance.GetInstance(), "");
 
-		MonoString* monoString = mono_string_new(mono_domain_get(), value.c_str());
+		MonoString *monoString = mono_string_new(mono_domain_get(), value.c_str());
 
 		if (m_MonoProperty)
 		{
-			void* data[] = { monoString };
+			void *data[] = { monoString };
 			mono_property_set_value(m_MonoProperty, entityInstance.GetInstance(), data, nullptr);
 		}
 		else
@@ -1448,27 +1448,27 @@ namespace Chroma
 		}
 	}
 
-	void PublicField::GetRuntimeValue_Internal(EntityInstance& entityInstance, void* outValue) const
+	void PublicField::GetRuntimeValue_Internal(EntityInstance &entityInstance, void *outValue) const
 	{
 		CHROMA_CORE_ASSERT(entityInstance.GetInstance(), "No entity instance!");
 
 		if (Type == FieldType::Entity)
 		{
-			MonoObject* obj;
+			MonoObject *obj;
 			if (m_MonoProperty)
 				obj = mono_property_get_value(m_MonoProperty, entityInstance.GetInstance(), nullptr, nullptr);
 			else
 				mono_field_get_value(entityInstance.GetInstance(), m_MonoClassField, &obj);
 
-			MonoProperty* idProperty = mono_class_get_property_from_name(entityInstance.ScriptClass->Class, "ID");
-			MonoObject* idObject = mono_property_get_value(idProperty, obj, nullptr, nullptr);
+			MonoProperty *idProperty = mono_class_get_property_from_name(entityInstance.ScriptClass->Class, "ID");
+			MonoObject *idObject = mono_property_get_value(idProperty, obj, nullptr, nullptr);
 			memcpy(outValue, mono_object_unbox(idObject), GetFieldSize(Type));
 		}
 		else
 		{
 			if (m_MonoProperty)
 			{
-				MonoObject* result = mono_property_get_value(m_MonoProperty, entityInstance.GetInstance(), nullptr, nullptr);
+				MonoObject *result = mono_property_get_value(m_MonoProperty, entityInstance.GetInstance(), nullptr, nullptr);
 				memcpy(outValue, mono_object_unbox(result), GetFieldSize(Type));
 			}
 			else
@@ -1476,22 +1476,18 @@ namespace Chroma
 				mono_field_get_value(entityInstance.GetInstance(), m_MonoClassField, outValue);
 			}
 		}
-
 	}
 
-	void PublicField::GetRuntimeValue_Internal(EntityInstance& entityInstance, std::string& outValue) const
+	void PublicField::GetRuntimeValue_Internal(EntityInstance &entityInstance, std::string &outValue) const
 	{
 		CHROMA_CORE_ASSERT(entityInstance.GetInstance(), "");
 
-		MonoString* monoString;
+		MonoString *monoString;
 		if (m_MonoProperty)
-			monoString = (MonoString*)mono_property_get_value(m_MonoProperty, entityInstance.GetInstance(), nullptr, nullptr);
+			monoString = (MonoString *)mono_property_get_value(m_MonoProperty, entityInstance.GetInstance(), nullptr, nullptr);
 		else
 			mono_field_get_value(entityInstance.GetInstance(), m_MonoClassField, &monoString);
 
 		outValue = mono_string_to_utf8(monoString);
 	}
-
 }
-
-

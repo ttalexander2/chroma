@@ -29,7 +29,7 @@ namespace Chroma
 		/// This will load the texture from the disk and load it into GPU memory.
 		/// Enable asserts to ensure sucessfull importing of textures.
 		/// See above for supported image formats.
-		OpenGLTexture2D(const std::string& path, bool flip_vertically);
+		OpenGLTexture2D(const std::string &path, bool flip_vertically);
 
 		/// @brief Constructs an empty OpenGLTexture2D.
 		/// @param width Width of the texture.
@@ -39,37 +39,37 @@ namespace Chroma
 		OpenGLTexture2D(uint32_t width, uint32_t height);
 
 		/// @brief Destorys the texutre and frees the data on the GPU.
-		virtual ~OpenGLTexture2D();
+		~OpenGLTexture2D() override;
 
 		/// @brief Gets the width of the texture.
 		/// @return Width in pixels.
-		virtual uint32_t GetWidth() const override { return m_Width; }
+		uint32_t GetWidth() const override { return m_Width; }
 
 		/// @brief Gets the height of the texture.
 		/// @return Height in pixels.
-		virtual uint32_t GetHeight() const override { return m_Height; }
+		uint32_t GetHeight() const override { return m_Height; }
 
 		/// @brief Binds the texture to a texture slot.
 		/// @param slot Optional texture slot.
-		virtual void Bind(uint32_t slot = 0) const override;
+		void Bind(uint32_t slot = 0) const override;
 
 		/// @brief Sets the texture data.
 		/// @param data Data to write to the GPU.
 		/// @param size Size of the data to set.
-		void SetData(void* data, uint32_t size) override;
+		void SetData(void *data, uint32_t size) override;
 
 		/// @brief Equality operator. Checks if two textures are identical.
 		/// @param other Other texture to compare.
 		/// @return Returns true if they are the same texture.
-		virtual bool operator==(const Texture& other) const override 
-		{ 
-			return m_RendererID == ((OpenGLTexture2D&)other).m_RendererID; 
+		bool operator==(const Texture &other) const override
+		{
+			return m_RendererID == ((OpenGLTexture2D &)other).m_RendererID;
 		}
 
-		virtual uint32_t GetTextureID() const override { return m_RendererID; }
+		uint32_t GetTextureID() const override { return m_RendererID; }
 
-		virtual void SetTextureFormat(TextureFormat format) override;
-		virtual void SetFiltering(FilterMethod method, FilterType type) override;
+		void SetTextureFormat(TextureFormat format) override;
+		void SetFiltering(FilterMethod method, FilterType type) override;
 
 	private:
 		/// @brief Path to the texture file
@@ -82,5 +82,3 @@ namespace Chroma
 		GLenum m_InternalFormat, m_DataFormat;
 	};
 }
-
-

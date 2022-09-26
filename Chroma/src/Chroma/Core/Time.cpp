@@ -3,5 +3,5 @@
 
 namespace Chroma
 {
-	Time* Time::m_Instance = nullptr;
+	Time *Time::m_Instance = nullptr;
 }

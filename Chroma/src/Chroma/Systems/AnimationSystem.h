@@ -13,4 +13,3 @@ namespace Chroma
 		void Update(Time delta) override;
 	};
 }
-

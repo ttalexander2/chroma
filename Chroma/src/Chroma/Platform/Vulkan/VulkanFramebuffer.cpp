@@ -1,7 +1,7 @@
 #include "chromapch.h"
 #include "VulkanFramebuffer.h"
 
-Chroma::VulkanFramebuffer::VulkanFramebuffer(const FramebufferSpecification& spec)
+Chroma::VulkanFramebuffer::VulkanFramebuffer(const FramebufferSpecification &spec)
 {
 }
 
@@ -27,7 +27,7 @@ void Chroma::VulkanFramebuffer::Resize(uint32_t width, uint32_t height)
 
 int Chroma::VulkanFramebuffer::ReadPixel(uint32_t attachmentIndex, uint32_t x, uint32_t y)
 {
-    return 0;
+	return 0;
 }
 
 void Chroma::VulkanFramebuffer::ClearAttachment(uint32_t attachmentIndex, int value)

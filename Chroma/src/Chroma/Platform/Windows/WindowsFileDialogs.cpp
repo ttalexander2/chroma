@@ -12,9 +12,7 @@
 
 namespace Chroma
 {
-
-
-	std::string FileDialogs::OpenFile(const char* filter, void* nativeHandle)
+	std::string FileDialogs::OpenFile(const char *filter, void *nativeHandle)
 	{
 #if _WIN32
 		if (nativeHandle == nullptr)
@@ -23,7 +21,7 @@ namespace Chroma
 		CHAR szFile[260] = { 0 };
 		ZeroMemory(&ofn, sizeof(OPENFILENAME));
 		ofn.lStructSize = sizeof(OPENFILENAME);
-		ofn.hwndOwner = glfwGetWin32Window((GLFWwindow*)nativeHandle);
+		ofn.hwndOwner = glfwGetWin32Window(static_cast<GLFWwindow *>(nativeHandle));
 		ofn.lpstrFile = szFile;
 		ofn.nMaxFile = sizeof(szFile);
 		ofn.lpstrFilter = filter;
@@ -35,10 +33,9 @@ namespace Chroma
 		}
 #endif
 		return std::string();
-
 	}
 
-	std::string FileDialogs::SaveFile(const char* filter, void* nativeHandle)
+	std::string FileDialogs::SaveFile(const char *filter, void *nativeHandle)
 	{
 #if _WIN32
 		if (nativeHandle == nullptr)
@@ -47,7 +44,7 @@ namespace Chroma
 		CHAR szFile[260] = { 0 };
 		ZeroMemory(&ofn, sizeof(OPENFILENAME));
 		ofn.lStructSize = sizeof(OPENFILENAME);
-		ofn.hwndOwner = glfwGetWin32Window((GLFWwindow*)nativeHandle);
+		ofn.hwndOwner = glfwGetWin32Window(static_cast<GLFWwindow *>(nativeHandle));
 		ofn.lpstrFile = szFile;
 		ofn.nMaxFile = sizeof(szFile);
 		ofn.lpstrFilter = filter;
@@ -59,29 +56,31 @@ namespace Chroma
 		}
 #endif
 		return std::string();
-
 	}
 
-	std::string FileDialogs::OpenDirectory(void* nativeHandle)
+	std::string FileDialogs::OpenDirectory(void *nativeHandle)
 	{
 #if _WIN32
 
 		if (nativeHandle == nullptr)
 			nativeHandle = Application::Get().GetWindow().GetNativeWindow();
 
-		IFileOpenDialog* pFileOpen;
+		IFileOpenDialog *pFileOpen;
 
-		auto hr = CoCreateInstance(CLSID_FileOpenDialog, NULL, CLSCTX_ALL,
-			IID_IFileOpenDialog, reinterpret_cast<void**>(&pFileOpen));
+		auto hr = CoCreateInstance(CLSID_FileOpenDialog,
+				nullptr,
+				CLSCTX_ALL,
+				IID_IFileOpenDialog,
+				reinterpret_cast<void **>(&pFileOpen));
 
 		if (SUCCEEDED(hr))
 		{
 			pFileOpen->SetOptions(FOS_PICKFOLDERS);
-			hr = pFileOpen->Show(glfwGetWin32Window((GLFWwindow*)nativeHandle));
-			
+			hr = pFileOpen->Show(glfwGetWin32Window(static_cast<GLFWwindow *>(nativeHandle)));
+
 			if (SUCCEEDED(hr))
 			{
-				IShellItem* pItem;
+				IShellItem *pItem;
 				hr = pFileOpen->GetResult(&pItem);
 				if (SUCCEEDED(hr))
 				{

@@ -4,16 +4,15 @@
 
 namespace Chroma
 {
-
 	/// @brief OpenGL Frame Buffer.
 	class OpenGLFramebuffer : public Framebuffer
 	{
 	public:
 		/// @brief Constructs a FrameBuffer given FrameBufferInfo.
 		/// @param spec Specification of the frame buffer.
-		OpenGLFramebuffer(const FramebufferSpecification& spec);
+		OpenGLFramebuffer(const FramebufferSpecification &spec);
 		/// @brief Destorys the frame buffer.
-		virtual ~OpenGLFramebuffer() override;
+		~OpenGLFramebuffer() override;
 
 		/// @brief Binds the frame buffer.
 		void Bind() override;
@@ -31,11 +30,15 @@ namespace Chroma
 
 		/// @brief Gets the Renderer ID for the color attachment.
 		/// @return rendererID
-		virtual uint32_t GetColorAttachmentRendererID(uint32_t index = 0) const override { CHROMA_CORE_ASSERT("Index must be less than color attachment size!", index < m_ColorAttachments.size());  return m_ColorAttachments[index]; }
+		uint32_t GetColorAttachmentRendererID(uint32_t index = 0) const override
+		{
+			CHROMA_CORE_ASSERT("Index must be less than color attachment size!", index < m_ColorAttachments.size());
+			return m_ColorAttachments[index];
+		}
 
 		/// @brief Gets the Frame Buffer Specification.
 		/// @return Frame buffer's FramebufferInfo.
-		virtual const FramebufferSpecification& GetSpecification() const override { return m_Specification; }
+		const FramebufferSpecification &GetSpecification() const override { return m_Specification; }
 
 		void ClearAttachment(uint32_t attachmentIndex, int value) override;
 
@@ -52,5 +55,3 @@ namespace Chroma
 		uint32_t m_DepthAttachment = 0;
 	};
 }
-
-

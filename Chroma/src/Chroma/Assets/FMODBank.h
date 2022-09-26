@@ -5,7 +5,6 @@
 
 namespace Chroma
 {
-
 	class FMODBank : public Asset
 	{
 		CHROMA_ASSET(FMODBank, Asset);

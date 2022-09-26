@@ -7,11 +7,10 @@
 
 namespace Chroma
 {
-
 	struct Collider : Component
 	{
 		CHROMA_ABSTRACT_COMPONENT(Collider, Component);
-		
+
 		friend class PhysicsSystem;
 
 		enum class ColliderType : char
@@ -22,7 +21,7 @@ namespace Chroma
 			Rectangle = 3
 		};
 
-		inline virtual const ColliderType GetColliderType() const { return ColliderType::Rectangle; }
+		virtual const ColliderType GetColliderType() const { return ColliderType::Rectangle; }
 		void Initialize() override;
 
 		struct Vertex
@@ -59,6 +58,4 @@ namespace Chroma
 		b2FixtureDef m_FixtureDef;
 		b2Fixture *m_Fixture = nullptr;
 	};
-
-
 }

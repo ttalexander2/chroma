@@ -12,15 +12,15 @@ namespace Chroma
 	public:
 		/// @brief Constructs a new Time Object
 		/// @param time Time in seconds.
-		Time(double time = 0.0f)
-			: m_Time(time)
+		Time(double time = 0.0f) :
+			m_Time(time)
 		{
 			m_Instance = this;
 		}
 
 		/// @brief Get the current time.
 		/// @return Pointer to the current time.
-		static Time* Current() { return Time::m_Instance; }
+		static Time *Current() { return m_Instance; }
 
 		/// @brief Converts the time to a double (seconds).
 		operator double() const { return m_Time; }
@@ -39,7 +39,6 @@ namespace Chroma
 		double m_Time;
 
 		/// @brief Current time.
-		static Time* m_Instance;
-
+		static Time *m_Instance;
 	};
 }

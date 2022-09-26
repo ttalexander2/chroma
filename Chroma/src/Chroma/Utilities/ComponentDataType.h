@@ -253,7 +253,7 @@ namespace Chroma
 
 		template <typename... Args>
 		ComponentData(Args &&...args) :
-				data(std::forward<Args>(args)...)
+			data(std::forward<Args>(args)...)
 		{
 		}
 
@@ -262,13 +262,13 @@ namespace Chroma
 			return data;
 		}
 
-		const T* operator->() const
+		const T *operator->() const
 		{
 			return &data;
 		}
 
 		template <typename... Args>
-		ComponentData& operator=(Args &&...args)
+		ComponentData &operator=(Args &&...args)
 		{
 			data = T{ std::forward<Args>(args)... };
 			return *this;
@@ -276,280 +276,280 @@ namespace Chroma
 
 		operator T() { return data; }
 
-		template <typename U = T, std::enable_if_t<Util::addition_detected<U, U>, bool> = true>
+		template <typename U = T, std::enable_if_t<Util::addition_detected<U, U>, bool>  = true>
 		T operator+(const T &v)
 		{
 			return data + v;
 		}
 
-		template <typename U = T, std::enable_if_t<Util::addition_detected<U, U>, bool> = true>
+		template <typename U = T, std::enable_if_t<Util::addition_detected<U, U>, bool>  = true>
 		T operator+(const ComponentData &v)
 		{
 			return data + v.data;
 		}
 
-		template <typename U = T, std::enable_if_t<Util::subtraction_detected<U, U>, bool> = true>
+		template <typename U = T, std::enable_if_t<Util::subtraction_detected<U, U>, bool>  = true>
 		T operator-(const T &v)
 		{
 			return data - v;
 		}
 
-		template <typename U = T, std::enable_if_t<Util::subtraction_detected<U, U>, bool> = true>
+		template <typename U = T, std::enable_if_t<Util::subtraction_detected<U, U>, bool>  = true>
 		T operator-(const ComponentData &v)
 		{
 			return data - v.data;
 		}
 
-		template <typename U = T, std::enable_if_t<Util::unary_plus_detected<U>, bool> = true>
+		template <typename U = T, std::enable_if_t<Util::unary_plus_detected<U>, bool>  = true>
 		T operator+()
 		{
 			return +data;
 		}
 
-		template <typename U = T, std::enable_if_t<Util::unary_minus_detected<U>, bool> = true>
+		template <typename U = T, std::enable_if_t<Util::unary_minus_detected<U>, bool>  = true>
 		T operator-()
 		{
 			return -data;
 		}
 
-		template <typename U = T, std::enable_if_t<Util::multiplication_detected<U, U>, bool> = true>
+		template <typename U = T, std::enable_if_t<Util::multiplication_detected<U, U>, bool>  = true>
 		T operator*(const T &v)
 		{
 			return data * v;
 		}
-		template <typename U = T, std::enable_if_t<Util::multiplication_detected<U, U>, bool> = true>
+
+		template <typename U = T, std::enable_if_t<Util::multiplication_detected<U, U>, bool>  = true>
 		T operator*(const ComponentData &v)
 		{
 			return data * v.data;
 		}
 
-		template <typename U = T, std::enable_if_t<Util::division_detected<U, U>, bool> = true>
+		template <typename U = T, std::enable_if_t<Util::division_detected<U, U>, bool>  = true>
 		T operator/(const T &v)
 		{
 			return data / v;
 		}
 
-		template <typename U = T, std::enable_if_t<Util::division_detected<U, U>, bool> = true>
+		template <typename U = T, std::enable_if_t<Util::division_detected<U, U>, bool>  = true>
 		T operator/(const ComponentData &v)
 		{
 			return data / v.data;
 		}
 
-		template <typename U = T, std::enable_if_t<Util::modulo_detected<U, U>, bool> = true>
+		template <typename U = T, std::enable_if_t<Util::modulo_detected<U, U>, bool>  = true>
 		T operator%(const T &v)
 		{
 			return data % v;
 		}
 
-		template <typename U = T, std::enable_if_t<Util::modulo_detected<U, U>, bool> = true>
+		template <typename U = T, std::enable_if_t<Util::modulo_detected<U, U>, bool>  = true>
 		T operator%(const ComponentData &v)
 		{
 			return data % v.data;
 		}
 
-		template <typename U = T, std::enable_if_t<Util::preincrement_detected<U>, bool> = true>
+		template <typename U = T, std::enable_if_t<Util::preincrement_detected<U>, bool>  = true>
 		T &operator++()
 		{
 			return ++data;
 		}
 
-		template <typename U = T, std::enable_if_t<Util::postincrement_detected<U>, bool> = true>
+		template <typename U = T, std::enable_if_t<Util::postincrement_detected<U>, bool>  = true>
 		T operator++(int)
 		{
 			return data++;
 		}
 
-		template <typename U = T, std::enable_if_t<Util::predeincrement_detected<U>, bool> = true>
+		template <typename U = T, std::enable_if_t<Util::predeincrement_detected<U>, bool>  = true>
 		T &operator--()
 		{
 			return --data;
 		}
 
-		template <typename U = T, std::enable_if_t<Util::postdeincrement_detected<U>, bool> = true>
+		template <typename U = T, std::enable_if_t<Util::postdeincrement_detected<U>, bool>  = true>
 		T operator--(int)
 		{
 			return data--;
 		}
 
-		template <typename U = T, std::enable_if_t<Util::equal_to_detected<U, U>, bool> = true>
+		template <typename U = T, std::enable_if_t<Util::equal_to_detected<U, U>, bool>  = true>
 		bool operator==(const T &v) const
 		{
 			return data == v;
 		}
 
-		template <typename U = T, std::enable_if_t<Util::equal_to_detected<U, U>, bool> = true>
+		template <typename U = T, std::enable_if_t<Util::equal_to_detected<U, U>, bool>  = true>
 		bool operator==(const ComponentData &v) const
 		{
 			return data == v.data;
 		}
 
-		template <typename U = T, std::enable_if_t<Util::not_equal_to_detected<U, U>, bool> = true>
+		template <typename U = T, std::enable_if_t<Util::not_equal_to_detected<U, U>, bool>  = true>
 		bool operator!=(const T &v) const
 		{
 			return data != v;
 		}
 
-		template <typename U = T, std::enable_if_t<Util::not_equal_to_detected<U, U>, bool> = true>
+		template <typename U = T, std::enable_if_t<Util::not_equal_to_detected<U, U>, bool>  = true>
 		bool operator!=(const ComponentData &v) const
 		{
 			return data != v.data;
 		}
 
-		template <typename U = T, std::enable_if_t<Util::greater_than_detected<U, U>, bool> = true>
+		template <typename U = T, std::enable_if_t<Util::greater_than_detected<U, U>, bool>  = true>
 		bool operator>(const T &v) const
 		{
 			return data > v;
 		}
 
-		template <typename U = T, std::enable_if_t<Util::greater_than_detected<U, U>, bool> = true>
+		template <typename U = T, std::enable_if_t<Util::greater_than_detected<U, U>, bool>  = true>
 		bool operator>(const ComponentData &v) const
 		{
 			return data > v.data;
 		}
 
-		template <typename U = T, std::enable_if_t<Util::less_than_detected<U, U>, bool> = true>
+		template <typename U = T, std::enable_if_t<Util::less_than_detected<U, U>, bool>  = true>
 		bool operator<(const T &v) const
 		{
 			return data < v;
 		}
 
-		template <typename U = T, std::enable_if_t<Util::less_than_detected<U, U>, bool> = true>
+		template <typename U = T, std::enable_if_t<Util::less_than_detected<U, U>, bool>  = true>
 		bool operator<(const ComponentData &v) const
 		{
 			return data < v.data;
 		}
 
-		template <typename U = T, std::enable_if_t<Util::greater_than_or_equal_to_detected<U, U>, bool> = true>
+		template <typename U = T, std::enable_if_t<Util::greater_than_or_equal_to_detected<U, U>, bool>  = true>
 		bool operator>=(const T &v) const
 		{
 			return data >= v;
 		}
 
-		template <typename U = T, std::enable_if_t<Util::greater_than_or_equal_to_detected<U, U>, bool> = true>
+		template <typename U = T, std::enable_if_t<Util::greater_than_or_equal_to_detected<U, U>, bool>  = true>
 		bool operator>=(const ComponentData &v) const
 		{
 			return data >= v.data;
 		}
 
-		template <typename U = T, std::enable_if_t<Util::less_than_or_equal_to_detected<U, U>, bool> = true>
+		template <typename U = T, std::enable_if_t<Util::less_than_or_equal_to_detected<U, U>, bool>  = true>
 		bool operator<=(const T &v) const
 		{
 			return data <= v;
 		}
 
-		template <typename U = T, std::enable_if_t<Util::less_than_or_equal_to_detected<U, U>, bool> = true>
+		template <typename U = T, std::enable_if_t<Util::less_than_or_equal_to_detected<U, U>, bool>  = true>
 		bool operator<=(const ComponentData &v) const
 		{
 			return data <= v.data;
 		}
 
-		template <typename U = T, std::enable_if_t<Util::three_way_comparison_detected<U, U>, bool> = true>
+		template <typename U = T, std::enable_if_t<Util::three_way_comparison_detected<U, U>, bool>  = true>
 		bool operator<=>(const T &v) const
 		{
 			return data <=> v;
 		}
 
-		template <typename U = T, std::enable_if_t<Util::three_way_comparison_detected<U, U>, bool> = true>
+		template <typename U = T, std::enable_if_t<Util::three_way_comparison_detected<U, U>, bool>  = true>
 		bool operator<=>(const ComponentData &v)
 		{
 			return data <=> v.data;
 		}
 
-		template <typename U = T, std::enable_if_t<Util::logical_negation_detected<U>, bool> = true>
+		template <typename U = T, std::enable_if_t<Util::logical_negation_detected<U>, bool>  = true>
 		bool operator!()
 		{
 			return !data;
 		}
 
-		template <typename U = T, std::enable_if_t<Util::logical_and_detected<U, U>, bool> = true>
+		template <typename U = T, std::enable_if_t<Util::logical_and_detected<U, U>, bool>  = true>
 		bool operator&&(const T &v)
 		{
 			return data && v;
 		}
 
-		template <typename U = T, std::enable_if_t<Util::logical_and_detected<U, U>, bool> = true>
+		template <typename U = T, std::enable_if_t<Util::logical_and_detected<U, U>, bool>  = true>
 		bool operator&&(const ComponentData &v)
 		{
 			return data && v.data;
 		}
 
-		template <typename U = T, std::enable_if_t<Util::logical_or_detected<U, U>, bool> = true>
+		template <typename U = T, std::enable_if_t<Util::logical_or_detected<U, U>, bool>  = true>
 		bool operator||(const T &v)
 		{
 			return data || v;
 		}
 
-		template <typename U = T, std::enable_if_t<Util::logical_or_detected<U, U>, bool> = true>
+		template <typename U = T, std::enable_if_t<Util::logical_or_detected<U, U>, bool>  = true>
 		bool operator||(const ComponentData &v)
 		{
 			return data || v.data;
 		}
 
-		template <typename U = T, std::enable_if_t<Util::bitwise_not_detected<U>, bool> = true>
+		template <typename U = T, std::enable_if_t<Util::bitwise_not_detected<U>, bool>  = true>
 		bool operator~()
 		{
 			return ~data;
 		}
 
-		template <typename U = T, std::enable_if_t<Util::bitwise_and_detected<U, U>, bool> = true>
+		template <typename U = T, std::enable_if_t<Util::bitwise_and_detected<U, U>, bool>  = true>
 		bool operator&(const T &v)
 		{
 			return data & v;
 		}
 
-		template <typename U = T, std::enable_if_t<Util::bitwise_and_detected<U, U>, bool> = true>
+		template <typename U = T, std::enable_if_t<Util::bitwise_and_detected<U, U>, bool>  = true>
 		bool operator&(const ComponentData &v)
 		{
 			return data & v.data;
 		}
 
-		template <typename U = T, std::enable_if_t<Util::bitwise_or_detected<U, U>, bool> = true>
+		template <typename U = T, std::enable_if_t<Util::bitwise_or_detected<U, U>, bool>  = true>
 		bool operator|(const T &v)
 		{
 			return data | v;
 		}
 
-		template <typename U = T, std::enable_if_t<Util::bitwise_or_detected<U, U>, bool> = true>
+		template <typename U = T, std::enable_if_t<Util::bitwise_or_detected<U, U>, bool>  = true>
 		bool operator|(const ComponentData &v)
 		{
 			return data | v.data;
 		}
 
-		template <typename U = T, std::enable_if_t<Util::bitwise_xor_detected<U, U>, bool> = true>
+		template <typename U = T, std::enable_if_t<Util::bitwise_xor_detected<U, U>, bool>  = true>
 		bool operator^(const T &v)
 		{
 			return data ^ v;
 		}
 
-		template <typename U = T, std::enable_if_t<Util::bitwise_xor_detected<U, U>, bool> = true>
+		template <typename U = T, std::enable_if_t<Util::bitwise_xor_detected<U, U>, bool>  = true>
 		bool operator^(const ComponentData &v)
 		{
 			return data ^ v.data;
 		}
 
-		template <typename U = T, std::enable_if_t<Util::bitwise_left_shift_detected<U, U>, bool> = true>
+		template <typename U = T, std::enable_if_t<Util::bitwise_left_shift_detected<U, U>, bool>  = true>
 		bool operator<<(const T &v)
 		{
 			return data << v;
 		}
 
-		template <typename U = T, std::enable_if_t<Util::bitwise_left_shift_detected<U, U>, bool> = true>
+		template <typename U = T, std::enable_if_t<Util::bitwise_left_shift_detected<U, U>, bool>  = true>
 		bool operator<<(const ComponentData &v)
 		{
 			return data << v.data;
 		}
 
-		template <typename U = T, std::enable_if_t<Util::bitwise_right_shift_detected<U, U>, bool> = true>
+		template <typename U = T, std::enable_if_t<Util::bitwise_right_shift_detected<U, U>, bool>  = true>
 		bool operator>>(const T &v)
 		{
 			return data >> v;
 		}
 
-		template <typename U = T, std::enable_if_t<Util::bitwise_right_shift_detected<U, U>, bool> = true>
+		template <typename U = T, std::enable_if_t<Util::bitwise_right_shift_detected<U, U>, bool>  = true>
 		bool operator>>(const ComponentData &v)
 		{
 			return data >> v.data;
 		}
-
 	};
 } //namespace Chroma

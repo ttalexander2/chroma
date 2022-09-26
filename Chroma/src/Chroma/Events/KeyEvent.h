@@ -14,14 +14,14 @@ namespace Chroma
 	public:
 		/// @brief Gets the keycode of the key pressed.
 		/// @return Keycode of the key pressed.
-		inline int GetKeyCode() const { return m_KeyCode; }
+		int GetKeyCode() const { return m_KeyCode; }
 
 		EVENT_CLASS_CATEGORY(EventCategoryKeyboard | EventCategoryInput)
 
 	protected:
 		/// @brief Constructs a KeyEvent.
-		KeyEvent(int keycode)
-			: m_KeyCode(keycode)
+		KeyEvent(int keycode) :
+			m_KeyCode(keycode)
 		{
 		}
 
@@ -40,12 +40,15 @@ namespace Chroma
 		/// @brief Constructs a KeyPressedEvent
 		/// @param keycode Keycode of the key pressed.
 		/// @param repeatCount Number of times the key has been repeated.
-		KeyPressedEvent(int keycode, int repeatCount)
-			: KeyEvent(keycode), m_RepeatCount(repeatCount) { }
+		KeyPressedEvent(int keycode, int repeatCount) :
+			KeyEvent(keycode),
+			m_RepeatCount(repeatCount)
+		{
+		}
 
 		/// @brief Gets number of repeats.
 		/// @return Number of repeats.
-		inline int GetRepeatCount() const { return m_RepeatCount;  }
+		int GetRepeatCount() const { return m_RepeatCount; }
 
 		/// @brief Converts the KeyPressedEvent to a string.
 		/// @return String containing keycode and repeat count.
@@ -72,8 +75,8 @@ namespace Chroma
 	public:
 		/// @brief Constructs a KeyReleasedEvent
 		/// @param keycode Key code of the key pressed.
-		KeyReleasedEvent(int keycode)
-			: KeyEvent(keycode)
+		KeyReleasedEvent(int keycode) :
+			KeyEvent(keycode)
 		{
 		}
 
@@ -98,8 +101,8 @@ namespace Chroma
 	public:
 		/// @brief Constructs a KeyTypedEvent.
 		/// @param keycode 
-		KeyTypedEvent(int keycode)
-			: KeyEvent(keycode)
+		KeyTypedEvent(int keycode) :
+			KeyEvent(keycode)
 		{
 		}
 
@@ -115,6 +118,5 @@ namespace Chroma
 		EVENT_CLASS_TYPE(KeyTyped)
 
 	private:
-
 	};
 }

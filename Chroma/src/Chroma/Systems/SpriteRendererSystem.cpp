@@ -9,7 +9,6 @@
 
 namespace Chroma
 {
-
 	void SpriteRendererSystem::Load()
 	{
 		/*
@@ -31,7 +30,7 @@ namespace Chroma
 		auto view = m_Scene->Registry.view<SpriteRenderer>();
 		for (EntityID e : view)
 		{
-			auto& spriteRenderer = view.get<SpriteRenderer>(e);
+			auto &spriteRenderer = view.get<SpriteRenderer>(e);
 			spriteRenderer.Playing = spriteRenderer.PlayOnStart;
 			spriteRenderer.RestartAnimation();
 		}
@@ -42,71 +41,67 @@ namespace Chroma
 		auto view = m_Scene->Registry.view<SpriteRenderer>();
 		for (EntityID e : view)
 		{
-			auto& spriteRenderer = view.get<SpriteRenderer>(e);
+			auto &spriteRenderer = view.get<SpriteRenderer>(e);
 			if (!spriteRenderer.IsEnabled())
 				continue;
 
 			if (spriteRenderer.GetSprite() && spriteRenderer.GetSprite()->IsLoaded())
 			{
 				auto &sprite = spriteRenderer.GetSprite();
-					if (spriteRenderer.Playing && sprite->Animated())
+				if (spriteRenderer.Playing && sprite->Animated())
+				{
+					spriteRenderer.SetAnimation(spriteRenderer.Animation);
+
+					Sprite::Animation animation = sprite->Animations[spriteRenderer.Animation];
+					if (spriteRenderer.time_till_next_frame >= sprite->Frames[spriteRenderer.CurrentFrame].Durration)
 					{
-						
-						spriteRenderer.SetAnimation(spriteRenderer.Animation);
+						spriteRenderer.time_till_next_frame = 0;
+						int start = sprite->Animations[spriteRenderer.Animation].Start;
+						int end = sprite->Animations[spriteRenderer.Animation].End;
 
-						Sprite::Animation animation = sprite->Animations[spriteRenderer.Animation];
-						if (spriteRenderer.time_till_next_frame >= sprite->Frames[spriteRenderer.CurrentFrame].Durration)
+						if (animation.Direction == Sprite::LoopDirection::Forward)
 						{
-							spriteRenderer.time_till_next_frame = 0;
-							int start = sprite->Animations[spriteRenderer.Animation].Start;
-							int end = sprite->Animations[spriteRenderer.Animation].End;
-
-							if (animation.Direction == Sprite::LoopDirection::Forward)
-							{
-								spriteRenderer.CurrentFrame++;
-							}
-							else if (animation.Direction == Sprite::LoopDirection::Reverse)
-							{
-								spriteRenderer.CurrentFrame--;
-							}
-							else
-							{
-								if (spriteRenderer.looping_forward)
-									spriteRenderer.CurrentFrame++;
-								else
-									spriteRenderer.CurrentFrame--;
-							}
-
-							if ((spriteRenderer.looping_forward && spriteRenderer.CurrentFrame >= animation.End)
-								|| (!spriteRenderer.looping_forward && spriteRenderer.CurrentFrame <= animation.Start))
-							{
-								if (animation.Direction == Sprite::LoopDirection::PingPong)
-								{
-									spriteRenderer.looping_forward = !spriteRenderer.looping_forward;
-									//LAST FRAME
-								}
-							}
-							if (spriteRenderer.Loop)
-							{
-								int high = animation.End;
-								int low = animation.Start;
-								int diff = high - low + 1;
-								spriteRenderer.CurrentFrame = Math::abs((spriteRenderer.CurrentFrame - low) % diff) + low;
-							}
-							else
-							{
-								if (spriteRenderer.CurrentFrame >= animation.End)
-								{
-									spriteRenderer.Playing = false;
-								}
-							}
-
+							spriteRenderer.CurrentFrame++;
 						}
-						spriteRenderer.time_till_next_frame += delta.GetMilliseconds();
+						else if (animation.Direction == Sprite::LoopDirection::Reverse)
+						{
+							spriteRenderer.CurrentFrame--;
+						}
+						else
+						{
+							if (spriteRenderer.looping_forward)
+								spriteRenderer.CurrentFrame++;
+							else
+								spriteRenderer.CurrentFrame--;
+						}
 
+						if ((spriteRenderer.looping_forward && spriteRenderer.CurrentFrame >= animation.End)
+							|| (!spriteRenderer.looping_forward && spriteRenderer.CurrentFrame <= animation.Start))
+						{
+							if (animation.Direction == Sprite::LoopDirection::PingPong)
+							{
+								spriteRenderer.looping_forward = !spriteRenderer.looping_forward;
+								//LAST FRAME
+							}
+						}
+						if (spriteRenderer.Loop)
+						{
+							int high = animation.End;
+							int low = animation.Start;
+							int diff = high - low + 1;
+							spriteRenderer.CurrentFrame = Math::abs((spriteRenderer.CurrentFrame - low) % diff) + low;
+						}
+						else
+						{
+							if (spriteRenderer.CurrentFrame >= animation.End)
+							{
+								spriteRenderer.Playing = false;
+							}
+						}
 					}
+					spriteRenderer.time_till_next_frame += static_cast<float>(delta.GetMilliseconds());
 				}
-
+			}
 		}
 	}
 
@@ -115,58 +110,55 @@ namespace Chroma
 		std::map<float, std::vector<EntityID>> sprites;
 		for (EntityID e : m_Scene->Registry.view<SpriteRenderer>())
 		{
-			SpriteRenderer s = m_Scene->Registry.get<SpriteRenderer>(e);
+			auto s = m_Scene->Registry.get<SpriteRenderer>(e);
 			if (!s.IsEnabled())
 				continue;
 
 			Math::vec2 absPos = m_Scene->GetTransformAbsolutePosition(e);
 			if (!s.GetSprite() || !s.GetSprite()->IsLoaded())
 				continue;
-			float y = -1.f*(absPos.y + s.Offset.y + s.SortingPoint);
-			if (sprites.find(y) == sprites.end())
+			float y = -1.f * (absPos.y + s.Offset.y + s.SortingPoint);
+			if (!sprites.contains(y))
 				sprites[y] = std::vector<EntityID>();
 			sprites[y].push_back(e);
 		}
 
 		//TODO: Cull sprites?
-			
+
 		for (auto &[y_index, sp_list] : sprites)
 		{
-			for (auto& e : sp_list)
+			for (auto &e : sp_list)
 			{
-				Transform& transform = m_Scene->Registry.get<Transform>(e);
-				SpriteRenderer& spriteRenderer = m_Scene->Registry.get<SpriteRenderer>(e);
+				Transform &transform = m_Scene->Registry.get<Transform>(e);
+				SpriteRenderer &spriteRenderer = m_Scene->Registry.get<SpriteRenderer>(e);
 				if (!spriteRenderer.IsEnabled())
 					continue;
 
-				const Math::vec2& origin = spriteRenderer.GetSpriteOriginVector();
-
-				
+				const Math::vec2 &origin = spriteRenderer.GetSpriteOriginVector();
 
 				if (spriteRenderer.GetSprite()->IsLoaded())
 				{
-
 					auto sprite = spriteRenderer.GetSprite();
 					int w = sprite->Frames[spriteRenderer.CurrentFrame].Texture->GetWidth();
 					int h = sprite->Frames[spriteRenderer.CurrentFrame].Texture->GetHeight();
 					if (!transform.IsChild())
 					{
-						Math::vec2 size = transform.Scale * Math::vec2((float)w, (float)h);
-						Math::vec2 originAdjustment = { Math::abs(size.x) / 2.f - origin.x, -Math::abs(size.y) / 2.f + origin.y};
+						Math::vec2 size = transform.Scale * Math::vec2(static_cast<float>(w), static_cast<float>(h));
+						Math::vec2 originAdjustment = { Math::abs(size.x) / 2.f - origin.x, -Math::abs(size.y) / 2.f + origin.y };
 
-						Chroma::Renderer2D::DrawSprite((int)e, transform.Position + spriteRenderer.Offset + originAdjustment * transform.Scale, size, sprite->Frames[spriteRenderer.CurrentFrame].Texture, spriteRenderer.Color, transform.Rotation);
+						Renderer2D::DrawSprite(static_cast<int>(e), transform.Position + spriteRenderer.Offset + originAdjustment * transform.Scale, size, sprite->Frames[spriteRenderer.CurrentFrame].Texture, spriteRenderer.Color, transform.Rotation);
 					}
 					else
 					{
 						Math::vec2 pos = transform.Position;
 						Math::vec2 scale = transform.Scale;
-						Math::vec2 parentPos{ 0,0 };
+						Math::vec2 parentPos{ 0, 0 };
 						float parentRot = 0;
 						float rotation = transform.Rotation;
 						EntityID parent = transform.Parent;
 						while (parent != ENTITY_NULL)
 						{
-							const Transform& parentTransform = m_Scene->GetComponent<Transform>(parent);
+							const Transform &parentTransform = m_Scene->GetComponent<Transform>(parent);
 							parentPos += parentTransform.Position;
 							scale *= parentTransform.Scale;
 							parentRot += parentTransform.Rotation;
@@ -177,17 +169,13 @@ namespace Chroma
 						//Math::vec2 finalPos = parentPos + adjusted + spriteRenderer.Offset;
 						//CHROMA_CORE_TRACE("Adjusted: [{}, {}]; ParentPos: [{}, {}]; ParentRot: {}, FINAL: [{},{}]", adjusted.x, adjusted.y, parentPos.x, parentPos.y, parentRot, finalPos.x, finalPos.y);
 
-						Math::vec2 size = scale * Math::vec2((float)w, (float)h);
-						Math::vec2 originAdjustment = { Math::abs(size.x) / 2.f - origin.x, -Math::abs(size.y) / 2.f + origin.y};
+						Math::vec2 size = scale * Math::vec2(static_cast<float>(w), static_cast<float>(h));
+						Math::vec2 originAdjustment = { Math::abs(size.x) / 2.f - origin.x, -Math::abs(size.y) / 2.f + origin.y };
 
-						Chroma::Renderer2D::DrawSprite((int)e, parentPos + adjusted + spriteRenderer.Offset + originAdjustment * transform.Scale, size, sprite->Frames[spriteRenderer.CurrentFrame].Texture, spriteRenderer.Color, rotation + parentRot);
+						Renderer2D::DrawSprite(static_cast<int>(e), parentPos + adjusted + spriteRenderer.Offset + originAdjustment * transform.Scale, size, sprite->Frames[spriteRenderer.CurrentFrame].Texture, spriteRenderer.Color, rotation + parentRot);
 					}
-
 				}
 			}
-			
 		}
 	}
 }
-
-

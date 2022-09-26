@@ -7,7 +7,5 @@ namespace Math = glm;
 
 namespace glm
 {
-	float normalize(const float val, const float min, const float max);
+	float normalize(float val, float min, float max);
 }
-
-

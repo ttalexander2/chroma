@@ -12,17 +12,16 @@ namespace Chroma
 	public:
 		/// @brief Constructs an OpenGLContext object given a GLFW window.
 		/// @param windowHandle Window Context.
-		OpenGLContext(GLFWwindow* windowHandle);
+		OpenGLContext(GLFWwindow *windowHandle);
 
 		/// @brief Initialized the context.
-		virtual void Init() override;
+		void Init() override;
 
 		/// @brief Swaps the front and back buffers.
-		virtual void SwapBuffers() override;
-	
+		void SwapBuffers() override;
+
 	private:
 		/// @brief Window handle.
-		GLFWwindow* m_WindowHandle;
+		GLFWwindow *m_WindowHandle;
 	};
 }
-

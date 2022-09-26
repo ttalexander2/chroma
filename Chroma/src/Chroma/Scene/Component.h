@@ -18,7 +18,6 @@
 #include "Chroma/Reflection/Reflection.h"
 
 
-
 namespace Polychrome
 {
 	class Inspector;
@@ -79,55 +78,58 @@ namespace Chroma
 		virtual inline Reflection::Handle ToHandle() const { return Reflection::Handle(*this); }										\
 		friend class Scene;																												\
 		friend struct Reflection;
-		
+
 		Component() :
-				m_EntityID(ENTITY_NULL)
+			m_EntityID(ENTITY_NULL)
 		{
 			comparison_id = comparison_counter++;
 		};
 
-		Component(EntityID id) : m_EntityID(id) 
+		Component(EntityID id) :
+			m_EntityID(id)
 		{
 			comparison_id = comparison_counter++;
 		}
 
-		Component(const Component&) = default;
+		Component(const Component &) = default;
 		virtual ~Component() = default;
 
-		virtual void Initialize() {};
+		virtual void Initialize()
+		{
+		};
 
-		const inline bool Valid() const { return m_EntityID != ENTITY_NULL; }
+		const bool Valid() const { return m_EntityID != ENTITY_NULL; }
 
-		const inline EntityID GetEntityID() const { return m_EntityID; }
-		const inline unsigned int GetUniqueID() const { return comparison_id; }
+		const EntityID GetEntityID() const { return m_EntityID; }
+		const unsigned int GetUniqueID() const { return comparison_id; }
 
-		const inline bool IsEnabled() const { return m_Enabled; }
-		const inline void Enable() { SetEnabled(true); }
-		const inline void Disable() { SetEnabled(false); }
-		virtual const inline void SetEnabled(bool enabled) { m_Enabled = enabled; }
+		const bool IsEnabled() const { return m_Enabled; }
+		const void Enable() { SetEnabled(true); }
+		const void Disable() { SetEnabled(false); }
+		virtual const void SetEnabled(bool enabled) { m_Enabled = enabled; }
 
-		inline int GetOrderID() const { return order_id; }
+		int GetOrderID() const { return order_id; }
 
-		virtual inline const uint32_t TypeId() const { return Reflection::Resolve<Component>().Id(); }
-		virtual inline const std::string TypeName() const { return Reflection::Resolve<Component>().GetName(); }
-		virtual inline const Reflection::Type GetType() const { return Reflection::Resolve<Component>(); }
-		virtual inline Reflection::AnyRef ToAnyRef() const { return Reflection::AnyRef::Create(*this); }
-		virtual inline Reflection::Any ToAny() const { return Reflection::Any(*this); }
-		virtual inline Reflection::Handle ToHandle() const { return Reflection::Handle(*this); }
-		virtual inline bool IsAbstract() const { return true; }
+		virtual const uint32_t TypeId() const { return Reflection::Resolve<Component>().Id(); }
+		virtual const std::string TypeName() const { return Reflection::Resolve<Component>().GetName(); }
+		virtual const Reflection::Type GetType() const { return Reflection::Resolve<Component>(); }
+		virtual Reflection::AnyRef ToAnyRef() const { return Reflection::AnyRef::Create(*this); }
+		virtual Reflection::Any ToAny() const { return Reflection::Any(*this); }
+		virtual Reflection::Handle ToHandle() const { return Reflection::Handle(*this); }
+		virtual bool IsAbstract() const { return true; }
 
-		template <typename T> 
-		inline const bool IsType() const
+		template <typename T>
+		const bool IsType() const
 		{
 			return Reflection::Resolve<T>().Id() == TypeId();
 		}
-		
-		inline const bool IsType(uint32_t id) const
+
+		const bool IsType(uint32_t id) const
 		{
 			return TypeId() == id;
 		}
-		
-		inline const bool IsType(const std::string &type_name) const
+
+		const bool IsType(const std::string &type_name) const
 		{
 			return type_name.compare(TypeName()) == 0;
 		}
@@ -167,11 +169,9 @@ namespace Chroma
 #ifdef CHROMA_DEBUG
 
 	template <typename T>
-	concept ComponentType = std::is_base_of_v<Chroma::Component, T>;
+	concept ComponentType = std::is_base_of_v<Component, T>;
 
 #else
 	#define ComponentType typename
 #endif
-				
 }
-

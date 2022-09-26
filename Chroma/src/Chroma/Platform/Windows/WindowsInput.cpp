@@ -6,9 +6,7 @@
 
 namespace Chroma
 {
-
-
-	Input::Gamepad Input::PrimaryGamepad = Input::Gamepad::_1;
+	Input::Gamepad Input::PrimaryGamepad = Gamepad::_1;
 	std::function<void(Input::Joystick)> Input::GamepadConnectionCallback;
 	std::function<void(Input::Joystick)> Input::GamepadDisconnectionCallback;
 
@@ -17,26 +15,26 @@ namespace Chroma
 		glfwSetJoystickCallback(JoystickCallback);
 	}
 
-	bool Input::IsKeyPressed(Input::Key keycode)
+	bool Input::IsKeyPressed(Key keycode)
 	{
-		auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
-		auto state = glfwGetKey(window, (int)keycode);
+		auto window = static_cast<GLFWwindow *>(Application::Get().GetWindow().GetNativeWindow());
+		auto state = glfwGetKey(window, static_cast<int>(keycode));
 		return state == GLFW_PRESS || state == GLFW_REPEAT;
 	}
 
-	bool Input::IsMouseButtonPressed(Input::Mouse button)
+	bool Input::IsMouseButtonPressed(Mouse button)
 	{
-		auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
-		auto state = glfwGetMouseButton(window, (int)button);
+		auto window = static_cast<GLFWwindow *>(Application::Get().GetWindow().GetNativeWindow());
+		auto state = glfwGetMouseButton(window, static_cast<int>(button));
 		return state == GLFW_PRESS;
 	}
 
 	std::pair<float, float> Input::GetMousePos()
 	{
-		auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
+		auto window = static_cast<GLFWwindow *>(Application::Get().GetWindow().GetNativeWindow());
 		double x, y;
 		glfwGetCursorPos(window, &x, &y);
-		return std::pair<float, float>((double)x, (double)y);
+		return std::pair<float, float>(x, y);
 	}
 
 
@@ -50,65 +48,69 @@ namespace Chroma
 		return GetMousePos().second;
 	}
 
-	bool Input::IsJoystickConnected(Input::Joystick gamepad)
+	bool Input::IsJoystickConnected(Joystick gamepad)
 	{
-		return glfwJoystickPresent((int)gamepad);
+		return glfwJoystickPresent(static_cast<int>(gamepad));
 	}
-	bool Input::IsGamepad(Input::Joystick gamepad)
+
+	bool Input::IsGamepad(Joystick gamepad)
 	{
-		return glfwJoystickIsGamepad((int)gamepad);
+		return glfwJoystickIsGamepad(static_cast<int>(gamepad));
 	}
+
 	Input::Gamepad Input::GetFirstConnectedGamepad()
 	{
-		for (int i = 0; i < (int)Input::Gamepad::_LAST; i++)
+		for (int i = 0; i < static_cast<int>(Input::Gamepad::_LAST); i++)
 		{
 			if (glfwJoystickPresent(i) && glfwJoystickIsGamepad(i))
-				return (Input::Gamepad)i;
+				return static_cast<Input::Gamepad>(i);
 		}
-		return Input::Gamepad::_NULL;
+		return Gamepad::_NULL;
 	}
+
 	Input::Joystick Input::GetFirstConnectedJoystick()
 	{
-		for (int i = 0; i < (int)Input::Joystick::_LAST; i++)
+		for (int i = 0; i < static_cast<int>(Input::Joystick::_LAST); i++)
 		{
 			if (glfwJoystickPresent(i))
-				return (Input::Gamepad)i;
+				return static_cast<Input::Gamepad>(i);
 		}
-		return Input::Gamepad::_NULL;
+		return Gamepad::_NULL;
 	}
+
 	std::vector<Input::Joystick> Input::GetAllConnectedControllers()
 	{
 		std::vector<Joystick> joystick;
-		for (int i = 0; i < (int)Input::Joystick::_LAST; i++)
+		for (int i = 0; i < static_cast<int>(Input::Joystick::_LAST); i++)
 		{
 			if (glfwJoystickPresent(i))
-				joystick.push_back((Input::Joystick)i);
+				joystick.push_back(static_cast<Input::Joystick>(i));
 		}
 		return joystick;
 	}
 
-	const Input::JoystickHatState* Input::GetJoystickHats(Joystick gamepad, int* count)
+	const Input::JoystickHatState *Input::GetJoystickHats(Joystick gamepad, int *count)
 	{
-		return (JoystickHatState*)glfwGetJoystickHats((int)gamepad, count);
+		return (JoystickHatState *)glfwGetJoystickHats(static_cast<int>(gamepad), count);
 	}
 
 	Input::Gamepad Input::SetPrimaryGamepad()
 	{
-		for (int i = 0; i < (int)Input::Joystick::_LAST; i++)
+		for (int i = 0; i < static_cast<int>(Input::Joystick::_LAST); i++)
 		{
 			if (glfwJoystickPresent(i) == GLFW_TRUE)
 			{
-				return PrimaryGamepad = (Input::Joystick)i;
+				return PrimaryGamepad = static_cast<Input::Joystick>(i);
 			}
 		}
 		return Joystick::_NULL;
 	}
 
-	std::vector<float> Input::GetGamepadAxis(Input::Gamepad gamepad)
+	std::vector<float> Input::GetGamepadAxis(Gamepad gamepad)
 	{
 		std::vector<float> ret;
 		int count;
-		const float* axes = glfwGetJoystickAxes((int)gamepad, &count);
+		const float *axes = glfwGetJoystickAxes(static_cast<int>(gamepad), &count);
 		for (int i = 0; i < count; i++)
 		{
 			ret.push_back(axes[count]);
@@ -116,20 +118,20 @@ namespace Chroma
 		return ret;
 	}
 
-	Input::ButtonState Input::GetGamepadButtonState(Input::GamepadButton button, Input::Gamepad gamepad)
+	Input::ButtonState Input::GetGamepadButtonState(GamepadButton button, Gamepad gamepad)
 	{
 		return GetJoystickButtonState(button, gamepad);
 	}
 
-	Input::ButtonState Input::GetJoystickButtonState(Input::JoystickButton button, Input::Joystick gamepad)
+	Input::ButtonState Input::GetJoystickButtonState(JoystickButton button, Joystick gamepad)
 	{
-		if (glfwJoystickPresent((int)gamepad) != GLFW_TRUE)
+		if (glfwJoystickPresent(static_cast<int>(gamepad)) != GLFW_TRUE)
 			return ButtonState::RELEASED;
 		int count;
-		const unsigned char* buttons = glfwGetJoystickButtons((int)gamepad, &count);
+		const unsigned char *buttons = glfwGetJoystickButtons(static_cast<int>(gamepad), &count);
 		if (buttons == nullptr)
 			return ButtonState::RELEASED;
-		if (buttons[(int)button - 1] == GLFW_TRUE)
+		if (buttons[static_cast<int>(button) - 1] == GLFW_TRUE)
 			return ButtonState::PRESSED;
 		return ButtonState::RELEASED;
 	}
@@ -138,42 +140,40 @@ namespace Chroma
 	Input::GamepadState Input::GetGamepadState(Gamepad gamepad)
 	{
 		GLFWgamepadstate glfwstate;
-		int connected = glfwGetGamepadState((int)gamepad, &glfwstate);
+		int connected = glfwGetGamepadState(static_cast<int>(gamepad), &glfwstate);
 		GamepadState state(glfwstate.buttons, glfwstate.axes);
 		return state;
 	}
+
 	Input::ConnectionState Input::GetGamepadConnectionState(Gamepad gamepad)
 	{
-		return (ConnectionState)glfwJoystickPresent((int)gamepad);
+		return static_cast<ConnectionState>(glfwJoystickPresent((int)gamepad));
 	}
 
-	const char* Input::GetGamepadName(Input::Gamepad gamepad)
+	const char *Input::GetGamepadName(Gamepad gamepad)
 	{
-		return glfwGetGamepadName((int)gamepad);
+		return glfwGetGamepadName(static_cast<int>(gamepad));
 	}
 
 	void Input::JoystickCallback(int jid, int evnt)
 	{
-		if (evnt == GLFW_CONNECTED && Input::GamepadConnectionCallback)
+		if (evnt == GLFW_CONNECTED && GamepadConnectionCallback)
 		{
-			Input::GamepadConnectionCallback((Joystick)jid);
+			GamepadConnectionCallback(static_cast<Joystick>(jid));
 		}
-		else if (evnt == GLFW_DISCONNECTED && Input::GamepadDisconnectionCallback)
+		else if (evnt == GLFW_DISCONNECTED && GamepadDisconnectionCallback)
 		{
-			Input::GamepadDisconnectionCallback((Joystick)jid);
+			GamepadDisconnectionCallback(static_cast<Joystick>(jid));
 		}
 	}
 
 	void Input::SetGamepadConnectionCallback(std::function<void(Joystick)> func)
 	{
-		Input::GamepadConnectionCallback = func;
+		GamepadConnectionCallback = func;
 	}
 
 	void Input::SetGamepadDisconnectionCallback(std::function<void(Joystick)> func)
 	{
-		Input::GamepadDisconnectionCallback = func;
+		GamepadDisconnectionCallback = func;
 	}
-
-
-
 }

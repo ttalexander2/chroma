@@ -15,7 +15,7 @@
 
 namespace Chroma
 {
-	static GLenum ShaderTypeFromString(const std::string& type)
+	static GLenum ShaderTypeFromString(const std::string &type)
 	{
 		if (type == "vertex")
 			return GL_VERTEX_SHADER;
@@ -30,25 +30,29 @@ namespace Chroma
 	{
 		switch (stage)
 		{
-		case GL_VERTEX_SHADER:   return shaderc_glsl_vertex_shader;
-		case GL_FRAGMENT_SHADER: return shaderc_glsl_fragment_shader;
+			case GL_VERTEX_SHADER:
+				return shaderc_glsl_vertex_shader;
+			case GL_FRAGMENT_SHADER:
+				return shaderc_glsl_fragment_shader;
 		}
 		CHROMA_CORE_ASSERT(false, "Unknown stage!");
-		return (shaderc_shader_kind)0;
+		return static_cast<shaderc_shader_kind>(0);
 	}
 
-	static const char* GLShaderStageToString(GLenum stage)
+	static const char *GLShaderStageToString(GLenum stage)
 	{
 		switch (stage)
 		{
-		case GL_VERTEX_SHADER:   return "GL_VERTEX_SHADER";
-		case GL_FRAGMENT_SHADER: return "GL_FRAGMENT_SHADER";
+			case GL_VERTEX_SHADER:
+				return "GL_VERTEX_SHADER";
+			case GL_FRAGMENT_SHADER:
+				return "GL_FRAGMENT_SHADER";
 		}
 		CHROMA_CORE_ASSERT(false, "Unknown stage!");
 		return nullptr;
 	}
 
-	static const char* GetCacheDirectory()
+	static const char *GetCacheDirectory()
 	{
 		// TODO: make sure the assets directory is valid
 		return "assets/cache/shader";
@@ -61,32 +65,35 @@ namespace Chroma
 			std::filesystem::create_directories(cacheDirectory);
 	}
 
-	static const char* GLShaderStageCachedOpenGLFileExtension(uint32_t stage)
+	static const char *GLShaderStageCachedOpenGLFileExtension(uint32_t stage)
 	{
 		switch (stage)
 		{
-		case GL_VERTEX_SHADER:    return ".cached_opengl.vert";
-		case GL_FRAGMENT_SHADER:  return ".cached_opengl.frag";
+			case GL_VERTEX_SHADER:
+				return ".cached_opengl.vert";
+			case GL_FRAGMENT_SHADER:
+				return ".cached_opengl.frag";
 		}
 		CHROMA_CORE_ASSERT(false, "Unknown stage!");
 		return "";
 	}
 
-	static const char* GLShaderStageCachedVulkanFileExtension(uint32_t stage)
+	static const char *GLShaderStageCachedVulkanFileExtension(uint32_t stage)
 	{
 		switch (stage)
 		{
-		case GL_VERTEX_SHADER:    return ".cached_vulkan.vert";
-		case GL_FRAGMENT_SHADER:  return ".cached_vulkan.frag";
+			case GL_VERTEX_SHADER:
+				return ".cached_vulkan.vert";
+			case GL_FRAGMENT_SHADER:
+				return ".cached_vulkan.frag";
 		}
 		CHROMA_CORE_ASSERT(false, "Unknown stage!");
 		return "";
 	}
 
-	OpenGLShader::OpenGLShader(const std::string& filePath) :
+	OpenGLShader::OpenGLShader(const std::string &filePath) :
 		m_FilePath(filePath)
 	{
-
 		CreateCacheDirectoryIfNeeded();
 
 		std::string source = ReadFile(filePath);
@@ -99,7 +106,7 @@ namespace Chroma
 		m_Name = std::filesystem::path(filePath).filename().string();
 	}
 
-	OpenGLShader::OpenGLShader(const std::string& name, const std::string& vertexSource, const std::string& fragmentSource) :
+	OpenGLShader::OpenGLShader(const std::string &name, const std::string &vertexSource, const std::string &fragmentSource) :
 		m_Name(name)
 	{
 		std::unordered_map<GLenum, std::string> sources;
@@ -109,7 +116,6 @@ namespace Chroma
 		CompileOrGetVulkanBinaries(sources);
 		CompileOrGetOpenGLBinaries();
 		CreateProgram();
-
 	}
 
 
@@ -119,7 +125,7 @@ namespace Chroma
 	}
 
 
-	std::string OpenGLShader::ReadFile(const std::string& filePath)
+	std::string OpenGLShader::ReadFile(const std::string &filePath)
 	{
 		std::string result;
 		std::ifstream in(filePath, std::ios::in | std::ios::binary);
@@ -148,11 +154,11 @@ namespace Chroma
 	}
 
 
-	std::unordered_map<GLenum, std::string> OpenGLShader::PreProcess(const std::string& source)
+	std::unordered_map<GLenum, std::string> OpenGLShader::PreProcess(const std::string &source)
 	{
 		std::unordered_map<GLenum, std::string> shaderSources;
 
-		const char* typeToken = "#type";
+		auto typeToken = "#type";
 		size_t typeTokenLength = strlen(typeToken);
 		size_t pos = source.find(typeToken, 0);
 		while (pos != std::string::npos)
@@ -171,10 +177,9 @@ namespace Chroma
 		}
 
 		return shaderSources;
-
 	}
 
-	void OpenGLShader::CompileOrGetVulkanBinaries(const std::unordered_map<GLenum, std::string>& shaderSources)
+	void OpenGLShader::CompileOrGetVulkanBinaries(const std::unordered_map<GLenum, std::string> &shaderSources)
 	{
 		shaderc::Compiler compiler;
 		shaderc::CompileOptions options;
@@ -187,10 +192,10 @@ namespace Chroma
 
 		std::filesystem::path cacheDirectory = GetCacheDirectory();
 
-		auto& shaderData = m_VulkanSPIRV;
+		auto &shaderData = m_VulkanSPIRV;
 		shaderData.clear();
 
-		for (auto&& [stage, source] : shaderSources)
+		for (auto &&[stage, source] : shaderSources)
 		{
 			std::filesystem::path shaderFilePath = m_FilePath;
 			std::filesystem::path cachedPath = cacheDirectory / (shaderFilePath.filename().string() + GLShaderStageCachedVulkanFileExtension(stage));
@@ -202,9 +207,9 @@ namespace Chroma
 				auto size = in.tellg();
 				in.seekg(0, std::ios::beg);
 
-				auto& data = shaderData[stage];
+				auto &data = shaderData[stage];
 				data.resize(size / sizeof(uint32_t));
-				in.read((char*)data.data(), size);
+				in.read((char *)data.data(), size);
 			}
 			else
 			{
@@ -220,8 +225,8 @@ namespace Chroma
 				std::ofstream out(cachedPath, std::ios::out | std::ios::binary);
 				if (out.is_open())
 				{
-					auto& data = shaderData[stage];
-					out.write((char*)data.data(), data.size() * sizeof(uint32_t));
+					auto &data = shaderData[stage];
+					out.write((char *)data.data(), data.size() * sizeof(uint32_t));
 					out.flush();
 					out.close();
 				}
@@ -233,7 +238,7 @@ namespace Chroma
 
 	void OpenGLShader::CompileOrGetOpenGLBinaries()
 	{
-		auto& shaderData = m_OpenGLSPRIV;
+		auto &shaderData = m_OpenGLSPRIV;
 
 		shaderc::Compiler compiler;
 		shaderc::CompileOptions options;
@@ -246,7 +251,7 @@ namespace Chroma
 
 		shaderData.clear();
 		m_OpenGLSourceCode.clear();
-		for (auto&& [stage, spirv] : m_VulkanSPIRV)
+		for (auto &&[stage, spirv] : m_VulkanSPIRV)
 		{
 			std::filesystem::path shaderFilePath = m_FilePath;
 			std::filesystem::path cachedPath = cacheDirectory / (shaderFilePath.filename().string() + GLShaderStageCachedOpenGLFileExtension(stage));
@@ -258,15 +263,15 @@ namespace Chroma
 				auto size = in.tellg();
 				in.seekg(0, std::ios::beg);
 
-				auto& data = shaderData[stage];
+				auto &data = shaderData[stage];
 				data.resize(size / sizeof(uint32_t));
-				in.read((char*)data.data(), size);
+				in.read((char *)data.data(), size);
 			}
 			else
 			{
 				spirv_cross::CompilerGLSL glslCompiler(spirv);
 				m_OpenGLSourceCode[stage] = glslCompiler.compile();
-				auto& source = m_OpenGLSourceCode[stage];
+				auto &source = m_OpenGLSourceCode[stage];
 
 				shaderc::SpvCompilationResult module = compiler.CompileGlslToSpv(source, GLShaderStageToShaderC(stage), m_FilePath.c_str());
 				if (module.GetCompilationStatus() != shaderc_compilation_status_success)
@@ -280,8 +285,8 @@ namespace Chroma
 				std::ofstream out(cachedPath, std::ios::out | std::ios::binary);
 				if (out.is_open())
 				{
-					auto& data = shaderData[stage];
-					out.write((char*)data.data(), data.size() * sizeof(uint32_t));
+					auto &data = shaderData[stage];
+					out.write((char *)data.data(), data.size() * sizeof(uint32_t));
 					out.flush();
 					out.close();
 				}
@@ -294,7 +299,7 @@ namespace Chroma
 		GLuint program = glCreateProgram();
 
 		std::vector<GLuint> shaderIDs;
-		for (auto&& [stage, spirv] : m_OpenGLSPRIV)
+		for (auto &&[stage, spirv] : m_OpenGLSPRIV)
 		{
 			shaderIDs.push_back(glCreateShader(stage));
 			GLuint shaderID = shaderIDs.back();
@@ -331,7 +336,7 @@ namespace Chroma
 		m_RendererID = program;
 	}
 
-	void OpenGLShader::Reflect(GLenum stage, const std::vector<uint32_t>& shaderData)
+	void OpenGLShader::Reflect(GLenum stage, const std::vector<uint32_t> &shaderData)
 	{
 		spirv_cross::Compiler compiler(shaderData);
 		spirv_cross::ShaderResources resources = compiler.get_shader_resources();
@@ -341,9 +346,9 @@ namespace Chroma
 		CHROMA_CORE_TRACE("    {0} resources", resources.sampled_images.size());
 
 		CHROMA_CORE_TRACE("Uniform buffers:");
-		for (const auto& resource : resources.uniform_buffers)
+		for (const auto &resource : resources.uniform_buffers)
 		{
-			const auto& bufferType = compiler.get_type(resource.base_type_id);
+			const auto &bufferType = compiler.get_type(resource.base_type_id);
 			size_t bufferSize = compiler.get_declared_struct_size(bufferType);
 			uint32_t binding = compiler.get_decoration(resource.id, spv::DecorationBinding);
 			size_t memberCount = bufferType.member_types.size();
@@ -359,91 +364,97 @@ namespace Chroma
 	{
 		glUseProgram(m_RendererID);
 	}
+
 	void OpenGLShader::Unbind() const
 	{
 		glUseProgram(0);
 	}
 
-	void OpenGLShader::UploadUniformInt(const std::string& name, int value)
+	void OpenGLShader::UploadUniformInt(const std::string &name, int value)
 	{
 		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
 		glUniform1i(location, value);
 	}
 
-	void OpenGLShader::UploadUniformIntArray(const std::string& name, int* values, int count)
+	void OpenGLShader::UploadUniformIntArray(const std::string &name, int *values, int count)
 	{
 		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
 		glUniform1iv(location, count, values);
 	}
 
-	void OpenGLShader::UploadUniformFloat(const std::string& name, float value)
+	void OpenGLShader::UploadUniformFloat(const std::string &name, float value)
 	{
 		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
 		glUniform1f(location, value);
 	}
 
-	void OpenGLShader::UploadUniformFloat2(const std::string& name, const glm::vec2& value)
+	void OpenGLShader::UploadUniformFloat2(const std::string &name, const glm::vec2 &value)
 	{
 		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
 		glUniform2f(location, value.x, value.y);
 	}
 
-	void OpenGLShader::UploadUniformFloat3(const std::string& name, const glm::vec3& value)
+	void OpenGLShader::UploadUniformFloat3(const std::string &name, const glm::vec3 &value)
 	{
 		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
 		glUniform3f(location, value.x, value.y, value.z);
 	}
 
-	void OpenGLShader::UploadUniformFloat4(const std::string& name, const glm::vec4& value)
+	void OpenGLShader::UploadUniformFloat4(const std::string &name, const glm::vec4 &value)
 	{
 		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
 		glUniform4f(location, value.x, value.y, value.z, value.w);
 	}
 
-	void OpenGLShader::UploadUniformMat3(const std::string& name, const glm::mat3& value)
+	void OpenGLShader::UploadUniformMat3(const std::string &name, const glm::mat3 &value)
 	{
 		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
-		glUniformMatrix3fv(location, 1, GL_FALSE, glm::value_ptr(value));
+		glUniformMatrix3fv(location, 1, GL_FALSE, value_ptr(value));
 	}
 
-	void OpenGLShader::UploadUniformMat4(const std::string& name, const glm::mat4& value)
+	void OpenGLShader::UploadUniformMat4(const std::string &name, const glm::mat4 &value)
 	{
 		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
-		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(value));
+		glUniformMatrix4fv(location, 1, GL_FALSE, value_ptr(value));
 	}
 
-	void OpenGLShader::SetUniformInt(const std::string& name, int value)
+	void OpenGLShader::SetUniformInt(const std::string &name, int value)
 	{
 		UploadUniformInt(name, value);
 	}
 
-	void OpenGLShader::SetUniformIntArray(const std::string& name, int* values, int count)
+	void OpenGLShader::SetUniformIntArray(const std::string &name, int *values, int count)
 	{
 		UploadUniformIntArray(name, values, count);
 	}
-	void OpenGLShader::SetUniformFloat(const std::string& name, float value)
+
+	void OpenGLShader::SetUniformFloat(const std::string &name, float value)
 	{
 		UploadUniformFloat(name, value);
 	}
-	void OpenGLShader::SetUniformFloat2(const std::string& name, const glm::vec2& value)
+
+	void OpenGLShader::SetUniformFloat2(const std::string &name, const glm::vec2 &value)
 	{
 		UploadUniformFloat2(name, value);
 	}
-	void OpenGLShader::SetUniformFloat3(const std::string& name, const glm::vec3& value)
+
+	void OpenGLShader::SetUniformFloat3(const std::string &name, const glm::vec3 &value)
 	{
 		UploadUniformFloat3(name, value);
 	}
-	void OpenGLShader::SetUniformFloat4(const std::string& name, const glm::vec4& value)
+
+	void OpenGLShader::SetUniformFloat4(const std::string &name, const glm::vec4 &value)
 	{
 		UploadUniformFloat4(name, value);
 	}
-	void OpenGLShader::SetUniformMat3(const std::string& name, const glm::mat3& uniform)
+
+	void OpenGLShader::SetUniformMat3(const std::string &name, const glm::mat3 &uniform)
 	{
 		UploadUniformMat3(name, uniform);
 	}
-	void OpenGLShader::SetUniformMat4(const std::string& name, const glm::mat4& uniform)
+
+	void OpenGLShader::SetUniformMat4(const std::string &name, const glm::mat4 &uniform)
 	{
 		UploadUniformMat4(name, uniform);
 	}
-
 }

@@ -21,28 +21,28 @@ namespace Chroma
 
 	void Reflection::InitializeDataTypes()
 	{
-		Reflection::Register<bool>("bool");
-		Reflection::Register<float>("float");
-		Reflection::Register<double>("double");
-		Reflection::Register<int32_t>("int32");
-		Reflection::Register<int64_t>("int64");
-		Reflection::Register<uint32_t>("uint32");
-		Reflection::Register<uint64_t>("uint64");
-		Reflection::Register<char>("char");
-		Reflection::Register<unsigned char>("uchar");
-		Reflection::Register<const char *>("cstring");
-		Reflection::Register<std::string>("string");
+		Register<bool>("bool");
+		Register<float>("float");
+		Register<double>("double");
+		Register<int32_t>("int32");
+		Register<int64_t>("int64");
+		Register<uint32_t>("uint32");
+		Register<uint64_t>("uint64");
+		Register<char>("char");
+		Register<unsigned char>("uchar");
+		Register<const char *>("cstring");
+		Register<std::string>("string");
 
-		Reflection::Register<Chroma::Ref<Chroma::Asset>>("Asset");
+		Register<Ref<Asset>>("Asset");
 
-		Reflection::Register<Math::vec2>("vec2");
-		Reflection::Register<Math::vec3>("vec3");
-		Reflection::Register<Math::vec4>("vec4");
-		Reflection::Register<Math::uvec2>("uvec2");
-		Reflection::Register<Math::uvec3>("uvec3");
-		Reflection::Register<Math::uvec4>("uvec4");
-		Reflection::Register<Chroma::EntityID>("EntityID");
-		Reflection::Register<Chroma::GUID>("GUID");
+		Register<Math::vec2>("vec2");
+		Register<Math::vec3>("vec3");
+		Register<Math::vec4>("vec4");
+		Register<Math::uvec2>("uvec2");
+		Register<Math::uvec3>("uvec3");
+		Register<Math::uvec4>("uvec4");
+		Register<EntityID>("EntityID");
+		Register<GUID>("GUID");
 
 		REGISTER_YAML_TYPE(bool);
 		REGISTER_YAML_TYPE(float);
@@ -65,7 +65,7 @@ namespace Chroma
 		REGISTER_YAML_TYPE(Chroma::GUID);
 	}
 
-	void Reflection::SerializeObjectYAML(YAML::Emitter &out, Reflection::Any& object, int depth)
+	void Reflection::SerializeObjectYAML(YAML::Emitter &out, Any &object, int depth)
 	{
 		if (!object)
 		{
@@ -83,9 +83,7 @@ namespace Chroma
 
 		//The object is not a primitive
 
-
 		//CHROMA_CORE_INFO("{}{}", std::string(depth, '\t'), object.Type().GetName());
-
 
 		//Just to prevent crashing from circular references
 		if (depth >= 64)
@@ -94,7 +92,6 @@ namespace Chroma
 			return;
 		}
 
-
 		depth++;
 
 		auto descriptor = Resolve<std::string>();
@@ -102,14 +99,13 @@ namespace Chroma
 		out << YAML::BeginMap;
 
 		//Loop through data members of the object
-		for (auto& data : object.Type().Data())
+		for (auto &data : object.Type().Data())
 		{
-
 			if (!data.Serialized(&object))
 				continue;
-		
-			Reflection::Any value = data.Get(object);
-		
+
+			Any value = data.Get(object);
+
 			uint32_t hash = data.Type().Id();
 			if (s_SerializeYAMLFunctions.contains(hash)) //If the type is a registered primitive
 			{
@@ -120,7 +116,7 @@ namespace Chroma
 			else if (data.Type().IsEnum()) //The type is an enum.
 			{
 				//Find the type of the enum value
-				for (auto& enumType : data.Type().Data())
+				for (auto &enumType : data.Type().Data())
 				{
 					if (enumType.Get({}) == value)
 					{
@@ -129,7 +125,6 @@ namespace Chroma
 						break;
 					}
 				}
-				
 			}
 			else if (data.Type().IsSequenceContainer()) //The type is a sequence container
 			{
@@ -173,20 +168,17 @@ namespace Chroma
 		depth--;
 	}
 
-	void Reflection::SerliazeObjectBinary(File &file, Reflection::Any& object, int depth)
+	void Reflection::SerliazeObjectBinary(File &file, Any &object, int depth)
 	{
-
 	}
 
-	void Reflection::DeserializeObjectYAML(Reflection::Any& any, Type type, YAML::Node &node, int depth)
+	void Reflection::DeserializeObjectYAML(Any &any, Type type, YAML::Node &node, int depth)
 	{
-
 		if (!any.Valid())
 		{
 			CHROMA_CORE_ERROR("Could not deserialize object! DEPTH: {}", depth);
 			return;
 		}
-
 
 		//CHROMA_CORE_TRACE("{}", object.Type().GetName());
 
@@ -196,7 +188,6 @@ namespace Chroma
 			CHROMA_CORE_ERROR("Could not serialize object! Max depth exceeded.");
 			return;
 		}
-
 
 		depth++;
 		for (auto &data : type.Data())
@@ -209,16 +200,16 @@ namespace Chroma
 
 				if (s_DeserializeYAMLFunctions.contains(data.Type().Id()))
 				{
-					Reflection::Any val = s_DeserializeYAMLFunctions[data.Type().Id()](data_node);
+					Any val = s_DeserializeYAMLFunctions[data.Type().Id()](data_node);
 					if (data.GetName() == "Color")
 					{
-						Math::vec4 color = any.Get(data.Id()).Cast<Math::vec4>();
+						auto color = any.Get(data.Id()).Cast<Math::vec4>();
 						CHROMA_CORE_TRACE("Color: {}, {}, {}, {}", color.r, color.g, color.b, color.a);
 					}
 					any.Set(data.Id(), val);
 					if (data.GetName() == "Color")
 					{
-						Math::vec4 color = any.Get(data.Id()).Cast<Math::vec4>();
+						auto color = any.Get(data.Id()).Cast<Math::vec4>();
 						CHROMA_CORE_TRACE("Color: {}, {}, {}, {}", color.r, color.g, color.b, color.a);
 					}
 				}
@@ -230,28 +221,26 @@ namespace Chroma
 						{
 							if (enumType.GetName() == data_node.as<std::string>())
 							{
-								Reflection::Any val = enumType.Get({});
+								Any val = enumType.Get({});
 								any.Set(data.Id(), val);
 								break;
 							}
 						}
-
 					}
 				}
-				else if (data.Type().IsSequenceContainer()) 
+				else if (data.Type().IsSequenceContainer())
 				{
 					if (data_node && data_node.IsSequence())
 					{
-						Reflection::Any containerAny = data.Get(any.Handle());
+						Any containerAny = data.Get(any.Handle());
 
 						SequenceContainer container = containerAny.AsSequenceContainer();
 						auto valType = container.ValueType();
-						
 
 						for (int i = 0; i < data_node.size(); i++)
 						{
 							YAML::Node item = data_node[i];
-							Reflection::Any val = valType.Construct();
+							Any val = valType.Construct();
 							DeserializeObjectYAML(val, valType, item);
 							container[i] = val;
 						}
@@ -262,7 +251,7 @@ namespace Chroma
 				{
 					if (data_node && data_node.IsMap())
 					{
-						Reflection::Any val = data.Get(any.Handle());
+						Any val = data.Get(any.Handle());
 						AssociativeContainer container = val.AsAssociativeContainer();
 						auto keyType = container.KeyType();
 						auto valType = container.ValueType();
@@ -271,10 +260,10 @@ namespace Chroma
 						{
 							YAML::Node keyNode = data_node[i];
 							YAML::Node valueNode = data_node[i][keyNode.as<std::string>()];
-							
-							Reflection::Any key = keyType.Construct();
+
+							Any key = keyType.Construct();
 							DeserializeObjectYAML(key, keyType, keyNode);
-							Reflection::Any value = valType.Construct();
+							Any value = valType.Construct();
 							DeserializeObjectYAML(value, valType, valueNode);
 
 							container.Insert(key, value);
@@ -285,7 +274,7 @@ namespace Chroma
 				}
 				else if (data.Type().IsClass())
 				{
-					Reflection::Any val = data.Get(any.Handle());
+					Any val = data.Get(any.Handle());
 					DeserializeObjectYAML(val, data.Type(), data_node);
 					any.Set(data.Id(), val);
 				}
@@ -300,9 +289,7 @@ namespace Chroma
 		//*any = object; 
 	}
 
-	void Reflection::DeserializeObjectBinary(Reflection::Any& any, Type type, File &file, int depth)
+	void Reflection::DeserializeObjectBinary(Any &any, Type type, File &file, int depth)
 	{
-		return;
 	}
-
 } //namespace Chroma

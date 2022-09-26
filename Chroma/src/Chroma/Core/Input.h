@@ -8,14 +8,12 @@ namespace Chroma
 	class CHROMA_API Input
 	{
 	public:
-
 		//For lua bindings
 		Input() = default;
 
 		static void Init();
 
 #pragma region Mouse & Keyboard
-
 
 
 		enum class Mouse
@@ -39,11 +37,16 @@ namespace Chroma
 		{
 			/// PRINTABLE KEYS
 			SPACE = 32,
-			APOSTROPHE = 39, /* ' */
-			COMMA = 44, /* , */
-			MINUS = 45, /* - */
-			PERIOD = 46, /* . */
-			SLASH = 47, /* / */
+			APOSTROPHE = 39,
+			/* ' */
+			COMMA = 44,
+			/* , */
+			MINUS = 45,
+			/* - */
+			PERIOD = 46,
+			/* . */
+			SLASH = 47,
+			/* / */
 			K_0 = 48,
 			K_1 = 49,
 			K_2 = 50,
@@ -54,8 +57,10 @@ namespace Chroma
 			K_7 = 55,
 			K_8 = 56,
 			K_9 = 57,
-			SEMICOLON = 59, /* ; */
-			EQUAL = 61, /* = */
+			SEMICOLON = 59,
+			/* ; */
+			EQUAL = 61,
+			/* = */
 			A = 65,
 			B = 66,
 			C = 67,
@@ -82,12 +87,18 @@ namespace Chroma
 			X = 88,
 			Y = 89,
 			Z = 90,
-			LEFT_BRACKET = 91, /* [ */
-			BACKSLASH = 92, /* \ */
-			RIGHT_BRACKET = 93, /* ] */
-			GRAVE_ACCENT = 96, /* ` */
-			WORLD_1 = 161, /* non-US #1 */
-			WORLD_2 = 162, /* non-US #2 */
+			LEFT_BRACKET = 91,
+			/* [ */
+			BACKSLASH = 92,
+			/* \ */
+			RIGHT_BRACKET = 93,
+			/* ] */
+			GRAVE_ACCENT = 96,
+			/* ` */
+			WORLD_1 = 161,
+			/* non-US #1 */
+			WORLD_2 = 162,
+			/* non-US #2 */
 
 			ESCAPE = 256,
 			ENTER = 257,
@@ -162,11 +173,11 @@ namespace Chroma
 
 			_LAST = MENU
 		};
-		
+
 		/// @brief Check if a specific key is pressed.
-		static bool IsKeyPressed(Input::Key keycode);
+		static bool IsKeyPressed(Key keycode);
 		/// @brief Check if a mouse button is pressed.
-		static bool IsMouseButtonPressed(Input::Mouse button);
+		static bool IsMouseButtonPressed(Mouse button);
 		/// @brief Get the current mouse position.
 		static std::pair<float, float> GetMousePos();
 		/// @brief Get the mouse X position.
@@ -219,26 +230,26 @@ namespace Chroma
 		/// @brief Possible Gamepad Buttons
 		enum class GamepadButton
 		{
-			A					= 0,
-			B					= 1,
-			X					= 2,
-			Y					= 3,
-			LEFT_BUMPER			= 4,
-			RIGHT_BUMPER		= 5,
-			BACK				= 6,
-			START				= 7,
-			GUIDE				= 8,
-			LEFT_THUMB			= 9,
-			RIGHT_THUMB			= 10,
-			DPAD_UP				= 11,
-			DPAD_RIGHT			= 12,
-			DPAD_DOWN			= 13,
-			DPAD_LEFT			= 14,
-			_LAST				= DPAD_DOWN,
-			CROSS				= A,
-			CIRCLE				= B,
-			SQUARE				= X,
-			TRIANGLE			= Y
+			A = 0,
+			B = 1,
+			X = 2,
+			Y = 3,
+			LEFT_BUMPER = 4,
+			RIGHT_BUMPER = 5,
+			BACK = 6,
+			START = 7,
+			GUIDE = 8,
+			LEFT_THUMB = 9,
+			RIGHT_THUMB = 10,
+			DPAD_UP = 11,
+			DPAD_RIGHT = 12,
+			DPAD_DOWN = 13,
+			DPAD_LEFT = 14,
+			_LAST = DPAD_DOWN,
+			CROSS = A,
+			CIRCLE = B,
+			SQUARE = X,
+			TRIANGLE = Y
 		};
 
 		enum class GamepadAxis
@@ -264,12 +275,12 @@ namespace Chroma
 
 			const ButtonState operator[](GamepadButton button) const
 			{
-				return Buttons[(int)button];
+				return Buttons[static_cast<int>(button)];
 			}
 
 			const float operator[](GamepadAxis button) const
 			{
-				return Axis[(int)button];
+				return Axis[static_cast<int>(button)];
 			}
 
 			/// @brief Gets the state of a specific button
@@ -277,22 +288,22 @@ namespace Chroma
 			/// @return Button state
 			const ButtonState GetButtonState(GamepadButton button) const
 			{
-				return Buttons[(int)button];
+				return Buttons[static_cast<int>(button)];
 			}
 
 			/// @brief Gets an array of size ButtonCount. Indexable with GamepadButton enum.
 			/// @return  Array containing the states of all the buttons.
-			const ButtonState* GetButtonStates() const
+			const ButtonState *GetButtonStates() const
 			{
 				return Buttons;
 			}
 
 			const float GetAxisState(GamepadAxis axis) const
 			{
-				return Axis[(int)axis];
+				return Axis[static_cast<int>(axis)];
 			}
 
-			const float* GetAxisStates() const
+			const float *GetAxisStates() const
 			{
 				return Axis;
 			}
@@ -302,18 +313,18 @@ namespace Chroma
 			{
 				for (int i = 0; i < ButtonCount; i++)
 				{
-					Buttons[i] = (ButtonState)buttons[i];
+					Buttons[i] = static_cast<ButtonState>(buttons[i]);
 				}
 				for (int i = 0; i < AxisCount; i++)
 				{
 					Axis[i] = axis[i];
 				}
-			} 
+			}
+
 			ButtonState Buttons[ButtonCount];
 			float Axis[AxisCount];
-			
+
 			friend class Input;
-			
 		};
 
 		enum class ConnectionState
@@ -324,55 +335,47 @@ namespace Chroma
 
 		enum class JoystickHatState
 		{
-			CENTERED	= 0,
-			UP			= 1,
-			RIGHT		= 2,
-			DOWN		= 4,
-			LEFT		= 8,
-			RIGHT_UP	= RIGHT | UP,
-			RIGHT_DOWN	= RIGHT | DOWN,
-			LEFT_UP	= LEFT | UP,
-			LEFT_DOWN	= LEFT | DOWN
+			CENTERED = 0,
+			UP = 1,
+			RIGHT = 2,
+			DOWN = 4,
+			LEFT = 8,
+			RIGHT_UP = RIGHT | UP,
+			RIGHT_DOWN = RIGHT | DOWN,
+			LEFT_UP = LEFT | UP,
+			LEFT_DOWN = LEFT | DOWN
 		};
 
 
-		static bool IsJoystickConnected(Joystick gamepad = Input::PrimaryGamepad);
-		static bool IsGamepad(Joystick gamepad = Input::PrimaryGamepad);
+		static bool IsJoystickConnected(Joystick gamepad = PrimaryGamepad);
+		static bool IsGamepad(Joystick gamepad = PrimaryGamepad);
 		static Gamepad GetFirstConnectedGamepad();
 		static Joystick GetFirstConnectedJoystick();
 		static std::vector<Joystick> GetAllConnectedControllers();
-		static const JoystickHatState* GetJoystickHats(Joystick gamepad, int* count);
+		static const JoystickHatState *GetJoystickHats(Joystick gamepad, int *count);
 
 		static Gamepad SetPrimaryGamepad();
 
-		static std::vector<float> GetGamepadAxis(Gamepad gamepad = Input::PrimaryGamepad);
-		static ButtonState GetGamepadButtonState(GamepadButton button, Gamepad gamepad = Input::PrimaryGamepad);
-		static ButtonState GetJoystickButtonState(JoystickButton button, Joystick gamepad = Input::PrimaryGamepad);
+		static std::vector<float> GetGamepadAxis(Gamepad gamepad = PrimaryGamepad);
+		static ButtonState GetGamepadButtonState(GamepadButton button, Gamepad gamepad = PrimaryGamepad);
+		static ButtonState GetJoystickButtonState(JoystickButton button, Joystick gamepad = PrimaryGamepad);
 
-		static GamepadState GetGamepadState(Gamepad gamepad = Input::PrimaryGamepad);
-		static ConnectionState GetGamepadConnectionState(Gamepad gamepad = Input::PrimaryGamepad);
+		static GamepadState GetGamepadState(Gamepad gamepad = PrimaryGamepad);
+		static ConnectionState GetGamepadConnectionState(Gamepad gamepad = PrimaryGamepad);
 
-		static const char* GetGamepadName(Gamepad = Input::PrimaryGamepad);
+		static const char *GetGamepadName(Gamepad = PrimaryGamepad);
 
 		static void SetGamepadConnectionCallback(std::function<void(Joystick)> func);
 		static void SetGamepadDisconnectionCallback(std::function<void(Joystick)> func);
 
 
-
 #pragma endregion
 
 	private:
-
 		static std::function<void(Joystick)> GamepadConnectionCallback;
 		static std::function<void(Joystick)> GamepadDisconnectionCallback;
 
 		static void JoystickCallback(int jit, int evnt);
-
-
-
-
-
-
 	};
 }
 

@@ -10,7 +10,6 @@
 
 namespace Chroma
 {
-
 	struct Animation : public Asset
 	{
 		CHROMA_ASSET(Animation, Asset);
@@ -44,7 +43,7 @@ namespace Chroma
 
 		struct TimeSort
 		{
-			bool operator ()(const Keyframe& lhs, const Keyframe& rhs) const
+			bool operator ()(const Keyframe &lhs, const Keyframe &rhs) const
 			{
 				return lhs.time < rhs.time;
 			}
@@ -54,8 +53,8 @@ namespace Chroma
 		{
 			UpdateType update;
 			std::multiset<Keyframe, TimeSort> keyframes;
-			Chroma::EntityID entityID;
-			size_t componentID;
+			EntityID entityID;
+			uint32_t componentID;
 			uint32_t propertyID;
 		};
 
@@ -63,5 +62,4 @@ namespace Chroma
 		LoopType loop_type;
 		std::vector<Track> tracks;
 	};
-
 }

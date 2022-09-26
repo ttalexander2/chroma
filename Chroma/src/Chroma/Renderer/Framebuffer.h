@@ -23,8 +23,9 @@ namespace Chroma
 	struct FramebufferTextureSpecification
 	{
 		FramebufferTextureSpecification() = default;
-		FramebufferTextureSpecification(FramebufferTextureFormat format)
-			:TextureFormat(format)
+
+		FramebufferTextureSpecification(FramebufferTextureFormat format) :
+			TextureFormat(format)
 		{
 		}
 
@@ -35,10 +36,12 @@ namespace Chroma
 	struct FramebufferAttachmentSpecification
 	{
 		FramebufferAttachmentSpecification() = default;
-		FramebufferAttachmentSpecification(std::initializer_list<FramebufferTextureSpecification> attachments)
-			:Attachments(attachments)
+
+		FramebufferAttachmentSpecification(std::initializer_list<FramebufferTextureSpecification> attachments) :
+			Attachments(attachments)
 		{
 		}
+
 		std::vector<FramebufferTextureSpecification> Attachments;
 	};
 
@@ -57,7 +60,7 @@ namespace Chroma
 	{
 	public:
 		virtual ~Framebuffer() = default;
-		static Ref<Framebuffer> Create(const FramebufferSpecification& spec);
+		static Ref<Framebuffer> Create(const FramebufferSpecification &spec);
 
 		virtual void Invalidate() = 0;
 		virtual void Resize(uint32_t width, uint32_t height) = 0;
@@ -68,12 +71,8 @@ namespace Chroma
 		virtual void Unbind() = 0;
 
 		virtual uint32_t GetColorAttachmentRendererID(uint32_t index = 0) const = 0;
-		virtual const FramebufferSpecification& GetSpecification() const = 0;
+		virtual const FramebufferSpecification &GetSpecification() const = 0;
 
 		virtual void ClearAttachment(uint32_t attachmentIndex, int value) = 0;
-
-		
 	};
 }
-
-

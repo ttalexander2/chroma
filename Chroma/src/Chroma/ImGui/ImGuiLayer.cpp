@@ -16,40 +16,39 @@ namespace Chroma
 {
 	ImGuiLayer::ImGuiLayer()
 	{
-
 	}
+
 	ImGuiLayer::~ImGuiLayer()
 	{
-
 	}
 
 	void ImGuiLayer::OnAttach()
 	{
 		IMGUI_CHECKVERSION();
-		ImGuiContext* ctx = ImGui::CreateContext();
+		ImGuiContext *ctx = ImGui::CreateContext();
 		ImGui::SetCurrentContext(ctx);
-		
-		ImGuiIO& io = ImGui::GetIO(); (void)io;
-		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;   //Enable keyboard controls
+
+		ImGuiIO &io = ImGui::GetIO();
+		(void)io;
+		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; //Enable keyboard controls
 		//io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;  //Enable gamepad controls
-		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;       //Enable docking
-		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;     //Enable Multi-viewport windows
-		
+		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable; //Enable docking
+		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable; //Enable Multi-viewport windows
+
 		ImGui::StyleColorsDark();
 
-		ImGuiStyle& style = ImGui::GetStyle();
+		ImGuiStyle &style = ImGui::GetStyle();
 		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
 		{
 			style.WindowRounding = 0.0f;
 			style.Colors[ImGuiCol_WindowBg].w = 1.0f;
 		}
 
-		Application& app = Application::Get();
-		GLFWwindow* window = static_cast<GLFWwindow*>(app.GetWindow().GetNativeWindow());
+		Application &app = Application::Get();
+		auto window = static_cast<GLFWwindow *>(app.GetWindow().GetNativeWindow());
 
 		ImGui_ImplGlfw_InitForOpenGL(window, true);
 		ImGui_ImplOpenGL3_Init("#version 410");
-
 	}
 
 	void ImGuiLayer::OnDetach()
@@ -57,15 +56,13 @@ namespace Chroma
 		ImGui_ImplOpenGL3_Shutdown();
 		ImGui_ImplGlfw_Shutdown();
 		ImGui::DestroyContext();
-		
-
 	}
 
-	void ImGuiLayer::OnEvent(Event& e)
+	void ImGuiLayer::OnEvent(Event &e)
 	{
 		if (m_BlockEvents)
 		{
-			ImGuiIO& io = ImGui::GetIO();
+			ImGuiIO &io = ImGui::GetIO();
 			e.Handled |= e.IsInCategory(EventCategoryMouse) & io.WantCaptureMouse;
 			e.Handled |= e.IsInCategory(EventCategoryKeyboard) & io.WantCaptureKeyboard;
 		}
@@ -81,8 +78,8 @@ namespace Chroma
 
 	void ImGuiLayer::End()
 	{
-		ImGuiIO& io = ImGui::GetIO();
-		Application& app = Application::Get();
+		ImGuiIO &io = ImGui::GetIO();
+		Application &app = Application::Get();
 		io.DisplaySize = ImVec2(static_cast<float>(app.GetWindow().GetWidth()), static_cast<float>(app.GetWindow().GetHeight()));
 
 		//Rendering
@@ -91,14 +88,10 @@ namespace Chroma
 
 		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
 		{
-			GLFWwindow* backup_current_context = glfwGetCurrentContext();
+			GLFWwindow *backup_current_context = glfwGetCurrentContext();
 			ImGui::UpdatePlatformWindows();
 			ImGui::RenderPlatformWindowsDefault();
 			glfwMakeContextCurrent(backup_current_context);
 		}
-
-
 	}
-
-	
 }

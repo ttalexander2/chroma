@@ -6,7 +6,6 @@
 #include "Chroma/Events/Event.h"
 
 
-
 namespace Chroma
 {
 	class GraphicsContext;
@@ -27,11 +26,14 @@ namespace Chroma
 		/// @param title Title of the window.
 		/// @param width Width of the window.
 		/// @param height Height of the window.
-		WindowProps(const std::string& title = "Polychrome",
-			unsigned int width = 1920,
-			unsigned int height = 1080,
-			bool decorated = true)
-			: Title(title), Width(width), Height(height), Decorated(decorated)
+		WindowProps(const std::string &title = "Polychrome",
+				unsigned int width = 1920,
+				unsigned int height = 1080,
+				bool decorated = true) :
+			Title(title),
+			Width(width),
+			Height(height),
+			Decorated(decorated)
 		{
 		}
 	};
@@ -41,10 +43,12 @@ namespace Chroma
 	{
 	public:
 		/// @brief Defines an event callback function type.
-		using EventCallbackFn = std::function<void(Event&)>;
+		using EventCallbackFn = std::function<void(Event &)>;
 
 		/// @brief Window destructor.
-		virtual ~Window() {}
+		virtual ~Window()
+		{
+		}
 
 		/// @brief Window update function, to be called once per frame to update the window
 		virtual void OnUpdate() = 0;
@@ -61,7 +65,7 @@ namespace Chroma
 
 		/// @brief Sets the event callback function, to be executed on any window event.
 		/// @param callback Callback function.
-		virtual void SetEventCallback(const EventCallbackFn& callback) = 0;
+		virtual void SetEventCallback(const EventCallbackFn &callback) = 0;
 
 		/// @brief Enable/Disables VSync.
 		/// @param enabled Whether VSync should be enabled.
@@ -73,15 +77,13 @@ namespace Chroma
 
 		/// @brief Gets the native window implementation object.
 		/// @return Returns a void pointer. Casting of this pointer would be dependent on the windowing backend.
-		virtual void* GetNativeWindow() const = 0;
+		virtual void *GetNativeWindow() const = 0;
 
-		inline virtual GraphicsContext* GetGraphicsContext() const = 0;
+		inline virtual GraphicsContext *GetGraphicsContext() const = 0;
 
 		/// @brief Create a new window. The engine should do this for you.
 		/// @param props Window properties (name & size).
 		/// @return Pointer to the newly created window.
-		static Window* Create(const WindowProps& props = WindowProps());
-
+		static Window *Create(const WindowProps &props = WindowProps());
 	};
 }
-

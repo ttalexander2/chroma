@@ -73,11 +73,11 @@ namespace Chroma
 	Reflection::TypeFactory<EdgeCollider> EdgeCollider::RegisterType()
 	{
 		return Reflection::Register<EdgeCollider>("EdgeCollider")
-				.Base<Collider>()
-				.Data<&EdgeCollider::SetV0, &EdgeCollider::GetV0>("V0")
-				.Data<&EdgeCollider::SetV1, &EdgeCollider::GetV1>("V1")
-				.Data<&EdgeCollider::SetV2, &EdgeCollider::GetV2>("V2")
-				.Data<&EdgeCollider::SetV3, &EdgeCollider::GetV3>("V3")
-				.Data<&EdgeCollider::SetOneSided, &EdgeCollider::IsOneSided>("OneSided");
+		       .Base<Collider>()
+		       .Data<&EdgeCollider::SetV0, &EdgeCollider::GetV0>("V0")
+		       .Data<&EdgeCollider::SetV1, &EdgeCollider::GetV1>("V1")
+		       .Data<&EdgeCollider::SetV2, &EdgeCollider::GetV2>("V2")
+		       .Data<&EdgeCollider::SetV3, &EdgeCollider::GetV3>("V3")
+		       .Data<&EdgeCollider::SetOneSided, &EdgeCollider::IsOneSided>("OneSided");
 	}
 }

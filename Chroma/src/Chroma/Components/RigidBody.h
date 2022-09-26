@@ -26,7 +26,7 @@ namespace Chroma
 		struct MassData
 		{
 			float mass = 0;
-			Math::vec2 center = {0.f, 0.f};
+			Math::vec2 center = { 0.f, 0.f };
 			float inertia = 0;
 		};
 
@@ -65,7 +65,7 @@ namespace Chroma
 		void ResetMassData();
 		MassData GetMassData();
 
-		inline bool HasCustomMassData() const { return m_UseCustomMassData; }
+		bool HasCustomMassData() const { return m_UseCustomMassData; }
 
 		void ApplyForce(const Math::vec2 &force, const Math::vec2 &point);
 		void ApplyForce(const Math::vec2 &force, const Math::vec2 &point, bool wake);
@@ -81,9 +81,8 @@ namespace Chroma
 		void ApplyAngularImpulse(float impulse, bool wake);
 
 	private:
-
 		b2BodyDef m_BodyDefinition;
-		b2Body * m_Body = nullptr;
+		b2Body *m_Body = nullptr;
 		std::vector<b2FixtureDef> m_FixtureDefinitions;
 		std::vector<b2Fixture> m_Fixtures;
 
@@ -91,8 +90,5 @@ namespace Chroma
 		float m_Mass = 0;
 		Math::vec2 m_CenterOfMass = { 0.f, 0.f };
 		float m_Inertia = 0;
-
-
-
 	};
 }

@@ -13,7 +13,7 @@ void Chroma::VulkanRendererAPI::Init()
 {
 }
 
-void Chroma::VulkanRendererAPI::SetClearColor(const glm::vec4& color)
+void Chroma::VulkanRendererAPI::SetClearColor(const glm::vec4 &color)
 {
 }
 

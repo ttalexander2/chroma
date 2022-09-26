@@ -13,11 +13,8 @@
 
 namespace Chroma
 {
-
-
-
-	OpenGLTexture2D::OpenGLTexture2D(const std::string& path, bool flip_vertically)
-		:m_Path(path)
+	OpenGLTexture2D::OpenGLTexture2D(const std::string &path, bool flip_vertically) :
+		m_Path(path)
 	{
 		int width, height, channels;
 
@@ -26,7 +23,7 @@ namespace Chroma
 		else
 			stbi_set_flip_vertically_on_load(0);
 
-		auto file = Chroma::File::Open(path);
+		auto file = File::Open(path);
 		if (!file.Good())
 		{
 			CHROMA_CORE_ERROR("Failed to load texture: [{}]", path);
@@ -39,8 +36,7 @@ namespace Chroma
 
 		file.Close();
 
-		stbi_uc* data = stbi_load_from_memory(raw_data.data(), static_cast<int>(len), &width, &height, &channels, 0);
-
+		stbi_uc *data = stbi_load_from_memory(raw_data.data(), static_cast<int>(len), &width, &height, &channels, 0);
 
 		CHROMA_ASSERT(data, "Failed to load image \'{0}\'", path);
 		m_Width = width;
@@ -72,10 +68,10 @@ namespace Chroma
 		stbi_image_free(data);
 	}
 
-	OpenGLTexture2D::OpenGLTexture2D(uint32_t width, uint32_t height)
-		:m_Width(width), m_Height(height)
+	OpenGLTexture2D::OpenGLTexture2D(uint32_t width, uint32_t height) :
+		m_Width(width),
+		m_Height(height)
 	{
-
 		m_InternalFormat = GL_RGBA8;
 		m_DataFormat = GL_RGBA;
 
@@ -98,7 +94,7 @@ namespace Chroma
 		glBindTextureUnit(slot, m_RendererID);
 	}
 
-	void OpenGLTexture2D::SetData(void* data, uint32_t size)
+	void OpenGLTexture2D::SetData(void *data, uint32_t size)
 	{
 		uint32_t bytesPerPixel = m_DataFormat == GL_RGBA ? 4 : 3;
 		CHROMA_CORE_ASSERT(size == m_Width * m_Height * bytesPerPixel, "Data does not match texture size");
@@ -159,5 +155,4 @@ namespace Chroma
 
 		glTextureParameteri(m_RendererID, gl_type, gl_method);
 	}
-
 }

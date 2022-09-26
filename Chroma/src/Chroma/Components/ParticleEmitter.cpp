@@ -6,17 +6,17 @@
 namespace Chroma
 {
 	std::random_device ParticleEmitter::sRd;
-	std::default_random_engine ParticleEmitter::sEngine { sRd() };
+	std::default_random_engine ParticleEmitter::sEngine{ sRd() };
 	std::uniform_int_distribution<unsigned int> ParticleEmitter::sDist{ std::numeric_limits<unsigned int>::min(), std::numeric_limits<unsigned int>::max() };
-	
+
 	void ParticleEmitter::GenerateRandomSeed()
 	{
 		SetSeed(sDist(sEngine));
 	}
 
-	void ParticleEmitter::Emit(const Math::vec2& position)
+	void ParticleEmitter::Emit(const Math::vec2 &position)
 	{
-		Particle& p = Particles[pos];
+		Particle &p = Particles[pos];
 		p.Active = true;
 		p.Angle = this->Angle + ((random() - 0.5f) * 2 * this->AngleVariance);
 		p.Life = this->Life + ((random() - 0.5f) * 2 * this->LifeVariance);
@@ -38,29 +38,28 @@ namespace Chroma
 				.Data<&Particle::Angle>("Angle");
 
 		return Reflection::Register<ParticleEmitter>("ParticleEmitter")
-				.Base<Component>()
-				.Data<&ParticleEmitter::PositionVariance>("PositionVariance")
-				.Data<&ParticleEmitter::StartColor>("StartColor")
-				.Data<&ParticleEmitter::EndColor>("EndColor")
-				.Data<&ParticleEmitter::Life>("Life")
-				.Data<&ParticleEmitter::LifeVariance>("LifeVariance")
-				.Data<&ParticleEmitter::Angle>("Angle")
-				.Data<&ParticleEmitter::AngleVariance>("AngleVariance")
-				.Data<&ParticleEmitter::Speed>("Speed")
-				.Data<&ParticleEmitter::SpeedVariance>("SpeedVariance")
-				.Data<&ParticleEmitter::Gravity>("Gravity")
-				.Data<&ParticleEmitter::GravityVariance>("GravityVariance")
-				.Data<&ParticleEmitter::Continuous>("Continuous")
-				.Data<&ParticleEmitter::EmissionRate>("EmissionRate")
-				.Data<&ParticleEmitter::PreWarm>("PreWarm")
-				.Data<&ParticleEmitter::PreWarmSeconds>("PreWarmSeconds")
-				.Data<&ParticleEmitter::SetSeed, &ParticleEmitter::GetSeed>("Seed")
-				.Data<&ParticleEmitter::SetCount, &ParticleEmitter::GetCount>("Count");
+		       .Base<Component>()
+		       .Data<&ParticleEmitter::PositionVariance>("PositionVariance")
+		       .Data<&ParticleEmitter::StartColor>("StartColor")
+		       .Data<&ParticleEmitter::EndColor>("EndColor")
+		       .Data<&ParticleEmitter::Life>("Life")
+		       .Data<&ParticleEmitter::LifeVariance>("LifeVariance")
+		       .Data<&ParticleEmitter::Angle>("Angle")
+		       .Data<&ParticleEmitter::AngleVariance>("AngleVariance")
+		       .Data<&ParticleEmitter::Speed>("Speed")
+		       .Data<&ParticleEmitter::SpeedVariance>("SpeedVariance")
+		       .Data<&ParticleEmitter::Gravity>("Gravity")
+		       .Data<&ParticleEmitter::GravityVariance>("GravityVariance")
+		       .Data<&ParticleEmitter::Continuous>("Continuous")
+		       .Data<&ParticleEmitter::EmissionRate>("EmissionRate")
+		       .Data<&ParticleEmitter::PreWarm>("PreWarm")
+		       .Data<&ParticleEmitter::PreWarmSeconds>("PreWarmSeconds")
+		       .Data<&ParticleEmitter::SetSeed, &ParticleEmitter::GetSeed>("Seed")
+		       .Data<&ParticleEmitter::SetCount, &ParticleEmitter::GetCount>("Count");
 	}
 
 	float ParticleEmitter::random()
 	{
 		return dist(engine);
 	}
-
 }

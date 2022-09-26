@@ -5,12 +5,8 @@
 
 namespace Chroma
 {
-
-
-
 	void OpenGLRendererAPI::Init()
 	{
-
 		glEnable(GL_BLEND);
 		glDisable(GL_DITHER);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -18,10 +14,11 @@ namespace Chroma
 		//glEnable(GL_DEPTH_TEST);
 	}
 
-	void OpenGLRendererAPI::SetClearColor(const glm::vec4& color)
+	void OpenGLRendererAPI::SetClearColor(const glm::vec4 &color)
 	{
 		glClearColor(color.r, color.g, color.b, color.a);
 	}
+
 	void OpenGLRendererAPI::Clear()
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -36,15 +33,15 @@ namespace Chroma
 
 		glOrtho(0.f, g_width, g_height, 0.f, 1.f, -1.f);
 
-		auto ratioX = width / (float)g_width;
-		auto ratioY = height / (float)g_height;
+		auto ratioX = width / static_cast<float>(g_width);
+		auto ratioY = height / static_cast<float>(g_height);
 		auto ratio = ratioX < ratioY ? ratioX : ratioY;
 
-		auto viewWidth = (uint32_t)(g_width * ratio);
-		auto viewHegiht = (uint32_t)(g_height * ratio);
+		auto viewWidth = static_cast<uint32_t>(g_width * ratio);
+		auto viewHegiht = static_cast<uint32_t>(g_height * ratio);
 
-		auto viewX = (uint32_t)((width - g_width * ratio) / 2.f);
-		auto viewY = (uint32_t)((height - g_height * ratio) / 2.f);
+		auto viewX = static_cast<uint32_t>((width - g_width * ratio) / 2.f);
+		auto viewY = static_cast<uint32_t>((height - g_height * ratio) / 2.f);
 
 		glViewport(viewX, viewY, viewWidth, viewHegiht);
 		glMatrixMode(GL_MODELVIEW_MATRIX);
@@ -59,19 +56,17 @@ namespace Chroma
 		GLenum glPrimitiveType = 0;
 		switch (type)
 		{
-		case PrimitiveType::Triangles:
-			glPrimitiveType = GL_TRIANGLES;
-			break;
-		case PrimitiveType::Lines:
-			glPrimitiveType = GL_LINES;
-			break;
+			case PrimitiveType::Triangles:
+				glPrimitiveType = GL_TRIANGLES;
+				break;
+			case PrimitiveType::Lines:
+				glPrimitiveType = GL_LINES;
+				break;
 		}
 
 		glDrawElements(glPrimitiveType, count, GL_UNSIGNED_INT, nullptr);
 
 		if (!depthTest)
 			glEnable(GL_DEPTH_TEST);
-
 	}
-
 }

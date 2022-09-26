@@ -7,25 +7,24 @@
 
 namespace Chroma
 {
+#define MASK 0xff
 
-	#define MASK 0xff
-
-	#define MUL_UN8(a, b, t) \
+#define MUL_UN8(a, b, t) \
 		((t) = (a) * (uint16_t)(b) + 0x80, ((((t) >> 8) + (t) ) >> 8))
 
-	#define DIV_UN8(a, b)							\
+#define DIV_UN8(a, b)							\
 		(((uint16_t) (a) * MASK + ((b) / 2)) / (b))
 
-	#define blend_multiply(b, s, t)   (MUL_UN8((b), (s), (t)))
-	#define blend_screen(b, s, t)     ((b) + (s) - MUL_UN8((b), (s), (t)))
-	#define blend_overlay(b, s, t)    (blend_hard_light(s, b, t))
-	#define blend_darken(b, s)        (Math::min((b), (s)))
-	#define blend_lighten(b, s)       (Math::max((b), (s)))
-	#define blend_hard_light(b, s, t) ((s) < 128 ?                          \
+#define blend_multiply(b, s, t)   (MUL_UN8((b), (s), (t)))
+#define blend_screen(b, s, t)     ((b) + (s) - MUL_UN8((b), (s), (t)))
+#define blend_overlay(b, s, t)    (blend_hard_light(s, b, t))
+#define blend_darken(b, s)        (Math::min((b), (s)))
+#define blend_lighten(b, s)       (Math::max((b), (s)))
+#define blend_hard_light(b, s, t) ((s) < 128 ?                          \
 									   blend_multiply((b), (s)<<1, (t)):    \
 									   blend_screen((b), ((s)<<1)-255, (t)))
-	#define blend_difference(b, s)    (Math::abs((b) - (s)))
-	#define blend_exclusion(b, s, t)  ((t) = MUL_UN8((b), (s), (t)), ((b) + (s) - 2*(t)))
+#define blend_difference(b, s)    (Math::abs((b) - (s)))
+#define blend_exclusion(b, s, t)  ((t) = MUL_UN8((b), (s), (t)), ((b) + (s) - 2*(t)))
 
 
 	/// @brief Function to blend divide two uint32_t colors.
@@ -36,10 +35,10 @@ namespace Chroma
 	{
 		if (b == 0)
 			return 0;
-		else if (b >= s)
+		if (b >= s)
 			return 255;
-		else
-			return DIV_UN8(b, s); // return b / s
+		return DIV_UN8(b, s);
+		// return b / s
 	}
 
 	/// @brief Function to blend color dodge two uint32_t colors.
@@ -54,8 +53,8 @@ namespace Chroma
 		s = (255 - s);
 		if (b >= s)
 			return 255;
-		else
-			return DIV_UN8(b, s); // return b / (1-s)
+		return DIV_UN8(b, s);
+		// return b / (1-s)
 	}
 
 	/// @brief Function to blend color burn two uint32_t colors.
@@ -70,8 +69,8 @@ namespace Chroma
 		b = (255 - b);
 		if (b >= s)
 			return 0;
-		else
-			return 255 - DIV_UN8(b, s); // return 1 - ((1-b)/s)
+		return 255 - DIV_UN8(b, s);
+		// return 1 - ((1-b)/s)
 	}
 
 	/// @brief Function to blend soft light two uint32_t colors.
@@ -94,11 +93,11 @@ namespace Chroma
 		else
 			r = b + (2.0 * s - 1.0) * (d - b);
 
-		return (uint32_t)(r * 255 + 0.5);
+		return static_cast<uint32_t>(r * 255 + 0.5);
 	}
 
 	//HSV helper functions
-	
+
 	/// @brief Calculate luminescence of a color
 	/// @param r Red color channel.
 	/// @param g Green color channel.
@@ -124,7 +123,7 @@ namespace Chroma
 	/// @param r Red color channel.
 	/// @param g Green color channel.
 	/// @param b Blue color channel.
-	inline void clip_color(double& r, double& g, double& b)
+	inline void clip_color(double &r, double &g, double &b)
 	{
 		double l = lum(r, g, b);
 		double n = std::min(r, std::min(g, b));
@@ -150,7 +149,7 @@ namespace Chroma
 	/// @param g Green color channel.
 	/// @param b Blue color channel.
 	/// @param l luminescence to set.
-	inline void set_lum(double& r, double& g, double& b, double l)
+	inline void set_lum(double &r, double &g, double &b, double l)
 	{
 		double d = l - lum(r, g, b);
 		r += d;
@@ -166,20 +165,20 @@ namespace Chroma
 	/// @param l luminescence to set.
 	/// 
 	/// The Aseprite source code indicates that this could be done better.
-	inline void set_sat(double& r, double& g, double& b, double s)
+	inline void set_sat(double &r, double &g, double &b, double s)
 	{
-	#undef MIN
-	#undef MAX
-	#undef MID
-	#define MIN(x,y)     (((x) < (y)) ? (x) : (y))
-	#define MAX(x,y)     (((x) > (y)) ? (x) : (y))
-	#define MID(x,y,z)   ((x) > (y) ? ((y) > (z) ? (y) : ((x) > (z) ?    \
+#undef MIN
+#undef MAX
+#undef MID
+#define MIN(x,y)     (((x) < (y)) ? (x) : (y))
+#define MAX(x,y)     (((x) > (y)) ? (x) : (y))
+#define MID(x,y,z)   ((x) > (y) ? ((y) > (z) ? (y) : ((x) > (z) ?    \
 						   (z) : (x))) : ((y) > (z) ? ((z) > (x) ? (z) : \
 						   (x)): (y)))
 
-		double& min = MIN(r, MIN(g, b));
-		double& mid = MID(r, g, b);
-		double& max = MAX(r, MAX(g, b));
+		double &min = MIN(r, MIN(g, b));
+		double &mid = MID(r, g, b);
+		double &max = MAX(r, MAX(g, b));
 
 		if (max > min)
 		{
@@ -204,23 +203,23 @@ namespace Chroma
 		/// @param backdrop Backdrop color.
 		/// @param src Source color.
 		/// @param opacity Opacity of the source.
-		static inline void BlendNormal(Color* backdrop, Color* src, int opacity)
+		static void BlendNormal(Color *backdrop, Color *src, int opacity)
 		{
 			int t;
 			auto sa = MUL_UN8(src->a, opacity, t);
 			auto ra = backdrop->a + sa - MUL_UN8(backdrop->a, sa, t);
 
-			backdrop->r = (unsigned char)(backdrop->r + (src->r - backdrop->r) * sa / ra);
-			backdrop->g = (unsigned char)(backdrop->g + (src->g - backdrop->g) * sa / ra);
-			backdrop->b = (unsigned char)(backdrop->b + (src->b - backdrop->b) * sa / ra);
-			backdrop->a = (unsigned char)ra;
+			backdrop->r = static_cast<unsigned char>(backdrop->r + (src->r - backdrop->r) * sa / ra);
+			backdrop->g = static_cast<unsigned char>(backdrop->g + (src->g - backdrop->g) * sa / ra);
+			backdrop->b = static_cast<unsigned char>(backdrop->b + (src->b - backdrop->b) * sa / ra);
+			backdrop->a = static_cast<unsigned char>(ra);
 		}
 
 		/// @brief Multiply the two colors.
 		/// @param backdrop Backdrop color.
 		/// @param src Source color.
 		/// @param opacity Opacity of the source.
-		static inline void BlendMultiply(Color* backdrop, Color* src, int opacity)
+		static void BlendMultiply(Color *backdrop, Color *src, int opacity)
 		{
 			int t;
 			src->r = blend_multiply(backdrop->r, src->r, t);
@@ -233,7 +232,7 @@ namespace Chroma
 		/// @param backdrop Backdrop color.
 		/// @param src Source color.
 		/// @param opacity Opacity of the source.
-		static inline void BlendScreen(Color* backdrop, Color* src, int opacity)
+		static void BlendScreen(Color *backdrop, Color *src, int opacity)
 		{
 			int t;
 			src->r = blend_screen(backdrop->r, src->r, t);
@@ -246,7 +245,7 @@ namespace Chroma
 		/// @param backdrop Backdrop color.
 		/// @param src Source color.
 		/// @param opacity Opacity of the source.
-		static inline void BlendOverlay(Color* backdrop, Color* src, int opacity)
+		static void BlendOverlay(Color *backdrop, Color *src, int opacity)
 		{
 			int t;
 			src->r = blend_overlay(backdrop->r, src->r, t);
@@ -259,7 +258,7 @@ namespace Chroma
 		/// @param backdrop Backdrop color.
 		/// @param src Source color.
 		/// @param opacity Opacity of the source.
-		static inline void BlendDarken(Color* backdrop, Color* src, int opacity)
+		static void BlendDarken(Color *backdrop, Color *src, int opacity)
 		{
 			src->r = blend_darken(backdrop->r, src->r);
 			src->g = blend_darken(backdrop->g, src->g);
@@ -271,7 +270,7 @@ namespace Chroma
 		/// @param backdrop Backdrop color.
 		/// @param src Source color.
 		/// @param opacity Opacity of the source.
-		static inline void BlendLighten(Color* backdrop, Color* src, int opacity)
+		static void BlendLighten(Color *backdrop, Color *src, int opacity)
 		{
 			src->r = blend_lighten(backdrop->r, src->r);
 			src->g = blend_lighten(backdrop->g, src->g);
@@ -283,7 +282,7 @@ namespace Chroma
 		/// @param backdrop Backdrop color.
 		/// @param src Source color.
 		/// @param opacity Opacity of the source.
-		static inline void BlendColorDodge(Color* backdrop, Color* src, int opacity)
+		static void BlendColorDodge(Color *backdrop, Color *src, int opacity)
 		{
 			src->r = blend_color_dodge(backdrop->r, src->r);
 			src->g = blend_color_dodge(backdrop->g, src->g);
@@ -295,7 +294,7 @@ namespace Chroma
 		/// @param backdrop Backdrop color.
 		/// @param src Source color.
 		/// @param opacity Opacity of the source.
-		static inline void BlendColorBurn(Color* backdrop, Color* src, int opacity)
+		static void BlendColorBurn(Color *backdrop, Color *src, int opacity)
 		{
 			src->r = blend_color_burn(backdrop->r, src->r);
 			src->g = blend_color_burn(backdrop->g, src->g);
@@ -307,7 +306,7 @@ namespace Chroma
 		/// @param backdrop Backdrop color.
 		/// @param src Source color.
 		/// @param opacity Opacity of the source.
-		static inline void BlendHardLight(Color* backdrop, Color* src, int opacity)
+		static void BlendHardLight(Color *backdrop, Color *src, int opacity)
 		{
 			int t;
 			src->r = blend_hard_light(backdrop->r, src->r, t);
@@ -320,7 +319,7 @@ namespace Chroma
 		/// @param backdrop Backdrop color.
 		/// @param src Source color.
 		/// @param opacity Opacity of the source.
-		static inline void BlendSoftLight(Color* backdrop, Color* src, int opacity)
+		static void BlendSoftLight(Color *backdrop, Color *src, int opacity)
 		{
 			src->r = blend_soft_light(backdrop->r, src->r);
 			src->g = blend_soft_light(backdrop->g, src->g);
@@ -332,7 +331,7 @@ namespace Chroma
 		/// @param backdrop Backdrop color.
 		/// @param src Source color.
 		/// @param opacity Opacity of the source.
-		static inline void BlendDifference(Color* backdrop, Color* src, int opacity)
+		static void BlendDifference(Color *backdrop, Color *src, int opacity)
 		{
 			src->r = blend_difference(backdrop->r, src->r);
 			src->g = blend_difference(backdrop->g, src->g);
@@ -344,7 +343,7 @@ namespace Chroma
 		/// @param backdrop Backdrop color.
 		/// @param src Source color.
 		/// @param opacity Opacity of the source.
-		static inline void BlendExclusion(Color* backdrop, Color* src, int opacity)
+		static void BlendExclusion(Color *backdrop, Color *src, int opacity)
 		{
 			int t;
 			src->r = blend_exclusion(backdrop->r, src->r, t);
@@ -357,7 +356,7 @@ namespace Chroma
 		/// @param backdrop Backdrop color.
 		/// @param src Source color.
 		/// @param opacity Opacity of the source.
-		static inline void BlendHue(Color* backdrop, Color* src, int opacity)
+		static void BlendHue(Color *backdrop, Color *src, int opacity)
 		{
 			double r = backdrop->r / 255.0;
 			double g = backdrop->g / 255.0;
@@ -372,9 +371,9 @@ namespace Chroma
 			set_sat(r, g, b, s);
 			set_lum(r, g, b, l);
 
-			src->r = uint8_t(255.0 * r);
-			src->g = uint8_t(255.0 * g);
-			src->b = uint8_t(255.0 * b);
+			src->r = static_cast<uint8_t>(255.0 * r);
+			src->g = static_cast<uint8_t>(255.0 * g);
+			src->b = static_cast<uint8_t>(255.0 * b);
 			BlendNormal(backdrop, src, opacity);
 		}
 
@@ -382,7 +381,7 @@ namespace Chroma
 		/// @param backdrop Backdrop color.
 		/// @param src Source color.
 		/// @param opacity Opacity of the source.
-		static inline void BlendSaturation(Color* backdrop, Color* src, int opacity)
+		static void BlendSaturation(Color *backdrop, Color *src, int opacity)
 		{
 			double r = src->r / 255.0;
 			double g = src->g / 255.0;
@@ -397,9 +396,9 @@ namespace Chroma
 			set_sat(r, g, b, s);
 			set_lum(r, g, b, l);
 
-			src->r = uint8_t(255.0 * r);
-			src->g = uint8_t(255.0 * g);
-			src->b = uint8_t(255.0 * b);
+			src->r = static_cast<uint8_t>(255.0 * r);
+			src->g = static_cast<uint8_t>(255.0 * g);
+			src->b = static_cast<uint8_t>(255.0 * b);
 			BlendNormal(backdrop, src, opacity);
 		}
 
@@ -407,7 +406,7 @@ namespace Chroma
 		/// @param backdrop Backdrop color.
 		/// @param src Source color.
 		/// @param opacity Opacity of the source.
-		static inline void BlendColor(Color* backdrop, Color* src, int opacity)
+		static void BlendColor(Color *backdrop, Color *src, int opacity)
 		{
 			double r = backdrop->r / 255.0;
 			double g = backdrop->g / 255.0;
@@ -420,9 +419,9 @@ namespace Chroma
 
 			set_lum(r, g, b, l);
 
-			src->r = uint8_t(255.0 * r);
-			src->g = uint8_t(255.0 * g);
-			src->b = uint8_t(255.0 * b);
+			src->r = static_cast<uint8_t>(255.0 * r);
+			src->g = static_cast<uint8_t>(255.0 * g);
+			src->b = static_cast<uint8_t>(255.0 * b);
 			BlendNormal(backdrop, src, opacity);
 		}
 
@@ -430,7 +429,7 @@ namespace Chroma
 		/// @param backdrop Backdrop color.
 		/// @param src Source color.
 		/// @param opacity Opacity of the source.
-		static inline void BlendLuminosity(Color* backdrop, Color* src, int opacity)
+		static void BlendLuminosity(Color *backdrop, Color *src, int opacity)
 		{
 			double r = src->r / 255.0;
 			double g = src->g / 255.0;
@@ -440,12 +439,12 @@ namespace Chroma
 			r = backdrop->r / 255.0;
 			g = backdrop->g / 255.0;
 			b = backdrop->b / 255.0;
-			
+
 			set_lum(r, g, b, l);
 
-			src->r = uint8_t(255.0 * r);
-			src->g = uint8_t(255.0 * g);
-			src->b = uint8_t(255.0 * b);
+			src->r = static_cast<uint8_t>(255.0 * r);
+			src->g = static_cast<uint8_t>(255.0 * g);
+			src->b = static_cast<uint8_t>(255.0 * b);
 			BlendNormal(backdrop, src, opacity);
 		}
 
@@ -453,7 +452,7 @@ namespace Chroma
 		/// @param backdrop Backdrop color.
 		/// @param src Source color.
 		/// @param opacity Opacity of the source.
-		static inline void BlendAddition(Color* backdrop, Color* src, int opacity)
+		static void BlendAddition(Color *backdrop, Color *src, int opacity)
 		{
 			src->r = Math::min(backdrop->r + src->r, 255);
 			src->g = Math::min(backdrop->g + src->g, 255);
@@ -465,7 +464,7 @@ namespace Chroma
 		/// @param backdrop Backdrop color.
 		/// @param src Source color.
 		/// @param opacity Opacity of the source.
-		static inline void BlendSubtract(Color* backdrop, Color* src, int opacity)
+		static void BlendSubtract(Color *backdrop, Color *src, int opacity)
 		{
 			src->r = Math::max(backdrop->r - src->r, 255);
 			src->g = Math::max(backdrop->g - src->g, 255);
@@ -477,7 +476,7 @@ namespace Chroma
 		/// @param backdrop Backdrop color.
 		/// @param src Source color.
 		/// @param opacity Opacity of the source.
-		static inline void BlendDivide(Color* backdrop, Color* src, int opacity)
+		static void BlendDivide(Color *backdrop, Color *src, int opacity)
 		{
 			src->r = blend_divide(backdrop->r, src->r);
 			src->g = blend_divide(backdrop->g, src->g);
@@ -485,122 +484,118 @@ namespace Chroma
 			BlendNormal(backdrop, src, opacity);
 		}
 
-		static inline Color BlendNormal(Color backdrop, Color src, int opacity)
+		static Color BlendNormal(Color backdrop, Color src, int opacity)
 		{
 			BlendNormal(&backdrop, &src, opacity);
 			return backdrop;
 		}
 
-		static inline Color BlendMultiply(Color backdrop, Color src, int opacity)
+		static Color BlendMultiply(Color backdrop, Color src, int opacity)
 		{
 			BlendMultiply(&backdrop, &src, opacity);
 			return backdrop;
 		}
 
-		static inline Color BlendScreen(Color backdrop, Color src, int opacity)
+		static Color BlendScreen(Color backdrop, Color src, int opacity)
 		{
 			BlendScreen(&backdrop, &src, opacity);
 			return backdrop;
 		}
 
-		static inline Color BlendOverlay(Color backdrop, Color src, int opacity)
+		static Color BlendOverlay(Color backdrop, Color src, int opacity)
 		{
 			BlendOverlay(&backdrop, &src, opacity);
 			return backdrop;
 		}
 
-		static inline Color BlendDarken(Color backdrop, Color src, int opacity)
+		static Color BlendDarken(Color backdrop, Color src, int opacity)
 		{
 			BlendDarken(&backdrop, &src, opacity);
 			return backdrop;
 		}
 
-		static inline Color BlendLighten(Color backdrop, Color src, int opacity)
+		static Color BlendLighten(Color backdrop, Color src, int opacity)
 		{
 			BlendLighten(&backdrop, &src, opacity);
 			return backdrop;
 		}
 
-		static inline Color BlendColorDodge(Color backdrop, Color src, int opacity)
+		static Color BlendColorDodge(Color backdrop, Color src, int opacity)
 		{
 			BlendColorDodge(&backdrop, &src, opacity);
 			return backdrop;
 		}
 
-		static inline Color BlendColorBurn(Color backdrop, Color src, int opacity)
+		static Color BlendColorBurn(Color backdrop, Color src, int opacity)
 		{
 			BlendColorBurn(&backdrop, &src, opacity);
 			return backdrop;
 		}
 
-		static inline Color BlendHardLight(Color backdrop, Color src, int opacity)
+		static Color BlendHardLight(Color backdrop, Color src, int opacity)
 		{
 			BlendHardLight(&backdrop, &src, opacity);
 			return backdrop;
 		}
 
-		static inline Color BlendSoftLight(Color backdrop, Color src, int opacity)
+		static Color BlendSoftLight(Color backdrop, Color src, int opacity)
 		{
 			BlendSoftLight(&backdrop, &src, opacity);
 			return backdrop;
 		}
 
-		static inline Color BlendDifference(Color backdrop, Color src, int opacity)
+		static Color BlendDifference(Color backdrop, Color src, int opacity)
 		{
 			BlendDifference(&backdrop, &src, opacity);
 			return backdrop;
 		}
 
-		static inline Color BlendExclusion(Color backdrop, Color src, int opacity)
+		static Color BlendExclusion(Color backdrop, Color src, int opacity)
 		{
 			BlendExclusion(&backdrop, &src, opacity);
 			return backdrop;
 		}
 
-		static inline Color BlendHue(Color backdrop, Color src, int opacity)
+		static Color BlendHue(Color backdrop, Color src, int opacity)
 		{
 			BlendHue(&backdrop, &src, opacity);
 			return backdrop;
 		}
 
-		static inline Color BlendSaturation(Color backdrop, Color src, int opacity)
+		static Color BlendSaturation(Color backdrop, Color src, int opacity)
 		{
 			BlendSaturation(&backdrop, &src, opacity);
 			return backdrop;
 		}
 
-		static inline Color BlendColor(Color backdrop, Color src, int opacity)
+		static Color BlendColor(Color backdrop, Color src, int opacity)
 		{
 			BlendColor(&backdrop, &src, opacity);
 			return backdrop;
 		}
 
-		static inline Color BlendLuminosity(Color backdrop, Color src, int opacity)
+		static Color BlendLuminosity(Color backdrop, Color src, int opacity)
 		{
 			BlendLuminosity(&backdrop, &src, opacity);
 			return backdrop;
 		}
 
-		static inline Color BlendAddition(Color backdrop, Color src, int opacity)
+		static Color BlendAddition(Color backdrop, Color src, int opacity)
 		{
 			BlendAddition(&backdrop, &src, opacity);
 			return backdrop;
 		}
 
-		static inline Color BlendSubtract(Color backdrop, Color src, int opacity)
+		static Color BlendSubtract(Color backdrop, Color src, int opacity)
 		{
 			BlendSubtract(&backdrop, &src, opacity);
 			return backdrop;
 		}
 
-		static inline Color BlendDivide(Color backdrop, Color src, int opacity)
+		static Color BlendDivide(Color backdrop, Color src, int opacity)
 		{
 			BlendDivide(&backdrop, &src, opacity);
 			return backdrop;
 		}
-
 	};
-
-
 }
-

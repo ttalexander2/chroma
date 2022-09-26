@@ -4,14 +4,13 @@
 
 namespace Chroma
 {
-	
 	struct PolygonCollider : public Collider
 	{
 		CHROMA_COMPONENT(PolygonCollider, Collider);
 
-		inline b2Shape *GetShapeHandle() override { return &m_Shape; }
+		b2Shape *GetShapeHandle() override { return &m_Shape; }
 
-		inline const ColliderType GetColliderType() const override { return ColliderType::Edge; }
+		const ColliderType GetColliderType() const override { return ColliderType::Edge; }
 
 		static const size_t MaxVertices = b2_maxPolygonVertices;
 
@@ -37,9 +36,7 @@ namespace Chroma
 		bool GetVertex(Vertex *out, int32_t index);
 
 	private:
-		void SetVertices(const std::vector<Vertex>& vertices);
+		void SetVertices(const std::vector<Vertex> &vertices);
 		b2PolygonShape m_Shape;
 	};
-
-
 }

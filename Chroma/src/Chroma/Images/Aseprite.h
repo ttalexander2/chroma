@@ -13,8 +13,6 @@ namespace Chroma
 	// Adapted from https://github.com/NoelFB/blah/
 
 
-
-
 	/// @brief Aseprite object, holding all data parsed from an `.ase` file.
 	///
 	/// This class was adapted from <a href="https://github.com/NoelFB/blah/">https://github.com/NoelFB/blah/</a>,
@@ -22,7 +20,6 @@ namespace Chroma
 	class Aseprite
 	{
 	public:
-
 		/// @brief Rendering mode of the images.
 		enum class Modes
 		{
@@ -128,7 +125,7 @@ namespace Chroma
 		/// @brief Layer information.
 		struct Layer
 		{
-			LayerFlags flag = (LayerFlags)0;
+			LayerFlags flag = static_cast<LayerFlags>(0);
 			LayerTypes type = LayerTypes::Normal;
 			std::string name;
 			int child_level = 0;
@@ -174,7 +171,7 @@ namespace Chroma
 		/// @brief List of frames.
 		std::vector<Frame> frames;
 		/// @brief List of tags.
-		std::vector<Tag>   tags;
+		std::vector<Tag> tags;
 		/// @brief List of slices.
 		std::vector<Slice> slices;
 		/// @brief List of colors in the palette.
@@ -188,29 +185,29 @@ namespace Chroma
 		/// 
 		/// The user of this constructor should check to make sure the path exists before
 		/// constructing an Aseprite object.
-		Aseprite(const std::string& path);
+		Aseprite(const std::string &path);
 
 		/// @brief Load an Aseprite from a byte stream.
 		/// @param stream Stream to the Aseprite data.
-		Aseprite(File& stream);
+		Aseprite(File &stream);
 
 		/// @brief Construct an Aseprite object from an existing Aseprite object.
 		/// @param src Aseprite object to copy.
-		Aseprite(const Aseprite& src);
+		Aseprite(const Aseprite &src);
 
 		/// @brief Construct an Aseprite object from an existing Aseprite object.
 		/// @param src Aseprite object to copy.
-		Aseprite(Aseprite&& src) noexcept;
-
-		/// @brief Construct an Aseprite object from an existing Aseprite object.
-		/// @param src Aseprite object to copy.
-		/// @returs Reference to the new Aseprite object.
-		Aseprite& operator=(const Aseprite& src);
+		Aseprite(Aseprite &&src) noexcept;
 
 		/// @brief Construct an Aseprite object from an existing Aseprite object.
 		/// @param src Aseprite object to copy.
 		/// @returs Reference to the new Aseprite object.
-		Aseprite& operator=(Aseprite&& src) noexcept;
+		Aseprite &operator=(const Aseprite &src);
+
+		/// @brief Construct an Aseprite object from an existing Aseprite object.
+		/// @param src Aseprite object to copy.
+		/// @returs Reference to the new Aseprite object.
+		Aseprite &operator=(Aseprite &&src) noexcept;
 
 		/// @brief Destroys an Aseprite instance.
 		///
@@ -220,48 +217,46 @@ namespace Chroma
 		void Dispose();
 
 	private:
-
 		/// @brief User data
-		UserData* m_last_userdata = nullptr;
+		UserData *m_last_userdata = nullptr;
 
 		/// @brief Parse a `.ase` file from a stream.
 		/// @param stream Stream to parse.
-		void parse(File& stream);
+		void parse(File &stream);
 
 		/// @brief Parse an aseprite layer chunk from a stream.
 		/// @param stream Stream to parse.
 		/// @param frame Frame number.
-		void parse_layer(File& stream, int frame);
+		void parse_layer(File &stream, int frame);
 
 		/// @brief Parse an aseprite cel chunk from a stream.
 		/// @param stream Stream to parse.
 		/// @param frame Frame number.
-		void parse_cel(File& stream, int frame, size_t maxPosition);
+		void parse_cel(File &stream, int frame, size_t maxPosition);
 
 		/// @brief Parse an aseprite pallete chunk from a stream.
 		/// @param stream Stream to parse.
 		/// @param frame Frame number.
-		void parse_palette(File& stream, int frame);
+		void parse_palette(File &stream, int frame);
 
 		/// @brief Parse an aseprite pallete chunk from a stream.
 		/// @param stream Stream to parse.
 		/// @param frame Frame number.
-		void parse_user_data(File& stream, int frame);
+		void parse_user_data(File &stream, int frame);
 
 		/// @brief Parse an aseprite tag chunk from a stream.
 		/// @param stream Stream to parse.
 		/// @param frame Frame number.
-		void parse_tag(File& stream, int frame);
+		void parse_tag(File &stream, int frame);
 
 		/// @brief Parse an aseprite slice chunk from a stream.
 		/// @param stream Stream to parse.
 		/// @param frame Frame number.
-		void parse_slice(File& stream, int frame);
+		void parse_slice(File &stream, int frame);
 
 		/// @brief Render a single cel and blend it with the cells beneath it.
 		/// @param stream Stream to parse.
 		/// @param frame Frame number.
-		void render_cel(Cel* cel, Frame* frame);
+		void render_cel(Cel *cel, Frame *frame);
 	};
 }
-

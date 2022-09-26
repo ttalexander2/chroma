@@ -22,9 +22,12 @@ namespace Chroma
 		/// @brief GUID of event.
 		FMOD_GUID GUID;
 
-		inline const std::string& GetEvent() const { return Event; }
-		inline void SetEvent(const std::string& _event) { Event = _event; GUID = Chroma::Audio::GetEventGuid(Event);}
+		const std::string &GetEvent() const { return Event; }
 
+		void SetEvent(const std::string &_event)
+		{
+			Event = _event;
+			GUID = Audio::GetEventGuid(Event);
+		}
 	};
 }
-

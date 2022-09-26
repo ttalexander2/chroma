@@ -13,22 +13,22 @@ namespace Chroma
 
 	void ImGuiDebugMenu::ShowValue(std::string label, bool value)
 	{
-		ImGuiDebugMenu::ShowValue(label, std::to_string(value));
+		ShowValue(label, std::to_string(value));
 	}
 
 	void ImGuiDebugMenu::ShowValue(std::string label, int value)
 	{
-		ImGuiDebugMenu::ShowValue(label, std::to_string(value));
+		ShowValue(label, std::to_string(value));
 	}
 
 	void ImGuiDebugMenu::ShowValue(std::string label, float value)
 	{
-		ImGuiDebugMenu::ShowValue(label, std::to_string(value));
+		ShowValue(label, std::to_string(value));
 	}
 
 	void ImGuiDebugMenu::ShowValue(std::string label, double value)
 	{
-		ImGuiDebugMenu::ShowValue(label, std::to_string(value));
+		ShowValue(label, std::to_string(value));
 	}
 
 	void ImGuiDebugMenu::Draw()
@@ -47,5 +47,3 @@ namespace Chroma
 		vals.clear();
 	}
 }
-
-

@@ -5,10 +5,11 @@
 
 namespace Chroma
 {
-	File File::Open(const std::string& path, FileMode mode)
+	File File::Open(const std::string &path, FileMode mode)
 	{
 		return FileSystem::Open(path, mode);
 	}
+
 	File::~File()
 	{
 		Close();
@@ -16,7 +17,7 @@ namespace Chroma
 
 	bool File::Good()
 	{
-		return m_Handle != NULL;
+		return m_Handle != nullptr;
 	}
 
 	void File::Close()
@@ -25,6 +26,7 @@ namespace Chroma
 			return;
 		PHYSFS_close(m_Handle);
 	}
+
 	bool File::EoF()
 	{
 		if (!Good())
@@ -32,17 +34,20 @@ namespace Chroma
 
 		return PHYSFS_eof(m_Handle) != 0;
 	}
+
 	int64_t File::Length()
 	{
 		if (!Good())
 			return -1;
 		return PHYSFS_fileLength(m_Handle);
 	}
+
 	void File::Flush()
 	{
 		if (Good())
 			PHYSFS_flush(m_Handle);
 	}
+
 	int64_t File::Tell()
 	{
 		if (!Good())
@@ -50,24 +55,25 @@ namespace Chroma
 
 		return PHYSFS_tell(m_Handle);
 	}
+
 	bool File::Seek(int64_t pos)
 	{
 		return PHYSFS_seek(m_Handle, pos) != 0;
 	}
 
 
-	int64_t File::Write(std::string& string)
+	int64_t File::Write(std::string &string)
 	{
-		return Write(reinterpret_cast<void*>(string.data()), string.size());
+		return Write(reinterpret_cast<void *>(string.data()), string.size());
 	}
 
-	int64_t File::Write(const char* string)
+	int64_t File::Write(const char *string)
 	{
 		size_t len = strlen(string);
-		return Write((void*)reinterpret_cast<const void*>(string), len);
+		return Write((void *)reinterpret_cast<const void *>(string), len);
 	}
 
-	int64_t File::Read(void* buffer, size_t size)
+	int64_t File::Read(void *buffer, size_t size)
 	{
 		if (!Good())
 			return -1;
@@ -76,7 +82,7 @@ namespace Chroma
 		return result;
 	}
 
-	int64_t File::Write(void* buffer, size_t size)
+	int64_t File::Write(void *buffer, size_t size)
 	{
 		if (!Good())
 		{
@@ -93,13 +99,13 @@ namespace Chroma
 		{
 			return "";
 		}
-			
+
 		uint64_t length = PHYSFS_fileLength(m_Handle);
 		if (length <= 0)
 		{
 			return "";
 		}
-		
+
 		std::vector<uint8_t> buffer;
 		buffer.resize(length);
 
@@ -110,7 +116,6 @@ namespace Chroma
 		}
 
 		return std::string(buffer.begin(), buffer.end());
-
 	}
 
 
@@ -128,7 +133,7 @@ namespace Chroma
 			PHYSFS_readBytes(m_Handle, &c, 1);
 			if (c == '\n')
 			{
-				endLine = true;		
+				endLine = true;
 			}
 			else if (c == '\r')
 			{
@@ -141,18 +146,11 @@ namespace Chroma
 				{
 					endLine = true;
 				}
-
-
 			}
 			if (!endLine)
 				ss << c;
-
 		} while (PHYSFS_eof(m_Handle) == 0 && c != '\n');
 
 		return ss.str();
-
-
-		
 	}
 }
-

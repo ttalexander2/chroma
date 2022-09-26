@@ -17,12 +17,8 @@ namespace Chroma
 		void Load() override;
 		void Init() override;
 		void Draw(Time delta) override;
-		virtual void LateUpdate(Time delta) override;
+		void LateUpdate(Time delta) override;
 
 		friend class Polychrome::EditorApp;
-
 	};
-
 }
-
-

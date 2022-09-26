@@ -11,7 +11,7 @@ namespace Chroma
 			this->Unload();
 	}
 
-	bool Asset::IsTypeOf(const TypeInfo* pTypeInfo) const
+	bool Asset::IsTypeOf(const TypeInfo *pTypeInfo) const
 	{
 		return GetTypeInfo()->IsTypeOf(pTypeInfo);
 	}
@@ -20,5 +20,4 @@ namespace Chroma
 	{
 		return GetTypeInfo()->IsTypeOf(type);
 	}
-
 }

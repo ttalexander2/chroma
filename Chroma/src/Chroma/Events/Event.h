@@ -9,21 +9,32 @@ namespace Chroma
 	enum class EventType
 	{
 		None = 0,
-		WindowClose, WindowResize, WindowFocus, WindowLostFocus, WindowMoved,
-		AppTick, AppUpdate, AppRender,
-		KeyPressed, KeyReleased, KeyTyped,
-		MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled
+		WindowClose,
+		WindowResize,
+		WindowFocus,
+		WindowLostFocus,
+		WindowMoved,
+		AppTick,
+		AppUpdate,
+		AppRender,
+		KeyPressed,
+		KeyReleased,
+		KeyTyped,
+		MouseButtonPressed,
+		MouseButtonReleased,
+		MouseMoved,
+		MouseScrolled
 	};
 
 	/// @brief Categories of various events.
 	enum EventCategory
 	{
 		None = 0,
-		EventCategoryApplication    = BIT(0),
-		EventCategoryInput          = BIT(1),
-		EventCategoryKeyboard       = BIT(2),
-		EventCategoryMouse          = BIT(3),
-		EventCategoryMouseButton    = BIT(4)
+		EventCategoryApplication = BIT(0),
+		EventCategoryInput = BIT(1),
+		EventCategoryKeyboard = BIT(2),
+		EventCategoryMouse = BIT(3),
+		EventCategoryMouseButton = BIT(4)
 	};
 
 #define EVENT_CLASS_TYPE(type) static EventType GetStaticType() {return EventType::##type; }\
@@ -49,7 +60,7 @@ namespace Chroma
 
 		/// @brief Gets the name of the event.
 		/// @return C string of the event's name.
-		virtual const char* GetName() const = 0;
+		virtual const char *GetName() const = 0;
 
 		/// @brief Gets the event category.
 		/// @return Bitwise flags from EventCategory.
@@ -69,7 +80,6 @@ namespace Chroma
 
 		/// @brief Checks whether the event has been handled.
 		bool IsHandled() const { return Handled; }
-		
 	};
 
 	/// @brief Class responsible for dispatching events to event listeners.
@@ -77,14 +87,14 @@ namespace Chroma
 	{
 		/// @brief Defines an event function. This function should return true if the event should be consumed.
 		/// @tparam T Type of event.
-		template<typename T>
-		using EventFn = std::function<bool(T&)>;
+		template <typename T>
+		using EventFn = std::function<bool(T &)>;
 
 	public:
 		/// @brief Constructs a new event dispatcher for an event.
 		/// @param event Event to dispatch.
-		EventDispatcher(Event& event)
-			: m_Event(event)
+		EventDispatcher(Event &event) :
+			m_Event(event)
 		{
 		}
 
@@ -92,12 +102,12 @@ namespace Chroma
 		/// @tparam T Type of event to dispatch
 		/// @param func Callback function to event.
 		/// @return Whether the event was handled.
-		template<typename T>
+		template <typename T>
 		bool Dispatch(EventFn<T> func)
 		{
 			if (m_Event.GetEventType() == T::GetStaticType())
 			{
-				m_Event.Handled = func(*(T*)&m_Event);
+				m_Event.Handled = func(*static_cast<T *>(&m_Event));
 				return true;
 			}
 			return false;
@@ -105,14 +115,14 @@ namespace Chroma
 
 	private:
 		/// @brief Event for the event dispatcher.
-		Event& m_Event;
+		Event &m_Event;
 	};
 
 	/// @brief Operator to provide the event's string to a std::ostream. This is neccesary for using events with spdlog.
 	/// @param os std::ostream reference to provide string to.
 	/// @param e Event to convert ot string.
 	/// @return returns the new ostream.
-	inline std::ostream& operator<<(std::ostream& os, const Event& e)
+	inline std::ostream &operator<<(std::ostream &os, const Event &e)
 	{
 		return os << e.ToString();
 	}

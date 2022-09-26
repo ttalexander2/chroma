@@ -10,7 +10,7 @@ namespace ImGui
 
 	void PushNewID()
 	{
-		ImGui::PushID(id_counter);
+		PushID(id_counter);
 		id_counter++;
 	}
 

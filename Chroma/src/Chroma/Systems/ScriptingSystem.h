@@ -8,8 +8,9 @@ namespace Chroma
 	class ScriptingSystem : public System
 	{
 	public:
-
-		ScriptingSystem() {}
+		ScriptingSystem()
+		{
+		}
 
 		void Load() override;
 
@@ -24,7 +25,5 @@ namespace Chroma
 		void EarlyDraw(Time time) override;
 		void Draw(Time time) override;
 		void LateDraw(Time time) override;
-
-
 	};
 }

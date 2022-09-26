@@ -4,17 +4,17 @@
 
 extern "C"
 {
-	__declspec(dllexport) unsigned long NvOptimusEnablement = 0x00000001;
+__declspec(dllexport) unsigned long NvOptimusEnablement = 0x00000001;
 }
 
 extern "C"
 {
-	__declspec(dllexport) int AmdPowerXpressRequestHighPerformance = 1;
+__declspec(dllexport) int AmdPowerXpressRequestHighPerformance = 1;
 }
 
 void InitFilesystem()
 {
-	PHYSFS_init(NULL);
+	PHYSFS_init(nullptr);
 }
 
 void DeinitFilesystem()
@@ -23,7 +23,7 @@ void DeinitFilesystem()
 }
 
 /// @brief Application entry point.
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
 	Chroma::Log::Init();
 	InitFilesystem();
@@ -36,5 +36,4 @@ int main(int argc, char** argv)
 	CHROMA_PROFILE_BEGIN_SESSION("Shutdown", "ChromaProfile-Shutdown.json");
 	delete app;
 	CHROMA_PROFILE_END_SESSION();
-
 }

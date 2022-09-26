@@ -44,10 +44,14 @@ namespace Chroma
 		const GUID GetID();
 
 		Scene();
-		Scene(const Scene&) {}
+
+		Scene(const Scene &)
+		{
+		}
+
 		~Scene();
 
-		Scene* Copy();
+		Scene *Copy();
 
 		Entity NewEntity();
 		Entity NewChild(Entity id);
@@ -56,15 +60,15 @@ namespace Chroma
 		void MakeUnique(EntityID entity);
 
 		const Math::vec2 GetTransformAbsolutePosition(EntityID entity);
-		void SetTransformAbsolutePosition(EntityID entity, const Math::vec2& position);
+		void SetTransformAbsolutePosition(EntityID entity, const Math::vec2 &position);
 
 		void DestroyEntity(EntityID id, bool destroy_children = false);
 
-		void SerializeEntity(YAML::Emitter& out, EntityID entity);
+		void SerializeEntity(YAML::Emitter &out, EntityID entity);
 		static void DeserializeEntity(EntityID id, YAML::Node &node, Scene *out);
 
 		std::string Serialize();
-		static bool Deserialize(Scene* out, const std::string& yaml, bool load_assets = false);
+		static bool Deserialize(Scene *out, const std::string &yaml, bool load_assets = false);
 
 		bool IsDescendant(EntityID child, EntityID parent);
 		bool IsRoot(EntityID entity);
@@ -72,27 +76,27 @@ namespace Chroma
 		std::vector<EntityID> FindAllDescendants(EntityID entity);
 
 		std::vector<EntityID> GetChildren(EntityID entity);
-		EntityID FindChildByName(EntityID entity, const std::string& child_name);
+		EntityID FindChildByName(EntityID entity, const std::string &child_name);
 		EntityID GetFirstChild(EntityID entity);
 		bool HasChildren(EntityID entity);
 		size_t NumChildren(EntityID entity);
 
-		Entity FindEntityByName(const std::string& name);
+		Entity FindEntityByName(const std::string &name);
 
 
-		template<ComponentType T>
-		T& AddComponent(EntityID id)
+		template <ComponentType T>
+		T &AddComponent(EntityID id)
 		{
 			return static_cast<T &>(*ComponentRegistry::AddComponent(Reflection::Resolve<T>().Id(), id, &Registry));
 		}
 
-		Component* AddComponent(const std::string& component, EntityID entity)
+		Component *AddComponent(const std::string &component, EntityID entity)
 		{
 			return ComponentRegistry::AddComponent(component, entity, &Registry);
 		}
 
-		template<ComponentType T>
-		T& GetComponent(EntityID id)
+		template <ComponentType T>
+		T &GetComponent(EntityID id)
 		{
 			T *comp = Registry.try_get<T>(id);
 			if (comp == nullptr)
@@ -100,43 +104,41 @@ namespace Chroma
 			return *comp;
 		}
 
-		Component* GetComponent(const std::string& component, EntityID entity)
+		Component *GetComponent(const std::string &component, EntityID entity)
 		{
 			return ComponentRegistry::GetComponent(component, entity, &Registry);
 		}
 
-		Component* GetComponent(size_t component_id, EntityID entity)
+		Component *GetComponent(uint32_t component_id, EntityID entity)
 		{
 			return ComponentRegistry::GetComponent(component_id, entity, &Registry);
 		}
 
-		static std::vector<Chroma::Reflection::Type> GetComponentTypes();
+		static std::vector<Reflection::Type> GetComponentTypes();
 
-		template<ComponentType T>
+		template <ComponentType T>
 		bool HasComponent(EntityID id)
 		{
 			return Registry.try_get<T>(id) != nullptr;
 		}
 
-		bool HasComponent(const std::string& component, EntityID entity)
+		bool HasComponent(const std::string &component, EntityID entity)
 		{
 			return ComponentRegistry::HasComponent(component, entity, &Registry);
 		}
 
-		template<ComponentType T>
+		template <ComponentType T>
 		size_t RemoveComponent(EntityID entity)
 		{
 			return Registry.remove<T>(entity);
 		}
 
-		size_t RemoveComponent(const std::string& component, EntityID entity)
+		size_t RemoveComponent(const std::string &component, EntityID entity)
 		{
 			return ComponentRegistry::RemoveComponent(component, entity, &Registry);
 		}
 
-		std::vector<Component*> GetAllComponents(EntityID entity);
-
-
+		std::vector<Component *> GetAllComponents(EntityID entity);
 
 
 		void OnLoad();
@@ -147,11 +149,11 @@ namespace Chroma
 		void Draw(Time delta);
 
 
-		Camera& GetPrimaryCamera();
+		Camera &GetPrimaryCamera();
 		EntityID GetPrimaryCameraEntity() { return PrimaryCameraEntity; }
 		bool SetPrimaryCamera(EntityID entity);
 
-		std::vector<Collider*> GetColliders(EntityID entity);
+		std::vector<Collider *> GetColliders(EntityID entity);
 
 		entt::registry Registry;
 
@@ -162,13 +164,12 @@ namespace Chroma
 		std::vector<Layer> Layers;
 
 	private:
-		
-		PhysicsSystem* physics_system;
-		ScriptingSystem* scripting_system;
-		AudioSystem* audio_system;
-		SpriteRendererSystem* sprite_renderer_system;
-		ParticleSystem* particle_system;
-		CameraSystem* camera_system;
+		PhysicsSystem *physics_system;
+		ScriptingSystem *scripting_system;
+		AudioSystem *audio_system;
+		SpriteRendererSystem *sprite_renderer_system;
+		ParticleSystem *particle_system;
+		CameraSystem *camera_system;
 
 		std::vector<EntityID> EntityOrder;
 		EntityID PrimaryCameraEntity = ENTITY_NULL;
@@ -179,8 +180,5 @@ namespace Chroma
 		friend class MonoScripting;
 		friend class Polychrome::Hierarchy;
 		friend class Polychrome::Inspector;
-
-
 	};
-
 }

@@ -17,9 +17,8 @@ namespace Chroma
 		CHROMA_ASSET(Font, Asset);
 
 	public:
+		~Font() override = default;
 
-		virtual ~Font() = default;
-		
 		struct Glyph
 		{
 			uint32_t codepoint;
@@ -60,8 +59,5 @@ namespace Chroma
 		bool ReadAtlas(Atlas *out, const std::string &path);
 
 	private:
-		
-
 	};
 }
-

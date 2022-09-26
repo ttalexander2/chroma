@@ -6,11 +6,12 @@
 
 namespace Chroma
 {
-	OpenGLContext::OpenGLContext(GLFWwindow* windowHandle)
-		:m_WindowHandle(windowHandle)
+	OpenGLContext::OpenGLContext(GLFWwindow *windowHandle) :
+		m_WindowHandle(windowHandle)
 	{
 		CHROMA_CORE_ASSERT(windowHandle, "Window Handle is null!");
 	}
+
 	void OpenGLContext::Init()
 	{
 		glfwMakeContextCurrent(m_WindowHandle);
@@ -20,8 +21,8 @@ namespace Chroma
 		CHROMA_CORE_INFO("OpenGL version {0}", glGetString(GL_VERSION));
 		CHROMA_CORE_INFO("Vendor: {0}", glGetString(GL_VENDOR));
 		CHROMA_CORE_INFO("Renderer: {0}", glGetString(GL_RENDERER));
-
 	}
+
 	void OpenGLContext::SwapBuffers()
 	{
 		glfwSwapBuffers(m_WindowHandle);

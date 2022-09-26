@@ -17,7 +17,7 @@ namespace Chroma
 		glDeleteBuffers(1, &m_RendererID);
 	}
 
-	void OpenGLUniformBuffer::SetData(const void* data, uint32_t size, uint32_t offset)
+	void OpenGLUniformBuffer::SetData(const void *data, uint32_t size, uint32_t offset)
 	{
 		glNamedBufferSubData(m_RendererID, offset, size, data);
 	}

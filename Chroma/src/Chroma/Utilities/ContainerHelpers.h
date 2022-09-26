@@ -2,9 +2,8 @@
 
 namespace Chroma
 {
-
-	template<typename ContainerType>
-	void SwapAndPopAtIndex(ContainerType& container, size_t index)
+	template <typename ContainerType>
+	void SwapAndPopAtIndex(ContainerType &container, size_t index)
 	{
 		if ((index + 1) >= container.size())
 			return;
@@ -12,8 +11,8 @@ namespace Chroma
 		container.pop_back();
 	}
 
-	template<typename ContainerType>
-	void RemoveAtIndex(ContainerType& container, size_t index)
+	template <typename ContainerType>
+	void RemoveAtIndex(ContainerType &container, size_t index)
 	{
 		if ((index) >= container.size())
 			return;
@@ -28,7 +27,7 @@ namespace Chroma
 	}
 
 	template <typename T>
-	T* PopValue(std::vector<T>& container, T& val)
+	T *PopValue(std::vector<T> &container, T &val)
 	{
 		if (container.empty())
 			return nullptr;
@@ -42,7 +41,7 @@ namespace Chroma
 				std::swap(container[i], container[i + 1]);
 			i++;
 		}
-		T* retval = nullptr;
+		T *retval = nullptr;
 		if (swapping)
 		{
 			retval = &container.back();

@@ -8,27 +8,26 @@ namespace Chroma
 	class OpenGLRendererAPI : public RendererAPI
 	{
 	public:
-
 		/// @brief Initialize OpenGL Rendering
-		virtual void Init() override;
+		void Init() override;
 
 		/// @brief Set the screen clear color.
 		/// @param color Color to clear the screen.
-		virtual void SetClearColor(const glm::vec4& color) override;
+		void SetClearColor(const glm::vec4 &color) override;
 
 		/// @brief Clear the screen.
-		virtual void Clear() override;
+		void Clear() override;
 
 		/// @brief Set the OpenGL viewport.
 		/// @param x X position of the viewport.
 		/// @param y Y position of the viewport.
 		/// @param width Width of the viewport.
 		/// @param height Height of the viewport.
-		virtual void SetViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height) override;
+		void SetViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height) override;
 
 		/// @brief Draw an indexed vertex array.
 		/// @param vertexArray Vertex array to draw.
 		/// @param indexCount Number of indices to draw.
-		virtual void DrawIndexed(uint32_t count, PrimitiveType type, bool depthTest) override;
+		void DrawIndexed(uint32_t count, PrimitiveType type, bool depthTest) override;
 	};
 }

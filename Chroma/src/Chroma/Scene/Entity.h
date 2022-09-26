@@ -6,7 +6,6 @@
 
 namespace Chroma
 {
-
 	class Bindings;
 
 	class Entity
@@ -14,10 +13,10 @@ namespace Chroma
 	public:
 		Entity() = default;
 		Entity(EntityID id);
-		Entity(EntityID id, Scene* scene);
-		Entity(const Entity& other) = default;
+		Entity(EntityID id, Scene *scene);
+		Entity(const Entity &other) = default;
 
-		inline EntityID GetID() const { return m_EntityID; }
+		EntityID GetID() const { return m_EntityID; }
 
 		const bool Valid() const;
 
@@ -27,7 +26,7 @@ namespace Chroma
 
 		Entity CreateChild();
 
-		void SetName(const std::string& name);
+		void SetName(const std::string &name);
 
 		template <ComponentType T>
 		bool HasComponent()
@@ -35,40 +34,40 @@ namespace Chroma
 			return m_Scene->HasComponent<T>(m_EntityID);
 		}
 
-		bool HasComponent(const std::string& component)
+		bool HasComponent(const std::string &component)
 		{
 			return m_Scene->HasComponent(component, m_EntityID);
 		}
 
-		template<ComponentType T>
-		T& AddComponent()
+		template <ComponentType T>
+		T &AddComponent()
 		{
 			return m_Scene->AddComponent<T>(m_EntityID);
 		}
 
-		Component* AddComponent(const std::string& component)
+		Component *AddComponent(const std::string &component)
 		{
 			return m_Scene->AddComponent(component, m_EntityID);
 		}
 
-		template<ComponentType T>
-		T& GetComponent()
+		template <ComponentType T>
+		T &GetComponent()
 		{
 			return m_Scene->GetComponent<T>(m_EntityID);
 		}
 
-		Component* GetComponent(const std::string& component)
+		Component *GetComponent(const std::string &component)
 		{
 			return m_Scene->GetComponent(component, m_EntityID);
 		}
 
-		template<ComponentType T>
+		template <ComponentType T>
 		size_t RemoveComponent()
 		{
 			return m_Scene->RemoveComponent<T>(m_EntityID);
 		}
 
-		size_t RemoveComponent(const std::string& component)
+		size_t RemoveComponent(const std::string &component)
 		{
 			return m_Scene->RemoveComponent(component, m_EntityID);
 		}
@@ -76,17 +75,17 @@ namespace Chroma
 		explicit operator EntityID() const { return m_EntityID; }
 		operator bool() const { return m_EntityID != ENTITY_NULL; }
 
-		bool operator==(const Entity& e) const
+		bool operator==(const Entity &e) const
 		{
 			return (this->m_EntityID == e.m_EntityID && this->m_Scene == e.m_Scene);
 		}
 
-		bool operator<(const Entity& b) const
+		bool operator<(const Entity &b) const
 		{
 			return (this->m_EntityID < b.m_EntityID);
 		}
 
-		
+
 		//template<typename OStream>
 		//friend OStream& operator<<(OStream& os, const Entity& e)
 		//{
@@ -94,15 +93,13 @@ namespace Chroma
 		//}
 
 
-		Scene& GetScene() { return *m_Scene; }
+		Scene &GetScene() { return *m_Scene; }
 
 	private:
-
 		EntityID m_EntityID;
-		Scene* m_Scene;
+		Scene *m_Scene;
 
 		friend class Scene;
 		friend class Bindings;
-
 	};
 }

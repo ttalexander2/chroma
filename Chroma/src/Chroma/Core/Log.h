@@ -19,9 +19,9 @@ namespace Chroma
 	public:
 		/// @brief Initialize the logging system.
 		static void Init();
-		
-		inline static std::shared_ptr<spdlog::logger>& GetCoreLogger() { return s_CoreLogger;  }
-		inline static std::shared_ptr<spdlog::logger>& GetClientLogger() { return s_ClientLogger; }
+
+		static std::shared_ptr<spdlog::logger> &GetCoreLogger() { return s_CoreLogger; }
+		static std::shared_ptr<spdlog::logger> &GetClientLogger() { return s_ClientLogger; }
 
 		enum class LogLevel
 		{

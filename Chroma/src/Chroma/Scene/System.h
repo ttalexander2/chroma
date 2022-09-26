@@ -5,35 +5,66 @@
 
 namespace Chroma
 {
-
 	class System
 	{
 	public:
 		System() = default;
 		virtual ~System() = default;
 
-		virtual void PreLoad() {};
-		virtual void Load() {};
-		virtual void PostLoad() {};
+		virtual void PreLoad()
+		{
+		};
 
-		virtual void EarlyInit() {};
-		virtual void Init() {};
-		virtual void LateInit() {};
+		virtual void Load()
+		{
+		};
+
+		virtual void PostLoad()
+		{
+		};
+
+		virtual void EarlyInit()
+		{
+		};
+
+		virtual void Init()
+		{
+		};
+
+		virtual void LateInit()
+		{
+		};
 
 
-		virtual void EarlyUpdate(Time time) {};
-		virtual void Update(Time time) {};
-		virtual void LateUpdate(Time time) {};
+		virtual void EarlyUpdate(Time time)
+		{
+		};
 
-		virtual void EarlyDraw(Time time) {};
-		virtual void Draw(Time time) {};
-		virtual void LateDraw(Time time) {};
+		virtual void Update(Time time)
+		{
+		};
+
+		virtual void LateUpdate(Time time)
+		{
+		};
+
+		virtual void EarlyDraw(Time time)
+		{
+		};
+
+		virtual void Draw(Time time)
+		{
+		};
+
+		virtual void LateDraw(Time time)
+		{
+		};
 
 
-		inline Scene* GetScene() { return m_Scene; }
+		Scene *GetScene() { return m_Scene; }
 
 	protected:
 		friend class Scene;
-		Scene* m_Scene;
+		Scene *m_Scene;
 	};
 }

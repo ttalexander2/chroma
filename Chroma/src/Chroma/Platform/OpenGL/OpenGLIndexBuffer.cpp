@@ -5,9 +5,8 @@
 
 namespace Chroma
 {
-
-	OpenGLIndexBuffer::OpenGLIndexBuffer(uint32_t* indices, uint32_t count)
-		: m_Count(count)
+	OpenGLIndexBuffer::OpenGLIndexBuffer(uint32_t *indices, uint32_t count) :
+		m_Count(count)
 	{
 		glCreateBuffers(1, &m_RendererId);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_RendererId);

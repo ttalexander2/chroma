@@ -10,26 +10,26 @@ namespace Chroma
 {
 	bool FMODBank::Load()
 	{
-   		if (!FileSystem::Exists(GetPath()))
+		if (!FileSystem::Exists(GetPath()))
 		{
 			CHROMA_CORE_ERROR("Could not load bank! The following path does not exist: {}", GetPath());
 			return false;
 		}
 
-		Chroma::Audio::LoadBank(GetPath());
+		Audio::LoadBank(GetPath());
 		return true;
 	}
 
 	bool FMODBank::Unload()
 	{
-		Chroma::Audio::UnloadBank(GetPath());
+		Audio::UnloadBank(GetPath());
 		return true;
 	}
 
 	bool FMODBank::Reload()
 	{
-		if (Chroma::AssetManager::Exists(GetID()))
-			Chroma::Audio::UnloadBank(GetPath());
+		if (AssetManager::Exists(GetID()))
+			Audio::UnloadBank(GetPath());
 
 		if (!FileSystem::Exists(GetPath()))
 		{
@@ -37,9 +37,7 @@ namespace Chroma
 			return false;
 		}
 
-	    Chroma::Audio::LoadBank(GetPath());
+		Audio::LoadBank(GetPath());
 		return true;
 	}
 }
-
-

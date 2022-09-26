@@ -17,7 +17,6 @@
 
 namespace Chroma
 {
-
 	struct QuadVertex
 	{
 		glm::vec3 Position;
@@ -44,20 +43,21 @@ namespace Chroma
 
 		uint32_t QuadIndexCount = 0;
 
-		QuadVertex* QuadVertexBufferBase = nullptr;
-		QuadVertex* QuadVertexBufferPtr = nullptr;
+		QuadVertex *QuadVertexBufferBase = nullptr;
+		QuadVertex *QuadVertexBufferPtr = nullptr;
 
 		std::array<Ref<Texture2D>, MaxTextureSlots> TextureSlots;
 		uint32_t TextureSlotIndex = 1;
 
 		glm::vec4 QuadVertexPositions[4];
-		
+
 		Renderer2D::Statistics Stats;
 
 		struct CameraData
 		{
 			glm::mat4 ViewProjection;
 		};
+
 		CameraData CameraBuffer;
 		Ref<UniformBuffer> CameraUniformBuffer;
 	};
@@ -72,12 +72,12 @@ namespace Chroma
 
 		PipelineSpecification spec;
 		spec.Layout = {
-			{ Chroma::ShaderDataType::Float3, "a_Position" },
-			{ Chroma::ShaderDataType::Float4, "a_Color" },
-			{ Chroma::ShaderDataType::Float2, "a_TextCoord" },
-			{ Chroma::ShaderDataType::Float, "a_TexIndex" },
-			{ Chroma::ShaderDataType::Float, "a_TilingFactor" },
-			{ Chroma::ShaderDataType::Int, "a_EntityID" }
+			{ ShaderDataType::Float3, "a_Position" },
+			{ ShaderDataType::Float4, "a_Color" },
+			{ ShaderDataType::Float2, "a_TextCoord" },
+			{ ShaderDataType::Float, "a_TexIndex" },
+			{ ShaderDataType::Float, "a_TilingFactor" },
+			{ ShaderDataType::Int, "a_EntityID" }
 		};
 		spec.Shader = Shader::Create("assets/shaders/Texture.glsl");
 
@@ -86,8 +86,7 @@ namespace Chroma
 		s_Data.QuadVertexBuffer = VertexBuffer::Create(s_Data.MaxVertices * sizeof(QuadVertex));
 		s_Data.QuadVertexBufferBase = new QuadVertex[s_Data.MaxVertices];
 
-
-		uint32_t* quadIndices = new uint32_t[s_Data.MaxIndices];
+		auto quadIndices = new uint32_t[s_Data.MaxIndices];
 
 		uint32_t offset = 0;
 		for (uint32_t i = 0; i < s_Data.MaxIndices; i += 6)
@@ -103,10 +102,8 @@ namespace Chroma
 			offset += 4;
 		}
 
-
 		s_Data.QuadIndexBuffer = IndexBuffer::Create(quadIndices, s_Data.MaxIndices);
 		delete[] quadIndices;
-
 
 		s_Data.WhiteTexture = Texture2D::Create(1, 1);
 		uint32_t whiteTextureData = 0xffffffff;
@@ -119,12 +116,11 @@ namespace Chroma
 		s_Data.TextureSlots[0] = s_Data.WhiteTexture;
 
 		s_Data.QuadVertexPositions[0] = { -0.5f, -0.5f, 0.0f, 1.0f };
-		s_Data.QuadVertexPositions[1] = {  0.5f, -0.5f, 0.0f, 1.0f };
-		s_Data.QuadVertexPositions[2] = {  0.5f,  0.5f, 0.0f, 1.0f };
-		s_Data.QuadVertexPositions[3] = { -0.5f,  0.5f, 0.0f, 1.0f };
+		s_Data.QuadVertexPositions[1] = { 0.5f, -0.5f, 0.0f, 1.0f };
+		s_Data.QuadVertexPositions[2] = { 0.5f, 0.5f, 0.0f, 1.0f };
+		s_Data.QuadVertexPositions[3] = { -0.5f, 0.5f, 0.0f, 1.0f };
 
 		s_Data.CameraUniformBuffer = UniformBuffer::Create(sizeof(RenderData::CameraData), 0);
-
 	}
 
 	void Renderer2D::Shutdown()
@@ -137,29 +133,28 @@ namespace Chroma
 		RenderCommand::Clear();
 	}
 
-	void Renderer2D::SetClearColor(const Color& color)
+	void Renderer2D::SetClearColor(const Color &color)
 	{
 		RenderCommand::SetClearColor(color);
 	}
 
-	void Renderer2D::SetClearColor(const Math::vec4& color)
+	void Renderer2D::SetClearColor(const Math::vec4 &color)
 	{
 		RenderCommand::SetClearColor(color);
 	}
 
-	void Renderer2D::Begin(const OrthographicCamera& camera)
+	void Renderer2D::Begin(const OrthographicCamera &camera)
 	{
 		Begin(camera.GetViewProjectionMatrix());
 	}
 
-	void Renderer2D::Begin(const Camera& camera)
+	void Renderer2D::Begin(const Camera &camera)
 	{
 		Begin(camera.GetViewProjectionMatrix());
 	}
 
 
-
-	void Renderer2D::Begin(const Math::mat4& camera)
+	void Renderer2D::Begin(const Math::mat4 &camera)
 	{
 		CHROMA_PROFILE_FUNCTION();
 
@@ -190,9 +185,8 @@ namespace Chroma
 		if (s_Data.QuadIndexCount == 0)
 			return;
 
-		uint32_t dataSize = (uint32_t)((uint8_t*)s_Data.QuadVertexBufferPtr - (uint8_t*)s_Data.QuadVertexBufferBase);
+		uint32_t dataSize = static_cast<uint32_t>((uint8_t *)s_Data.QuadVertexBufferPtr - (uint8_t *)s_Data.QuadVertexBufferBase);
 		s_Data.QuadVertexBuffer->SetData(s_Data.QuadVertexBufferBase, dataSize);
-
 
 		for (uint32_t i = 0; i < s_Data.TextureSlotIndex; i++)
 			s_Data.TextureSlots[i]->Bind(i);
@@ -205,16 +199,15 @@ namespace Chroma
 		s_Data.Stats.DrawCalls++;
 	}
 
-	void Renderer2D::Flush(const Ref<Shader>& shader)
+	void Renderer2D::Flush(const Ref<Shader> &shader)
 	{
 		CHROMA_PROFILE_FUNCTION();
 
 		if (s_Data.QuadIndexCount == 0)
 			return;
 
-		uint32_t dataSize = (uint32_t)((uint8_t*)s_Data.QuadVertexBufferPtr - (uint8_t*)s_Data.QuadVertexBufferBase);
+		uint32_t dataSize = static_cast<uint32_t>((uint8_t *)s_Data.QuadVertexBufferPtr - (uint8_t *)s_Data.QuadVertexBufferBase);
 		s_Data.QuadVertexBuffer->SetData(s_Data.QuadVertexBufferBase, dataSize);
-
 
 		for (uint32_t i = 0; i < s_Data.TextureSlotIndex; i++)
 			s_Data.TextureSlots[i]->Bind(i);
@@ -238,7 +231,7 @@ namespace Chroma
 		StartBatch();
 	}
 
-	void Renderer2D::DrawSprite(int entityID, const Math::vec2& position, const Math::vec2& size, const Ref<Texture2D>& texture, const Math::vec4& color, float rotation)
+	void Renderer2D::DrawSprite(int entityID, const Math::vec2 &position, const Math::vec2 &size, const Ref<Texture2D> &texture, const Math::vec4 &color, float rotation)
 	{
 		CHROMA_PROFILE_FUNCTION();
 
@@ -247,15 +240,15 @@ namespace Chroma
 		glm::mat4 transform;
 
 		if (rotation == 0)
-			transform = glm::translate(glm::mat4(1.0f), { position, 0.f })
-			* glm::scale(glm::mat4(1.0f), { size, 0.f });
+			transform = translate(glm::mat4(1.0f), { position, 0.f })
+					* scale(glm::mat4(1.0f), { size, 0.f });
 		else
-			transform = glm::translate(glm::mat4(1.0f), { position, 0.f })
-			* glm::rotate(glm::mat4(1.0f), rotation, { 0.0f, 0.0f, 1.0f })
-			* glm::scale(glm::mat4(1.0f), { size, 0.f });
+			transform = translate(glm::mat4(1.0f), { position, 0.f })
+					* rotate(glm::mat4(1.0f), rotation, { 0.0f, 0.0f, 1.0f })
+					* scale(glm::mat4(1.0f), { size, 0.f });
 
 		//if (!s_CullingFrustum.CubeIntersects(glm::min(position, p2), glm::max(position, p2)))
-			//return;
+		//return;
 
 		constexpr size_t quadVertexCount = 4;
 
@@ -268,18 +261,17 @@ namespace Chroma
 		{
 			if (*s_Data.TextureSlots[i].get() == *texture.get())
 			{
-				textureIndex = (float)i;
+				textureIndex = static_cast<float>(i);
 				break;
 			}
 		}
 
 		if (textureIndex == 0.0f)
 		{
-			textureIndex = (float)s_Data.TextureSlotIndex;
+			textureIndex = static_cast<float>(s_Data.TextureSlotIndex);
 			s_Data.TextureSlots[s_Data.TextureSlotIndex] = texture;
 			s_Data.TextureSlotIndex++;
 		}
-
 
 		s_Data.QuadVertexBufferPtr->Position = transform * s_Data.QuadVertexPositions[0];
 		s_Data.QuadVertexBufferPtr->Color = color;
@@ -314,7 +306,6 @@ namespace Chroma
 		s_Data.QuadVertexBufferPtr++;
 
 		s_Data.QuadIndexCount += 6;
-
 
 		s_Data.Stats.QuadCount++;
 	}
@@ -322,44 +313,42 @@ namespace Chroma
 	void Renderer2D::FlushAndReset()
 	{
 		End();
-		
+
 		s_Data.QuadIndexCount = 0;
 		s_Data.QuadVertexBufferPtr = s_Data.QuadVertexBufferBase;
 
 		s_Data.TextureSlotIndex = 1;
 	}
 
-	void Renderer2D::DrawQuad(const Math::vec2& position, const Math::vec2& size, const Math::vec4& color, float rotation)
+	void Renderer2D::DrawQuad(const Math::vec2 &position, const Math::vec2 &size, const Math::vec4 &color, float rotation)
 	{
 		DrawQuad({ position.x, position.y, 0.0f }, { size.x, size.y, 0.0f }, color, rotation);
 	}
 
-	void Renderer2D::DrawQuad(const Math::vec3& position, const Math::vec3& size, const Math::vec4& color, float rotation)
+	void Renderer2D::DrawQuad(const Math::vec3 &position, const Math::vec3 &size, const Math::vec4 &color, float rotation)
 	{
 		CHROMA_PROFILE_FUNCTION();
 
 		glm::mat4 transform;
 
 		if (rotation == 0)
-			transform = glm::translate(glm::mat4(1.0f), position)
-			* glm::scale(glm::mat4(1.0f), size);
+			transform = translate(glm::mat4(1.0f), position)
+					* scale(glm::mat4(1.0f), size);
 		else
-			transform = glm::translate(glm::mat4(1.0f), position)
-			* glm::rotate(glm::mat4(1.0f), rotation, { 0.0f, 0.0f, 1.0f })
-			* glm::scale(glm::mat4(1.0f), size);
+			transform = translate(glm::mat4(1.0f), position)
+					* rotate(glm::mat4(1.0f), rotation, { 0.0f, 0.0f, 1.0f })
+					* scale(glm::mat4(1.0f), size);
 
 		glm::vec3 p2 = position + size;
-
 
 		//CHROMA_CORE_WARN("POS: ({0}, {1}, {2}), SIZE: ({3}, {4}, {5})", position.x, position.y, position.z, size.x, size.y, size.z);
 		//CHROMA_CORE_WARN("MIN: ({0}, {1}, {2}), MAX: ({3}, {4}, {5})", glm::min(position, p2).x, glm::min(position, p2).y, glm::min(position, p2).z, glm::max(position, p2).x, glm::max(position, p2).y, glm::max(position, p2).z);
 
 		//if (!s_CullingFrustum.CubeIntersects(glm::min(position, p2), glm::max(position, p2)))
-			//return;
+		//return;
 
 		if (s_Data.QuadIndexCount + 6 >= s_Data.MaxIndices)
 			FlushAndReset();
-
 
 		const float whiteTextureIndex = 0.0f;
 
@@ -389,27 +378,25 @@ namespace Chroma
 
 		s_Data.QuadIndexCount += 6;
 
-
 		s_Data.Stats.QuadCount++;
-
 	}
 
-	void Renderer2D::DrawQuad(const Math::vec2& position, const Math::vec2& size, const Ref<Texture2D>& texture, const Math::vec4& color, float rotation)
+	void Renderer2D::DrawQuad(const Math::vec2 &position, const Math::vec2 &size, const Ref<Texture2D> &texture, const Math::vec4 &color, float rotation)
 	{
 		DrawQuad({ position.x, position.y, 0.0f }, { size.x, size.y, 0.0f }, texture, color, rotation);
 	}
 
-	void Renderer2D::DrawQuad(const Math::vec2& position, const Math::vec2& size, const Ref<Texture2D>& texture, float rotation)
+	void Renderer2D::DrawQuad(const Math::vec2 &position, const Math::vec2 &size, const Ref<Texture2D> &texture, float rotation)
 	{
 		DrawQuad({ position.x, position.y, 0.0f }, { size.x, size.y, 0.0f }, texture, glm::vec4(1.0f), rotation);
 	}
 
-	void Renderer2D::DrawQuad(const Math::vec3& position, const Math::vec3& size, const Ref<Texture2D>& texture, float rotation)
+	void Renderer2D::DrawQuad(const Math::vec3 &position, const Math::vec3 &size, const Ref<Texture2D> &texture, float rotation)
 	{
 		DrawQuad(position, size, texture, glm::vec4(1.0f), rotation);
 	}
 
-	void Renderer2D::DrawQuad(const Math::mat4& transform, const Math::vec4& color)
+	void Renderer2D::DrawQuad(const Math::mat4 &transform, const Math::vec4 &color)
 	{
 		CHROMA_PROFILE_FUNCTION();
 
@@ -418,7 +405,6 @@ namespace Chroma
 
 		const float whiteTextureIndex = 0.0f;
 
-
 		s_Data.QuadVertexBufferPtr->Position = transform * s_Data.QuadVertexPositions[0];
 		s_Data.QuadVertexBufferPtr->Color = color;
 		s_Data.QuadVertexBufferPtr->TexCoord = { 0.0f, 0.0f };
@@ -445,11 +431,10 @@ namespace Chroma
 
 		s_Data.QuadIndexCount += 6;
 
-
 		s_Data.Stats.QuadCount++;
 	}
 
-	void Renderer2D::DrawQuad(const Math::mat4& transform, const Ref<Texture2D>& texture, const Math::vec4& color)
+	void Renderer2D::DrawQuad(const Math::mat4 &transform, const Ref<Texture2D> &texture, const Math::vec4 &color)
 	{
 		CHROMA_PROFILE_FUNCTION();
 
@@ -464,14 +449,14 @@ namespace Chroma
 		{
 			if (*s_Data.TextureSlots[i].get() == *texture.get())
 			{
-				textureIndex = (float)i;
+				textureIndex = static_cast<float>(i);
 				break;
 			}
 		}
 
 		if (textureIndex == 0.0f)
 		{
-			textureIndex = (float)s_Data.TextureSlotIndex;
+			textureIndex = static_cast<float>(s_Data.TextureSlotIndex);
 			s_Data.TextureSlots[s_Data.TextureSlotIndex] = texture;
 			s_Data.TextureSlotIndex++;
 		}
@@ -502,11 +487,10 @@ namespace Chroma
 
 		s_Data.QuadIndexCount += 6;
 
-
 		s_Data.Stats.QuadCount++;
 	}
 
-	void Renderer2D::DrawQuad(const Math::vec3& position, const Math::vec3& size, const Ref<Texture2D>& texture, const Math::vec4& color, float rotation)
+	void Renderer2D::DrawQuad(const Math::vec3 &position, const Math::vec3 &size, const Ref<Texture2D> &texture, const Math::vec4 &color, float rotation)
 	{
 		CHROMA_PROFILE_FUNCTION();
 
@@ -521,15 +505,15 @@ namespace Chroma
 		glm::mat4 transform;
 
 		if (rotation == 0)
-			transform = glm::translate(glm::mat4(1.0f), position)
-			* glm::scale(glm::mat4(1.0f), size);
+			transform = translate(glm::mat4(1.0f), position)
+					* scale(glm::mat4(1.0f), size);
 		else
-			transform = glm::translate(glm::mat4(1.0f), position)
-			* glm::rotate(glm::mat4(1.0f), rotation, { 0.0f, 0.0f, 1.0f })
-			* glm::scale(glm::mat4(1.0f), size);
+			transform = translate(glm::mat4(1.0f), position)
+					* rotate(glm::mat4(1.0f), rotation, { 0.0f, 0.0f, 1.0f })
+					* scale(glm::mat4(1.0f), size);
 
 		//if (!s_CullingFrustum.CubeIntersects(glm::min(position, p2), glm::max(position, p2)))
-			//return;
+		//return;
 
 		constexpr size_t quadVertexCount = 4;
 
@@ -542,18 +526,17 @@ namespace Chroma
 		{
 			if (*s_Data.TextureSlots[i].get() == *texture.get())
 			{
-				textureIndex = (float)i;
+				textureIndex = static_cast<float>(i);
 				break;
 			}
 		}
 
 		if (textureIndex == 0.0f)
 		{
-			textureIndex = (float)s_Data.TextureSlotIndex;
+			textureIndex = static_cast<float>(s_Data.TextureSlotIndex);
 			s_Data.TextureSlots[s_Data.TextureSlotIndex] = texture;
 			s_Data.TextureSlotIndex++;
 		}
-
 
 		s_Data.QuadVertexBufferPtr->Position = transform * s_Data.QuadVertexPositions[0];
 		s_Data.QuadVertexBufferPtr->Color = color;
@@ -581,12 +564,10 @@ namespace Chroma
 
 		s_Data.QuadIndexCount += 6;
 
-
 		s_Data.Stats.QuadCount++;
-
 	}
 
-	void Renderer2D::DrawLine(const Math::vec2& p1, const Math::vec2& p2, float line_width, const Math::vec4& color)
+	void Renderer2D::DrawLine(const Math::vec2 &p1, const Math::vec2 &p2, float line_width, const Math::vec4 &color)
 	{
 		Math::vec2 midpoint = { (p1.x + p2.x) / 2.f, (p1.y + p2.y) / 2.f };
 		float length = static_cast<float>(Math::sqrt(Math::pow((p2.x - p1.x), 2) + Math::pow((p2.y - p1.y), 2)));
@@ -627,16 +608,15 @@ namespace Chroma
 		s_Data.QuadVertexBufferPtr->TexIndex = whiteTextureIndex;
 		s_Data.QuadVertexBufferPtr++;
 
-
 		s_Data.QuadIndexCount += 3;
 
 		s_Data.Stats.QuadCount++;
 	}
 
-	void Renderer2D::DrawRect(const Math::vec2& position, const Math::vec2& size, float line_width, const Math::vec4& color, float rotation)
+	void Renderer2D::DrawRect(const Math::vec2 &position, const Math::vec2 &size, float line_width, const Math::vec4 &color, float rotation)
 	{
-		DrawQuad({position.x, position.y - size.y/2.f }, { size.x + line_width, line_width }, color, rotation); //h
-		DrawQuad({position.x + size.x/2.f, position.y }, { line_width, size.y - line_width }, color, rotation); //v
+		DrawQuad({ position.x, position.y - size.y / 2.f }, { size.x + line_width, line_width }, color, rotation); //h
+		DrawQuad({ position.x + size.x / 2.f, position.y }, { line_width, size.y - line_width }, color, rotation); //v
 		DrawQuad({ position.x, position.y + size.y / 2.f }, { size.x + line_width, line_width }, color, rotation); //h
 		DrawQuad({ position.x - size.x / 2.f, position.y }, { line_width, size.y - line_width }, color, rotation); //v
 
@@ -712,10 +692,7 @@ namespace Chroma
 
 		float textureIndex = 0.0f;
 
-		
-
-		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::scale(glm::mat4(1.0f), glm::vec3(scale, scale, 0));
-		
+		glm::mat4 transform = translate(glm::mat4(1.0f), position) * glm::scale(glm::mat4(1.0f), glm::vec3(scale, scale, 0));
 
 		Ref<Texture2D> fontAtlas = font->m_Atlas.texture;
 
@@ -723,18 +700,17 @@ namespace Chroma
 		{
 			if (*s_Data.TextureSlots[i].get() == *fontAtlas.get())
 			{
-				textureIndex = (float)i;
+				textureIndex = static_cast<float>(i);
 				break;
 			}
 		}
 
 		if (textureIndex == 0.0f)
 		{
-			textureIndex = (float)s_Data.TextureSlotIndex;
+			textureIndex = static_cast<float>(s_Data.TextureSlotIndex);
 			s_Data.TextureSlots[s_Data.TextureSlotIndex] = fontAtlas;
 			s_Data.TextureSlotIndex++;
 		}
-
 
 		std::vector<int> nextLines;
 		{
@@ -752,16 +728,16 @@ namespace Chroma
 					continue;
 				}
 
-				auto& glyph = font->m_Atlas.glyphs[character];
-				if (font->m_Atlas.glyphs.find(character) == font->m_Atlas.glyphs.end())
+				auto &glyph = font->m_Atlas.glyphs[character];
+				if (!font->m_Atlas.glyphs.contains(character))
 					glyph = font->m_Atlas.glyphs['?'];
-				if (font->m_Atlas.glyphs.find('?') == font->m_Atlas.glyphs.end())
+				if (!font->m_Atlas.glyphs.contains('?'))
 					continue;
 
 				if (character != ' ')
 				{
-					glm::vec2 quadMin((float)glyph.pl, (float)glyph.pb);
-					glm::vec2 quadMax((float)glyph.pr, (float)glyph.pt);
+					glm::vec2 quadMin(static_cast<float>(glyph.pl), static_cast<float>(glyph.pb));
+					glm::vec2 quadMax(static_cast<float>(glyph.pr), static_cast<float>(glyph.pt));
 
 					quadMin *= fsScale;
 					quadMax *= fsScale;
@@ -802,9 +778,9 @@ namespace Chroma
 				}
 
 				auto &glyph = font->m_Atlas.glyphs[character];
-				if (font->m_Atlas.glyphs.find(character) == font->m_Atlas.glyphs.end())
+				if (!font->m_Atlas.glyphs.contains(character))
 					glyph = font->m_Atlas.glyphs['?'];
-				if (font->m_Atlas.glyphs.find('?') == font->m_Atlas.glyphs.end())
+				if (!font->m_Atlas.glyphs.contains('?'))
 					continue;
 
 				double l, b, r, t, pl, pb, pr, pt;
@@ -817,14 +793,12 @@ namespace Chroma
 				pr = glyph.pr;
 				pt = glyph.pt;
 
-
 				pl *= fsScale, pb *= fsScale, pr *= fsScale, pt *= fsScale;
 				pl += x, pb += y, pr += x, pt += y;
 
 				double texelWidth = 1. / fontAtlas->GetWidth();
 				double texelHeight = 1. / fontAtlas->GetHeight();
 				l *= texelWidth, b *= texelHeight, r *= texelWidth, t *= texelHeight;
-
 
 				s_Data.QuadVertexBufferPtr->Position = transform * glm::vec4(pl, pb, 0.0f, 1.0f);
 				s_Data.QuadVertexBufferPtr->Color = color;
@@ -857,7 +831,6 @@ namespace Chroma
 			}
 		}
 	}
-
 
 
 	void Renderer2D::ResetStats()

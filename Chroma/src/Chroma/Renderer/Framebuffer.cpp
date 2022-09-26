@@ -7,13 +7,16 @@
 
 namespace Chroma
 {
-	Ref<Framebuffer> Framebuffer::Create(const FramebufferSpecification& spec)
+	Ref<Framebuffer> Framebuffer::Create(const FramebufferSpecification &spec)
 	{
 		switch (RendererAPI::GetAPI())
 		{
-			case RendererAPI::API::None:		CHROMA_CORE_ASSERT(false, "RenderAPI::None is currently not supported!"); return nullptr;
-			case RendererAPI::API::OpenGL:		return CreateRef<OpenGLFramebuffer>(spec);
-			case RendererAPI::API::Vulkan:		return CreateRef<VulkanFramebuffer>(spec);
+			case RendererAPI::API::None: CHROMA_CORE_ASSERT(false, "RenderAPI::None is currently not supported!");
+				return nullptr;
+			case RendererAPI::API::OpenGL:
+				return CreateRef<OpenGLFramebuffer>(spec);
+			case RendererAPI::API::Vulkan:
+				return CreateRef<VulkanFramebuffer>(spec);
 		}
 
 		CHROMA_CORE_ASSERT(false, "Unknown RendererAPI!");

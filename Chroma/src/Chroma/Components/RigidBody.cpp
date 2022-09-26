@@ -36,7 +36,6 @@ namespace Chroma
 				m_BodyDefinition.type = b2_staticBody;
 				break;
 		}
-
 	}
 
 	RigidBody::BodyType RigidBody::GetBodyType() const
@@ -72,10 +71,7 @@ namespace Chroma
 			b2Vec2 v = m_Body->GetLinearVelocity();
 			return { v.x / Physics::GetScale(), v.y / Physics::GetScale() };
 		}
-		else
-		{
-			return { m_BodyDefinition.linearVelocity.x / Physics::GetScale(), m_BodyDefinition.linearVelocity.y / Physics::GetScale() };
-		}
+		return { m_BodyDefinition.linearVelocity.x / Physics::GetScale(), m_BodyDefinition.linearVelocity.y / Physics::GetScale() };
 	}
 
 	void RigidBody::SetAngularVelocity(float velocity)
@@ -96,11 +92,7 @@ namespace Chroma
 		{
 			return m_Body->GetAngularVelocity();
 		}
-		else
-		{
-			return m_BodyDefinition.angularVelocity;
-		}
-
+		return m_BodyDefinition.angularVelocity;
 	}
 
 	void RigidBody::SetLinearDamping(float damping)
@@ -121,10 +113,7 @@ namespace Chroma
 		{
 			return m_Body->GetLinearDamping();
 		}
-		else
-		{
-			return m_BodyDefinition.linearDamping;
-		}
+		return m_BodyDefinition.linearDamping;
 	}
 
 	void RigidBody::SetAngularDamping(float damping)
@@ -145,10 +134,7 @@ namespace Chroma
 		{
 			return m_Body->GetAngularDamping();
 		}
-		else
-		{
-			return m_BodyDefinition.angularDamping;
-		}
+		return m_BodyDefinition.angularDamping;
 	}
 
 	void RigidBody::SetSleepingAllowed(bool value)
@@ -168,11 +154,8 @@ namespace Chroma
 		if (m_Body)
 		{
 			return m_Body->IsSleepingAllowed();
-		} 
-		else
-		{
-			return m_BodyDefinition.allowSleep;
 		}
+		return m_BodyDefinition.allowSleep;
 	}
 
 	void RigidBody::SetAwake(bool value)
@@ -193,10 +176,7 @@ namespace Chroma
 		{
 			return m_Body->IsAwake();
 		}
-		else
-		{
-			return m_BodyDefinition.awake;
-		}
+		return m_BodyDefinition.awake;
 	}
 
 	void RigidBody::SetFixedRotation(bool value)
@@ -217,11 +197,7 @@ namespace Chroma
 		{
 			return m_Body->IsFixedRotation();
 		}
-		else
-		{
-			return m_BodyDefinition.fixedRotation;
-		}
-		
+		return m_BodyDefinition.fixedRotation;
 	}
 
 	void RigidBody::SetBullet(bool value)
@@ -234,7 +210,6 @@ namespace Chroma
 		{
 			m_BodyDefinition.bullet = value;
 		}
-		
 	}
 
 	bool RigidBody::IsBullet() const
@@ -243,10 +218,7 @@ namespace Chroma
 		{
 			return m_Body->IsBullet();
 		}
-		else
-		{
-			return m_BodyDefinition.bullet;
-		}
+		return m_BodyDefinition.bullet;
 	}
 
 	void RigidBody::SetGravityScale(float scale)
@@ -267,10 +239,7 @@ namespace Chroma
 		{
 			return m_Body->GetGravityScale();
 		}
-		else
-		{
-			return m_BodyDefinition.gravityScale;
-		}
+		return m_BodyDefinition.gravityScale;
 	}
 
 	void RigidBody::SetCustomMassData(float mass, const Math::vec2 &center, float inertia)
@@ -396,48 +365,47 @@ namespace Chroma
 	}
 
 
-
 	Reflection::TypeFactory<RigidBody> RigidBody::RegisterType()
 	{
-		Reflection::Register<RigidBody::MassData>("RigidBody::MassData")
-				.Data<&RigidBody::MassData::mass>("mass")
-				.Data<&RigidBody::MassData::center>("center")
-				.Data<&RigidBody::MassData::inertia>("inertia");
+		Reflection::Register<MassData>("RigidBody::MassData")
+				.Data<&MassData::mass>("mass")
+				.Data<&MassData::center>("center")
+				.Data<&MassData::inertia>("inertia");
 
-		Reflection::Register<RigidBody::BodyType>("RigidBody::BodyType")
-				.Data<RigidBody::BodyType::Static>("Static")
-				.Data<RigidBody::BodyType::Kinematic>("Kinematic")
-				.Data<RigidBody::BodyType::Dynamic>("Dynamic");
+		Reflection::Register<BodyType>("RigidBody::BodyType")
+				.Data<BodyType::Static>("Static")
+				.Data<BodyType::Kinematic>("Kinematic")
+				.Data<BodyType::Dynamic>("Dynamic");
 
 		return Reflection::Register<RigidBody>("RigidBody")
-				.Base<Component>()
-				.Data<&RigidBody::SetBodyType, &RigidBody::GetBodyType>("BodyType")
-				.Data<&RigidBody::SetLinearVelocity, &RigidBody::GetLinearVelocity>("LinearVelocity")
-				.Data<&RigidBody::SetAngularVelocity, &RigidBody::GetAngularVelocity>("AngularVelocity")
-				.Data<&RigidBody::SetLinearDamping, &RigidBody::GetLinearDamping>("LinearDamping")
-				.Data<&RigidBody::SetAngularDamping, &RigidBody::GetAngularDamping>("AngularDamping")
-				.Data<&RigidBody::SetSleepingAllowed, &RigidBody::IsSleepingAllowed>("SleepingAllowed")
-				.Data<&RigidBody::SetAwake, &RigidBody::IsAwake>("Awake")
-				.Data<&RigidBody::SetFixedRotation, &RigidBody::IsFixedRotation>("FixedRotation")
-				.Data<&RigidBody::SetBullet, &RigidBody::IsBullet>("Bullet")
-				.Data<&RigidBody::SetGravityScale, &RigidBody::GetGravityScale>("GravityScale")
-				.Data<nullptr, &RigidBody::HasCustomMassData>("UsesCustomMassData", false)
-				.Data<static_cast<void (RigidBody::*)(RigidBody::MassData)>(&RigidBody::SetCustomMassData), &RigidBody::GetMassData>("MassData", [&](Reflection::Any* val)
-				{ 
-					return val->Cast<RigidBody>().m_UseCustomMassData;
-				})
-				.Func<static_cast<void (RigidBody::*)(const Math::vec2 &, const Math::vec2 &)>(&RigidBody::ApplyForce)>("ApplyForce")
-				.Func<static_cast<void (RigidBody::*)(const Math::vec2 &, const Math::vec2 &, bool)>(&RigidBody::ApplyForce)>("ApplyForce")
-				.Func<static_cast<void (RigidBody::*)(const Math::vec2 &)>(&RigidBody::ApplyForce)>("ApplyForce")
-				.Func<static_cast<void (RigidBody::*)(const Math::vec2 &, bool)>(&RigidBody::ApplyForce)>("ApplyForce")
-				.Func<static_cast<void (RigidBody::*)(float)>(&RigidBody::ApplyTorque)>("ApplyTorque")
-				.Func<static_cast<void (RigidBody::*)(float, bool)>(&RigidBody::ApplyTorque)>("ApplyTorque")
-				.Func<static_cast<void (RigidBody::*)(const Math::vec2 &, const Math::vec2 &)>(&RigidBody::ApplyLinearImpulse)>("ApplyLinearImpulse")
-				.Func<static_cast<void (RigidBody::*)(const Math::vec2 &, const Math::vec2 &, bool)>(&RigidBody::ApplyLinearImpulse)>("ApplyLinearImpulse")
-				.Func<static_cast<void (RigidBody::*)(const Math::vec2 &, bool)>(&RigidBody::ApplyLinearImpulse)>("ApplyLinearImpulse")
-				.Func<static_cast<void (RigidBody::*)(const Math::vec2 &)>(&RigidBody::ApplyLinearImpulse)>("ApplyLinearImpulse")
-				.Func<static_cast<void (RigidBody::*)(float)>(&RigidBody::ApplyAngularImpulse)>("ApplyAngularImpulse")
-				.Func<static_cast<void (RigidBody::*)(float, bool)>(&RigidBody::ApplyAngularImpulse)>("ApplyAngularImpulse");
+		       .Base<Component>()
+		       .Data<&RigidBody::SetBodyType, &RigidBody::GetBodyType>("BodyType")
+		       .Data<&RigidBody::SetLinearVelocity, &RigidBody::GetLinearVelocity>("LinearVelocity")
+		       .Data<&RigidBody::SetAngularVelocity, &RigidBody::GetAngularVelocity>("AngularVelocity")
+		       .Data<&RigidBody::SetLinearDamping, &RigidBody::GetLinearDamping>("LinearDamping")
+		       .Data<&RigidBody::SetAngularDamping, &RigidBody::GetAngularDamping>("AngularDamping")
+		       .Data<&RigidBody::SetSleepingAllowed, &RigidBody::IsSleepingAllowed>("SleepingAllowed")
+		       .Data<&RigidBody::SetAwake, &RigidBody::IsAwake>("Awake")
+		       .Data<&RigidBody::SetFixedRotation, &RigidBody::IsFixedRotation>("FixedRotation")
+		       .Data<&RigidBody::SetBullet, &RigidBody::IsBullet>("Bullet")
+		       .Data<&RigidBody::SetGravityScale, &RigidBody::GetGravityScale>("GravityScale")
+		       .Data<nullptr, &RigidBody::HasCustomMassData>("UsesCustomMassData", false)
+		       .Data<static_cast<void (RigidBody::*)(MassData)>(&RigidBody::SetCustomMassData), &RigidBody::GetMassData>("MassData",
+				       [&](Reflection::Any *val)
+				       {
+					       return val->Cast<RigidBody>().m_UseCustomMassData;
+				       })
+		       .Func<static_cast<void (RigidBody::*)(const Math::vec2 &, const Math::vec2 &)>(&RigidBody::ApplyForce)>("ApplyForce")
+		       .Func<static_cast<void (RigidBody::*)(const Math::vec2 &, const Math::vec2 &, bool)>(&RigidBody::ApplyForce)>("ApplyForce")
+		       .Func<static_cast<void (RigidBody::*)(const Math::vec2 &)>(&RigidBody::ApplyForce)>("ApplyForce")
+		       .Func<static_cast<void (RigidBody::*)(const Math::vec2 &, bool)>(&RigidBody::ApplyForce)>("ApplyForce")
+		       .Func<static_cast<void (RigidBody::*)(float)>(&RigidBody::ApplyTorque)>("ApplyTorque")
+		       .Func<static_cast<void (RigidBody::*)(float, bool)>(&RigidBody::ApplyTorque)>("ApplyTorque")
+		       .Func<static_cast<void (RigidBody::*)(const Math::vec2 &, const Math::vec2 &)>(&RigidBody::ApplyLinearImpulse)>("ApplyLinearImpulse")
+		       .Func<static_cast<void (RigidBody::*)(const Math::vec2 &, const Math::vec2 &, bool)>(&RigidBody::ApplyLinearImpulse)>("ApplyLinearImpulse")
+		       .Func<static_cast<void (RigidBody::*)(const Math::vec2 &, bool)>(&RigidBody::ApplyLinearImpulse)>("ApplyLinearImpulse")
+		       .Func<static_cast<void (RigidBody::*)(const Math::vec2 &)>(&RigidBody::ApplyLinearImpulse)>("ApplyLinearImpulse")
+		       .Func<static_cast<void (RigidBody::*)(float)>(&RigidBody::ApplyAngularImpulse)>("ApplyAngularImpulse")
+		       .Func<static_cast<void (RigidBody::*)(float, bool)>(&RigidBody::ApplyAngularImpulse)>("ApplyAngularImpulse");
 	}
 }
-

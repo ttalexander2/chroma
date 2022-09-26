@@ -4,14 +4,13 @@
 
 namespace Chroma
 {
-	
 	struct CircleCollider : public Collider
 	{
 		CHROMA_COMPONENT(CircleCollider, Collider);
 
-		inline b2Shape *GetShapeHandle() { return &m_Shape; }
+		b2Shape *GetShapeHandle() override { return &m_Shape; }
 
-		inline const ColliderType GetColliderType() const override { return ColliderType::Circle; }
+		const ColliderType GetColliderType() const override { return ColliderType::Circle; }
 
 		float GetRadius() const;
 		void SetRadius(float value);

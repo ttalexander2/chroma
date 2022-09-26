@@ -13,7 +13,7 @@
 
 namespace Chroma
 {
-	static VkShaderStageFlagBits ShaderTypeFromString(const std::string& type)
+	static VkShaderStageFlagBits ShaderTypeFromString(const std::string &type)
 	{
 		if (type == "vertex")
 			return VK_SHADER_STAGE_VERTEX_BIT;
@@ -28,37 +28,43 @@ namespace Chroma
 	{
 		switch (stage)
 		{
-		case VK_SHADER_STAGE_VERTEX_BIT:   return shaderc_glsl_vertex_shader;
-		case VK_SHADER_STAGE_FRAGMENT_BIT: return shaderc_glsl_fragment_shader;
+			case VK_SHADER_STAGE_VERTEX_BIT:
+				return shaderc_glsl_vertex_shader;
+			case VK_SHADER_STAGE_FRAGMENT_BIT:
+				return shaderc_glsl_fragment_shader;
 		}
 		CHROMA_CORE_ASSERT(false, "Unknown stage!");
-		return (shaderc_shader_kind)0;
+		return static_cast<shaderc_shader_kind>(0);
 	}
 
-	static const char* ShaderStageToString(VkShaderStageFlagBits stage)
+	static const char *ShaderStageToString(VkShaderStageFlagBits stage)
 	{
 		switch (stage)
 		{
-		case VK_SHADER_STAGE_VERTEX_BIT:   return "VK_SHADER_STAGE_VERTEX_BIT";
-		case VK_SHADER_STAGE_FRAGMENT_BIT: return "VK_SHADER_STAGE_FRAGMENT_BIT";
+			case VK_SHADER_STAGE_VERTEX_BIT:
+				return "VK_SHADER_STAGE_VERTEX_BIT";
+			case VK_SHADER_STAGE_FRAGMENT_BIT:
+				return "VK_SHADER_STAGE_FRAGMENT_BIT";
 		}
 		CHROMA_CORE_ASSERT(false, "Unknown stage!");
 		return nullptr;
 	}
 
-	static const char* ShaderStageCachedVulkanFileExtension(VkShaderStageFlagBits stage)
+	static const char *ShaderStageCachedVulkanFileExtension(VkShaderStageFlagBits stage)
 	{
 		switch (stage)
 		{
-		case VK_SHADER_STAGE_VERTEX_BIT:    return ".cached_vulkan.vert";
-		case VK_SHADER_STAGE_FRAGMENT_BIT:  return ".cached_vulkan.frag";
+			case VK_SHADER_STAGE_VERTEX_BIT:
+				return ".cached_vulkan.vert";
+			case VK_SHADER_STAGE_FRAGMENT_BIT:
+				return ".cached_vulkan.frag";
 		}
 		CHROMA_CORE_ASSERT(false, "Unknown stage!");
 		return "";
 	}
-	
 
-	static const char* GetCacheDirectory()
+
+	static const char *GetCacheDirectory()
 	{
 		// TODO: make sure the assets directory is valid
 		return "assets/cache/shader";
@@ -72,9 +78,9 @@ namespace Chroma
 	}
 
 
-
-	VulkanShader::VulkanShader(const std::string& filePath)
-		:m_FilePath(filePath), m_Name(filePath)
+	VulkanShader::VulkanShader(const std::string &filePath) :
+		m_FilePath(filePath),
+		m_Name(filePath)
 	{
 		CreateCacheDirectoryIfNeeded();
 
@@ -85,8 +91,8 @@ namespace Chroma
 		CreateShaderModules();
 	}
 
-	VulkanShader::VulkanShader(const std::string& name, const std::string& vertexSource, const std::string& fragmentSource)
-		:m_Name(name)
+	VulkanShader::VulkanShader(const std::string &name, const std::string &vertexSource, const std::string &fragmentSource) :
+		m_Name(name)
 	{
 		std::unordered_map<VkShaderStageFlagBits, std::string> sources;
 		sources[VK_SHADER_STAGE_VERTEX_BIT] = vertexSource;
@@ -98,11 +104,10 @@ namespace Chroma
 
 	VulkanShader::~VulkanShader()
 	{
-		for (auto& [type, shader] : m_ShaderModules)
+		for (auto &[type, shader] : m_ShaderModules)
 		{
 			vkDestroyShaderModule(VulkanContext::GetDevice(), shader, nullptr);
 		}
-		
 	}
 
 	void VulkanShader::Bind() const
@@ -113,35 +118,35 @@ namespace Chroma
 	{
 	}
 
-	void VulkanShader::SetUniformInt(const std::string& name, int value)
+	void VulkanShader::SetUniformInt(const std::string &name, int value)
 	{
 	}
 
-	void VulkanShader::SetUniformIntArray(const std::string& name, int* values, int count)
+	void VulkanShader::SetUniformIntArray(const std::string &name, int *values, int count)
 	{
 	}
 
-	void VulkanShader::SetUniformMat3(const std::string& name, const glm::mat3& value)
+	void VulkanShader::SetUniformMat3(const std::string &name, const glm::mat3 &value)
 	{
 	}
 
-	void VulkanShader::SetUniformMat4(const std::string& name, const glm::mat4& value)
+	void VulkanShader::SetUniformMat4(const std::string &name, const glm::mat4 &value)
 	{
 	}
 
-	void VulkanShader::SetUniformFloat(const std::string& name, float value)
+	void VulkanShader::SetUniformFloat(const std::string &name, float value)
 	{
 	}
 
-	void VulkanShader::SetUniformFloat2(const std::string& name, const glm::vec2& value)
+	void VulkanShader::SetUniformFloat2(const std::string &name, const glm::vec2 &value)
 	{
 	}
 
-	void VulkanShader::SetUniformFloat3(const std::string& name, const glm::vec3& value)
+	void VulkanShader::SetUniformFloat3(const std::string &name, const glm::vec3 &value)
 	{
 	}
 
-	void VulkanShader::SetUniformFloat4(const std::string& name, const glm::vec4& value)
+	void VulkanShader::SetUniformFloat4(const std::string &name, const glm::vec4 &value)
 	{
 	}
 
@@ -149,7 +154,8 @@ namespace Chroma
 	{
 		return std::string();
 	}
-	std::string VulkanShader::ReadFile(const std::string& filePath)
+
+	std::string VulkanShader::ReadFile(const std::string &filePath)
 	{
 		std::string result;
 		std::ifstream in(filePath, std::ios::in | std::ios::binary);
@@ -176,11 +182,12 @@ namespace Chroma
 
 		return result;
 	}
-	std::unordered_map<VkShaderStageFlagBits, std::string> VulkanShader::PreProcess(const std::string& source)
+
+	std::unordered_map<VkShaderStageFlagBits, std::string> VulkanShader::PreProcess(const std::string &source)
 	{
 		std::unordered_map<VkShaderStageFlagBits, std::string> shaderSources;
 
-		const char* typeToken = "#type";
+		auto typeToken = "#type";
 		size_t typeTokenLength = strlen(typeToken);
 		size_t pos = source.find(typeToken, 0);
 		while (pos != std::string::npos)
@@ -200,7 +207,8 @@ namespace Chroma
 
 		return shaderSources;
 	}
-	void VulkanShader::CompileOrGetVulkanBinaries(const std::unordered_map<VkShaderStageFlagBits, std::string>& shaderSources)
+
+	void VulkanShader::CompileOrGetVulkanBinaries(const std::unordered_map<VkShaderStageFlagBits, std::string> &shaderSources)
 	{
 		shaderc::Compiler compiler;
 		shaderc::CompileOptions options;
@@ -213,10 +221,10 @@ namespace Chroma
 
 		std::filesystem::path cacheDirectory = GetCacheDirectory();
 
-		auto& shaderData = m_VulkanSPIRV;
+		auto &shaderData = m_VulkanSPIRV;
 		shaderData.clear();
 
-		for (auto&& [stage, source] : shaderSources)
+		for (auto &&[stage, source] : shaderSources)
 		{
 			std::filesystem::path shaderFilePath = m_FilePath;
 			std::filesystem::path cachedPath = cacheDirectory / (shaderFilePath.filename().string() + ShaderStageCachedVulkanFileExtension(stage));
@@ -228,9 +236,9 @@ namespace Chroma
 				auto size = in.tellg();
 				in.seekg(0, std::ios::beg);
 
-				auto& data = shaderData[stage];
+				auto &data = shaderData[stage];
 				data.resize(size / sizeof(uint32_t));
-				in.read((char*)data.data(), size);
+				in.read((char *)data.data(), size);
 			}
 			else
 			{
@@ -246,24 +254,24 @@ namespace Chroma
 				std::ofstream out(cachedPath, std::ios::out | std::ios::binary);
 				if (out.is_open())
 				{
-					auto& data = shaderData[stage];
-					out.write((char*)data.data(), data.size() * sizeof(uint32_t));
+					auto &data = shaderData[stage];
+					out.write((char *)data.data(), data.size() * sizeof(uint32_t));
 					out.flush();
 					out.close();
 				}
 			}
 		}
 	}
+
 	void VulkanShader::CreateShaderModules()
 	{
-
-		for (auto& [type, data] : m_VulkanSPIRV)
+		for (auto &[type, data] : m_VulkanSPIRV)
 		{
 			VkShaderModuleCreateInfo createInfo{};
 			createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
 			createInfo.codeSize = data.size() * sizeof(uint32_t);
-			createInfo.pCode = reinterpret_cast<const uint32_t*>(data.data());
-			
+			createInfo.pCode = reinterpret_cast<const uint32_t *>(data.data());
+
 			VkShaderModule shaderModule;
 			if (vkCreateShaderModule(VulkanContext::GetDevice(), &createInfo, nullptr, &shaderModule) != VK_SUCCESS)
 			{
@@ -281,5 +289,3 @@ namespace Chroma
 		}
 	}
 }
-
-

@@ -4,16 +4,14 @@
 
 namespace Chroma
 {
-
-
 	struct RectangleCollider : public Collider
 	{
 		CHROMA_COMPONENT(RectangleCollider, Collider);
 
 		void Initialize() override;
-		inline b2Shape *GetShapeHandle() override { return &m_Shape; }
+		b2Shape *GetShapeHandle() override { return &m_Shape; }
 
-		inline const ColliderType GetColliderType() const override { return ColliderType::Edge; }
+		const ColliderType GetColliderType() const override { return ColliderType::Edge; }
 
 		Math::vec2 GetPosition() const override;
 		void SetPosition(const Math::vec2 &value) override;
@@ -31,5 +29,4 @@ namespace Chroma
 		//Setting this value does not control rotation, it is only used to keep track of the rotation applied to the polygon
 		float m_Rotation = 0.f;
 	};
-
 }

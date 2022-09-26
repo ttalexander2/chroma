@@ -33,15 +33,16 @@ namespace Chroma
 	class CHROMA_API Application
 	{
 	public:
-
 		/// @brief Constructs a new Chroma Engine Application.
 		/// @param title Window Title.
 		/// @param width Width of the window.
 		/// @param height Height of the window.
-		Application(const std::string& title = "Chroma Engine", unsigned int width = 1920, unsigned int height = 1080, bool child = false);
+		Application(const std::string &title = "Chroma Engine", unsigned int width = 1920, unsigned int height = 1080, bool child = false);
 		virtual ~Application();
 
-		virtual void BindScripts() {};
+		virtual void BindScripts()
+		{
+		};
 
 		/// @brief Main update loop for the chroma engine application.
 		///
@@ -50,66 +51,75 @@ namespace Chroma
 
 		/// @brief Processes and propagates application events.
 		/// @param e Event to process.
-		void ProcessEvents(Event& e);
+		void ProcessEvents(Event &e);
 
 		/// @brief Initialization phase, called before the main update loop, after EarlyInit() and before LateInit().
-		virtual void Init() {};
+		virtual void Init()
+		{
+		};
 
 		/// @brief Update Step. Called once per frame.
 		/// @param time Current delta time in seconds.
-		virtual void Update(Time time) {};
+		virtual void Update(Time time)
+		{
+		};
 
 		/// @brief Draw Step. Called once per frame
 		/// @param time Current delta time in seconds.
-		virtual void Draw(Time time) {};
+		virtual void Draw(Time time)
+		{
+		};
 
 		/// @brief ImGui draw Step. Called once per frame, draws all ImGui needed for the
 		/// @param time Current delta time in seconds.
-		virtual void ImGuiDraw(Time time) {};
+		virtual void ImGuiDraw(Time time)
+		{
+		};
 
 		/// @brief Event handling function. All events will call this function.
 		/// @param e Current event.
-		virtual void OnEvent(Event& e) {};
+		virtual void OnEvent(Event &e)
+		{
+		};
 
-		virtual void OnDestroy() {};
+		virtual void OnDestroy()
+		{
+		};
 
 		/// @brief Get the current window.
-		Window& GetWindow() { return *m_Window; }
+		Window &GetWindow() { return *m_Window; }
 
 		/// @brief Get the current instance of the application.
-		static Application& Get() { return *s_Instance; }
+		static Application &Get() { return *s_Instance; }
 
 		/// @brief Get the ImGui Layer.
 		/// @return 
-		ImGuiLayer* GetImGuiLayer() { return m_ImGuiLayer; }
+		ImGuiLayer *GetImGuiLayer() { return m_ImGuiLayer; }
 
 		/// @brief Get the current time.
 		/// Alternatively Time can be accessed statically.
 		Time GetTime() { return m_Time; }
 
-		inline const bool IsRunning() const { return m_Running; }
+		const bool IsRunning() const { return m_Running; }
 
 		void Stop();
-		
+
 
 	private:
-
-
-		static Application* s_Instance;
+		static Application *s_Instance;
 
 		Time m_Time;
 		Time m_VariableTime;
 
-		bool OnWindowClose(WindowCloseEvent& e);
-		bool OnWindowResize(WindowResizeEvent& e);
+		bool OnWindowClose(WindowCloseEvent &e);
+		bool OnWindowResize(WindowResizeEvent &e);
 
 		Scope<Window> m_Window;
-		ImGuiLayer* m_ImGuiLayer;
+		ImGuiLayer *m_ImGuiLayer;
 		bool m_Running = true;
 		bool m_Minimized = false;
 	};
 
 	// Game entry point, defined in game project
-	Application* CreateApplication();
+	Application *CreateApplication();
 }
-

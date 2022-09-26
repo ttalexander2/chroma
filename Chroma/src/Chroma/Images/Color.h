@@ -11,35 +11,38 @@ namespace Chroma
 	/// @brief Simple RGBA color.
 	struct Color
 	{
-		uint8_t r; 		/// @brief Red color channel.
-		uint8_t g;		/// @brief Green color channel.
-		uint8_t b;		/// @brief Blue color channel.
-		uint8_t a;		/// @brief Alpha color channel.
+		uint8_t r; /// @brief Red color channel.
+		uint8_t g; /// @brief Green color channel.
+		uint8_t b; /// @brief Blue color channel.
+		uint8_t a; /// @brief Alpha color channel.
 
 		/// @brief Constructs an RGBA color with all channels set to 0.
-		constexpr Color()
-			: r(0), g(0), b(0), a(0)
+		constexpr Color() :
+			r(0),
+			g(0),
+			b(0),
+			a(0)
 		{
 		}
 
 		/// @brief Constructs an RGBA color from an RGB int, with the alpha channel set to 255.
 		/// @param rgb 8-bit RGB color, each channel containing 8 bits.
-		constexpr Color(int rgb)
-			: r((uint8_t)((rgb & 0xFF0000) >> 16))
-			, g((uint8_t)((rgb & 0x00FF00) >> 8))
-			, b((uint8_t)(rgb & 0x0000FF))
-			, a(255)
+		constexpr Color(int rgb) :
+			r(static_cast<uint8_t>((rgb & 0xFF0000) >> 16)),
+			g(static_cast<uint8_t>((rgb & 0x00FF00) >> 8)),
+			b(static_cast<uint8_t>(rgb & 0x0000FF)),
+			a(255)
 		{
 		}
 
 		/// @brief Constructs an RGBA color from an RGB int, with the alpha channel set to the provided alpha.
 		/// @param rgb 8-bit RGB color, each channel containing 8 bits.
 		/// @param alpha Alpha amount, from 0-1.
-		constexpr Color(int rgb, float alpha)
-			: r((int)(((uint8_t)((rgb & 0xFF0000) >> 16))* alpha))
-			, g((int)(((uint8_t)((rgb & 0x00FF00) >> 8))* alpha))
-			, b((int)(((uint8_t)(rgb & 0x0000FF))* alpha))
-			, a((int)(255 * alpha))
+		constexpr Color(int rgb, float alpha) :
+			r(static_cast<int>(((uint8_t)((rgb & 0xFF0000) >> 16)) * alpha)),
+			g(static_cast<int>(((uint8_t)((rgb & 0x00FF00) >> 8)) * alpha)),
+			b(static_cast<int>(((uint8_t)(rgb & 0x0000FF)) * alpha)),
+			a(static_cast<int>(255 * alpha))
 		{
 		}
 
@@ -47,11 +50,11 @@ namespace Chroma
 		/// @param r 8-bit Red channel.
 		/// @param g 8-bit Green channel.
 		/// @param b 8-bit Blue channel.
-		constexpr Color(uint8_t r, uint8_t g, uint8_t b)
-			: r(r)
-			, g(g)
-			, b(b)
-			, a(255)
+		constexpr Color(uint8_t r, uint8_t g, uint8_t b) :
+			r(r),
+			g(g),
+			b(b),
+			a(255)
 		{
 		}
 
@@ -60,49 +63,52 @@ namespace Chroma
 		/// @param g 8-bit Green channel.
 		/// @param b 8-bit Blue channel.
 		/// @param b 8-bit Alpha channel.
-		constexpr Color(uint8_t r, uint8_t g, uint8_t b, uint8_t a)
-			: r(r)
-			, g(g)
-			, b(b)
-			, a(a)
+		constexpr Color(uint8_t r, uint8_t g, uint8_t b, uint8_t a) :
+			r(r),
+			g(g),
+			b(b),
+			a(a)
 		{
 		}
 
 		/// @brief Constructs an RGBA color from a 3 component vector. Sets alpha to 255.
 		/// @param vec3 Vector containing red, green, and blue channels.
-		constexpr Color(const Math::vec3& vec3)
-			: r((int)(vec3.x * 255))
-			, g((int)(vec3.y * 255))
-			, b((int)(vec3.z * 255))
-			, a((int)(255))
+		constexpr Color(const Math::vec3 &vec3) :
+			r(static_cast<int>(vec3.x * 255)),
+			g(static_cast<int>(vec3.y * 255)),
+			b(static_cast<int>(vec3.z * 255)),
+			a(255)
 		{
 		}
 
 		/// @brief Constructs an RGBA color from a 3 component vector. Sets alpha to provided value.
 		/// @param vec3 Vector containing red, green, and blue channels in a range from 0 to 1.
 		/// @param alpha Alpha amount, from 0-1.
-		constexpr Color(const Math::vec3& vec3, float alpha)
-			: r((int)(vec3.x* alpha * 255))
-			, g((int)(vec3.y* alpha * 255))
-			, b((int)(vec3.z* alpha * 255))
-			, a((int)(alpha * 255))
+		constexpr Color(const Math::vec3 &vec3, float alpha) :
+			r(static_cast<int>(vec3.x * alpha * 255)),
+			g(static_cast<int>(vec3.y * alpha * 255)),
+			b(static_cast<int>(vec3.z * alpha * 255)),
+			a(static_cast<int>(alpha * 255))
 		{
 		}
 
 		/// @brief Constructs an RGBA color from a 4 component vector.
 		/// @param vec3 Vector containing red, green, blue, and alpha channels in a range from 0 to 1.
-		constexpr Color(const Math::vec4& vec4)
-			: r((int)(vec4.x * 255))
-			, g((int)(vec4.y * 255))
-			, b((int)(vec4.z * 255))
-			, a((int)(vec4.w * 255))
+		constexpr Color(const Math::vec4 &vec4) :
+			r(static_cast<int>(vec4.x * 255)),
+			g(static_cast<int>(vec4.y * 255)),
+			b(static_cast<int>(vec4.z * 255)),
+			a(static_cast<int>(vec4.w * 255))
 		{
 		}
 
 		/// @brief Constructs an RGBA color from a hexidecimal string.
 		/// @param hex_string String containing a valid hexidecimal color representation.
-		constexpr Color(const char* hex_string)
-			: r(0), g(0), b(0), a(255)
+		constexpr Color(const char *hex_string) :
+			r(0),
+			g(0),
+			b(0),
+			a(255)
 		{
 			if (*hex_string == '#')
 				hex_string += 1;
@@ -163,10 +169,10 @@ namespace Chroma
 		constexpr uint32_t ToRGBA() const
 		{
 			return
-				((uint32_t)r << 24) |
-				((uint32_t)g << 16) |
-				((uint32_t)b << 8) |
-				(uint32_t)a;
+					(static_cast<uint32_t>(r) << 24) |
+					(static_cast<uint32_t>(g) << 16) |
+					(static_cast<uint32_t>(b) << 8) |
+					static_cast<uint32_t>(a);
 		}
 
 		/// @brief Converts a 32 bit RGBA color integer to a Color.
@@ -174,62 +180,63 @@ namespace Chroma
 		{
 			return
 			{
-				(uint8_t)((value & 0xFF000000) >> 24),
-				(uint8_t)((value & 0x00FF0000) >> 16),
-				(uint8_t)((value & 0x0000FF00) >> 8),
-				(uint8_t)((value & 0x000000FF))
+				static_cast<uint8_t>((value & 0xFF000000) >> 24),
+				static_cast<uint8_t>((value & 0x00FF0000) >> 16),
+				static_cast<uint8_t>((value & 0x0000FF00) >> 8),
+				static_cast<uint8_t>((value & 0x000000FF))
 			};
 		}
 
 		/// @brief Converts the color to a 32-bit integer, each channel taking 8 bits.
 		constexpr uint32_t ToRGBA()
 		{
-			return (uint32_t)r << 24 | (uint32_t)g << 16 | (uint32_t)b << 8 | (uint32_t)a;
-
+			return static_cast<uint32_t>(r) << 24 | static_cast<uint32_t>(g) << 16 | static_cast<uint32_t>(b) << 8 | static_cast<uint32_t>(a);
 		}
 
 		/// @brief Converts the color to a 32-bit integer, each channel taking 8 bits.
 		static constexpr Color Lerp(Color a, Color b, float amount)
 		{
-			if (amount < 0) amount = 0;
-			if (amount > 1) amount = 1;
+			if (amount < 0)
+				amount = 0;
+			if (amount > 1)
+				amount = 1;
 
 			return Color(
-				(uint8_t)(a.r + (b.r - a.r) * amount),
-				(uint8_t)(a.g + (b.g - a.g) * amount),
-				(uint8_t)(a.b + (b.b - a.b) * amount),
-				(uint8_t)(a.a + (b.a - a.a) * amount)
-			);
+					static_cast<uint8_t>(a.r + (b.r - a.r) * amount),
+					static_cast<uint8_t>(a.g + (b.g - a.g) * amount),
+					static_cast<uint8_t>(a.b + (b.b - a.b) * amount),
+					static_cast<uint8_t>(a.a + (b.a - a.a) * amount)
+					);
 		}
 
 		/// @brief Multiply this color by a float value.
 		constexpr Color operator*(float multiply) const
 		{
 			return Color(
-				(int)(r * multiply),
-				(int)(g * multiply),
-				(int)(b * multiply),
-				(int)(a * multiply));
+					static_cast<int>(r * multiply),
+					static_cast<int>(g * multiply),
+					static_cast<int>(b * multiply),
+					static_cast<int>(a * multiply));
 		}
 
 		/// @brief Set a color equal to an RGB integer.
-		constexpr Color& operator= (int rgb)
+		constexpr Color &operator=(int rgb)
 		{
-			r = (uint8_t)((rgb & 0xFF0000) >> 16);
-			g = (uint8_t)((rgb & 0x00FF00) >> 8);
-			b = (uint8_t)(rgb & 0x0000FF);
+			r = static_cast<uint8_t>((rgb & 0xFF0000) >> 16);
+			g = static_cast<uint8_t>((rgb & 0x00FF00) >> 8);
+			b = static_cast<uint8_t>(rgb & 0x0000FF);
 			a = 255;
 			return *this;
 		}
 
 		/// @brief Multiply this color by a float value.
-		constexpr bool operator ==(const Color& rhs) const
+		constexpr bool operator ==(const Color &rhs) const
 		{
 			return r == rhs.r && g == rhs.g && b == rhs.b && a == rhs.a;
 		}
 
 		/// @brief Not equals operator for 2 Colors.
-		constexpr bool operator !=(const Color& rhs) const
+		constexpr bool operator !=(const Color &rhs) const
 		{
 			return r != rhs.r || g != rhs.g || b != rhs.b || a != rhs.a;
 		}
@@ -245,7 +252,6 @@ namespace Chroma
 		static const Color Orange;
 		static const Color Purple;
 		static const Color Teal;
-
 	};
 
 	inline const Color Color::Transparent = Color(0, 0, 0, 0);
@@ -260,6 +266,3 @@ namespace Chroma
 }
 
 #undef HEX_VALUE
-
-
-

@@ -13,19 +13,19 @@ namespace Chroma
 	public:
 		OrthographicCameraController(float aspect_ratio, bool rotation = false);
 
-		void OnEvent(Event& e);
+		void OnEvent(Event &e);
 		void OnUpdate(Time ts);
 
-		OrthographicCamera& GetCamera() { return m_Camera; }
-		const OrthographicCamera& GetCamera() const { return m_Camera; }
+		OrthographicCamera &GetCamera() { return m_Camera; }
+		const OrthographicCamera &GetCamera() const { return m_Camera; }
 
 		glm::vec3 GetPosition() const { return m_CameraPosition; }
 
 		void SetZoomLevel(float level) { m_ZoomLevel = level; }
 		float GetZoomLevel() const { return m_ZoomLevel; }
 	private:
-		bool OnMouseScrolled(MouseScrolledEvent& e);
-		bool OnWindowResized(WindowResizeEvent& e);
+		bool OnMouseScrolled(MouseScrolledEvent &e);
+		bool OnWindowResized(WindowResizeEvent &e);
 	private:
 		float m_AspectRatio;
 		float m_ZoomLevel = 30.0f;

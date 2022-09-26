@@ -5,8 +5,8 @@
 
 namespace Chroma
 {
-	OpenGLPipeline::OpenGLPipeline(const PipelineSpecification& spec)
-		: m_Specification(spec)
+	OpenGLPipeline::OpenGLPipeline(const PipelineSpecification &spec) :
+		m_Specification(spec)
 	{
 		Initialize();
 	}
@@ -30,25 +30,21 @@ namespace Chroma
 	{
 		glBindVertexArray(m_VertexArrayRendererID);
 
-		const auto& layout = m_Specification.Layout;
+		const auto &layout = m_Specification.Layout;
 		uint32_t attribute = 0;
-		for (const auto& element : layout)
+		for (const auto &element : layout)
 		{
 			auto glBaseType = OpenGL::ShaderDataTypeToOpenGLBaseType(element.Type);
 			glEnableVertexAttribArray(attribute);
 			if (glBaseType == GL_INT)
 			{
-				glVertexAttribIPointer(attribute, element.GetComponentCount(), glBaseType, layout.GetStride(), (const void*)(intptr_t)element.Offset);
+				glVertexAttribIPointer(attribute, element.GetComponentCount(), glBaseType, layout.GetStride(), (const void *)static_cast<intptr_t>(element.Offset));
 			}
 			else
 			{
-				glVertexAttribPointer(attribute, element.GetComponentCount(), glBaseType, element.Normalized ? GL_TRUE : GL_FALSE, layout.GetStride(), (const void*)(intptr_t)element.Offset);
+				glVertexAttribPointer(attribute, element.GetComponentCount(), glBaseType, element.Normalized ? GL_TRUE : GL_FALSE, layout.GetStride(), (const void *)static_cast<intptr_t>(element.Offset));
 			}
 			attribute++;
-
 		}
-
 	}
 }
-
-

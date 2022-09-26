@@ -11,12 +11,9 @@ struct RectI : public glm::ivec4
 		{
 			int x, y, width, height;
 		};
-
 	};
 
 
 	operator glm::ivec4() const { return glm::ivec4(x, y, width, height); }
 	operator Math::vec4() const { return Math::vec4(x, y, width, height); }
 };
-
-

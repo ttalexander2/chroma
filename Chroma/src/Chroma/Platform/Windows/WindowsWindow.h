@@ -14,27 +14,27 @@ namespace Chroma
 	public:
 		/// @brief Construct a windows window.
 		/// @param props Properties for the window (width, height, title).
-		WindowsWindow(const WindowProps& props);
+		WindowsWindow(const WindowProps &props);
 
 		/// @brief Destroy the window.
-		virtual ~WindowsWindow();
+		~WindowsWindow() override;
 
 		/// @brief Polls window events and swap buffers. Called once per frame.
 		void OnUpdate() override;
 
 		/// @brief Get window width.
 		/// @return Width in pixels.
-		inline unsigned int GetWidth() const override { return m_Data.Width; }
+		unsigned int GetWidth() const override { return m_Data.Width; }
 
 		/// @brief Get window height.
 		/// @return Height in pixels.
-		inline unsigned int GetHeight() const override { return m_Data.Height; }
+		unsigned int GetHeight() const override { return m_Data.Height; }
 
 		//Window attributes
 
 		/// @brief Set the event callback function.
 		/// @param callback Function to be called on window event.
-		inline virtual void SetEventCallback(const EventCallbackFn& callback) override { m_Data.EventCallback = callback; }
+		void SetEventCallback(const EventCallbackFn &callback) override { m_Data.EventCallback = callback; }
 
 		/// @brief Sets window vsync.
 		/// @param enabled Value to set.
@@ -46,21 +46,21 @@ namespace Chroma
 
 		/// @brief Gets the native window.
 		/// @return Returns pointer to native window handle.
-		inline virtual void* GetNativeWindow() const { return m_Window; }
+		void *GetNativeWindow() const override { return m_Window; }
 
-		inline virtual GraphicsContext* GetGraphicsContext() const override { return m_Context; }
+		GraphicsContext *GetGraphicsContext() const override { return m_Context; }
 
 	private:
 		/// @brief Initialize the window.
 		/// @param props Properties of the window.
-		virtual void Init(const WindowProps& props);
+		virtual void Init(const WindowProps &props);
 		/// @brief Shutdown the window.
 		virtual void Shutdown();
 	private:
 		/// @brief Pointer to the window.
-		GLFWwindow* m_Window;
+		GLFWwindow *m_Window;
 		/// @brief Graphics context.
-		GraphicsContext* m_Context;
+		GraphicsContext *m_Context;
 
 		/// @brief Window information.
 		struct WindowData
@@ -78,5 +78,3 @@ namespace Chroma
 		WindowData m_Data;
 	};
 }
-
-

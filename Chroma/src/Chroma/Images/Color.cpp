@@ -5,7 +5,7 @@ namespace Chroma
 {
 	std::string Color::ToHexRGBA() const
 	{
-		static const char* hex = "0123456789ABCDEF";
+		static auto hex = "0123456789ABCDEF";
 
 		std::string str = "00000000";
 		str[0] = hex[(r & 0xF0) >> 4];
@@ -18,9 +18,10 @@ namespace Chroma
 		str[7] = hex[(a & 0x0F) >> 0];
 		return str;
 	}
+
 	std::string Color::ToHexRGB() const
 	{
-		static const char* hex = "0123456789ABCDEF";
+		static auto hex = "0123456789ABCDEF";
 
 		std::string str = "000000";
 		str[0] = hex[(r & 0xF0) >> 4];

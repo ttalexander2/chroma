@@ -7,48 +7,47 @@
 
 namespace Chroma
 {
-	
-	Component*  ComponentRegistry::AddComponent(uint32_t component_id, EntityID id, entt::registry *r)
+	Component *ComponentRegistry::AddComponent(uint32_t component_id, EntityID id, entt::registry *r)
 	{
-		if (ComponentAddFunctions().find(component_id) == ComponentAddFunctions().end())
+		if (!ComponentAddFunctions().contains(component_id))
 			return nullptr;
 		return ComponentAddFunctions()[component_id](id, r);
 	}
 
-	Component*  ComponentRegistry::GetComponent(uint32_t component_id, EntityID id, entt::registry *r)
+	Component *ComponentRegistry::GetComponent(uint32_t component_id, EntityID id, entt::registry *r)
 	{
-		if (ComponentGetFunctions().find(component_id) == ComponentGetFunctions().end())
+		if (!ComponentGetFunctions().contains(component_id))
 			return nullptr;
 		return ComponentGetFunctions()[component_id](id, r);
 	}
 
 	bool ComponentRegistry::HasComponent(uint32_t component_id, EntityID id, entt::registry *r)
 	{
-		if (ComponentHasFunctions().find(component_id) == ComponentHasFunctions().end())
+		if (!ComponentHasFunctions().contains(component_id))
 			return false;
 		return ComponentHasFunctions()[component_id](id, r);
 	}
 
 	size_t ComponentRegistry::RemoveComponent(uint32_t component_id, EntityID id, entt::registry *r)
 	{
-		if (ComponentRemoveFunctions().find(component_id) == ComponentRemoveFunctions().end())
+		if (!ComponentRemoveFunctions().contains(component_id))
 			return 0u;
 		return ComponentRemoveFunctions()[component_id](id, r);
 	}
 
 	void ComponentRegistry::CopyComponent(uint32_t component_id, EntityID id, entt::registry *dst, entt::registry *src)
 	{
-		if (ComponentCopyFunctions().find(component_id) == ComponentCopyFunctions().end())
+		if (!ComponentCopyFunctions().contains(component_id))
 			return;
 		ComponentCopyFunctions()[component_id](id, dst, src);
 	}
 
-	Component*  ComponentRegistry::AddComponent(const std::string &component_name, EntityID id, entt::registry *r)
+	Component *ComponentRegistry::AddComponent(const std::string &component_name, EntityID id, entt::registry *r)
 	{
 		return AddComponent(BasicHash<uint32_t>::Hash(component_name).m_Hash, id, r);
 	}
 
-	Component*  ComponentRegistry::GetComponent(const std::string &component_name, EntityID id, entt::registry *r)
+	Component *ComponentRegistry::GetComponent(const std::string &component_name, EntityID id, entt::registry *r)
 	{
 		return GetComponent(BasicHash<uint32_t>::Hash(component_name).m_Hash, id, r);
 	}
@@ -70,7 +69,7 @@ namespace Chroma
 
 	bool ComponentRegistry::EmplaceOrReplaceComponentFromPtr(uint32_t component_id, EntityID id, Component *val, entt::registry *r)
 	{
-		if (ComponentEmplaceOrReplaceFunctions().find(component_id) == ComponentEmplaceOrReplaceFunctions().end())
+		if (!ComponentEmplaceOrReplaceFunctions().contains(component_id))
 			return false;
 		return ComponentEmplaceOrReplaceFunctions()[component_id](id, val, r);
 	}
@@ -87,10 +86,9 @@ namespace Chroma
 		{
 			for (auto comp : Reflection::TypeData::GetTypeRequirements()[component_id])
 			{
-				if (ComponentRegistry::ComponentAddFunctions().contains(comp))
-					ComponentRegistry::ComponentAddFunctions()[comp](entity, r);
+				if (ComponentAddFunctions().contains(comp))
+					ComponentAddFunctions()[comp](entity, r);
 			}
 		}
 	}
-
 } //namespace Chroma

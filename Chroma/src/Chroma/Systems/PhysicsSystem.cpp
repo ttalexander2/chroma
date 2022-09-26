@@ -12,11 +12,10 @@
 
 namespace Chroma
 {
-
 	bool PhysicsSystem::PhysicsContactFilter::ShouldCollide(b2Fixture *fixtureA, b2Fixture *fixtureB)
 	{
-		Collider *collider_a = reinterpret_cast<Collider*>(fixtureA->GetUserData().pointer);
-		Collider *collider_b = reinterpret_cast<Collider*>(fixtureB->GetUserData().pointer);
+		auto collider_a = reinterpret_cast<Collider *>(fixtureA->GetUserData().pointer);
+		auto collider_b = reinterpret_cast<Collider *>(fixtureB->GetUserData().pointer);
 
 		CHROMA_CORE_INFO("Should Collide: {}, {}", collider_a->GetEntityID(), collider_b->GetEntityID());
 
@@ -34,7 +33,7 @@ namespace Chroma
 		m_World = new b2World(m_Gravity);
 		m_World->SetContactFilter(&m_ContactFilter);
 		m_World->SetDebugDraw(&m_DebugDraw);
-		m_World->SetContactListener(dynamic_cast<b2ContactListener*>(&m_ContactFilter));
+		m_World->SetContactListener(dynamic_cast<b2ContactListener *>(&m_ContactFilter));
 
 		m_ContactListener.m_Scene = m_Scene;
 		m_ContactFilter.m_Scene = m_Scene;
@@ -45,7 +44,6 @@ namespace Chroma
 		//flags += b2Draw::e_aabbBit;
 		//flags += b2Draw::e_centerOfMassBit;
 		m_DebugDraw.SetFlags(flags);
-
 
 		auto view = m_Scene->Registry.view<Transform, RigidBody>();
 
@@ -58,7 +56,7 @@ namespace Chroma
 			rigidbody.m_BodyDefinition.angle = transform.Rotation;
 
 			rigidbody.m_Body = m_World->CreateBody(&rigidbody.m_BodyDefinition);
-			rigidbody.m_Body->SetType(b2BodyType::b2_dynamicBody);
+			rigidbody.m_Body->SetType(b2_dynamicBody);
 			if (rigidbody.m_UseCustomMassData)
 			{
 				b2MassData data;
@@ -72,13 +70,13 @@ namespace Chroma
 		}
 	}
 
-	
+
 	void PhysicsSystem::CreateFixture(EntityID entity, RigidBody *body)
 	{
 		Transform &transform = m_Scene->Registry.get<Transform>(entity);
 		auto colliders = m_Scene->GetColliders(entity);
 
-		for (Collider* collider : colliders)
+		for (Collider *collider : colliders)
 		{
 			collider->m_FixtureDef.userData.pointer = reinterpret_cast<uintptr_t>(collider);
 			collider->m_FixtureDef.shape = collider->GetShapeHandle();
@@ -98,8 +96,8 @@ namespace Chroma
 
 	void PhysicsSystem::Update(Time time)
 	{
-		m_World->Step(time.GetSeconds(), m_VelocityIterations, m_PositionIterations);
-		
+		m_World->Step(static_cast<float>(time.GetSeconds()), m_VelocityIterations, m_PositionIterations);
+
 		auto view = m_Scene->Registry.view<Transform, RigidBody>();
 		for (auto &entity : view)
 		{
@@ -114,7 +112,6 @@ namespace Chroma
 				transform.Rotation = rigidbody.m_Body->GetAngle();
 			}
 		}
-
 	}
 
 	void PhysicsSystem::LateDraw(Time time)
@@ -136,7 +133,7 @@ namespace Chroma
 		for (int32 i = 0; i < vertexCount; ++i)
 		{
 			b2Vec2 p2 = vertices[i];
-			Chroma::Renderer2D::DrawLine({ p1.x / Physics::GetScale(), p1.y / Physics::GetScale() }, { p2.x / Physics::GetScale(), p2.y / Physics::GetScale() }, 0.1f, { color.r, color.g, color.b, color.a });
+			Renderer2D::DrawLine({ p1.x / Physics::GetScale(), p1.y / Physics::GetScale() }, { p2.x / Physics::GetScale(), p2.y / Physics::GetScale() }, 0.1f, { color.r, color.g, color.b, color.a });
 			p1 = p2;
 		}
 	}
@@ -158,7 +155,7 @@ namespace Chroma
 		for (int32 i = 0; i < vertexCount; ++i)
 		{
 			b2Vec2 p2 = vertices[i];
-			Chroma::Renderer2D::DrawLine({ p1.x / Physics::GetScale(), p1.y / Physics::GetScale() }, { p2.x / Physics::GetScale(), p2.y / Physics::GetScale() }, 0.1f, { color.r, color.g, color.b, color.a });
+			Renderer2D::DrawLine({ p1.x / Physics::GetScale(), p1.y / Physics::GetScale() }, { p2.x / Physics::GetScale(), p2.y / Physics::GetScale() }, 0.1f, { color.r, color.g, color.b, color.a });
 			p1 = p2;
 		}
 	}
@@ -178,11 +175,10 @@ namespace Chroma
 			r2.x = cosInc * r1.x - sinInc * r1.y;
 			r2.y = sinInc * r1.x + cosInc * r1.y;
 			b2Vec2 v2 = center + radius * r2;
-			Chroma::Renderer2D::DrawLine({ v1.x / Physics::GetScale(), v1.y / Physics::GetScale() }, { v2.x / Physics::GetScale(), v2.y / Physics::GetScale() }, 1, { color.r, color.g, color.b, color.a });
+			Renderer2D::DrawLine({ v1.x / Physics::GetScale(), v1.y / Physics::GetScale() }, { v2.x / Physics::GetScale(), v2.y / Physics::GetScale() }, 1, { color.r, color.g, color.b, color.a });
 			r1 = r2;
 			v1 = v2;
 		}
-
 	}
 
 	void PhysicsSystem::PhysicsSystemDebugDraw::DrawSolidCircle(const b2Vec2 &center, float radius, const b2Vec2 &axis, const b2Color &color)
@@ -200,7 +196,7 @@ namespace Chroma
 			r2.x = cosInc * r1.x - sinInc * r1.y;
 			r2.y = sinInc * r1.x + cosInc * r1.y;
 			b2Vec2 v2 = center + radius * r2;
-			Chroma::Renderer2D::DrawLine({ v1.x / Physics::GetScale(), v1.y / Physics::GetScale() }, { v2.x / Physics::GetScale(), v2.y / Physics::GetScale() }, 1, { color.r, color.g, color.b, color.a });
+			Renderer2D::DrawLine({ v1.x / Physics::GetScale(), v1.y / Physics::GetScale() }, { v2.x / Physics::GetScale(), v2.y / Physics::GetScale() }, 1, { color.r, color.g, color.b, color.a });
 			r1 = r2;
 			v1 = v2;
 		}
@@ -208,8 +204,7 @@ namespace Chroma
 
 	void PhysicsSystem::PhysicsSystemDebugDraw::DrawSegment(const b2Vec2 &p1, const b2Vec2 &p2, const b2Color &color)
 	{
-		Chroma::Renderer2D::DrawLine({ p1.x / Physics::GetScale(), p1.y / Physics::GetScale() }, { p2.x / Physics::GetScale(), p2.y / Physics::GetScale() }, 1, { color.r, color.g, color.b, color.a });
-
+		Renderer2D::DrawLine({ p1.x / Physics::GetScale(), p1.y / Physics::GetScale() }, { p2.x / Physics::GetScale(), p2.y / Physics::GetScale() }, 1, { color.r, color.g, color.b, color.a });
 	}
 
 	void PhysicsSystem::PhysicsSystemDebugDraw::DrawTransform(const b2Transform &xf)
@@ -222,15 +217,14 @@ namespace Chroma
 
 	void PhysicsSystem::PhysicsContactListener::BeginContact(b2Contact *contact)
 	{
-		b2Fixture* A = contact->GetFixtureA();
-		b2Fixture* B = contact->GetFixtureB();
-		Collider* colliderA = reinterpret_cast<Collider*>(A->GetUserData().pointer);
-		Collider* colliderB = reinterpret_cast<Collider*>(B->GetUserData().pointer);
+		b2Fixture *A = contact->GetFixtureA();
+		b2Fixture *B = contact->GetFixtureB();
+		auto colliderA = reinterpret_cast<Collider *>(A->GetUserData().pointer);
+		auto colliderB = reinterpret_cast<Collider *>(B->GetUserData().pointer);
 
 		CHROMA_CORE_TRACE("Begin Contact");
 
 		MonoScripting::OnBeginContact(colliderA, colliderB, contact);
-
 	}
 
 	void PhysicsSystem::PhysicsContactListener::EndContact(b2Contact *contact)
@@ -244,5 +238,4 @@ namespace Chroma
 	void PhysicsSystem::PhysicsContactListener::PostSolve(b2Contact *contact, const b2ContactImpulse *impulse)
 	{
 	}
-
 } //namespace Chroma

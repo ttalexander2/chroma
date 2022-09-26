@@ -6,14 +6,13 @@
 
 namespace Chroma
 {
-
 	class Engine
 	{
 	public:
-		static bool LoadScene(const std::string& sceneFile);
-		static bool LoadScene(File& file);
+		static bool LoadScene(const std::string &sceneFile);
+		static bool LoadScene(File &file);
 		static bool SceneLoaded() { return CurrentScene != nullptr; }
 
-		static Scene* CurrentScene;
+		static Scene *CurrentScene;
 	};
 }

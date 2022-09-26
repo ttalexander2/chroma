@@ -7,13 +7,17 @@
 
 namespace Chroma
 {
-	std::vector<Layer> World::Layers = {Layer("Background", 0), Layer("Default", 1, GUID::Zero()), Layer("Foreground", 2), Layer("UI", 3)};
+	std::vector<Layer> World::Layers = { Layer("Background", 0), Layer("Default", 1, GUID::Zero()), Layer("Foreground", 2), Layer("UI", 3) };
 
-	Layer::Layer(const std::string& name, int order, GUID id)
-	: Name(name), Order(order), ID(id) {}
+	Layer::Layer(const std::string &name, int order, GUID id) :
+		Order(order),
+		Name(name),
+		ID(id)
+	{
+	}
 
 
-	void Layer::Serialize(YAML::Emitter& out)
+	void Layer::Serialize(YAML::Emitter &out)
 	{
 		out << YAML::Key << "Name";
 		out << YAML::Value << Name;
@@ -25,7 +29,7 @@ namespace Chroma
 		out << YAML::Value << Order;
 	}
 
-	void Layer::Deserialize(YAML::Node& node)
+	void Layer::Deserialize(YAML::Node &node)
 	{
 		auto val = node["Name"];
 		if (val)
@@ -42,13 +46,12 @@ namespace Chroma
 		{
 			Order = val.as<int>();
 		}
-
 	}
 
-	void World::Serialize(YAML::Emitter& out)
+	void World::Serialize(YAML::Emitter &out)
 	{
 		out << YAML::Key << "Layers" << YAML::Value << YAML::BeginSeq;
-		for (auto& layer : Layers)
+		for (auto &layer : Layers)
 		{
 			//CHROMA_CORE_TRACE("layer: {}", layer.Name);
 			out << YAML::BeginMap;
@@ -59,16 +62,15 @@ namespace Chroma
 	}
 
 
-	void World::Deserialize(YAML::Node& node)
+	void World::Deserialize(YAML::Node &node)
 	{
-
 		auto layers = node["Layers"];
 		if (layers && layers.size() > 0)
 		{
 			Layers.clear();
 			for (auto layer : layers)
 			{
-				Layer l = Layer("", 0);
+				auto l = Layer("", 0);
 				l.Deserialize(layer);
 				Layers.push_back(l);
 			}

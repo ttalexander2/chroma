@@ -4,16 +4,14 @@
 
 namespace Chroma
 {
-	
 	class VulkanUniformBuffer : public UniformBuffer
 	{
 	public:
 		VulkanUniformBuffer(uint32_t size, uint32_t binding);
-		virtual ~VulkanUniformBuffer();
+		~VulkanUniformBuffer() override;
 
-		virtual void SetData(const void* data, uint32_t size, uint32_t offset = 0) override;
+		void SetData(const void *data, uint32_t size, uint32_t offset = 0) override;
 
 	private:
-
 	};
 }

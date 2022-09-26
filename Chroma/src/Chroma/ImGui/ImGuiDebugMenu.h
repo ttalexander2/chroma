@@ -31,11 +31,9 @@ namespace Chroma
 
 		/// @brief Display the debug menu.
 		static void Draw();
-
-
 	};
 }
 
 #ifndef CHROMA_DEBUG_VALUE
-	#define CHROMA_DEBUG_VALUE(label, value) Chroma::ImGuiDebugMenu::ShowValue(label, value)
+#define CHROMA_DEBUG_VALUE(label, value) Chroma::ImGuiDebugMenu::ShowValue(label, value)
 #endif

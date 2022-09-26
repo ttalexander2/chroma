@@ -10,27 +10,24 @@
 #include "Chroma/IO/FileSystem.h"
 
 
-
 namespace Chroma
 {
-
-
 	Aseprite::Aseprite()
-		= default;
+	= default;
 
-	Aseprite::Aseprite(const std::string& path)
+	Aseprite::Aseprite(const std::string &path)
 	{
-		Chroma::File fs = FileSystem::Open(path, FileMode::Read);
+		File fs = FileSystem::Open(path, FileMode::Read);
 		parse(fs);
 		fs.Close();
 	}
 
-	Aseprite::Aseprite(Chroma::File& stream)
+	Aseprite::Aseprite(File &stream)
 	{
 		parse(stream);
 	}
 
-	Aseprite::Aseprite(const Aseprite & src)
+	Aseprite::Aseprite(const Aseprite &src)
 	{
 		mode = src.mode;
 		width = src.width;
@@ -42,7 +39,7 @@ namespace Chroma
 		palette = src.palette;
 	}
 
-	Aseprite::Aseprite(Aseprite && src) noexcept
+	Aseprite::Aseprite(Aseprite &&src) noexcept
 	{
 		mode = src.mode;
 		width = src.width;
@@ -54,7 +51,7 @@ namespace Chroma
 		palette = std::move(src.palette);
 	}
 
-	Aseprite& Aseprite::operator=(const Aseprite & src)
+	Aseprite &Aseprite::operator=(const Aseprite &src)
 	{
 		mode = src.mode;
 		width = src.width;
@@ -67,7 +64,7 @@ namespace Chroma
 		return *this;
 	}
 
-	Aseprite& Aseprite::operator=(Aseprite && src) noexcept
+	Aseprite &Aseprite::operator=(Aseprite &&src) noexcept
 	{
 		mode = src.mode;
 		width = src.width;
@@ -102,7 +99,7 @@ namespace Chroma
 		palette.clear();
 	}
 
-	void Aseprite::parse(Chroma::File& stream)
+	void Aseprite::parse(File &stream)
 	{
 		if (!stream.Good())
 		{
@@ -129,19 +126,19 @@ namespace Chroma
 			frame_count = stream.Read<uint16_t>(Endian::Little);
 			width = stream.Read<uint16_t>(Endian::Little);
 			height = stream.Read<uint16_t>(Endian::Little);
-			mode = static_cast<Aseprite::Modes>(stream.Read<uint16_t>(Endian::Little) / 8);
+			mode = static_cast<Modes>(stream.Read<uint16_t>(Endian::Little) / 8);
 
 			// don't care about other info
-			stream.Read<uint32_t>(Endian::Little);				// Flags
-			stream.Read<uint16_t>(Endian::Little);				// Speed (deprecated)
-			stream.Read<uint32_t>(Endian::Little);				// Should be 0
-			stream.Read<uint32_t>(Endian::Little);				// Should be 0
-			stream.Read<uint8_t>(Endian::Little);				// Palette entry
-			stream.Seek(3 + stream.Tell());						// Ignore these bytes
-			stream.Read<uint16_t>(Endian::Little);				// Number of colors (0 means 256 for old sprites)
-			stream.Read<int8_t>(Endian::Little);				// Pixel width
-			stream.Read<int8_t>(Endian::Little);				// Pixel height
-			stream.Seek(92 + stream.Tell());					// For Future
+			stream.Read<uint32_t>(Endian::Little); // Flags
+			stream.Read<uint16_t>(Endian::Little); // Speed (deprecated)
+			stream.Read<uint32_t>(Endian::Little); // Should be 0
+			stream.Read<uint32_t>(Endian::Little); // Should be 0
+			stream.Read<uint8_t>(Endian::Little); // Palette entry
+			stream.Seek(3 + stream.Tell()); // Ignore these bytes
+			stream.Read<uint16_t>(Endian::Little); // Number of colors (0 means 256 for old sprites)
+			stream.Read<int8_t>(Endian::Little); // Pixel width
+			stream.Read<int8_t>(Endian::Little); // Pixel height
+			stream.Seek(92 + stream.Tell()); // For Future
 		}
 
 		frames.resize(frame_count);
@@ -155,7 +152,7 @@ namespace Chroma
 
 			auto offset = stream.Read<uint32_t>(Endian::Little);
 
-			stream.Seek((int64_t)offset - 4 + stream.Tell());
+			stream.Seek(static_cast<int64_t>(offset) - 4 + stream.Tell());
 			auto frameEnd = stream.Tell();
 
 			stream.Seek(frameStart);
@@ -175,7 +172,7 @@ namespace Chroma
 
 				auto old_chunk_count = stream.Read<uint16_t>(Endian::Little);
 				frames[i].duration = stream.Read<uint16_t>(Endian::Little);
-				stream.Seek(2 + stream.Tell());			// for future
+				stream.Seek(2 + stream.Tell()); // for future
 				auto new_chunk_count = stream.Read<uint32_t>(Endian::Little);
 
 				if (old_chunk_count == 0xFFFF)
@@ -194,7 +191,7 @@ namespace Chroma
 			{
 				auto chunkStart = stream.Tell();
 				uint32_t chunkSize = stream.Read<uint32_t>(Endian::Little);
-				stream.Seek((int64_t)chunkSize - 4 + stream.Tell());
+				stream.Seek(static_cast<int64_t>(chunkSize) - 4 + stream.Tell());
 				auto chunkEnd = stream.Tell();
 				stream.Seek(chunkStart);
 				stream.Seek(4 + stream.Tell());
@@ -203,17 +200,28 @@ namespace Chroma
 
 				//CHROMA_CORE_TRACE("Chunk [{}]: Start[{}], End[{}], Size[{}], Type[0x{:x}]", j, (int64_t)chunkStart, (int64_t)chunkEnd, chunkSize, chunkType);
 
-
-
 				switch (chunkType)
 				{
-					case Chunks::Layer: parse_layer(stream, i); break;
-					case Chunks::Cel: parse_cel(stream, i, (int64_t)chunkEnd); break;
-					case Chunks::Palette: parse_palette(stream, i); break;
-					case Chunks::UserData: parse_user_data(stream, i); break;
-					case Chunks::FrameTags: parse_tag(stream, i); break;
-					case Chunks::Slice: parse_slice(stream, i); break;
-					default: break;
+					case Chunks::Layer:
+						parse_layer(stream, i);
+						break;
+					case Chunks::Cel:
+						parse_cel(stream, i, chunkEnd);
+						break;
+					case Chunks::Palette:
+						parse_palette(stream, i);
+						break;
+					case Chunks::UserData:
+						parse_user_data(stream, i);
+						break;
+					case Chunks::FrameTags:
+						parse_tag(stream, i);
+						break;
+					case Chunks::Slice:
+						parse_slice(stream, i);
+						break;
+					default:
+						break;
 				}
 
 				stream.Seek(chunkEnd);
@@ -223,13 +231,13 @@ namespace Chroma
 		}
 	}
 
-	void Aseprite::parse_layer(File& stream, int frame)
+	void Aseprite::parse_layer(File &stream, int frame)
 	{
 		layers.emplace_back();
 
-		auto& layer = layers.back();
+		auto &layer = layers.back();
 		layer.flag = static_cast<LayerFlags>(stream.Read<uint16_t>(Endian::Little));
-		layer.visible = ((int)layer.flag & (int)LayerFlags::Visible) == (int)LayerFlags::Visible;
+		layer.visible = (static_cast<int>(layer.flag) & static_cast<int>(LayerFlags::Visible)) == static_cast<int>(LayerFlags::Visible);
 		layer.type = static_cast<LayerTypes>(stream.Read<uint16_t>(Endian::Little));
 		layer.child_level = stream.Read<uint16_t>(Endian::Little);
 		stream.Read<uint16_t>(Endian::Little); // width
@@ -239,24 +247,24 @@ namespace Chroma
 			blendMode = 0;
 		layer.blendmode = static_cast<BlendMode>(blendMode);
 		layer.alpha = stream.Read<uint8_t>(Endian::Little);
-		stream.Seek(3+ stream.Tell()); // for future
+		stream.Seek(3 + stream.Tell()); // for future
 
-		char* buff = new char[stream.Read<uint16_t>(Endian::Little)];
+		auto buff = new char[stream.Read<uint16_t>(Endian::Little)];
 		stream.Read(buff, layer.name.length());
 		layer.name = std::string(buff);
 		delete[] buff;
 
-		layer.userdata.color = {255, 255, 255, 1};
+		layer.userdata.color = { 255, 255, 255, 1 };
 		layer.userdata.text = "";
 		m_last_userdata = &(layer.userdata);
 	}
 
-	void Aseprite::parse_cel(File& stream, int frameIndex, size_t maxPosition)
+	void Aseprite::parse_cel(File &stream, int frameIndex, size_t maxPosition)
 	{
-		Frame& frame = frames[frameIndex];
+		Frame &frame = frames[frameIndex];
 
 		frame.cels.emplace_back();
-		auto& cel = frame.cels.back();
+		auto &cel = frame.cels.back();
 		cel.layer_index = stream.Read<uint16_t>(Endian::Little);
 		cel.x = stream.Read<uint16_t>(Endian::Little);
 		cel.y = stream.Read<uint16_t>(Endian::Little);
@@ -271,14 +279,14 @@ namespace Chroma
 		{
 			auto width = stream.Read<uint16_t>(Endian::Little);
 			auto height = stream.Read<uint16_t>(Endian::Little);
-			auto count = width * height * (int)mode;
+			auto count = width * height * static_cast<int>(mode);
 
 			cel.image = Image(width, height);
 
 			// RAW
 			if (celType == 0)
 			{
-				stream.Read(reinterpret_cast<char*>(cel.image.Pixels), count);
+				stream.Read(reinterpret_cast<char *>(cel.image.Pixels), count);
 				//stream.read(cel.image.Pixels, count);
 			}
 			// DEFLATE (zlib)
@@ -286,15 +294,15 @@ namespace Chroma
 			{
 				// this could be optimized to use a buffer on the stack if we only read set chunks at a time
 				// stbi's zlib doesn't have that functionality though
-				auto size = maxPosition - (int64_t)stream.Tell();
+				auto size = maxPosition - stream.Tell();
 				if (size > INT32_MAX)
 					size = INT32_MAX;
 
-				char* buffer = new char[size];
+				auto buffer = new char[size];
 				stream.Read(buffer, size);
 
 				int olen = width * height * sizeof(Math::vec4);
-				int res = stbi_zlib_decode_buffer(reinterpret_cast<char*>(cel.image.Pixels), olen, buffer, (int)size);
+				int res = stbi_zlib_decode_buffer(reinterpret_cast<char *>(cel.image.Pixels), olen, buffer, static_cast<int>(size));
 
 				delete[] buffer;
 
@@ -309,19 +317,18 @@ namespace Chroma
 			// note: we work in-place to save having to store stuff in a buffer
 			if (mode == Modes::Grayscale)
 			{
-				auto src = (unsigned char*)cel.image.Pixels;
+				auto src = (unsigned char *)cel.image.Pixels;
 				auto dst = cel.image.Pixels;
 				for (int d = width * height - 1, s = (width * height - 1) * 2; d >= 0; d--, s -= 2)
 					dst[d] = Color(src[s], src[s], src[s], src[s + 1]);
 			}
 			else if (mode == Modes::Indexed)
 			{
-				auto src = (unsigned char*)cel.image.Pixels;
+				auto src = (unsigned char *)cel.image.Pixels;
 				auto dst = cel.image.Pixels;
 				for (int i = width * height - 1; i >= 0; i--)
 					dst[i] = palette[src[i]];
 			}
-
 		}
 		// REFERENCE
 		// this cel directly references a previous cel
@@ -331,7 +338,7 @@ namespace Chroma
 		}
 
 		// draw to frame if visible
-		if ((int)layers[cel.layer_index].flag & (int)LayerFlags::Visible)
+		if (static_cast<int>(layers[cel.layer_index].flag) & static_cast<int>(LayerFlags::Visible))
 		{
 			render_cel(&cel, &frame);
 		}
@@ -341,9 +348,10 @@ namespace Chroma
 		m_last_userdata = &(cel.userdata);
 	}
 
-	void Aseprite::parse_palette(File& stream, int frame)
+	void Aseprite::parse_palette(File &stream, int frame)
 	{
-		/* size */ stream.Read<uint32_t>(Endian::Little);
+		/* size */
+		stream.Read<uint32_t>(Endian::Little);
 		auto start = stream.Read<uint32_t>(Endian::Little);
 		auto end = stream.Read<uint32_t>(Endian::Little);
 		stream.Seek(8 + stream.Tell());
@@ -363,7 +371,7 @@ namespace Chroma
 		}
 	}
 
-	void Aseprite::parse_user_data(File& stream, int frame)
+	void Aseprite::parse_user_data(File &stream, int frame)
 	{
 		if (m_last_userdata != nullptr)
 		{
@@ -372,7 +380,7 @@ namespace Chroma
 			// has text
 			if (flags & (1 << 0))
 			{
-				char* buff = new char[stream.Read<uint16_t>(Endian::Little)];
+				auto buff = new char[stream.Read<uint16_t>(Endian::Little)];
 				stream.Read(buff, m_last_userdata->text.length());
 				m_last_userdata->text = std::string(buff);
 				delete[] buff;
@@ -384,7 +392,7 @@ namespace Chroma
 		}
 	}
 
-	void Aseprite::parse_tag(File& stream, int frame)
+	void Aseprite::parse_tag(File &stream, int frame)
 	{
 		auto count = stream.Read<uint16_t>(Endian::Little);
 		stream.Seek(8 + stream.Tell());
@@ -401,7 +409,7 @@ namespace Chroma
 			stream.Seek(1 + stream.Tell());
 
 			uint16_t len = stream.Read<uint16_t>(Endian::Little);
-			char* buff = new char[len];
+			auto buff = new char[len];
 			stream.Read(buff, len);
 			tag.name = std::string(buff, buff + len);
 			delete[] buff;
@@ -410,14 +418,14 @@ namespace Chroma
 		}
 	}
 
-	void Aseprite::parse_slice(File& stream, int frame)
+	void Aseprite::parse_slice(File &stream, int frame)
 	{
 		int count = stream.Read<uint32_t>(Endian::Little);
 		int flags = stream.Read<uint32_t>(Endian::Little);
 		stream.Read<uint32_t>(Endian::Little); // reserved
 
 		std::string name;
-		char* buff = new char[stream.Read<uint16_t>(Endian::Little)];
+		auto buff = new char[stream.Read<uint16_t>(Endian::Little)];
 		stream.Read(buff, name.length());
 		name = std::string(buff);
 		delete[] buff;
@@ -426,7 +434,7 @@ namespace Chroma
 		{
 			slices.emplace_back();
 
-			auto& slice = slices.back();
+			auto &slice = slices.back();
 			slice.name = name;
 			slice.frame = stream.Read<uint32_t>(Endian::Little);
 			slice.origin.x = static_cast<float>(stream.Read<int32_t>(Endian::Little));
@@ -461,14 +469,14 @@ namespace Chroma
 #define MUL_UN8(a, b, t) \
 	((t) = (a) * (uint16_t)(b) + 0x80, ((((t) >> 8) + (t) ) >> 8))
 
-	void Aseprite::render_cel(Cel * cel, Frame * frame)
+	void Aseprite::render_cel(Cel *cel, Frame *frame)
 	{
-		Layer& layer = layers[cel->layer_index];
+		Layer &layer = layers[cel->layer_index];
 
 		while (cel->linked_frame_index >= 0)
 		{
-			auto& frame = frames[cel->linked_frame_index];
-			for (auto& it : frame.cels)
+			auto &frame = frames[cel->linked_frame_index];
+			for (auto &it : frame.cels)
 				if (it.layer_index == cel->layer_index)
 				{
 					cel = &it;
@@ -502,38 +510,76 @@ namespace Chroma
 		{
 			for (int dy = top, sy = -Math::min(srcY, 0); dy < bottom; dy++, sy++)
 			{
-				Chroma::Color* srcColor = (src + sx + sy * srcW);
-				Chroma::Color* dstColor = (dst + dx + dy * dstW);
+				Color *srcColor = (src + sx + sy * srcW);
+				Color *dstColor = (dst + dx + dy * dstW);
 
 				if (srcColor->a != 0)
 				{
 					switch (layer.blendmode)
 					{
-						case BlendMode::Normal: BlendFunctions::BlendNormal(dstColor, srcColor, opacity); break;
-						case BlendMode::Multiply: BlendFunctions::BlendMultiply(dstColor, srcColor, opacity); break;
-						case BlendMode::Screen: BlendFunctions::BlendScreen(dstColor, srcColor, opacity); break;
-						case BlendMode::Overlay: BlendFunctions::BlendOverlay(dstColor, srcColor, opacity); break;
-						case BlendMode::Darken: BlendFunctions::BlendDarken(dstColor, srcColor, opacity); break;
-						case BlendMode::Lighten: BlendFunctions::BlendLighten(dstColor, srcColor, opacity); break;
-						case BlendMode::ColorDodge: BlendFunctions::BlendColorDodge(dstColor, srcColor, opacity); break;
-						case BlendMode::ColorBurn: BlendFunctions::BlendColorBurn(dstColor, srcColor, opacity); break;
-						case BlendMode::HardLight: BlendFunctions::BlendHardLight(dstColor, srcColor, opacity); break;
-						case BlendMode::SoftLight: BlendFunctions::BlendSoftLight(dstColor, srcColor, opacity); break;
-						case BlendMode::Difference: BlendFunctions::BlendDifference(dstColor, srcColor, opacity); break;
-						case BlendMode::Exclusion: BlendFunctions::BlendExclusion(dstColor, srcColor, opacity); break;
-						case BlendMode::Hue: BlendFunctions::BlendHue(dstColor, srcColor, opacity); break;
-						case BlendMode::Saturation: BlendFunctions::BlendSaturation(dstColor, srcColor, opacity); break;
-						case BlendMode::Color: BlendFunctions::BlendColor(dstColor, srcColor, opacity); break;
-						case BlendMode::Luminosity: BlendFunctions::BlendLuminosity(dstColor, srcColor, opacity); break;
-						case BlendMode::Addition: BlendFunctions::BlendAddition(dstColor, srcColor, opacity); break;
-						case BlendMode::Subtract: BlendFunctions::BlendSubtract(dstColor, srcColor, opacity); break;
-						case BlendMode::Divide: BlendFunctions::BlendDivide(dstColor, srcColor, opacity); break;
-						default: BlendFunctions::BlendNormal(dstColor, srcColor, opacity); break;
+						case BlendMode::Normal:
+							BlendFunctions::BlendNormal(dstColor, srcColor, opacity);
+							break;
+						case BlendMode::Multiply:
+							BlendFunctions::BlendMultiply(dstColor, srcColor, opacity);
+							break;
+						case BlendMode::Screen:
+							BlendFunctions::BlendScreen(dstColor, srcColor, opacity);
+							break;
+						case BlendMode::Overlay:
+							BlendFunctions::BlendOverlay(dstColor, srcColor, opacity);
+							break;
+						case BlendMode::Darken:
+							BlendFunctions::BlendDarken(dstColor, srcColor, opacity);
+							break;
+						case BlendMode::Lighten:
+							BlendFunctions::BlendLighten(dstColor, srcColor, opacity);
+							break;
+						case BlendMode::ColorDodge:
+							BlendFunctions::BlendColorDodge(dstColor, srcColor, opacity);
+							break;
+						case BlendMode::ColorBurn:
+							BlendFunctions::BlendColorBurn(dstColor, srcColor, opacity);
+							break;
+						case BlendMode::HardLight:
+							BlendFunctions::BlendHardLight(dstColor, srcColor, opacity);
+							break;
+						case BlendMode::SoftLight:
+							BlendFunctions::BlendSoftLight(dstColor, srcColor, opacity);
+							break;
+						case BlendMode::Difference:
+							BlendFunctions::BlendDifference(dstColor, srcColor, opacity);
+							break;
+						case BlendMode::Exclusion:
+							BlendFunctions::BlendExclusion(dstColor, srcColor, opacity);
+							break;
+						case BlendMode::Hue:
+							BlendFunctions::BlendHue(dstColor, srcColor, opacity);
+							break;
+						case BlendMode::Saturation:
+							BlendFunctions::BlendSaturation(dstColor, srcColor, opacity);
+							break;
+						case BlendMode::Color:
+							BlendFunctions::BlendColor(dstColor, srcColor, opacity);
+							break;
+						case BlendMode::Luminosity:
+							BlendFunctions::BlendLuminosity(dstColor, srcColor, opacity);
+							break;
+						case BlendMode::Addition:
+							BlendFunctions::BlendAddition(dstColor, srcColor, opacity);
+							break;
+						case BlendMode::Subtract:
+							BlendFunctions::BlendSubtract(dstColor, srcColor, opacity);
+							break;
+						case BlendMode::Divide:
+							BlendFunctions::BlendDivide(dstColor, srcColor, opacity);
+							break;
+						default:
+							BlendFunctions::BlendNormal(dstColor, srcColor, opacity);
+							break;
 					}
-
 				}
 			}
 		}
 	}
 }
-

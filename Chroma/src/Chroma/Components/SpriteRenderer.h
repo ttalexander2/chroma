@@ -14,7 +14,6 @@ namespace Polychrome
 }
 
 
-
 namespace Chroma
 {
 	class SpriteRendererSystem;
@@ -46,9 +45,9 @@ namespace Chroma
 		};
 
 		/// @brief Color to render the sprite. Default is White.
-		Math::vec4 Color { 1.0f, 1.0f, 1.0f, 1.0f };
+		Math::vec4 Color{ 1.0f, 1.0f, 1.0f, 1.0f };
 		/// @brief Offset to render the sprite.
-		Math::vec2 Offset { 0.0f, 0.0f};
+		Math::vec2 Offset{ 0.0f, 0.0f };
 
 		float SortingPoint = 0;
 		/// @brief Whether to play the sprite on start.
@@ -68,7 +67,7 @@ namespace Chroma
 		/// Sprite must already be loaded.
 		/// @see AssetManager to load sprite.
 		/// @param spriteID Name/Path of the sprite.
-		void SetSprite(const GUID& spriteID);
+		void SetSprite(const GUID &spriteID);
 
 		/// @brief Set the animation of the sprite.
 		/// @param animation Number of the animation.
@@ -76,7 +75,7 @@ namespace Chroma
 
 		/// @brief Set the animation of the sprite.
 		/// @param animation_name Name of the animation.
-		void SetAnimation(const std::string& animation_name);
+		void SetAnimation(const std::string &animation_name);
 
 		/// @brief Get the number of the current animation.
 		/// @return 
@@ -96,13 +95,13 @@ namespace Chroma
 		void SetCurrentFrame(unsigned int frame);
 
 		void SetSpriteOrigin(SpriteOrigin origin);
-		void SetSpriteOrigin(const Math::vec2& custom_position);
+		void SetSpriteOrigin(const Math::vec2 &custom_position);
 
 		SpriteOrigin GetSpriteOrigin();
-		const Math::vec2& GetSpriteOriginVector();
+		const Math::vec2 &GetSpriteOriginVector();
 
 		std::string GetSpritePath();
-		inline const Ref<Sprite> &GetSprite() { return AssetManager::Get<Chroma::Sprite>(m_SpriteID); }
+		const Ref<Sprite> GetSprite() { return AssetManager::Get<Sprite>(m_SpriteID); }
 
 		/// @brief Restart the animation.
 		void RestartAnimation();
@@ -118,9 +117,8 @@ namespace Chroma
 
 
 		float time_till_next_frame = 0;
-		bool looping_forward = 0;
-		
-		GUID m_SpriteID;
+		bool looping_forward = false;
 
+		GUID m_SpriteID;
 	};
 }

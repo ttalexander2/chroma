@@ -14,9 +14,9 @@
 
 namespace ImGui
 {
-    static std::unordered_map<ImGuiID, int> active;
-    static std::unordered_map<ImGuiID, int> hovered;
-    static std::unordered_map<ImGuiID, int> clicked;
+	static std::unordered_map<ImGuiID, int> active;
+	static std::unordered_map<ImGuiID, int> hovered;
+	static std::unordered_map<ImGuiID, int> clicked;
 
 	/// @brief Editable list imgui widget.
 	/// @param list List of strings to display/edit.
@@ -26,163 +26,150 @@ namespace ImGui
     /// Widget contains list of strings, allows user to edit, reorder, add, and delete strings.
 	static bool EditableList(std::vector<std::string> &list, bool open)
 	{
+		PushID(&list);
+		ImGuiID id = GetID(&list);
 
-        ImGui::PushID(&list);
-        ImGuiID id = ImGui::GetID(&list);
+		if (active.size() > 100)
+			active.clear();
+		if (hovered.size() > 100)
+			hovered.clear();
+		if (clicked.size() > 100)
+			clicked.clear();
 
+		if (open)
+		{
+			if (!active.contains(id))
+				active.emplace(id, -1);
+			if (!hovered.contains(id))
+				hovered.emplace(id, -1);
+			if (!clicked.contains(id))
+				clicked.emplace(id, 0);
+		}
 
-        if (active.size() > 100)
-            active.clear();
-        if (hovered.size() > 100)
-            hovered.clear();
-        if (clicked.size() > 100)
-            clicked.clear();
+		if (BeginCollapsibleGroupPanel(id, GetContentRegionAvail(), open))
+		{
+			bool any_hovered = false;
+			bool mouseReleased = IsMouseReleased(ImGuiMouseButton_Left);
+			for (int i = 0; i < list.size(); i++)
+			{
+				PushID(i);
+				std::string item = list[i];
 
-        if (open)
-        {
-            if (!active.contains(id))
-                active.emplace(id, -1);
-            if (!hovered.contains(id))
-                hovered.emplace(id, -1);
-            if (!clicked.contains(id))
-                clicked.emplace(id, 0);
-        }
+				AlignTextToFramePadding();
 
+				SetCursorPosX(GetCursorPosX() + 3);
 
-        if (ImGui::BeginCollapsibleGroupPanel(id, ImGui::GetContentRegionAvail(), open))
-        {
-            bool any_hovered = false;
-            bool mouseReleased = ImGui::IsMouseReleased(ImGuiMouseButton_Left);
-            for (int i = 0; i < list.size(); i++)
-            {
-                ImGui::PushID(i);
-                std::string item = list[i];
+				ImVec4 col = GetStyleColorVec4(ImGuiCol_Header);
+				PushStyleColor(ImGuiCol_Header, { col.x, col.y, col.z, 0.8f });
+				if (hovered[id] == i)
+					PushStyleColor(ImGuiCol_HeaderHovered, { col.x, col.y, col.z, 0.7f });
 
-                ImGui::AlignTextToFramePadding();
+				bool is_selected = (i == clicked[id]);
+				Selectable((std::string("##selectable") + std::to_string(i)).c_str(), &is_selected, ImGuiSelectableFlags_AllowItemOverlap, { GetContentRegionAvail().x - 3, 0 });
 
-                ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 3);
+				if (IsItemClicked())
+				{
+					clicked[id] = i;
+				}
 
-                ImVec4 col = ImGui::GetStyleColorVec4(ImGuiCol_Header);
-                ImGui::PushStyleColor(ImGuiCol_Header, { col.x, col.y, col.z, 0.8f });
-                if (hovered[id] == i)
-                    ImGui::PushStyleColor(ImGuiCol_HeaderHovered, { col.x, col.y, col.z, 0.7f });
+				if (hovered[id] == i)
+					PopStyleColor();
+				PopStyleColor();
 
-                bool is_selected = (i == clicked[id]);
-                ImGui::Selectable((std::string("##selectable") + std::to_string(i)).c_str(), &is_selected, ImGuiSelectableFlags_AllowItemOverlap, { ImGui::GetContentRegionAvail().x - 3, 0 });
+				if (active[id] == -1 && IsItemActive())
+				{
+					active[id] = i;
+				}
 
+				if (IsItemHovered(ImGuiHoveredFlags_AllowWhenBlockedByActiveItem))
+				{
+					hovered[id] = i;
+					any_hovered = true;
+				}
 
-                if (ImGui::IsItemClicked())
-                {
-                    clicked[id] = i;
-                }
+				SameLine(-1);
+				SetCursorPosX(GetCursorPosX() + 3);
 
-                if (hovered[id] == i)
-                    ImGui::PopStyleColor();
-                ImGui::PopStyleColor();
-                
+				if (is_selected)
+					PushStyleColor(ImGuiCol_FrameBg, { 0, 0, 0, 0 });
+				if (hovered[id] == i && any_hovered)
+					PushStyleColor(ImGuiCol_FrameBg, { 0, 0, 0, 0 });
 
-                if (active[id] == -1 && ImGui::IsItemActive())
-                {
-                    active[id] = i;
-                }
-                
-                if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenBlockedByActiveItem))
-                {
-                    hovered[id] = i;
-                    any_hovered = true;
-                }
+				AlignTextToFramePadding();
+				Text(ICON_FK_BARS);
 
-                ImGui::SameLine(-1);
-                ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 3);
+				SameLine(24.0f);
+				SetNextItemWidth(GetContentRegionAvail().x);
+				std::string input_hash = std::string("##input_text") + std::to_string(i);
 
-                if (is_selected)
-                    ImGui::PushStyleColor(ImGuiCol_FrameBg, { 0,0,0,0 });
-                if (hovered[id] == i && any_hovered)
-                    ImGui::PushStyleColor(ImGuiCol_FrameBg, { 0,0,0,0 });
+				PushStyleColor(ImGuiCol_TextSelectedBg, GetStyleColorVec4(ImGuiCol_BorderShadow));
 
-                ImGui::AlignTextToFramePadding();
-                ImGui::Text(ICON_FK_BARS);
-                
-                ImGui::SameLine(24.0f);
-                ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-                std::string input_hash = std::string("##input_text") + std::to_string(i);
+				InputText(input_hash.c_str(), &list[i]);
 
-                ImGui::PushStyleColor(ImGuiCol_TextSelectedBg, ImGui::GetStyleColorVec4(ImGuiCol_BorderShadow));
+				PopStyleColor();
 
-                ImGui::InputText(input_hash.c_str(), &list[i]);
+				if (is_selected)
+					PopStyleColor();
+				if (hovered[id] == i && any_hovered)
+					PopStyleColor();
 
-                ImGui::PopStyleColor();
+				PopID();
+			}
+		}
 
-                if (is_selected)
-                    ImGui::PopStyleColor();
-                if (hovered[id] == i && any_hovered)
-                    ImGui::PopStyleColor();
+		if (open)
+		{
+			if (active[id] != -1 && hovered[id] != -1 && hovered[id] != active[id])
+			{
+				std::string item = list[active[id]];
+				int n_next = active[id] + (GetMouseDragDelta(0).y < 0.1f ? -1 : 1);
+				if (n_next >= 0 && n_next < list.size())
+				{
+					list[active[id]] = list[n_next];
+					list[n_next] = item;
+					ResetMouseDragDelta();
+					active[id] = n_next;
+					clicked[id] = n_next;
+				}
+			}
 
-                ImGui::PopID();
-            }
+			if (IsMouseReleased(ImGuiMouseButton_Left))
+			{
+				active[id] = -1;
+			}
+		}
 
-        }
+		EndCollapsibleGroupPanel();
 
+		if (open)
+		{
+			PushStyleVar(ImGuiStyleVar_ItemSpacing, { 0, 0 });
+			PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
+			ImVec4 c = GetStyleColorVec4(ImGuiCol_Border);
+			PushStyleColor(ImGuiCol_Button, { c.x, c.y, c.z, c.w / 2.5f });
 
-        if (open)
-        {
-            if (active[id] != -1 && hovered[id] != -1 && hovered[id] != active[id])
-            {
-                std::string item = list[active[id]];
-                int n_next = active[id] + (ImGui::GetMouseDragDelta(0).y < 0.1f ? -1 : 1);
-                if (n_next >= 0 && n_next < list.size())
-                {
-                    list[active[id]] = list[n_next];
-                    list[n_next] = item;
-                    ImGui::ResetMouseDragDelta();
-                    active[id] = n_next;
-                    clicked[id] = n_next;
-                }
-            }
+			Dummy({ 1.0f, 0.0f });
+			SameLine(GetContentRegionAvail().x - 50.0f);
 
-            if (IsMouseReleased(ImGuiMouseButton_Left))
-            {
-                active[id] = -1;
-            }
-        }
+			if (Button(ICON_FK_PLUS))
+			{
+				list.push_back("");
+			}
+			SameLine();
+			if (Button(ICON_FK_MINUS))
+			{
+				if (clicked[id] != -1)
+					Chroma::RemoveAtIndex<std::vector<std::string>>(list, clicked[id]);
+				if (clicked[id] > static_cast<int>(list.size()) - 1)
+					clicked[id] = static_cast<int>(list.size()) - 1;
+			}
 
+			PopStyleColor();
+			PopStyleVar(2);
+		}
 
+		PopID();
 
-        ImGui::EndCollapsibleGroupPanel();
-
-        if (open)
-        {
-            ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 0,0 });
-            ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
-            ImVec4 c = ImGui::GetStyleColorVec4(ImGuiCol_Border);
-            ImGui::PushStyleColor(ImGuiCol_Button, { c.x, c.y, c.z, c.w / 2.5f });
-
-            ImGui::Dummy({ 1.0f, 0.0f });
-            ImGui::SameLine(ImGui::GetContentRegionAvail().x - 50.0f);
-
-
-            if (ImGui::Button(ICON_FK_PLUS))
-            {
-                list.push_back("");
-            }
-            ImGui::SameLine();
-            if (ImGui::Button(ICON_FK_MINUS))
-            {
-                if (clicked[id] != -1)
-                    Chroma::RemoveAtIndex<std::vector<std::string>>(list, clicked[id]);
-                if (clicked[id] > static_cast<int>(list.size()) - 1)
-                    clicked[id] = static_cast<int>(list.size()) - 1;
-            }
-
-
-            ImGui::PopStyleColor();
-            ImGui::PopStyleVar(2);
-        }
-
-        ImGui::PopID();
-       
-        return open;
+		return open;
 	}
-
-    
 }

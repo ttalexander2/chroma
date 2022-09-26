@@ -6,7 +6,6 @@
 
 namespace Chroma
 {
-
 	class ParticleSystem;
 
 	struct Particle
@@ -27,13 +26,13 @@ namespace Chroma
 		glm::vec2 PositionVariance = { 0, 0 };
 
 		//Color
-		glm::vec4 StartColor = {1.f, 0.f, 0.f, 1.f};
-		glm::vec4 EndColor = {0.f, 0.f, 1.f, 1.f};
+		glm::vec4 StartColor = { 1.f, 0.f, 0.f, 1.f };
+		glm::vec4 EndColor = { 0.f, 0.f, 1.f, 1.f };
 
 		//Life
 		float Life = 2.f;
-		float LifeVariance =  0.5f;
-		
+		float LifeVariance = 0.5f;
+
 		//Angle
 		float Angle = 0.f;
 		float AngleVariance = 360.f;
@@ -51,21 +50,31 @@ namespace Chroma
 		float EmissionRate = 5.f;
 		bool PreWarm = true;
 		float PreWarmSeconds = 2.f;
-		
+
 
 		const unsigned int GetSeed() { return _seed; }
-		void SetSeed(unsigned int seed) { _seed = seed; engine.seed(_seed); }
+
+		void SetSeed(unsigned int seed)
+		{
+			_seed = seed;
+			engine.seed(_seed);
+		}
 
 		void GenerateRandomSeed();
-		void Emit(const Math::vec2& position);
+		void Emit(const Math::vec2 &position);
 
 		constexpr size_t GetCount() { return Particles.size(); }
-		void SetCount(size_t size) { Particles.resize(size); if (pos > size) pos = size - 1; }
+
+		void SetCount(size_t size)
+		{
+			Particles.resize(size);
+			if (pos > size)
+				pos = size - 1;
+		}
 
 		std::vector<Particle> Particles = std::vector<Particle>(200);
 
 	private:
-		
 		size_t pos = 0;
 
 		double timeSinceLastEmit = 0;
@@ -80,9 +89,8 @@ namespace Chroma
 		static std::random_device sRd;
 		static std::default_random_engine sEngine;
 		static std::uniform_int_distribution<unsigned int> sDist;
-		
+
 
 		friend class ParticleSystem;
-
 	};
 }

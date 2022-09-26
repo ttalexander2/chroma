@@ -40,15 +40,12 @@
 #include <Chroma/Assets/Font.h>
 
 
-
 namespace Chroma
 {
-	
-	Application* Application::s_Instance = nullptr;
+	Application *Application::s_Instance = nullptr;
 
-	Application::Application(const std::string& title, unsigned int width, unsigned int height, bool child)
+	Application::Application(const std::string &title, unsigned int width, unsigned int height, bool child)
 	{
-
 		if (!child)
 		{
 			CHROMA_CORE_INFO("Chroma Engine v0.1");
@@ -80,16 +77,13 @@ namespace Chroma
 			AssetManager::Register<FMODBank>();
 			AssetManager::Register<Font>();
 		}
-
-
-
 	}
 
-	Application::~Application() 
+	Application::~Application()
 	{
 	}
 
-	void Application::ProcessEvents(Event& e)
+	void Application::ProcessEvents(Event &e)
 	{
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<WindowCloseEvent>(CHROMA_BIND_EVENT_FN(Application::OnWindowClose));
@@ -99,7 +93,7 @@ namespace Chroma
 		this->OnEvent(e);
 	}
 
-	bool Application::OnWindowResize(WindowResizeEvent& e)
+	bool Application::OnWindowResize(WindowResizeEvent &e)
 	{
 		if (e.GetWidth() == 0 || e.GetHeight() == 0)
 		{
@@ -108,7 +102,7 @@ namespace Chroma
 		}
 		m_Minimized = false;
 
-		RenderCommand::SetViewport(0,0,e.GetWidth(), e.GetHeight());
+		RenderCommand::SetViewport(0, 0, e.GetWidth(), e.GetHeight());
 
 		return false;
 	}
@@ -118,7 +112,7 @@ namespace Chroma
 		m_Running = false;
 	}
 
-	bool Application::OnWindowClose(WindowCloseEvent& e)
+	bool Application::OnWindowClose(WindowCloseEvent &e)
 	{
 		m_Running = false;
 		return true;
@@ -137,9 +131,7 @@ namespace Chroma
 		double elapsedTime = 0.0;
 		double accumulator = 0.0;
 
-
 		double currentTime = glfwGetTime();
-
 
 		while (m_Running)
 		{
@@ -163,12 +155,11 @@ namespace Chroma
 				accumulator -= dt;
 
 				m_Time = dt;
-				
+
 				//Fixed Update
 				this->Update(dt);
-
 			}
-			
+
 			m_VariableTime = frameTime;
 
 			//this->Update(frameTime);
@@ -190,5 +181,4 @@ namespace Chroma
 		m_ImGuiLayer->OnDetach();
 		Audio::Shutdown();
 	}
-
 }

@@ -2,10 +2,8 @@
 
 namespace Chroma
 {
-
 	class GUI
 	{
 	public:
-
 	};
 }

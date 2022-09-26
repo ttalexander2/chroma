@@ -5,16 +5,21 @@
 
 namespace Chroma
 {
-	static std::string to_lower(const std::string& val)
+	static std::string to_lower(const std::string &val)
 	{
 		std::string temp;
-		std::transform(temp.begin(), temp.end(), temp.begin(), [](unsigned char c)
-				{ return std::tolower(c); 
-			});
+		std::transform(temp.begin(),
+				temp.end(),
+				temp.begin(),
+				[](unsigned char c)
+				{
+					return std::tolower(c);
+				});
 		return temp;
 	}
 
-	Path::Path(const std::string &path): m_Path(path)
+	Path::Path(const std::string &path):
+		m_Path(path)
 	{
 		size_t pos = 0;
 		if ((pos = m_Path.find(':')) != std::string::npos)
@@ -90,5 +95,3 @@ namespace Chroma
 		return to_lower(Extension()).compare(to_lower(extension)) == 0;
 	}
 }
-
-

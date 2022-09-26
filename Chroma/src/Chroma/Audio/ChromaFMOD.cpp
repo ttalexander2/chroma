@@ -6,12 +6,12 @@
 namespace Chroma
 {
 	/// @brief Constructs an FMOD Studio instance.
-	ChromaFMOD::ChromaFMOD()
-		: m_NextChanelID(0)
+	ChromaFMOD::ChromaFMOD() :
+		m_NextChanelID(0)
 	{
 		m_StudioSystem = nullptr;
 		Audio::ErrorCheck(FMOD::Studio::System::create(&m_StudioSystem));
-		Audio::ErrorCheck(m_StudioSystem->initialize(32, FMOD_STUDIO_INIT_LIVEUPDATE, FMOD_STUDIO_INIT_NORMAL, NULL));
+		Audio::ErrorCheck(m_StudioSystem->initialize(32, FMOD_STUDIO_INIT_LIVEUPDATE, FMOD_STUDIO_INIT_NORMAL, nullptr));
 
 		m_System = nullptr;
 		Audio::ErrorCheck(m_StudioSystem->getCoreSystem(&m_System));
@@ -30,7 +30,7 @@ namespace Chroma
 	void ChromaFMOD::Update()
 	{
 		std::vector<int> stoppedChannels;
-		for (auto& [num, channel] : m_Channels)
+		for (auto &[num, channel] : m_Channels)
 		{
 			bool isPlaying = false;
 			channel->isPlaying(&isPlaying);

@@ -9,7 +9,7 @@ namespace Chroma
 {
 	struct PipelineSpecification
 	{
-		Ref<Chroma::Shader> Shader;
+		Ref<Shader> Shader;
 		VertexBufferLayout Layout;
 	};
 
@@ -18,13 +18,13 @@ namespace Chroma
 	public:
 		virtual ~Pipeline() = default;
 
-		virtual PipelineSpecification& GetSpecification() = 0;
-		virtual const PipelineSpecification& GetSpecification() const = 0;
+		virtual PipelineSpecification &GetSpecification() = 0;
+		virtual const PipelineSpecification &GetSpecification() const = 0;
 
 		virtual void Initialize() = 0;
 
 		virtual void Bind() = 0;
 
-		static Ref<Pipeline> Create(const PipelineSpecification& spec);
+		static Ref<Pipeline> Create(const PipelineSpecification &spec);
 	};
 }

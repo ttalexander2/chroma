@@ -4,7 +4,7 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/matrix_decompose.hpp>
 
-bool Chroma::DecomposeTransform(const glm::mat4& transform, glm::vec3& translation, glm::vec3& rotation, glm::vec3& scale)
+bool Chroma::DecomposeTransform(const glm::mat4 &transform, glm::vec3 &translation, glm::vec3 &rotation, glm::vec3 &scale)
 {
 	// From glm::decompose in matrix_decompose.inl
 
@@ -74,11 +74,10 @@ bool Chroma::DecomposeTransform(const glm::mat4& transform, glm::vec3& translati
 		rotation.z = 0;
 	}
 
-	if (glm::isnan(translation.x) || glm::isnan(translation.y) || glm::isnan(translation.z) ||
-		glm::isnan(rotation.x) || glm::isnan(rotation.y) || glm::isnan(rotation.z) ||
-		glm::isnan(scale.x) || glm::isnan(scale.y) || glm::isnan(scale.z))
+	if (isnan(translation.x) || isnan(translation.y) || isnan(translation.z) ||
+		isnan(rotation.x) || isnan(rotation.y) || isnan(rotation.z) ||
+		isnan(scale.x) || isnan(scale.y) || isnan(scale.z))
 		return false;
-
 
 	return true;
 }

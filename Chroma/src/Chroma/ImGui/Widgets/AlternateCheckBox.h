@@ -7,10 +7,10 @@ namespace ImGui
 {
 	/// @brief Function to display a checkbox with alternate icons.
 	/// @param active Whether the check box is active.
-	inline void AlternateCheckBox(bool* active)
+	inline void AlternateCheckBox(bool *active)
 	{
-		ImGui::PushID(active);
-		const char* icon;
+		PushID(active);
+		const char *icon;
 		if (*active)
 		{
 			icon = ICON_FK_CHECK_SQUARE_O;
@@ -20,12 +20,11 @@ namespace ImGui
 			icon = ICON_FK_SQUARE_O;
 		}
 
-		ImGui::PushStyleColor(ImGuiCol_Button, { 0,0,0,0 });
-		ImGui::PushStyleColor(ImGuiCol_ButtonActive, { 0,0,0,0 });
-		if (ImGui::Button(icon))
+		PushStyleColor(ImGuiCol_Button, { 0, 0, 0, 0 });
+		PushStyleColor(ImGuiCol_ButtonActive, { 0, 0, 0, 0 });
+		if (Button(icon))
 			*active = !*active;
-		ImGui::PopStyleColor(2);
-		ImGui::PopID();
+		PopStyleColor(2);
+		PopID();
 	}
 }
-

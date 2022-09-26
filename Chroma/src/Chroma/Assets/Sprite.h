@@ -5,11 +5,10 @@
 
 namespace Chroma
 {
-
 	/// @brief Animated or Static Sprite.
 	///
 	/// Class for Game Sprite. This sprite can be static or animated.
-	struct Sprite: public Asset
+	struct Sprite : public Asset
 	{
 		CHROMA_ASSET(Sprite, Asset);
 
@@ -33,9 +32,9 @@ namespace Chroma
 		{
 			std::string Tag;
 			LoopDirection Direction = LoopDirection::Forward;
-			int Start;
-			int End;
-			Chroma::Color LabelColor;
+			unsigned int Start;
+			unsigned int End;
+			Color LabelColor;
 		};
 
 		/// @brief List of sprite animations.
@@ -43,8 +42,8 @@ namespace Chroma
 
 		/// @brief List of sprite frames.
 		std::vector<Frame> Frames;
-			
-		const Math::vec2 GetSize() const { return Size; }
+
+		const Math::vec2 GetSize() const { return m_Size; }
 
 		/// @brief Returns true if the sprite is animated.
 		bool Animated() { return Animations.size() > 0; }
@@ -55,8 +54,6 @@ namespace Chroma
 		bool Reload() override;
 
 	private:
-		Math::vec2 Size;
-
-
+		Math::vec2 m_Size = { 1.f, 1.f };
 	};
 }

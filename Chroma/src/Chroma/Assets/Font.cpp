@@ -14,7 +14,6 @@
 
 namespace Chroma
 {
-
 	static Path GetCacheDirectory()
 	{
 		return Path("cache/fonts");
@@ -27,21 +26,21 @@ namespace Chroma
 
 	static bool CreateCacheDirectoryIfNeeded()
 	{
-		if (!Chroma::FileSystem::Exists(GetCacheDirectory()))
+		if (!FileSystem::Exists(GetCacheDirectory()))
 		{
-			return Chroma::FileSystem::CreateDir(GetCacheDirectory());
+			return FileSystem::CreateDir(GetCacheDirectory());
 		}
 		return true;
 	}
 
 	bool Font::Load()
 	{
-		if (Chroma::FileSystem::Exists(GetCacheDirectory()))
+		if (FileSystem::Exists(GetCacheDirectory()))
 		{
 			Path cacheDir = GetCacheDirectory();
 			cacheDir /= this->GetID().ToString() + GetCacheExtension();
 
-			if (Chroma::FileSystem::Exists(cacheDir))
+			if (FileSystem::Exists(cacheDir))
 			{
 				//Load shit from cache directory
 				ReadAtlas(&m_Atlas, cacheDir);
@@ -49,9 +48,8 @@ namespace Chroma
 				return true;
 			}
 		}
-		
-		return Reload();
 
+		return Reload();
 	}
 
 	bool Font::Reload()
@@ -61,11 +59,11 @@ namespace Chroma
 		bool success = false;
 		if (msdfgen::FreetypeHandle *ft = msdfgen::initializeFreetype())
 		{
-			Chroma::File font_file = Chroma::File::Open(GetPath());
+			File font_file = File::Open(GetPath());
 			if (!font_file.Good())
 			{
 				CHROMA_CORE_ERROR("Font could not be found!");
-				msdfgen::deinitializeFreetype(ft);
+				deinitializeFreetype(ft);
 				return false;
 			}
 
@@ -75,7 +73,7 @@ namespace Chroma
 			font_file.Read<msdfgen::byte>(data);
 			font_file.Close();
 
-			if (msdfgen::FontHandle *font = msdfgen::loadFontData(ft, data.data(), static_cast<int>(data.size())))
+			if (msdfgen::FontHandle *font = loadFontData(ft, data.data(), static_cast<int>(data.size())))
 			{
 				// Storage for glyph geometry and their coordinates in the atlas
 				std::vector<GlyphGeometry> glyphs;
@@ -88,24 +86,18 @@ namespace Chroma
 				// To load specific glyph indices, use loadGlyphs instead.
 				Charset charset = Charset::ASCII;
 
-				
-
 				//Hiragana and katakana
-				for (char32_t c = (char32_t)0x3040; c <= (char32_t)0x30FF; ++c)
+				for (char32_t c = static_cast<char32_t>(0x3040); c <= static_cast<char32_t>(0x30FF); ++c)
 				{
 					charset.add(c);
 				}
-				
+
 				charset.add(U'私');
 				charset.add(U'冷');
 				charset.add(U'醸');
 				charset.add(U'造');
 				charset.add(U'飲');
 				charset.add(U'好');
-
-
-
-
 
 				fontGeometry.loadCharset(font, 1.0, charset);
 
@@ -132,9 +124,9 @@ namespace Chroma
 				packer.getDimensions(width, height);
 				// The ImmediateAtlasGenerator class facilitates the generation of the atlas bitmap.
 
-				ImmediateAtlasGenerator<float, 4, msdf_atlas::mtsdfGenerator, BitmapAtlasStorage<byte, 4>> generator(width, height);
+				ImmediateAtlasGenerator<float, 4, mtsdfGenerator, BitmapAtlasStorage<byte, 4>> generator(width, height);
 
-				DynamicAtlas<ImmediateAtlasGenerator<float, 4, msdf_atlas::mtsdfGenerator, BitmapAtlasStorage<byte, 4>>> dynamic_atlas;
+				DynamicAtlas<ImmediateAtlasGenerator<float, 4, mtsdfGenerator, BitmapAtlasStorage<byte, 4>>> dynamic_atlas;
 				//dynamic_atlas.
 
 				// GeneratorAttributes can be modified to change the generator's default settings.
@@ -169,9 +161,6 @@ namespace Chroma
 					}
 				}
 
-
-				
-
 				for (auto &fg_glyph : fontGeometry.getGlyphs())
 				{
 					Glyph glyph;
@@ -202,7 +191,7 @@ namespace Chroma
 						Path cacheDir = GetCacheDirectory();
 						cacheDir /= this->GetID().ToString() + GetCacheExtension();
 
-						Chroma::File test_png = Chroma::File::Open("test_atlas.png", Chroma::FileMode::Write);
+						File test_png = File::Open("test_atlas.png", FileMode::Write);
 						test_png.Write(png_data.data(), png_data.size());
 						test_png.Close();
 
@@ -224,13 +213,13 @@ namespace Chroma
 				}
 
 				// Cleanup
-				msdfgen::destroyFont(font);
+				destroyFont(font);
 			}
 			else
 			{
 				CHROMA_CORE_ERROR("Failed to open font.");
 			}
-			msdfgen::deinitializeFreetype(ft);
+			deinitializeFreetype(ft);
 		}
 		else
 		{
@@ -246,9 +235,9 @@ namespace Chroma
 		return true;
 	}
 
-	bool Font::WriteAtlas(const std::string &path, std::vector<unsigned char>& png_data)
+	bool Font::WriteAtlas(const std::string &path, std::vector<unsigned char> &png_data)
 	{
-		File f = File::Open(path, Chroma::FileMode::Write);
+		File f = File::Open(path, FileMode::Write);
 		if (!f.Good())
 			return false;
 
@@ -278,7 +267,7 @@ namespace Chroma
 
 		//Glyphs
 		f.Write(m_Atlas.glyphs.size());
-		for (auto& [cp, glyph] : m_Atlas.glyphs)
+		for (auto &[cp, glyph] : m_Atlas.glyphs)
 		{
 			f.Write(glyph.codepoint);
 			f.Write(glyph.l);
@@ -301,10 +290,9 @@ namespace Chroma
 	}
 
 
-
 	bool Font::ReadAtlas(Atlas *out, const std::string &path)
 	{
-		File f = File::Open(path, Chroma::FileMode::Read);
+		File f = File::Open(path, FileMode::Read);
 		if (!f.Good())
 			return false;
 
@@ -373,16 +361,12 @@ namespace Chroma
 			out->texture->SetFiltering(Texture::FilterMethod::LINEAR, Texture::FilterType::MAG);
 			out->texture->SetData(rawData, out->width * out->height * 4);
 			stbi_image_free(rawData);
-
 		}
-
 
 		f.Close();
 		return true;
 	}
 }
-
-
 
 
 #undef MAGIC_NUMBER

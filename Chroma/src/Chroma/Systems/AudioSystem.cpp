@@ -11,24 +11,22 @@ namespace Chroma
 		auto view = m_Scene->Registry.view<AudioSource>();
 		for (EntityID e : view)
 		{
-			AudioSource& audio = view.get<AudioSource>(e);
+			AudioSource &audio = view.get<AudioSource>(e);
 			Audio::LoadEvent(audio.Event);
 			if (audio.PlayOnInit && audio.IsEnabled())
 				Audio::PlayEvent(audio.Event);
 		}
 	}
 
-	
+
 	void AudioSystem::LateUpdate(Time delta)
 	{
 		auto view = m_Scene->Registry.view<AudioSource>();
 		for (EntityID e : view)
 		{
-			AudioSource& audio = view.get<AudioSource>(e);
+			AudioSource &audio = view.get<AudioSource>(e);
 			if (!audio.IsEnabled())
 				continue;
 		}
 	}
 }
-
-

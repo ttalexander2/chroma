@@ -13,10 +13,10 @@
 
 namespace YAML
 {
-	template<>
+	template <>
 	struct convert<Math::vec2>
 	{
-		static Node encode(const Math::vec2& val)
+		static Node encode(const Math::vec2 &val)
 		{
 			Node node;
 			node.push_back(val.x);
@@ -24,7 +24,7 @@ namespace YAML
 			return node;
 		}
 
-		static bool decode(const Node& node, Math::vec2& val)
+		static bool decode(const Node &node, Math::vec2 &val)
 		{
 			if (!node.IsSequence() || node.size() != 2)
 				return false;
@@ -35,10 +35,10 @@ namespace YAML
 		}
 	};
 
-	template<>
+	template <>
 	struct convert<Math::vec3>
 	{
-		static Node encode(const Math::vec3& val)
+		static Node encode(const Math::vec3 &val)
 		{
 			Node node;
 			node.push_back(val.x);
@@ -47,7 +47,7 @@ namespace YAML
 			return node;
 		}
 
-		static bool decode(const Node& node, Math::vec3& val)
+		static bool decode(const Node &node, Math::vec3 &val)
 		{
 			if (!node.IsSequence() || node.size() != 3)
 				return false;
@@ -59,10 +59,10 @@ namespace YAML
 		}
 	};
 
-	template<>
+	template <>
 	struct convert<Math::vec4>
 	{
-		static Node encode(const Math::vec4& val)
+		static Node encode(const Math::vec4 &val)
 		{
 			Node node;
 			node.push_back(val.x);
@@ -72,7 +72,7 @@ namespace YAML
 			return node;
 		}
 
-		static bool decode(const Node& node, Math::vec4& val)
+		static bool decode(const Node &node, Math::vec4 &val)
 		{
 			if (!node.IsSequence() || node.size() != 4)
 				return false;
@@ -157,16 +157,17 @@ namespace YAML
 		}
 	};
 
-	template<>
+	template <>
 	struct convert<Chroma::Ref<Chroma::Asset>>
 	{
-		static Node encode(const Chroma::Ref<Chroma::Asset>& val) {
+		static Node encode(const Chroma::Ref<Chroma::Asset> &val)
+		{
 			Node node;
 			node.push_back(val->GetID().ToString());
 			return node;
 		}
 
-		static bool decode(const Node& node, Chroma::Ref<Chroma::Asset>& asset)
+		static bool decode(const Node &node, Chroma::Ref<Chroma::Asset> &asset)
 		{
 			if (!node.IsDefined() || node.IsNull())
 				return false;
@@ -175,34 +176,36 @@ namespace YAML
 		}
 	};
 
-	template<>
+	template <>
 	struct convert<Chroma::EntityID>
 	{
-		static Node encode(const Chroma::EntityID& id) {
+		static Node encode(const Chroma::EntityID &id)
+		{
 			Node node;
-			node.push_back((uint32_t)id);
+			node.push_back(static_cast<uint32_t>(id));
 			return node;
 		}
 
-		static bool decode(const Node& node, Chroma::EntityID& id)
+		static bool decode(const Node &node, Chroma::EntityID &id)
 		{
 			if (!node.IsDefined() || node.IsNull())
 				return false;
-			id = (Chroma::EntityID)node.as<uint32_t>();
+			id = static_cast<Chroma::EntityID>(node.as<uint32_t>());
 			return true;
 		}
 	};
 
-	template<>
+	template <>
 	struct convert<Chroma::GUID>
 	{
-		static Node encode(const Chroma::GUID& guid) {
+		static Node encode(const Chroma::GUID &guid)
+		{
 			Node node;
 			node.push_back(guid.ToString());
 			return node;
 		}
 
-		static bool decode(const Node& node, Chroma::GUID& guid)
+		static bool decode(const Node &node, Chroma::GUID &guid)
 		{
 			//CHROMA_CORE_TRACE("{}", node.Type());
 			if (!node.IsDefined() || node.IsNull())
@@ -230,7 +233,7 @@ namespace YAML
 				node.push_back(value.verts[i].x);
 				node.push_back(value.verts[i].y);
 			}
-			
+
 			return node;
 		}
 
@@ -256,15 +259,13 @@ namespace YAML
 	};
 
 	Emitter &operator<<(Emitter &out, const c2Poly &v);
-	Emitter& operator<<(Emitter& out, const Chroma::GUID& v);
-	Emitter& operator<<(Emitter& out, const Chroma::EntityID& v);
-	Emitter& operator<<(Emitter& out, const Math::vec2& v);
-	Emitter& operator<<(Emitter& out, const Math::vec3& v);
-	Emitter& operator<<(Emitter& out, const Math::vec4& v);
+	Emitter &operator<<(Emitter &out, const Chroma::GUID &v);
+	Emitter &operator<<(Emitter &out, const Chroma::EntityID &v);
+	Emitter &operator<<(Emitter &out, const Math::vec2 &v);
+	Emitter &operator<<(Emitter &out, const Math::vec3 &v);
+	Emitter &operator<<(Emitter &out, const Math::vec4 &v);
 	Emitter &operator<<(Emitter &out, const Math::uvec2 &v);
 	Emitter &operator<<(Emitter &out, const Math::uvec3 &v);
 	Emitter &operator<<(Emitter &out, const Math::uvec4 &v);
-	Emitter& operator<<(Emitter& out, const Chroma::Ref<Chroma::Asset>& v);
+	Emitter &operator<<(Emitter &out, const Chroma::Ref<Chroma::Asset> &v);
 }
-
-

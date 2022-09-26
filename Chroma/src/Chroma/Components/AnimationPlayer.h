@@ -5,7 +5,6 @@
 
 namespace Chroma
 {
-
 	class AnimationSystem;
 
 	struct AnimationPlayer : public Component
@@ -19,16 +18,16 @@ namespace Chroma
 		void Pause();
 		void Stop();
 
-		void SetAnimation(Animation* animation);
+		void SetAnimation(Animation *animation);
 
-		inline bool IsPlaying() { return m_Playing; }
+		bool IsPlaying() { return m_Playing; }
 
 	private:
 		bool m_Playing = false;
 		float m_Time = 0.f;
-		Animation* m_Current = nullptr;
+		Animation *m_Current = nullptr;
 		bool m_Reverse = false;
-		std::unordered_map<Chroma::Animation::Track*, std::multiset<Chroma::Animation::Keyframe, Chroma::Animation::TimeSort>::iterator> m_Keyframes;
+		std::unordered_map<Animation::Track *, std::multiset<Animation::Keyframe, Animation::TimeSort>::iterator> m_Keyframes;
 
 
 		friend class AnimationSystem;

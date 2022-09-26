@@ -10,7 +10,7 @@ namespace Chroma
 	{
 		m_Time = 0.f;
 		m_Keyframes.clear();
-		for (auto& track : m_Current->tracks)
+		for (auto &track : m_Current->tracks)
 		{
 			m_Keyframes[&track] = track.keyframes.begin();
 		}
@@ -33,7 +33,7 @@ namespace Chroma
 		m_Playing = false;
 	}
 
-	void AnimationPlayer::SetAnimation(Animation* animation)
+	void AnimationPlayer::SetAnimation(Animation *animation)
 	{
 		m_Time = 0.f;
 		m_Current = animation;
@@ -42,10 +42,7 @@ namespace Chroma
 	Reflection::TypeFactory<AnimationPlayer> AnimationPlayer::RegisterType()
 	{
 		return Reflection::Register<AnimationPlayer>("AnimationPlayer")
-				.Base<Component>()
-				.Data<&AnimationPlayer::PlayOnStart>("PlayOnStart");
+		       .Base<Component>()
+		       .Data<&AnimationPlayer::PlayOnStart>("PlayOnStart");
 	}
-
 }
-
-

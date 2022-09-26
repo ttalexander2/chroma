@@ -6,7 +6,6 @@
 
 namespace Chroma
 {
-
 	/// @brief Load the sprite from file.
 	/// 
 	/// This function loads the sprite from a file, if it exists.
@@ -15,38 +14,37 @@ namespace Chroma
 	/// @return Returns true if the sprite was loaded succesfully.
 	bool Sprite::Load()
 	{
-
-		if (!Chroma::FileSystem::Exists(GetPath()))
+		if (!FileSystem::Exists(GetPath()))
 		{
 			CHROMA_CORE_ERROR("Could not load sprite! The following path does not exist: {}", GetPath());
 			return false;
 		}
 
-
 		if (FileSystem::HasFileExtension(GetPath(), ".ase") || FileSystem::HasFileExtension(GetPath(), ".aseprite"))
 		{
-			Aseprite a = Aseprite(GetPath());
+			auto a = Aseprite(GetPath());
 
-			Chroma::Color* data = new Chroma::Color[a.width * a.height];
-			float width = 0.f; float height = 0.f;
+			auto data = new Color[a.width * a.height];
+			float width = 0.f;
+			float height = 0.f;
 
-			for (auto& frame : a.frames)
+			for (auto &frame : a.frames)
 			{
 				Frame fr;
 				fr.Durration = frame.duration;
-				fr.Texture = Chroma::Texture2D::Create(a.width, a.height);
+				fr.Texture = Texture2D::Create(a.width, a.height);
 				frame.image.FlipVertically();
 				frame.image.GetData(data);
-				fr.Texture->SetData(data, sizeof(Chroma::Color) * a.width * a.height);
+				fr.Texture->SetData(data, sizeof(Color) * a.width * a.height);
 				Frames.push_back(fr);
 
 				if (a.width > width)
-					width = (float)a.width;
+					width = static_cast<float>(a.width);
 				if (a.height > height)
-					height = (float)a.height;
+					height = static_cast<float>(a.height);
 			}
 
-			Size = { width, height };
+			m_Size = { width, height };
 			/*
 			if (a.frames.size() > 1 && a.tags.size() == 0)
 			{
@@ -59,10 +57,10 @@ namespace Chroma
 			}
 			*/
 
-			for (auto& tag : a.tags)
+			for (auto &tag : a.tags)
 			{
-				Chroma::Sprite::Animation anim;
-				anim.Direction = (Sprite::LoopDirection)tag.loops;
+				Animation anim;
+				anim.Direction = static_cast<LoopDirection>(tag.loops);
 				anim.Tag = tag.name;
 				anim.Start = tag.from;
 				anim.End = tag.to;
@@ -75,26 +73,23 @@ namespace Chroma
 
 			return true;
 		}
-		else if (FileSystem::HasFileExtension(GetPath(), ".png"))
+		if (FileSystem::HasFileExtension(GetPath(), ".png"))
 		{
 			Frame fr;
-			fr.Texture = Chroma::Texture2D::Create(GetPath());
+			fr.Texture = Texture2D::Create(GetPath());
 			Frames.push_back(fr);
-			Size = { fr.Texture->GetWidth(), fr.Texture->GetHeight() };
+			m_Size = { fr.Texture->GetWidth(), fr.Texture->GetHeight() };
 			return true;
 		}
-		else if (std::filesystem::path(GetPath()).extension() == ".jpg")
+		if (std::filesystem::path(GetPath()).extension() == ".jpg")
 		{
 			Frame fr;
-			fr.Texture = Chroma::Texture2D::Create(GetPath());
+			fr.Texture = Texture2D::Create(GetPath());
 			Frames.push_back(fr);
-			Size = { fr.Texture->GetWidth(), fr.Texture->GetHeight() };
+			m_Size = { fr.Texture->GetWidth(), fr.Texture->GetHeight() };
 			return true;
 		}
-		else
-		{
-			CHROMA_CORE_ERROR("Sprite type not supported: {}", std::filesystem::path(GetPath()).extension());
-		}
+		CHROMA_CORE_ERROR("Sprite type not supported: {}", std::filesystem::path(GetPath()).extension());
 
 		return false;
 	}

@@ -3,6 +3,5 @@
 
 namespace Chroma
 {
-
-	float Physics::m_Scale = 1/100.f;
+	float Physics::m_Scale = 1 / 100.f;
 }

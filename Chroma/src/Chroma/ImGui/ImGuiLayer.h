@@ -23,7 +23,7 @@ namespace Chroma
 
 		/// @brief Called on Events. Allows ImGuiLayer to handle its own events.
 		/// @param e Event to be handled.
-		virtual void OnEvent(Event& e);
+		virtual void OnEvent(Event &e);
 
 		/// @brief Begins the ImGui step for this frame.
 		void Begin();
@@ -33,11 +33,9 @@ namespace Chroma
 		/// @brief Tells the layer whether to block events.
 		/// @param block Layer will block events from other layers if true.
 		void BlockEvents(bool block) { m_BlockEvents = block; }
-										
-	private:			
+
+	private:
 		bool m_BlockEvents = true;
-		float m_Time;					
+		float m_Time;
 	};
 }
-
-

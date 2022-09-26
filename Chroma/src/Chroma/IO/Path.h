@@ -3,14 +3,13 @@
 
 namespace Chroma
 {
-
 	struct Path
 	{
 		Path() = default;
 		Path(const Path &) = default;
 		Path(Path &&) = default;
 		~Path() = default;
-		Path& operator=(const Path &) = default;
+		Path &operator=(const Path &) = default;
 		Path &operator=(Path &&) = default;
 
 		Path(const std::string &path);
@@ -33,11 +32,10 @@ namespace Chroma
 		bool Exists();
 		bool IsFile();
 		bool IsDirectory();
-		bool HasExtension(const std::string& extension);
+		bool HasExtension(const std::string &extension);
 
 
 	private:
 		std::string m_Path;
-
 	};
 }

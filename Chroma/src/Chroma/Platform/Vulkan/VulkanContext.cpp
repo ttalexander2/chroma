@@ -22,8 +22,7 @@
 
 namespace Chroma
 {
-
-	VulkanContext* VulkanContext::s_Instance = nullptr;
+	VulkanContext *VulkanContext::s_Instance = nullptr;
 
 #ifndef CHROMA_DEBUG
 	const bool enableValidationLayers = false;
@@ -33,24 +32,21 @@ namespace Chroma
 
 	const int MAX_FRAMES_IN_FLIGHT = 2;
 
-	const std::vector<const char*> validationLayers = {
+	const std::vector<const char *> validationLayers = {
 		"VK_LAYER_KHRONOS_validation"
 	};
 
-	const std::vector<const char*> deviceExtensions = {
+	const std::vector<const char *> deviceExtensions = {
 		VK_KHR_SWAPCHAIN_EXTENSION_NAME
 	};
 
 
-
-
-
-	VulkanContext::VulkanContext(GLFWwindow* windowHandle)
-		:m_WindowHandle(windowHandle)
+	VulkanContext::VulkanContext(GLFWwindow *windowHandle) :
+		m_WindowHandle(windowHandle)
 	{
 		CHROMA_CORE_ASSERT(windowHandle, "Window Handle is null!");
 		s_Instance = this;
-		glfwSetWindowUserPointer(windowHandle, (void*)this);
+		glfwSetWindowUserPointer(windowHandle, this);
 		glfwSetFramebufferSizeCallback(windowHandle, FramebufferResizeCallback);
 	}
 
@@ -71,7 +67,6 @@ namespace Chroma
 		}
 		vkDestroyCommandPool(m_Device, m_CommandPool, nullptr);
 
-		
 		vkDestroyDevice(m_Device, nullptr);
 		if (enableValidationLayers)
 		{
@@ -107,7 +102,6 @@ namespace Chroma
 		}
 
 		vkDeviceWaitIdle(m_Device);
-
 	}
 
 	void VulkanContext::SwapBuffers()
@@ -132,7 +126,6 @@ namespace Chroma
 		}
 
 		m_ImagesInFlight[imageIndex] = m_InFlightFences[m_CurrentFrame];
-
 
 		VkSubmitInfo submitInfo{};
 		submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
@@ -216,7 +209,6 @@ namespace Chroma
 
 		vkFreeCommandBuffers(m_Device, m_CommandPool, static_cast<uint32_t>(m_CommandBuffers.size()), m_CommandBuffers.data());
 
-
 		vkDestroyPipeline(m_Device, m_GraphicsPipeline, nullptr);
 		vkDestroyPipelineLayout(m_Device, m_PipelineLayout, nullptr);
 		vkDestroyRenderPass(m_Device, m_RenderPass, nullptr);
@@ -229,12 +221,10 @@ namespace Chroma
 
 	void VulkanContext::CreateInstance()
 	{
-
 		if (enableValidationLayers && !CheckValidationLayerSupport())
 		{
 			throw std::runtime_error("validation layers requested, but not available!");
 		}
-
 
 		VkApplicationInfo appInfo{};
 		appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
@@ -254,21 +244,20 @@ namespace Chroma
 		createInfo.ppEnabledExtensionNames = glfwExtensions.data();
 
 		VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo{};
-		
+
 		if (enableValidationLayers)
 		{
 			createInfo.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
 			createInfo.ppEnabledLayerNames = validationLayers.data();
 
 			PopulateDebugMessengerCreateInfo(debugCreateInfo);
-			createInfo.pNext = (VkDebugUtilsMessengerCreateInfoEXT*) &debugCreateInfo;
+			createInfo.pNext = &debugCreateInfo;
 		}
 		else
 		{
 			createInfo.enabledLayerCount = 0;
 			createInfo.pNext = nullptr;
 		}
-		
 
 		if (vkCreateInstance(&createInfo, nullptr, &m_Instance) != VK_SUCCESS)
 			throw std::runtime_error("Failed to create vkInstance");
@@ -279,12 +268,12 @@ namespace Chroma
 		std::vector<VkExtensionProperties> extensions(extensionCount);
 
 		vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, extensions.data());
-
 	}
 
 	void VulkanContext::SetupDebugMessenger()
 	{
-		if (!enableValidationLayers) return;
+		if constexpr (!enableValidationLayers)
+			return;
 
 		VkDebugUtilsMessengerCreateInfoEXT createInfo{};
 		PopulateDebugMessengerCreateInfo(createInfo);
@@ -293,7 +282,6 @@ namespace Chroma
 		{
 			throw std::runtime_error("Failed to set up debug messenger!");
 		}
-
 	}
 
 	void VulkanContext::CreateSurface()
@@ -320,7 +308,7 @@ namespace Chroma
 			throw std::runtime_error("Failed to find GPUs with Vulkan support!");
 		}
 
-		for (const auto& device : devices)
+		for (const auto &device : devices)
 		{
 			if (IsDeviceSuitable(device))
 			{
@@ -354,7 +342,7 @@ namespace Chroma
 		}
 
 		VkPhysicalDeviceFeatures deviceFeatures{};
-		
+
 		VkDeviceCreateInfo createInfo{};
 		createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
 
@@ -375,7 +363,6 @@ namespace Chroma
 		{
 			createInfo.enabledLayerCount = 0;
 		}
-
 
 		if (vkCreateDevice(m_PhysicalDevice, &createInfo, nullptr, &m_Device) != VK_SUCCESS)
 		{
@@ -441,14 +428,12 @@ namespace Chroma
 			throw std::runtime_error("Failed to create swap chain!");
 		}
 
-
 		vkGetSwapchainImagesKHR(m_Device, m_Swapchain, &imageCount, nullptr);
 		m_SwapchainImages.resize(imageCount);
 		vkGetSwapchainImagesKHR(m_Device, m_Swapchain, &imageCount, m_SwapchainImages.data());
 
 		m_SwapchainImageFormat = surfaceFormat.format;
 		m_SwapchainExtent = extent;
-
 	}
 
 	void VulkanContext::CreateImageViews()
@@ -467,7 +452,7 @@ namespace Chroma
 			createInfo.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
 			createInfo.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
 			createInfo.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
-			
+
 			createInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
 			createInfo.subresourceRange.baseMipLevel = 0;
 			createInfo.subresourceRange.levelCount = 1;
@@ -478,7 +463,6 @@ namespace Chroma
 			{
 				throw std::runtime_error("Failed to create image views!");
 			}
-
 		}
 	}
 
@@ -531,7 +515,6 @@ namespace Chroma
 
 	void VulkanContext::CreateGraphicsPipeline()
 	{
-
 		VkPipelineVertexInputStateCreateInfo vertexInputInfo{};
 		vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
 		vertexInputInfo.vertexBindingDescriptionCount = 0;
@@ -547,8 +530,8 @@ namespace Chroma
 		VkViewport viewport{};
 		viewport.x = 0.0f;
 		viewport.y = 0.0f;
-		viewport.width = (float)m_SwapchainExtent.width;
-		viewport.height = (float)m_SwapchainExtent.height;
+		viewport.width = static_cast<float>(m_SwapchainExtent.width);
+		viewport.height = static_cast<float>(m_SwapchainExtent.height);
 		viewport.minDepth = 0.0f;
 		viewport.maxDepth = 1.0f;
 
@@ -633,7 +616,7 @@ namespace Chroma
 		VkGraphicsPipelineCreateInfo pipelineInfo{};
 		pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
 		pipelineInfo.stageCount = 2;
-		pipelineInfo.pStages = reinterpret_cast<const VkPipelineShaderStageCreateInfo*>(shader.m_ShaderStageCreateInfo.data());
+		pipelineInfo.pStages = reinterpret_cast<const VkPipelineShaderStageCreateInfo *>(shader.m_ShaderStageCreateInfo.data());
 
 		pipelineInfo.pVertexInputState = &vertexInputInfo;
 		pipelineInfo.pInputAssemblyState = &inputAssembly;
@@ -655,8 +638,6 @@ namespace Chroma
 		{
 			throw std::runtime_error("Failed to create graphics pipeline!");
 		}
-
-
 	}
 
 	void VulkanContext::CreateFramebuffers()
@@ -682,7 +663,6 @@ namespace Chroma
 			{
 				throw std::runtime_error("Failed to create framebuffer!");
 			}
-
 		}
 	}
 
@@ -699,8 +679,6 @@ namespace Chroma
 		{
 			throw std::runtime_error("Failed to create command pool!");
 		}
-
-
 	}
 
 	void VulkanContext::CreateCommandBuffers()
@@ -711,8 +689,8 @@ namespace Chroma
 		allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
 		allocInfo.commandPool = m_CommandPool;
 		allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-		allocInfo.commandBufferCount = (uint32_t)m_CommandBuffers.size();
-		
+		allocInfo.commandBufferCount = static_cast<uint32_t>(m_CommandBuffers.size());
+
 		if (vkAllocateCommandBuffers(m_Device, &allocInfo, m_CommandBuffers.data()) != VK_SUCCESS)
 		{
 			throw std::runtime_error("Failed to allocate command buffers!");
@@ -735,10 +713,10 @@ namespace Chroma
 			renderPassInfo.renderPass = m_RenderPass;
 			renderPassInfo.framebuffer = m_SwapchainFramebuffers[i];
 
-			renderPassInfo.renderArea.offset = { 0,0 };
+			renderPassInfo.renderArea.offset = { 0, 0 };
 			renderPassInfo.renderArea.extent = m_SwapchainExtent;
 
-			VkClearValue clearColor = { {{0.0f, 0.0f, 0.0f, 1.0f}} };
+			VkClearValue clearColor = { { { 0.0f, 0.0f, 0.0f, 1.0f } } };
 			renderPassInfo.clearValueCount = 1;
 			renderPassInfo.pClearValues = &clearColor;
 
@@ -764,14 +742,12 @@ namespace Chroma
 		m_InFlightFences.resize(MAX_FRAMES_IN_FLIGHT);
 		m_ImagesInFlight.resize(m_SwapchainImages.size(), VK_NULL_HANDLE);
 
-
 		VkSemaphoreCreateInfo semaphoreInfo{};
 		semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
 
 		VkFenceCreateInfo fenceInfo{};
 		fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
 		fenceInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
-
 
 		for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++)
 		{
@@ -782,7 +758,6 @@ namespace Chroma
 				throw std::runtime_error("Failed to create synchronozation objects for frame!");
 			}
 		}
-
 	}
 
 
@@ -819,7 +794,7 @@ namespace Chroma
 		vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, queueFamilies.data());
 
 		int i = 0;
-		for (const auto& queueFamily : queueFamilies)
+		for (const auto &queueFamily : queueFamilies)
 		{
 			if (queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT)
 			{
@@ -837,7 +812,6 @@ namespace Chroma
 			if (indices.IsComplete())
 				break;
 
-
 			i++;
 		}
 		return indices;
@@ -853,7 +827,7 @@ namespace Chroma
 
 		std::set<std::string> requiredExtensions(deviceExtensions.begin(), deviceExtensions.end());
 
-		for (const auto& extension : availableExtensions)
+		for (const auto &extension : availableExtensions)
 		{
 			requiredExtensions.erase(extension.extensionName);
 		}
@@ -888,9 +862,9 @@ namespace Chroma
 		return details;
 	}
 
-	VkSurfaceFormatKHR VulkanContext::ChooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats)
+	VkSurfaceFormatKHR VulkanContext::ChooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR> &availableFormats)
 	{
-		for (const auto& availableFormat : availableFormats)
+		for (const auto &availableFormat : availableFormats)
 		{
 			if (availableFormat.format == VK_FORMAT_B8G8R8A8_SRGB && availableFormat.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR)
 			{
@@ -900,11 +874,10 @@ namespace Chroma
 		return availableFormats[0];
 	}
 
-	VkPresentModeKHR VulkanContext::ChooseSwapPresetMode(const std::vector<VkPresentModeKHR>& availablePresentModes)
+	VkPresentModeKHR VulkanContext::ChooseSwapPresetMode(const std::vector<VkPresentModeKHR> &availablePresentModes)
 	{
-
 		//Prefer tripple buffering if available
-		for (const auto& availablePresentMode : availablePresentModes)
+		for (const auto &availablePresentMode : availablePresentModes)
 		{
 			if (availablePresentMode == VK_PRESENT_MODE_MAILBOX_KHR)
 			{
@@ -915,33 +888,30 @@ namespace Chroma
 		return VK_PRESENT_MODE_FIFO_KHR;
 	}
 
-	VkExtent2D VulkanContext::ChooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities)
+	VkExtent2D VulkanContext::ChooseSwapExtent(const VkSurfaceCapabilitiesKHR &capabilities)
 	{
 		if (capabilities.currentExtent.width != UINT32_MAX)
 		{
 			return capabilities.currentExtent;
 		}
-		else
-		{
-			int width, height;
-			glfwGetFramebufferSize(m_WindowHandle, &width, &height);
+		int width, height;
+		glfwGetFramebufferSize(m_WindowHandle, &width, &height);
 
-			VkExtent2D actualExtent = {
-				static_cast<uint32_t>(width),
-				static_cast<uint32_t>(height)
-			};
+		VkExtent2D actualExtent = {
+			static_cast<uint32_t>(width),
+			static_cast<uint32_t>(height)
+		};
 
-			actualExtent.width = std::clamp(actualExtent.width, capabilities.minImageExtent.width, capabilities.maxImageExtent.width);
-			actualExtent.height = std::clamp(actualExtent.height, capabilities.minImageExtent.height, capabilities.maxImageExtent.height);
+		actualExtent.width = std::clamp(actualExtent.width, capabilities.minImageExtent.width, capabilities.maxImageExtent.width);
+		actualExtent.height = std::clamp(actualExtent.height, capabilities.minImageExtent.height, capabilities.maxImageExtent.height);
 
-			return actualExtent;
-		}
+		return actualExtent;
 	}
 
 	uint32_t VulkanContext::FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties)
 	{
 		VkPhysicalDeviceMemoryProperties memProps;
-		vkGetPhysicalDeviceMemoryProperties(VulkanContext::GetPhysicalDevice(), &memProps);
+		vkGetPhysicalDeviceMemoryProperties(GetPhysicalDevice(), &memProps);
 
 		for (uint32_t i = 0; i < memProps.memoryTypeCount; i++)
 		{
@@ -954,7 +924,7 @@ namespace Chroma
 		throw std::runtime_error("Failed to find a suitable memory type!");
 	}
 
-	void VulkanContext::CreateBuffer(VkDevice device, VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory)
+	void VulkanContext::CreateBuffer(VkDevice device, VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer &buffer, VkDeviceMemory &bufferMemory)
 	{
 		VkBufferCreateInfo bufferInfo{};
 		bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
@@ -1027,11 +997,11 @@ namespace Chroma
 		std::vector<VkLayerProperties> availableLayers(layer_count);
 		vkEnumerateInstanceLayerProperties(&layer_count, availableLayers.data());
 
-		for (const char* layerName : validationLayers)
+		for (const char *layerName : validationLayers)
 		{
 			bool layerFound = false;
 
-			for (const auto& layerProperties : availableLayers)
+			for (const auto &layerProperties : availableLayers)
 			{
 				if (strcmp(layerName, layerProperties.layerName) == 0)
 				{
@@ -1050,13 +1020,13 @@ namespace Chroma
 	}
 
 
-	std::vector<const char*> VulkanContext::GetRequiredExtensions()
+	std::vector<const char *> VulkanContext::GetRequiredExtensions()
 	{
 		uint32_t glfwExtensionCount = 0;
-		const char** glfwExtensions;
+		const char **glfwExtensions;
 		glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
 
-		std::vector<const char*> extensions(glfwExtensions, glfwExtensions + glfwExtensionCount);
+		std::vector<const char *> extensions(glfwExtensions, glfwExtensions + glfwExtensionCount);
 
 		if (enableValidationLayers)
 		{
@@ -1067,40 +1037,40 @@ namespace Chroma
 	}
 
 
-	VKAPI_ATTR VkBool32 VKAPI_CALL VulkanContext::DebugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void* pUserData)
+	VKAPI_ATTR VkBool32 VKAPI_CALL VulkanContext::DebugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT *pCallbackData, void *pUserData)
 	{
 		switch (messageSeverity)
 		{
-			case VkDebugUtilsMessageSeverityFlagBitsEXT::VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT: CHROMA_CORE_TRACE("VULKAN: {}", pCallbackData->pMessage); break;
-			case VkDebugUtilsMessageSeverityFlagBitsEXT::VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT: CHROMA_CORE_INFO("VULKAN: {}", pCallbackData->pMessage); break;
-			case VkDebugUtilsMessageSeverityFlagBitsEXT::VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT: CHROMA_CORE_WARN("VULKAN: {}", pCallbackData->pMessage); break;
-			case VkDebugUtilsMessageSeverityFlagBitsEXT::VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT: CHROMA_CORE_ERROR("VULKAN: {}", pCallbackData->pMessage); break;
+			case VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT: CHROMA_CORE_TRACE("VULKAN: {}", pCallbackData->pMessage);
+				break;
+			case VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT: CHROMA_CORE_INFO("VULKAN: {}", pCallbackData->pMessage);
+				break;
+			case VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT: CHROMA_CORE_WARN("VULKAN: {}", pCallbackData->pMessage);
+				break;
+			case VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT: CHROMA_CORE_ERROR("VULKAN: {}", pCallbackData->pMessage);
+				break;
 		}
-		
 
 		return VK_FALSE;
 	}
 
-	void VulkanContext::FramebufferResizeCallback(GLFWwindow* window, int width, int height)
+	void VulkanContext::FramebufferResizeCallback(GLFWwindow *window, int width, int height)
 	{
-		auto context = reinterpret_cast<VulkanContext*>(glfwGetWindowUserPointer(window));
+		auto context = reinterpret_cast<VulkanContext *>(glfwGetWindowUserPointer(window));
 		context->m_FramebufferResized = true;
 	}
 
-	VkResult VulkanContext::CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger)
+	VkResult VulkanContext::CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT *pCreateInfo, const VkAllocationCallbacks *pAllocator, VkDebugUtilsMessengerEXT *pDebugMessenger)
 	{
 		auto func = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT");
 		if (func != nullptr)
 		{
 			return func(instance, pCreateInfo, pAllocator, pDebugMessenger);
 		}
-		else
-		{
-			return VK_ERROR_EXTENSION_NOT_PRESENT;
-		}
+		return VK_ERROR_EXTENSION_NOT_PRESENT;
 	}
 
-	void VulkanContext::DestroyDebugUtiilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator)
+	void VulkanContext::DestroyDebugUtiilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks *pAllocator)
 	{
 		auto func = (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkDestroyDebugUtilsMessengerEXT");
 		if (func != nullptr)
@@ -1109,7 +1079,7 @@ namespace Chroma
 		}
 	}
 
-	void VulkanContext::PopulateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo)
+	void VulkanContext::PopulateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT &createInfo)
 	{
 		createInfo = {};
 		createInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
@@ -1117,7 +1087,5 @@ namespace Chroma
 		createInfo.messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
 		createInfo.pfnUserCallback = DebugCallback;
 		createInfo.pUserData = nullptr;
-
 	}
-
 }

@@ -16,6 +16,6 @@ namespace Chroma
 		/// @brief Editor Order
 		unsigned int Ordering = 0;
 
-		const inline void SetEnabled(bool enabled) override { m_Enabled = true; }
+		const void SetEnabled(bool enabled) override { m_Enabled = true; }
 	};
 }

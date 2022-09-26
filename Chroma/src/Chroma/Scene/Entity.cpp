@@ -6,13 +6,14 @@
 
 namespace Chroma
 {
-	Entity::Entity(EntityID id)
-		: m_EntityID(id)
+	Entity::Entity(EntityID id) :
+		m_EntityID(id)
 	{
 	}
 
-	Entity::Entity(EntityID id, Scene* scene)
-		: m_EntityID(id), m_Scene(scene)
+	Entity::Entity(EntityID id, Scene *scene) :
+		m_EntityID(id),
+		m_Scene(scene)
 	{
 	}
 
@@ -49,8 +50,7 @@ namespace Chroma
 		return m_Scene->NewChild(m_EntityID);
 	}
 
-	void Entity::SetName(const std::string& name)
+	void Entity::SetName(const std::string &name)
 	{
-		
 	}
 }

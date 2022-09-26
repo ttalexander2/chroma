@@ -28,10 +28,6 @@ namespace Chroma
 		/// @return mat4 transform.
 		Math::mat4 GetTransform() const;
 
-		const inline void SetEnabled(bool enabled) override { m_Enabled = true; }
-		
-
+		const void SetEnabled(bool enabled) override { m_Enabled = true; }
 	};
 }
-
-

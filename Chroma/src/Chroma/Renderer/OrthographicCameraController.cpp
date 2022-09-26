@@ -6,11 +6,11 @@
 
 namespace Chroma
 {
-
-	OrthographicCameraController::OrthographicCameraController(float aspect_ratio, bool rotation)
-		: m_AspectRatio(aspect_ratio), m_Camera(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel), m_Rotation(rotation)
+	OrthographicCameraController::OrthographicCameraController(float aspect_ratio, bool rotation) :
+		m_AspectRatio(aspect_ratio),
+		m_Camera(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel),
+		m_Rotation(rotation)
 	{
-
 	}
 
 	void OrthographicCameraController::OnUpdate(Time ts)
@@ -37,14 +37,14 @@ namespace Chroma
 		m_Camera.SetPosition(m_CameraPosition);
 	}
 
-	void OrthographicCameraController::OnEvent(Event& e)
+	void OrthographicCameraController::OnEvent(Event &e)
 	{
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<MouseScrolledEvent>(CHROMA_BIND_EVENT_FN(OrthographicCameraController::OnMouseScrolled));
 		dispatcher.Dispatch<WindowResizeEvent>(CHROMA_BIND_EVENT_FN(OrthographicCameraController::OnWindowResized));
 	}
 
-	bool OrthographicCameraController::OnMouseScrolled(MouseScrolledEvent& e)
+	bool OrthographicCameraController::OnMouseScrolled(MouseScrolledEvent &e)
 	{
 		m_ZoomLevel -= e.getYOffset() * 2.0f;
 		m_ZoomLevel = std::max(m_ZoomLevel, 0.25f);
@@ -52,7 +52,7 @@ namespace Chroma
 		return false;
 	}
 
-	bool OrthographicCameraController::OnWindowResized(WindowResizeEvent& e)
+	bool OrthographicCameraController::OnWindowResized(WindowResizeEvent &e)
 	{
 		//m_AspectRatio = (float)e.GetWidth() / (float)e.GetHeight();
 		//m_Camera.SetProjection(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);

@@ -12,18 +12,19 @@ namespace Chroma
 		/// @brief Constructs a window resize event.
 		/// @param width New width of the window.
 		/// @param height New height of the window.
-		WindowResizeEvent(unsigned int width, unsigned int height)
-			: m_Width(width), m_Height(height)
+		WindowResizeEvent(unsigned int width, unsigned int height) :
+			m_Width(width),
+			m_Height(height)
 		{
 		}
 
 		/// @brief Get the width of the newly resized window.
 		/// @return Width in pixels.
-		inline unsigned int GetWidth() const { return m_Width; }
+		unsigned int GetWidth() const { return m_Width; }
 
 		/// @brief Get the height of the newly resized window.
 		/// @return Height in pixels.
-		inline unsigned int GetHeight() const { return m_Height; }
+		unsigned int GetHeight() const { return m_Height; }
 
 		/// @brief Converts the window resize event information to a string.
 		/// @return Window resize as a std::string.
@@ -37,7 +38,6 @@ namespace Chroma
 		EVENT_CLASS_TYPE(WindowResize)
 		EVENT_CLASS_CATEGORY(EventCategoryApplication)
 	private:
-
 		/// @brief Width and Height of the window.
 		unsigned int m_Width, m_Height;
 	};
@@ -47,9 +47,10 @@ namespace Chroma
 	class CHROMA_API WindowCloseEvent : public Event
 	{
 	public:
-
 		/// @brief Constructs a window close event.
-		WindowCloseEvent() {}
+		WindowCloseEvent()
+		{
+		}
 
 		EVENT_CLASS_TYPE(WindowClose)
 		EVENT_CLASS_CATEGORY(EventCategoryApplication)
@@ -60,7 +61,9 @@ namespace Chroma
 	{
 	public:
 		/// @brief Constructs an app update event.
-		AppUpdateEvent() {}
+		AppUpdateEvent()
+		{
+		}
 
 		EVENT_CLASS_TYPE(AppUpdate)
 		EVENT_CLASS_CATEGORY(EventCategoryApplication)
@@ -71,7 +74,9 @@ namespace Chroma
 	{
 	public:
 		/// @brief Constructs an app render event.
-		AppRenderEvent() {}
+		AppRenderEvent()
+		{
+		}
 
 		EVENT_CLASS_TYPE(AppRender)
 		EVENT_CLASS_CATEGORY(EventCategoryApplication)

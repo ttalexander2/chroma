@@ -4,7 +4,7 @@
 #include "Chroma/Renderer/Shader.h"
 
 // TODO REMOVE
-typedef unsigned int GLenum;
+using GLenum = unsigned int;
 
 namespace Chroma
 {
@@ -14,16 +14,16 @@ namespace Chroma
 	public:
 		/// @brief Construct an OpenGL shader from a file.
 		/// @param filePath Path to the GLSL shader.
-		OpenGLShader(const std::string& filePath);
+		OpenGLShader(const std::string &filePath);
 
 		/// @brief Construct an OpenGL shader from a string source.
 		/// @param name Name of the shader
 		/// @param vertexSrc Vertex shader source.
 		/// @param fragmentSrc Fragment shader source.
-		OpenGLShader(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc);
+		OpenGLShader(const std::string &name, const std::string &vertexSrc, const std::string &fragmentSrc);
 
 		/// Destroys the shader.
-		~OpenGLShader();
+		~OpenGLShader() override;
 
 		/// @brief Binds a shader for use.
 		void Bind() const override;
@@ -33,103 +33,103 @@ namespace Chroma
 
 		/// @brief Gets the name of the shader.
 		/// @return Shader's name.
-		virtual std::string GetName() const override { return m_Name; }
+		std::string GetName() const override { return m_Name; }
 
 		/// @brief Sets a shader uniform value.
 		/// @param name Name of the uniform value.
 		/// @param value Uniform value.
-		virtual void SetUniformInt(const std::string& name, int value) override;
+		void SetUniformInt(const std::string &name, int value) override;
 
 		/// @brief Sets multiple shader uniform values.
 		/// @param name Name of the uniform values.
 		/// @param value Array of uniform values.
-		virtual void SetUniformIntArray(const std::string& name, int* values, int count) override;
+		void SetUniformIntArray(const std::string &name, int *values, int count) override;
 
 		/// @brief Sets a shader uniform value.
 		/// @param name Name of the uniform value.
 		/// @param value Uniform value.
-		virtual void SetUniformFloat(const std::string& name, float value) override;
+		void SetUniformFloat(const std::string &name, float value) override;
 
 		/// @brief Sets a shader uniform value.
 		/// @param name Name of the uniform value.
 		/// @param value Uniform value.
-		virtual void SetUniformFloat2(const std::string& name, const glm::vec2& value) override;
+		void SetUniformFloat2(const std::string &name, const glm::vec2 &value) override;
 
 		/// @brief Sets a shader uniform value.
 		/// @param name Name of the uniform value.
 		/// @param value Uniform value.
-		virtual void SetUniformFloat3(const std::string& name, const glm::vec3& value) override;
+		void SetUniformFloat3(const std::string &name, const glm::vec3 &value) override;
 
 		/// @brief Sets a shader uniform value.
 		/// @param name Name of the uniform value.
 		/// @param value Uniform value.
-		virtual void SetUniformFloat4(const std::string& name, const glm::vec4& value) override;
+		void SetUniformFloat4(const std::string &name, const glm::vec4 &value) override;
 
 		/// @brief Sets a shader uniform value.
 		/// @param name Name of the uniform value.
 		/// @param value Uniform value.
-		virtual void SetUniformMat3(const std::string& name, const glm::mat3& value) override;
+		void SetUniformMat3(const std::string &name, const glm::mat3 &value) override;
 
 		/// @brief Sets a shader uniform value.
 		/// @param name Name of the uniform value.
 		/// @param value Uniform value.
-		virtual void SetUniformMat4(const std::string& name, const glm::mat4& value) override;
+		void SetUniformMat4(const std::string &name, const glm::mat4 &value) override;
 
 		/// @brief Uploads a shader uniform value.
 		/// @param name Name of the uniform value.
 		/// @param value Uniform value.
-		void UploadUniformInt(const std::string& name, int value);
+		void UploadUniformInt(const std::string &name, int value);
 
 		/// @brief Uploads multiple shader uniform values.
 		/// @param name Name of the uniform values.
 		/// @param value Array of uniform values.
-		void UploadUniformIntArray(const std::string& name, int* values, int count);
+		void UploadUniformIntArray(const std::string &name, int *values, int count);
 
 		/// @brief Uploads a shader uniform value.
 		/// @param name Name of the uniform value.
 		/// @param value Uniform value.
-		void UploadUniformFloat(const std::string& name, float value);
+		void UploadUniformFloat(const std::string &name, float value);
 
 		/// @brief Uploads a shader uniform value.
 		/// @param name Name of the uniform value.
 		/// @param value Uniform value.
-		void UploadUniformFloat2(const std::string& name, const glm::vec2& value);
+		void UploadUniformFloat2(const std::string &name, const glm::vec2 &value);
 
 		/// @brief Uploads a shader uniform value.
 		/// @param name Name of the uniform value.
 		/// @param value Uniform value.
-		void UploadUniformFloat3(const std::string& name, const glm::vec3& value);
+		void UploadUniformFloat3(const std::string &name, const glm::vec3 &value);
 
 		/// @brief Uploads a shader uniform value.
 		/// @param name Name of the uniform value.
 		/// @param value Uniform value.
-		void UploadUniformFloat4(const std::string& name, const glm::vec4& value);
+		void UploadUniformFloat4(const std::string &name, const glm::vec4 &value);
 
 		/// @brief Uploads a shader uniform value.
 		/// @param name Name of the uniform value.
 		/// @param value Uniform value.
-		void UploadUniformMat3(const std::string& name, const glm::mat3& value);
+		void UploadUniformMat3(const std::string &name, const glm::mat3 &value);
 
 		/// @brief Uploads a shader uniform value.
 		/// @param name Name of the uniform value.
 		/// @param value Uniform value.
-		void UploadUniformMat4(const std::string& name, const glm::mat4& value);
+		void UploadUniformMat4(const std::string &name, const glm::mat4 &value);
 
 	private:
 		/// @brief Read shader from file.
 		/// @param filePath Path to GLSL shader.
 		/// @return Shader source.
-		std::string ReadFile(const std::string& filePath);
+		std::string ReadFile(const std::string &filePath);
 
 		/// @brief Preprocess the shader and store the results on the GPU.
 		/// @param source Source of the shader.
 		/// @return Resulting OpenGL handle for the shader.
-		std::unordered_map<GLenum, std::string> PreProcess(const std::string& source);
+		std::unordered_map<GLenum, std::string> PreProcess(const std::string &source);
 
-		void CompileOrGetVulkanBinaries(const std::unordered_map<GLenum, std::string>& shaderSources);
+		void CompileOrGetVulkanBinaries(const std::unordered_map<GLenum, std::string> &shaderSources);
 		void CompileOrGetOpenGLBinaries();
 		void CreateProgram();
-		void Reflect(GLenum stage, const std::vector<uint32_t>& shaderData);
+		void Reflect(GLenum stage, const std::vector<uint32_t> &shaderData);
 
 	private:
 		uint32_t m_RendererID;

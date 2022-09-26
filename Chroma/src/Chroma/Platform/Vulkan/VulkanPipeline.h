@@ -7,15 +7,15 @@ namespace Chroma
 	class VulkanPipeline : public Pipeline
 	{
 	public:
-		VulkanPipeline(const PipelineSpecification& spec);
-		virtual ~VulkanPipeline();
+		VulkanPipeline(const PipelineSpecification &spec);
+		~VulkanPipeline() override;
 
-		virtual PipelineSpecification& GetSpecification() override { return m_Spec; }
-		virtual const PipelineSpecification& GetSpecification() const override { return m_Spec; }
+		PipelineSpecification &GetSpecification() override { return m_Spec; }
+		const PipelineSpecification &GetSpecification() const override { return m_Spec; }
 
-		virtual void Initialize() override;
+		void Initialize() override;
 
-		virtual void Bind() override;
+		void Bind() override;
 
 
 	private:

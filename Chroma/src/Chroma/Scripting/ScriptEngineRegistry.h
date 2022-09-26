@@ -9,5 +9,3 @@ namespace Chroma
 		static void RegisterAll();
 	};
 }
-
-

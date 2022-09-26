@@ -9,6 +9,6 @@ Chroma::VulkanUniformBuffer::~VulkanUniformBuffer()
 {
 }
 
-void Chroma::VulkanUniformBuffer::SetData(const void* data, uint32_t size, uint32_t offset)
+void Chroma::VulkanUniformBuffer::SetData(const void *data, uint32_t size, uint32_t offset)
 {
 }

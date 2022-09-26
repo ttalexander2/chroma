@@ -10,4 +10,3 @@ namespace Chroma
 		void LateUpdate(Time delta) override;
 	};
 }
-

@@ -12,8 +12,8 @@ namespace Chroma
 		auto view = m_Scene->Registry.view<Camera, Transform>();
 		for (EntityID e : view)
 		{
-			auto& cam = view.get<Camera>(e);
-			auto& transform = view.get<Transform>(e);
+			auto &cam = view.get<Camera>(e);
+			auto &transform = view.get<Transform>(e);
 			cam.SetPosition(transform.Position);
 			if (cam.dirty)
 			{
@@ -28,12 +28,12 @@ namespace Chroma
 		auto view = m_Scene->Registry.view<Camera, Transform>();
 		for (EntityID e : view)
 		{
-			auto& cam = view.get<Camera>(e);
+			auto &cam = view.get<Camera>(e);
 
 			if (!cam.IsEnabled())
 				continue;
 
-			auto& transform = view.get<Transform>(e);
+			auto &transform = view.get<Transform>(e);
 			cam.SetPosition(transform.Position);
 			if (cam.dirty)
 			{
@@ -43,4 +43,3 @@ namespace Chroma
 		}
 	}
 }
-

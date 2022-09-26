@@ -6,21 +6,16 @@
 #include "GLFW/glfw3.h"
 
 
-
 namespace Chroma
 {
-
-
-	void Clipboard::Write(const std::string& text)
+	void Clipboard::Write(const std::string &text)
 	{
-		glfwSetClipboardString((GLFWwindow*)Application::Get().GetWindow().GetNativeWindow(), text.c_str());
+		glfwSetClipboardString(static_cast<GLFWwindow *>(Application::Get().GetWindow().GetNativeWindow()), text.c_str());
 	}
 
 	std::string Clipboard::Read()
 	{
-		const char* text = glfwGetClipboardString((GLFWwindow*)Application::Get().GetWindow().GetNativeWindow());
+		const char *text = glfwGetClipboardString(static_cast<GLFWwindow *>(Application::Get().GetWindow().GetNativeWindow()));
 		return text;
 	}
-
-
 }

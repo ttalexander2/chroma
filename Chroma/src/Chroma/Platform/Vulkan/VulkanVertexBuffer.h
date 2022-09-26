@@ -5,22 +5,20 @@
 
 namespace Chroma
 {
-
-
 	class VulkanVertexBuffer : public VertexBuffer
 	{
 	public:
 		VulkanVertexBuffer(uint32_t size, VertexBufferUsage usage);
-		VulkanVertexBuffer(float* vertices, uint32_t size, VertexBufferUsage usage);
-		~VulkanVertexBuffer();
+		VulkanVertexBuffer(float *vertices, uint32_t size, VertexBufferUsage usage);
+		~VulkanVertexBuffer() override;
 
-		virtual void Bind() const override;
+		void Bind() const override;
 
-		virtual void SetData(const void* data, uint32_t size, uint32_t offset) override;
+		void SetData(const void *data, uint32_t size, uint32_t offset) override;
 
-		virtual const VertexBufferLayout& GetLayout() const override { return m_Layout; }
-		virtual void SetLayout(const VertexBufferLayout& layout) override { m_Layout = layout; }
-		virtual uint32_t GetSize() const override { return m_Size; }
+		const VertexBufferLayout &GetLayout() const override { return m_Layout; }
+		void SetLayout(const VertexBufferLayout &layout) override { m_Layout = layout; }
+		uint32_t GetSize() const override { return m_Size; }
 
 		//VULKAN SPECIFIC
 		VkVertexInputBindingDescription GetBindingDescription();
@@ -35,6 +33,4 @@ namespace Chroma
 		VkBuffer m_VertexBuffer = VK_NULL_HANDLE;
 		VkDeviceMemory m_VertexMemory = VK_NULL_HANDLE;
 	};
-
-
 }

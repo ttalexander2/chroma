@@ -96,7 +96,7 @@ namespace Chroma
 		return m_Shape.m_count;
 	}
 
-	bool PolygonCollider::GetVertex(PolygonCollider::Vertex *out, int32_t index)
+	bool PolygonCollider::GetVertex(Vertex *out, int32_t index)
 	{
 		if (index >= m_Shape.m_count)
 			return false;
@@ -115,7 +115,7 @@ namespace Chroma
 	void PolygonCollider::SetVertices(const std::vector<Vertex> &vertices)
 	{
 		int i = 0;
-		for (const Vertex& v : vertices)
+		for (const Vertex &v : vertices)
 		{
 			if (i >= MaxVertices)
 				break;
@@ -126,5 +126,4 @@ namespace Chroma
 			i++;
 		}
 	}
-
 }

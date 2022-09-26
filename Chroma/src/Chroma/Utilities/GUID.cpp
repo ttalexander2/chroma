@@ -8,8 +8,6 @@
 
 namespace Chroma
 {
-
-
 	uint8_t RandomUnsignedChar()
 	{
 		std::random_device random;
@@ -22,11 +20,11 @@ namespace Chroma
 	{
 		GUID result;
 		uint8_t vals[4] = { RandomUnsignedChar(), RandomUnsignedChar(), RandomUnsignedChar(), RandomUnsignedChar() };
-		result.Data1 = *(uint32_t*)vals;
+		result.Data1 = *(uint32_t *)vals;
 		uint8_t vals2[2] = { RandomUnsignedChar(), RandomUnsignedChar() };
-		result.Data2 = *(uint16_t*)vals2;
+		result.Data2 = *(uint16_t *)vals2;
 		uint8_t vals3[2] = { RandomUnsignedChar(), RandomUnsignedChar() };
-		result.Data3 = *(uint16_t*)vals3;
+		result.Data3 = *(uint16_t *)vals3;
 		for (int i = 0; i < 8; i++)
 		{
 			result.Data4[i] = RandomUnsignedChar();
@@ -34,18 +32,18 @@ namespace Chroma
 		return result;
 	}
 
-	const GUID GUID::Parse(const std::string& guid)
+	const GUID GUID::Parse(const std::string &guid)
 	{
 		std::string s = guid;
-		
+
 		//convert the string to lowercase
 		std::locale loc;
 		for (std::string::size_type i = 0; i < s.length(); i++)
 			s[i] = std::tolower(s[i], loc);
 
 		//Remove non aphanumeric characters
-		s.erase(std::remove_if(s.begin(), s.end(), [](char c) { return !std::isalnum(c); }), s.end());
-		
+		std::erase_if(s, [](char c) { return !std::isalnum(c); });
+
 		size_t pos = std::string::npos;
 
 		std::string toErase("0x");
@@ -54,7 +52,7 @@ namespace Chroma
 			s.erase(pos, toErase.length());
 
 		if (s.length() != 32)
-			return GUID::Zero();
+			return Zero();
 
 		GUID result{};
 		result.Data1 = static_cast<uint32_t>(std::stoll(s.substr(0, 8), nullptr, 16));
@@ -66,8 +64,6 @@ namespace Chroma
 		}
 
 		return result;
-		
-
 	}
 
 	const GUID GUID::Zero()
@@ -95,7 +91,7 @@ namespace Chroma
 		for (int i = 0; i < 8; i++)
 		{
 			stream = std::ostringstream();
-			stream << std::hex << std::uppercase << std::setw(2) << std::setfill('0') << (int)Data4[i];
+			stream << std::hex << std::uppercase << std::setw(2) << std::setfill('0') << static_cast<int>(Data4[i]);
 			result += stream.str();
 			if (i == 1)
 				result += "-";
@@ -104,14 +100,13 @@ namespace Chroma
 		return result;
 	}
 
-	bool GUID::operator==(const GUID& other) const
+	bool GUID::operator==(const GUID &other) const
 	{
 		return memcmp(this, &other, sizeof(other)) == 0;
 	}
 
-	bool GUID::operator<(GUID& other) const
+	bool GUID::operator<(GUID &other) const
 	{
 		return memcmp(this, &other, sizeof(other)) < 0;
 	}
-
 }
