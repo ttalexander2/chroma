@@ -10,7 +10,7 @@
 
 namespace Chroma
 {
-	struct Animation : public Asset
+	struct Animation : Asset
 	{
 		CHROMA_ASSET(Animation, Asset);
 

@@ -28,6 +28,7 @@ IncludeDir["msdfgen"] = "%{wks.location}/Chroma/third_party/msdf-atlas-gen/msdfg
 IncludeDir["msdf_atlasgen"] = "%{wks.location}/Chroma/third_party/msdf-atlas-gen"
 IncludeDir["better_enums"] = "%{wks.location}/Chroma/third_party/better-enums"
 IncludeDir["rangev3"] = "%{wks.location}/Chroma/third_party/range-v3/include"
+IncludeDir["mirr"] = "%{wks.location}/Chroma/third_party/mirr/include"
 
 
 IncludeDir["Catch2"] = "%{wks.location}/Test/third_party/Catch2"

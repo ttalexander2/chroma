@@ -4,6 +4,8 @@
 #include "Reflection.h"
 #include "Chroma/Utilities/Yaml.h"
 
+#include <mirr/mirr.h>
+
 namespace Chroma
 {
 	std::unordered_map<uint32_t, std::function<void(YAML::Emitter &, Reflection::Any &)>> Reflection::s_SerializeYAMLFunctions;
@@ -21,6 +23,7 @@ namespace Chroma
 
 	void Reflection::InitializeDataTypes()
 	{
+		mirr::register_type<bool>("bool");
 		Register<bool>("bool");
 		Register<float>("float");
 		Register<double>("double");

@@ -107,8 +107,7 @@ namespace Chroma
 			}
 
 			~FileSystemException() noexcept override
-			{
-			}
+			= default;
 
 			const char *what() const noexcept override
 			{

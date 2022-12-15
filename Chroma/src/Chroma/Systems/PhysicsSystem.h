@@ -9,7 +9,7 @@
 
 namespace Chroma
 {
-	class PhysicsSystem : public System
+	class PhysicsSystem final : public System
 	{
 	public:
 		~PhysicsSystem() override;
@@ -64,10 +64,10 @@ namespace Chroma
 
 		void CreateFixture(EntityID entity, RigidBody *rigidBody);
 
-		b2World *m_World;
+		b2World *m_World = nullptr;
 		b2Vec2 m_Gravity = { 0.f, 0.f };
-		PhysicsContactFilter m_ContactFilter;
-		PhysicsContactListener m_ContactListener;
+		PhysicsContactFilter m_ContactFilter = PhysicsContactFilter();
+		PhysicsContactListener m_ContactListener = PhysicsContactListener();
 
 		int32_t m_VelocityIterations = 8;
 		int32_t m_PositionIterations = 3;

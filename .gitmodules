@@ -50,3 +50,6 @@
 [submodule "Chroma/third_party/entt"]
 	path = Chroma/third_party/entt
 	url = https://github.com/ttalexander2/entt.git
+[submodule "Chroma/third_party/mirr"]
+	path = Chroma/third_party/mirr
+	url = https://github.com/ttalexander2/mirr.git

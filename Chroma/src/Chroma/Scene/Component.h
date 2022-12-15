@@ -51,7 +51,7 @@ namespace Chroma
 		virtual inline const uint32_t TypeId() const override { return Reflection::Resolve<typeName>().Id(); }							\
 		virtual inline const std::string TypeName() const override { return Reflection::Resolve<typeName>().GetName(); }				\
 		virtual inline const Reflection::Type GetType() const override { return Reflection::Resolve<typeName>(); }						\
-		virtual inline Reflection::AnyRef ToAnyRef() const override { return Reflection::AnyRef::Create(*this); }						\
+		virtual inline Reflection::AnyRef ToAnyRef() const override { return Reflection::AnyRef::Create(this); }						\
 		virtual inline Reflection::Any ToAny() const override { return Reflection::Any(*this); }										\
 		virtual inline Reflection::Handle ToHandle() const { return Reflection::Handle(*this); }										\
 		inline bool IsAbstract() const override { return false; }																		\
@@ -73,7 +73,7 @@ namespace Chroma
 		virtual inline const uint32_t TypeId() const override { return Reflection::Resolve<typeName>().Id(); }							\
 		virtual inline const std::string TypeName() const override { return Reflection::Resolve<typeName>().GetName(); }				\
 		virtual inline const Reflection::Type GetType() const override { return Reflection::Resolve<typeName>(); }						\
-		virtual inline Reflection::AnyRef ToAnyRef() const override { return Reflection::AnyRef::Create(*this); }						\
+		virtual inline Reflection::AnyRef ToAnyRef() const override { return Reflection::AnyRef::Create(this); }						\
 		virtual inline Reflection::Any ToAny() const override { return Reflection::Any(*this); }										\
 		virtual inline Reflection::Handle ToHandle() const { return Reflection::Handle(*this); }										\
 		friend class Scene;																												\
@@ -113,7 +113,7 @@ namespace Chroma
 		virtual const uint32_t TypeId() const { return Reflection::Resolve<Component>().Id(); }
 		virtual const std::string TypeName() const { return Reflection::Resolve<Component>().GetName(); }
 		virtual const Reflection::Type GetType() const { return Reflection::Resolve<Component>(); }
-		virtual Reflection::AnyRef ToAnyRef() const { return Reflection::AnyRef::Create(*this); }
+		virtual Reflection::AnyRef ToAnyRef() const { return Reflection::AnyRef::Create(this); }
 		virtual Reflection::Any ToAny() const { return Reflection::Any(*this); }
 		virtual Reflection::Handle ToHandle() const { return Reflection::Handle(*this); }
 		virtual bool IsAbstract() const { return true; }

@@ -3,13 +3,11 @@
 #include <entt/entt.hpp>
 #include <string>
 #include <type_traits>
-#include <concepts>
 #include <unordered_map>
 #include <yaml-cpp/yaml.h>
 #include <Chroma/Utilities/StringHash.h>
 #include <Chroma/IO/File.h>
 #include <Chroma/Core/Log.h>
-#include <iostream>
 #include <utility>
 #include <range/v3/view/join.hpp>
 #include "Chroma/Scene/ComponentRegistry.h"
@@ -18,12 +16,12 @@ namespace Chroma
 {
 	struct Component;
 
-	/// @brief This is the main class that controlls the runtime reflection system.
+	/// @brief This is the main class that controls the runtime reflection system.
 	/// In order to register a type, use the CHROMA_REFLECT() macro, and implement the static
 	/// RegisterType() function.
 	/// 
-	/// All of the classes specified here initialially had their own implementations, but due to various concerns,
-	/// they were instead tweaked to wrap the entt runtime reflection libaray.
+	/// All of the classes specified here initially had their own implementations, but due to various concerns,
+	/// they were instead tweaked to wrap the entt runtime reflection library.
 	struct Reflection
 	{
 		struct Type;
@@ -36,7 +34,7 @@ namespace Chroma
 		struct Handle;
 
 
-	public:
+
 		struct SequenceContainer
 		{
 			friend struct Reflection;
@@ -44,7 +42,7 @@ namespace Chroma
 			friend struct Any;
 			friend struct Func;
 			template <typename T>
-			friend struct Reflection::TypeFactory;
+			friend struct TypeFactory;
 
 			struct Iterator
 			{
@@ -148,7 +146,7 @@ namespace Chroma
 			friend struct Any;
 			friend struct Func;
 			template <typename T>
-			friend struct Reflection::TypeFactory;
+			friend struct TypeFactory;
 
 			struct Iterator
 			{
@@ -369,13 +367,13 @@ namespace Chroma
 			template <typename T>
 			Any AllowCast() const
 			{
-				return Any(m_Value.allow_cast());
+				return Any(m_Value.allow_cast(entt::resolve<T>()));
 			}
 
 			template <typename T>
 			bool AllowCast()
 			{
-				return m_Value.allow_cast();
+				return m_Value.allow_cast(entt::resolve<T>());
 			}
 
 			template <typename T, typename... Args>
@@ -457,8 +455,8 @@ namespace Chroma
 
 			AnyRef() = delete;
 
-			AnyRef(const Any &) = delete;
-			AnyRef(AnyRef &&) = delete;
+			AnyRef(const AnyRef &other) = default;
+			AnyRef(AnyRef &&) = default;
 
 			template <typename T>
 			std::enable_if_t<!std::is_same_v<std::decay_t<T>, Any>, Any &>
@@ -469,12 +467,12 @@ namespace Chroma
 			}
 
 			template <typename T, typename = std::enable_if_t<!std::is_same_v<std::decay_t<T>, Any> && !std::is_same_v<std::decay_t<T>, entt::meta_any>>>
-			static AnyRef Create(T &&value)
+			static AnyRef Create(T* value)
 			{
-				return AnyRef(std::move(entt::forward_as_meta(std::forward<T>(value))));
+				return AnyRef(entt::meta_any(value));
 			}
 
-			Type Type() const { return Reflection::Type(m_Value.type()); }
+			Type Type() const { return Reflection::Type((*m_Value).type()); }
 
 			const void *Data() const { return m_Value.data(); }
 			void *Data() { return m_Value.data(); }
@@ -482,14 +480,14 @@ namespace Chroma
 			template <typename... Args>
 			Any Invoke(const uint32_t id, Args &&...args) const
 			{
-				m_Value.invoke(id, std::forward<Args>(args)...);
+				return m_Value.invoke(id, std::forward<Args>(args)...);
 			}
 
 			template <typename... Args>
 			Any Invoke(const std::string &name, Args &&...args) const
 			{
 				uint32_t hash = BasicHash<uint32_t>::Hash(name);
-				m_Value.invoke(hash, std::forward<Args>(args)...);
+				return m_Value.invoke(hash, std::forward<Args>(args)...);
 			}
 
 			template <typename T>
@@ -543,7 +541,7 @@ namespace Chroma
 			template <typename T>
 			bool AllowCast()
 			{
-				return m_Value.allow_cast();
+				return m_Value.allow_cast(entt::resolve<T>());
 			}
 
 			template <typename T, typename... Args>
@@ -596,13 +594,14 @@ namespace Chroma
 			{
 				return type.Id() == m_Value.type().id();
 			}
+			
+			operator Reflection::Handle() { return Handle(); }
 
-			operator entt::meta_any() { return m_Value; }
-			operator Reflection::Handle() { return Reflection::Handle(m_Value); }
-
-			Handle Handle() { return Reflection::Handle(m_Value); }
+			Handle Handle() { return Reflection::Handle(*m_Value); }
 
 			const bool Valid() const { return m_Value.operator bool(); }
+
+			void* RawPointer() { return m_Value.data();}
 
 		private:
 			AnyRef(entt::meta_any val) :
@@ -667,7 +666,7 @@ namespace Chroma
 				uint32_t hash = BasicHash<uint32_t>::Hash(name).m_Hash;
 				TypeData::GetTypeDataNames()[m_Hash][hash] = name;
 				TypeData::GetTypeDataSerializeCallbacks()[m_Hash][hash] = callback;
-				m_Factory.data < Data > (hash);
+				m_Factory.data<Data>(hash);
 				return *this;
 			}
 
@@ -677,7 +676,7 @@ namespace Chroma
 				uint32_t hash = BasicHash<uint32_t>::Hash(name).m_Hash;
 				TypeData::GetTypeDataNames()[m_Hash][hash] = name;
 				TypeData::GetTypeDataSerializeCallbacks()[m_Hash][hash] = callback;
-				m_Factory.data < Setter, Getter > (hash);
+				m_Factory.data<Setter, Getter>(hash);
 				return *this;
 			}
 
@@ -849,7 +848,7 @@ namespace Chroma
 			const Reflection::Type Parent() const { return Resolve(m_Parent); }
 
 			template <typename T>
-			bool Set(Handle &handle, T &&value) const
+			bool Set(Handle handle, T &&value) const
 			{
 				return m_Data.set<T>(std::move(handle.m_Handle), std::forward<T>(value));
 			}
@@ -943,6 +942,8 @@ namespace Chroma
 					return TypeData::GetTypeNames()[m_Type.id()];
 				return std::string();
 			}
+
+			bool operator==(Type const& rhs) const { return Id() == rhs.Id(); }
 
 			const bool IsIntegral() const { return m_Type.is_integral(); }
 			const bool IsArray() const { return m_Type.is_array(); }
@@ -1251,6 +1252,13 @@ namespace Chroma
 			{
 			}
 
+			Handle(entt::meta_any val) :
+				m_Handle(val),
+				m_Type(val.type())
+			{
+				
+			}
+
 			explicit operator bool() const
 			{
 				return m_Handle.operator bool();
@@ -1272,7 +1280,7 @@ namespace Chroma
 		private:
 			Handle() = default;
 
-
+			
 			entt::meta_handle m_Handle;
 			Reflection::Type m_Type;
 		};

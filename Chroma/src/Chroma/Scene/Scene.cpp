@@ -28,6 +28,7 @@
 #include <Chroma/Components/PolygonCollider.h>
 #include <Chroma/Components/RectangleCollider.h>
 #include <Chroma/Reflection/Reflection.h>
+#include <mirr/mirr.h>
 
 
 namespace Chroma
@@ -570,6 +571,7 @@ namespace Chroma
 				{
 					auto key = component.first.as<std::string>();
 					//CHROMA_CORE_INFO("{}", key);
+					
 					auto type = Reflection::Resolve(key);
 					if (!type.Valid())
 						CHROMA_CORE_ERROR("Type {} not valid!", key);

@@ -99,7 +99,8 @@ project "Chroma"
         "%{IncludeDir.msdfgen}",
         "%{IncludeDir.msdf_atlasgen}",
         "%{IncludeDir.better_enums}",
-        "%{IncludeDir.rangev3}"
+        "%{IncludeDir.rangev3}",
+        "%{IncludeDir.mirr}"
 
     }
 
@@ -113,6 +114,7 @@ project "Chroma"
         "PhysicsFS",
         "box2d",
         "msdf-atlas-gen",
+        "mirr",
         "%{Library.Vulkan}",
         "%{Library.VulkanUtils}",
 
@@ -240,7 +242,8 @@ project "Polychrome"
         "%{IncludeDir.msdfgen}",
         "%{IncludeDir.msdf_atlasgen}",
         "%{IncludeDir.better_enums}",
-        "%{IncludeDir.rangev3}"
+        "%{IncludeDir.rangev3}",
+        "%{IncludeDir.mirr}"
     }
 
 
@@ -355,7 +358,8 @@ project "Polychrome"
             "%{IncludeDir.msdfgen}",
             "%{IncludeDir.msdf_atlasgen}",
             "%{IncludeDir.better_enums}",
-            "%{IncludeDir.rangev3}"
+            "%{IncludeDir.rangev3}",
+            "%{IncludeDir.mirr}"
         }
     
         links

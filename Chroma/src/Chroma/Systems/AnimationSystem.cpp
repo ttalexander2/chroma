@@ -90,8 +90,7 @@ namespace Chroma
 							Component *c = m_Scene->GetComponent(track->componentID, track->entityID);
 
 							auto meta_handle = c->GetType().Data(track->propertyID);
-							Reflection::Handle cHandle = c;
-							meta_handle.Set(cHandle, val);
+							meta_handle.Set(c->ToHandle(), val);
 						}
 					}
 					else
@@ -101,8 +100,7 @@ namespace Chroma
 							Component *c = m_Scene->GetComponent(track->componentID, track->entityID);
 
 							auto meta_handle = c->GetType().Data(track->propertyID);
-							Reflection::Handle cHandle = c;
-							meta_handle.Set(cHandle, kf->value);
+							meta_handle.Set(c->ToHandle(), kf->value);
 						}
 					}
 				}

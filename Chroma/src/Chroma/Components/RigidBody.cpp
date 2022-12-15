@@ -390,11 +390,7 @@ namespace Chroma
 		       .Data<&RigidBody::SetBullet, &RigidBody::IsBullet>("Bullet")
 		       .Data<&RigidBody::SetGravityScale, &RigidBody::GetGravityScale>("GravityScale")
 		       .Data<nullptr, &RigidBody::HasCustomMassData>("UsesCustomMassData", false)
-		       .Data<static_cast<void (RigidBody::*)(MassData)>(&RigidBody::SetCustomMassData), &RigidBody::GetMassData>("MassData",
-				       [&](Reflection::Any *val)
-				       {
-					       return val->Cast<RigidBody>().m_UseCustomMassData;
-				       })
+		       .Data<static_cast<void (RigidBody::*)(MassData)>(&RigidBody::SetCustomMassData), &RigidBody::GetMassData>("MassData")
 		       .Func<static_cast<void (RigidBody::*)(const Math::vec2 &, const Math::vec2 &)>(&RigidBody::ApplyForce)>("ApplyForce")
 		       .Func<static_cast<void (RigidBody::*)(const Math::vec2 &, const Math::vec2 &, bool)>(&RigidBody::ApplyForce)>("ApplyForce")
 		       .Func<static_cast<void (RigidBody::*)(const Math::vec2 &)>(&RigidBody::ApplyForce)>("ApplyForce")

@@ -41,6 +41,12 @@ namespace Polychrome
 
 	void ComponentWidgets::Draw(Chroma::Component* c)
 	{
+
+		DrawObject(c, c->ToAnyRef());
+
+		return;
+
+		
 		if (c->IsType<Chroma::Transform>()) DrawTransform(c);
 		if (c->IsType<Chroma::CSharpScript>()) DrawCSharpScript(c);
 		if (c->IsType<Chroma::AudioSource>()) DrawAudioSource(c);
@@ -415,6 +421,88 @@ namespace Polychrome
 
 	}
 
+	void ComponentWidgets::DrawBool(Chroma::Component *c, Chroma::Reflection::Data data, Chroma::Reflection::AnyRef handle)
+	{
+		ImGui::PushID(handle.RawPointer());
+		
+		DrawComponentValue(c, data.GetName());
+		bool temp = data.Get(handle.Handle()).Cast<bool>();
+		ImGui::Checkbox("##bool", &temp);
+		data.Set(handle.Handle(), temp);
+		
+		ImGui::PopID();
+		
+	}
+
+	void ComponentWidgets::DrawFloat(Chroma::Component *c, Chroma::Reflection::Data data, Chroma::Reflection::AnyRef handle)
+	{
+	}
+
+	void ComponentWidgets::DrawDouble(Chroma::Component *c, Chroma::Reflection::Data data, Chroma::Reflection::AnyRef handle)
+	{
+	}
+
+	void ComponentWidgets::DrawInt32(Chroma::Component *c, Chroma::Reflection::Data data, Chroma::Reflection::AnyRef handle)
+	{
+	}
+
+	void ComponentWidgets::DrawUInt32(Chroma::Component *c, Chroma::Reflection::Data data, Chroma::Reflection::AnyRef handle)
+	{
+	}
+
+	void ComponentWidgets::DrawInt64(Chroma::Component *c, Chroma::Reflection::Data data, Chroma::Reflection::AnyRef handle)
+	{
+	}
+
+	void ComponentWidgets::DrawUInt64(Chroma::Component *c, Chroma::Reflection::Data data, Chroma::Reflection::AnyRef handle)
+	{
+	}
+
+	void ComponentWidgets::DrawChar(Chroma::Component *c, Chroma::Reflection::Data data, Chroma::Reflection::AnyRef handle)
+	{
+	}
+
+	void ComponentWidgets::DrawUChar(Chroma::Component *c, Chroma::Reflection::Data data, Chroma::Reflection::AnyRef handle)
+	{
+	}
+
+	void ComponentWidgets::DrawString(Chroma::Component *c, Chroma::Reflection::Data data, Chroma::Reflection::AnyRef handle)
+	{
+	}
+
+	void ComponentWidgets::DrawAsset(Chroma::Component *c, Chroma::Reflection::Data data, Chroma::Reflection::AnyRef handle)
+	{
+	}
+
+	void ComponentWidgets::DrawVec2(Chroma::Component *c, Chroma::Reflection::Data data, Chroma::Reflection::AnyRef handle)
+	{
+	}
+
+	void ComponentWidgets::DrawVec3(Chroma::Component *c, Chroma::Reflection::Data data, Chroma::Reflection::AnyRef handle)
+	{
+	}
+
+	void ComponentWidgets::DrawVec4(Chroma::Component *c, Chroma::Reflection::Data data, Chroma::Reflection::AnyRef handle)
+	{
+	}
+
+	void ComponentWidgets::DrawUVec2(Chroma::Component *c, Chroma::Reflection::Data data, Chroma::Reflection::AnyRef handle)
+	{
+	}
+
+	void ComponentWidgets::DrawUVec3(Chroma::Component *c, Chroma::Reflection::Data data, Chroma::Reflection::AnyRef handle)
+	{
+	}
+
+	void ComponentWidgets::DrawUVec4(Chroma::Component *c, Chroma::Reflection::Data data, Chroma::Reflection::AnyRef handle)
+	{
+	}
+
+	void ComponentWidgets::DrawEntity(Chroma::Component *c, Chroma::Reflection::Data data, Chroma::Reflection::AnyRef handle)
+	{
+	}
+
+
 
 	void ComponentWidgets::DrawSpriteRenderer(Chroma::Component* c)
 	{
@@ -757,5 +845,16 @@ namespace Polychrome
 
 		return collapsibleOpen[id];
 
+	}
+
+	void ComponentWidgets::DrawObject(Chroma::Component* c, Chroma::Reflection::AnyRef val)
+	{
+		for (auto data : val.Type().Data())
+		{
+			if (data.Type() == Chroma::Reflection::Resolve<bool>())
+			{
+				DrawBool(c, data, val);
+			}
+		}
 	}
 }
