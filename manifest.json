@@ -1,0 +1,572 @@
+{
+  "homepages": [],
+  "source_base_path": "/github/workspace/docs",
+  "xrefmap": "xrefmap.yml",
+  "files": [
+    {
+      "type": "Resource",
+      "output": {
+        "resource": {
+          "relative_path": "index.json"
+        }
+      },
+      "is_incremental": false
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Chroma.Audio.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Chroma.Audio.html",
+          "hash": "dTOuUl5Rd0XmnkVcFqyZ+w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Chroma.AudioSource.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Chroma.AudioSource.html",
+          "hash": "XasxertLtk8UzmDFTRCAlQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Chroma.BoxCollider.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Chroma.BoxCollider.html",
+          "hash": "UylRjwJu9UwsOTyTImY63Q=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Chroma.Camera.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Chroma.Camera.html",
+          "hash": "hO9IhQ4QrU/PppAlymPSuw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Chroma.CircleCollider.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Chroma.CircleCollider.html",
+          "hash": "GJQ2XjKXsQs75ryYX8f3iQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Chroma.Color.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Chroma.Color.html",
+          "hash": "jBYgl9isxChqwis+WefSow=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Chroma.Component.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Chroma.Component.html",
+          "hash": "n+D00V+eIZ0W2zB14JiHjw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Chroma.Coroutine.CoroutineFunction.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Chroma.Coroutine.CoroutineFunction.html",
+          "hash": "asg4v0KXSEyWc5PfquQH7w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Chroma.Coroutine.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Chroma.Coroutine.html",
+          "hash": "7UeOtKVbCnfQq6qph05ClA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Chroma.Entity.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Chroma.Entity.html",
+          "hash": "PGzSYIxAcFJ1f9PkONjUQw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Chroma.ExecutionOrder.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Chroma.ExecutionOrder.html",
+          "hash": "n2YpaFfrjvfGSg/c/cFk+w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Chroma.Input.ConnectionState.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Chroma.Input.ConnectionState.html",
+          "hash": "FCGlj3VyjAiEdiAJNOQw5Q=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Chroma.Input.Gamepad.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Chroma.Input.Gamepad.html",
+          "hash": "D2Nzo21Bvx0SuXfTpYfCrw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Chroma.Input.GamepadAxis.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Chroma.Input.GamepadAxis.html",
+          "hash": "PPC2oftK2gPmpkYvUzCEyg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Chroma.Input.GamepadButton.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Chroma.Input.GamepadButton.html",
+          "hash": "Oi0QlS31Vfxxx0Jloe3AGg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Chroma.Input.JoystickHatState.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Chroma.Input.JoystickHatState.html",
+          "hash": "ndZGz44JDuMwDi0bsf5Jbw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Chroma.Input.Key.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Chroma.Input.Key.html",
+          "hash": "EpJQgjQIEFck68s9vCQ9mg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Chroma.Input.Mouse.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Chroma.Input.Mouse.html",
+          "hash": "P1VDXD8KvDVj0HLqVeUWPw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Chroma.Input.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Chroma.Input.html",
+          "hash": "9usflJRGtirUc34T5/Z6wQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Chroma.Log.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Chroma.Log.html",
+          "hash": "FeS/e4NE/StaKfwKi9MlYg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Chroma.Mathf.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Chroma.Mathf.html",
+          "hash": "yMAuq7ishPnD1I4XAh+J/w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Chroma.ParticleEmitter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Chroma.ParticleEmitter.html",
+          "hash": "1+x22BMZ1CyGdiliEs4URA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Chroma.RuntimeException.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Chroma.RuntimeException.html",
+          "hash": "axqJxTsBO0eqRIe9HqTs1w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Chroma.Scene.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Chroma.Scene.html",
+          "hash": "8T8OICJuVa2k3DDEJ6rPHA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Chroma.SpriteRenderer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Chroma.SpriteRenderer.html",
+          "hash": "qpsGH+ey/UuolijOcIMBqA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Chroma.StateMachine-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Chroma.StateMachine-1.html",
+          "hash": "T2vvJHTBTTzLIwQPlxx56A=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Chroma.Time.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Chroma.Time.html",
+          "hash": "vs+tliAwtCYks6bXvkv0wA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Chroma.Transform.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Chroma.Transform.html",
+          "hash": "U/aK6ZMd739a8rnByfv1Dw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Chroma.Vector2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Chroma.Vector2.html",
+          "hash": "rBG1SJGWWUskIriPY/evQQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Chroma.Vector3.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Chroma.Vector3.html",
+          "hash": "W3AKSxWAmBL+p3uVoA8iew=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Chroma.Vector4.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Chroma.Vector4.html",
+          "hash": "TBMPImOhn9S/d3bnNjocdA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Chroma.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Chroma.html",
+          "hash": "D9GFlbjAtudIx4CJxOXfNw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "api/index.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/index.html",
+          "hash": "8zyk1QTOPmCtegMCFxGnew=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/creating_a_project.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/creating_a_project.html",
+          "hash": "wGGSIchu7BFYgDfK6Y9Wfw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/intro.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/intro.html",
+          "hash": "ns+tClH+ZyhxVkJcFGgxsw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/setting_up.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/setting_up.html",
+          "hash": "DgVKvFx8lq+iZKYwpUu6Ow=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/vscode_extension.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/vscode_extension.html",
+          "hash": "4Hi9HvaATtbZ4CWPcRpnXw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/asset_completion.gif",
+      "output": {
+        "resource": {
+          "relative_path": "images/asset_completion.gif"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/code_lens.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/code_lens.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/create_project.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/create_project.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/launcher.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/launcher.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "index.md",
+      "output": {
+        ".html": {
+          "relative_path": "index.html",
+          "hash": "zFHEmRGNoVs+FgO3BXlaRg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    }
+  ],
+  "incremental_info": [
+    {
+      "status": {
+        "can_incremental": false,
+        "details": "Cannot build incrementally because last build info is missing.",
+        "incrementalPhase": "build",
+        "total_file_count": 0,
+        "skipped_file_count": 0,
+        "full_build_reason_code": "NoAvailableBuildCache"
+      },
+      "processors": {
+        "ConceptualDocumentProcessor": {
+          "can_incremental": false,
+          "incrementalPhase": "build",
+          "total_file_count": 6,
+          "skipped_file_count": 0
+        },
+        "ManagedReferenceDocumentProcessor": {
+          "can_incremental": false,
+          "incrementalPhase": "build",
+          "total_file_count": 32,
+          "skipped_file_count": 0
+        },
+        "ResourceDocumentProcessor": {
+          "can_incremental": false,
+          "details": "Processor ResourceDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
+          "incrementalPhase": "build",
+          "total_file_count": 0,
+          "skipped_file_count": 0
+        },
+        "TocDocumentProcessor": {
+          "can_incremental": false,
+          "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
+          "incrementalPhase": "build",
+          "total_file_count": 0,
+          "skipped_file_count": 0
+        }
+      }
+    },
+    {
+      "status": {
+        "can_incremental": false,
+        "details": "Cannot support incremental post processing, the reason is: should not trace intermediate info.",
+        "incrementalPhase": "postProcessing",
+        "total_file_count": 0,
+        "skipped_file_count": 0
+      },
+      "processors": {}
+    }
+  ],
+  "version_info": {},
+  "groups": [
+    {
+      "xrefmap": "xrefmap.yml"
+    }
+  ]
+}
