@@ -3,7 +3,7 @@
 [![Build](https://github.com/ttalexander2/chroma/actions/workflows/build.yml/badge.svg)](https://github.com/ttalexander2/chroma/actions/workflows/build.yml)
 [![Documentation](https://github.com/ttalexander2/chroma/actions/workflows/main.yml/badge.svg)](https://github.com/ttalexander2/chroma/actions/workflows/main.yml)
 
-A small C++ Game Engine and Editor, designed in order to providing simple tools for creating games in 2D. It was started as a way to learn more about game technology, computer graphics and game engine design. It takes ideas and inspiration from other open-source engines, and is designed to be lightweight and easily modifiable.
+A small C++ Game Engine and Editor, designed for creating games in 2D. It was started as a way to learn more about game technology, computer graphics, and game engine design. It takes ideas and inspiration from other open-source engines, and is designed to be lightweight and easily modifiable.
 
 At the moment, only Windows building is supported. Support for other platforms will be implemented at a later date.
 
@@ -19,7 +19,7 @@ At the moment, only Windows building is supported. Support for other platforms w
 
 #### Building
 ##### Windows
-- Requires C++20, Visual Studio 2019, C++  Python 3.3+, and Mono
+- Requires C++20, Visual Studio 2019, Python 3.3+, and Mono
 - All other dependencies are either included within the project, or provided as github submodules.
 - Instructions
     - `git clone --recurse-submodules -j8 https://github.com/ttalexander2/chroma.git`
@@ -34,8 +34,8 @@ At the moment, only Windows building is supported. Support for other platforms w
 
 ----
 #### Notes
-- Currently single threaded, plans for a multi-threaded renderer in the future.
-- Audio is implemented using FMOD Studio, plans for a non-fmod audio backend will be implemted in the future.
+- Engine is currently single threaded, plans for a multi-threaded renderer as well as a job system may be implemented in the future.
+- Audio is implemented using FMOD Studio, plans for a non-fmod audio backend will be implemented in the future.
 - Only OpenGL renderer is implemented, a Vulkan backend is currently in the works.
 
 ---
