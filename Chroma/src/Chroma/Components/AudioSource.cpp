@@ -5,12 +5,12 @@
 
 namespace Chroma
 {
-	Reflection::TypeFactory<AudioSource> AudioSource::RegisterType()
+	Reflection::type_factory<AudioSource> AudioSource::register_type()
 	{
-		return Reflection::Register<AudioSource>("AudioSource")
-		       .Base<Component>()
-		       .Data<&AudioSource::SetEvent, &AudioSource::GetEvent>("Event")
-		       .Data<&AudioSource::Mute>("Mute")
-		       .Data<&AudioSource::PlayOnInit>("PlayOnInit");
+		return Reflection::RegisterComponent<AudioSource>("AudioSource")
+		       .base<Component>()
+		       .data<&AudioSource::GetEvent, &AudioSource::SetEvent>("Event")
+		       .data<&AudioSource::Mute>("Mute")
+		       .data<&AudioSource::PlayOnInit>("PlayOnInit");
 	}
 } //namespace Chroma

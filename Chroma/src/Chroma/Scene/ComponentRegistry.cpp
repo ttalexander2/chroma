@@ -82,13 +82,11 @@ namespace Chroma
 	void ComponentRegistry::AddRequirements(uint32_t component_id, EntityID entity, entt::registry *r)
 	{
 		//CHROMA_CORE_TRACE("Looking for requirements for {}", component_id);
-		if (Reflection::TypeData::GetTypeRequirements().contains(component_id))
+
+		for (auto comp : Reflection::GetTypeRequirements(component_id))
 		{
-			for (auto comp : Reflection::TypeData::GetTypeRequirements()[component_id])
-			{
-				if (ComponentAddFunctions().contains(comp))
-					ComponentAddFunctions()[comp](entity, r);
-			}
+			if (ComponentAddFunctions().contains(comp))
+				ComponentAddFunctions()[comp](entity, r);
 		}
 	}
 } //namespace Chroma

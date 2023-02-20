@@ -10,27 +10,23 @@ namespace Chroma
 {
 	Math::mat4 Transform::GetTransform() const
 	{
-		glm::mat4 rotation = toMat4(glm::quat({ 0, 0, Rotation }));
+		const glm::mat4 rotation = toMat4(glm::quat({ 0, 0, Rotation }));
 
 		return translate(glm::mat4(1.0f), Math::vec3(Position.x, Position.y, 0.f))
 				* rotation * scale(glm::mat4(1.0f), { Scale, 0 });
 	}
 
-	Reflection::TypeFactory<Transform> Transform::RegisterType()
+	Reflection::type_factory<Transform> Transform::register_type()
 	{
-		return Reflection::Register<Transform>("Transform")
-		       .Base<Component>()
-		       .Data<&Transform::Position>("Position")
-		       .Data<&Transform::Rotation>("Rotation")
-		       .Data<&Transform::Scale>("Scale")
-		       .Data<&Transform::Parent>("Parent",
-				       [](Reflection::Any *val)
-				       {
-					       return val->Cast<Transform>().Parent != ENTITY_NULL;
-				       })
-		       .Data<&Transform::Children>("Children")
-		       .Func<&Transform::HasChild>("HasChild")
-		       .Func<&Transform::HasChildren>("HasChildren")
-		       .Func<&Transform::GetTransform>("GetTransform");
+		return Reflection::RegisterComponent<Transform>("Transform")
+		       .base<Component>()
+		       .data<&Transform::Position>("Position")
+		       .data<&Transform::Rotation>("Rotation")
+		       .data<&Transform::Scale>("Scale")
+		       .data<&Transform::Parent>("Parent")
+		       .data<&Transform::Children>("Children")
+		       .function<&Transform::HasChild>("HasChild")
+		       .function<&Transform::HasChildren>("HasChildren")
+		       .function<&Transform::GetTransform>("GetTransform");
 	}
 }

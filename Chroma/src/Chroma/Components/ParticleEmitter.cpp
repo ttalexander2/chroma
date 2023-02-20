@@ -27,35 +27,35 @@ namespace Chroma
 		pos = (pos + 1) % Particles.size();
 	}
 
-	Reflection::TypeFactory<ParticleEmitter> ParticleEmitter::RegisterType()
+	Reflection::type_factory<ParticleEmitter> ParticleEmitter::register_type()
 	{
-		Reflection::Register<Particle>("Particle")
-				.Data<&Particle::Active>("Active")
-				.Data<&Particle::Position>("Position")
-				.Data<&Particle::Life>("Life")
-				.Data<&Particle::TotalLife>("TotalLife")
-				.Data<&Particle::Speed>("Speed")
-				.Data<&Particle::Angle>("Angle");
+		Reflection::register_type<Particle>("Particle")
+				.data<&Particle::Active>("Active")
+				.data<&Particle::Position>("Position")
+				.data<&Particle::Life>("Life")
+				.data<&Particle::TotalLife>("TotalLife")
+				.data<&Particle::Speed>("Speed")
+				.data<&Particle::Angle>("Angle");
 
-		return Reflection::Register<ParticleEmitter>("ParticleEmitter")
-		       .Base<Component>()
-		       .Data<&ParticleEmitter::PositionVariance>("PositionVariance")
-		       .Data<&ParticleEmitter::StartColor>("StartColor")
-		       .Data<&ParticleEmitter::EndColor>("EndColor")
-		       .Data<&ParticleEmitter::Life>("Life")
-		       .Data<&ParticleEmitter::LifeVariance>("LifeVariance")
-		       .Data<&ParticleEmitter::Angle>("Angle")
-		       .Data<&ParticleEmitter::AngleVariance>("AngleVariance")
-		       .Data<&ParticleEmitter::Speed>("Speed")
-		       .Data<&ParticleEmitter::SpeedVariance>("SpeedVariance")
-		       .Data<&ParticleEmitter::Gravity>("Gravity")
-		       .Data<&ParticleEmitter::GravityVariance>("GravityVariance")
-		       .Data<&ParticleEmitter::Continuous>("Continuous")
-		       .Data<&ParticleEmitter::EmissionRate>("EmissionRate")
-		       .Data<&ParticleEmitter::PreWarm>("PreWarm")
-		       .Data<&ParticleEmitter::PreWarmSeconds>("PreWarmSeconds")
-		       .Data<&ParticleEmitter::SetSeed, &ParticleEmitter::GetSeed>("Seed")
-		       .Data<&ParticleEmitter::SetCount, &ParticleEmitter::GetCount>("Count");
+		return Reflection::RegisterComponent<ParticleEmitter>("ParticleEmitter")
+		       .base<Component>()
+		       .data<&ParticleEmitter::PositionVariance>("PositionVariance")
+		       .data<&ParticleEmitter::StartColor>("StartColor")
+		       .data<&ParticleEmitter::EndColor>("EndColor")
+		       .data<&ParticleEmitter::Life>("Life")
+		       .data<&ParticleEmitter::LifeVariance>("LifeVariance")
+		       .data<&ParticleEmitter::Angle>("Angle")
+		       .data<&ParticleEmitter::AngleVariance>("AngleVariance")
+		       .data<&ParticleEmitter::Speed>("Speed")
+		       .data<&ParticleEmitter::SpeedVariance>("SpeedVariance")
+		       .data<&ParticleEmitter::Gravity>("Gravity")
+		       .data<&ParticleEmitter::GravityVariance>("GravityVariance")
+		       .data<&ParticleEmitter::Continuous>("Continuous")
+		       .data<&ParticleEmitter::EmissionRate>("EmissionRate")
+		       .data<&ParticleEmitter::PreWarm>("PreWarm")
+		       .data<&ParticleEmitter::PreWarmSeconds>("PreWarmSeconds")
+		       .data<&ParticleEmitter::GetSeed, &ParticleEmitter::SetSeed>("Seed")
+		       .data<&ParticleEmitter::GetCount, &ParticleEmitter::SetCount>("Count");
 	}
 
 	float ParticleEmitter::random()

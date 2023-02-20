@@ -718,8 +718,11 @@ namespace Chroma
 		scriptClass.InitClassMethods(appAssemblyImage);
 
 		EntityInstanceData &entityInstanceData = entityInstanceMap[scene.GetID()][id];
+
 		EntityInstance &entityInstance = entityInstanceData.Instance;
 		entityInstance.ScriptClass = &scriptClass;
+
+
 
 		CSharpScript &scriptComponent = entity.GetComponent<CSharpScript>();
 		ScriptModuleFieldMap &moduleFieldMap = scriptComponent.ModuleFieldMap;
@@ -749,21 +752,6 @@ namespace Chroma
 
 				MonoType *fieldType = mono_field_get_type(iter);
 				int intType = mono_type_get_type(fieldType);
-
-				//if (intType == MONO_TYPE_CLASS | MONO_TYPE_ENUM)
-				//{
-				//	//bool class_is_enum = mono_class(mono_class_from_mono_type(fieldType));
-				//	//if (class_is_enum)
-				//	{
-				//		CHROMA_CORE_INFO("YEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEET");
-				//		fieldType = mono_class_enum_basetype(mono_class_from_mono_type(fieldType));
-				//		if (fieldType == nullptr)
-				//		{
-				//
-				//		}
-				//	}
-				//
-				//}
 
 				FieldType chromaFieldType = GetChromaFieldType(fieldType);
 
@@ -860,10 +848,18 @@ namespace Chroma
 	void MonoScripting::ShutdownScriptEntity(Entity entity, const std::string &moduleName)
 	{
 		{
-			EntityInstanceData &entityInstanceData = GetEntityInstanceData(entity.GetScene().GetID(), entity.GetID());
-			ScriptModuleFieldMap &moduleFieldMap = entityInstanceData.ModuleFieldMap;
-			if (moduleFieldMap.contains(moduleName))
-				moduleFieldMap.erase(moduleName);
+			EntityInstanceData* entityInstanceData = GetEntityInstanceData(entity.GetScene().GetID(), entity.GetID());
+			if (entityInstanceData)
+			{
+				ScriptModuleFieldMap &moduleFieldMap = entityInstanceData->ModuleFieldMap;
+				if (moduleFieldMap.contains(moduleName))
+					moduleFieldMap.erase(moduleName);
+			}
+			else
+			{
+				CHROMA_CORE_WARN("Could not find entity instance of given id {}", entity.GetID());
+			}
+
 		}
 
 		{
@@ -883,13 +879,21 @@ namespace Chroma
 		CSharpScript &scriptComponent = entity.GetComponent<CSharpScript>();
 		auto &moduleName = scriptComponent.ModuleName;
 
-		EntityInstanceData &entityInstanceData = GetEntityInstanceData(scene.GetID(), id);
-		EntityInstance &entityInstance = entityInstanceData.Instance;
-		CHROMA_CORE_ASSERT(entityInstance.ScriptClass, "");
-		entityInstance.Handle = Instantiate(*entityInstance.ScriptClass);
+		EntityInstanceData* entityInstanceData = GetEntityInstanceData(scene.GetID(), id);
+		if (entityInstanceData)
+		{
+			EntityInstance &entityInstance = entityInstanceData->Instance;
+			CHROMA_CORE_ASSERT(entityInstance.ScriptClass, "");
+			entityInstance.Handle = Instantiate(*entityInstance.ScriptClass);
 
-		void *param[] = { &id };
-		CallMethod(entityInstance.GetInstance(), entityInstance.ScriptClass->Constructor, param);
+			void *param[] = { &id };
+			CallMethod(entityInstance.GetInstance(), entityInstance.ScriptClass->Constructor, param);	
+		}
+		else
+		{
+			CHROMA_CORE_WARN("Could not find entity instance of given id {}", entity.GetID());
+		}
+
 
 		//Set public fields
 		//ScriptModuleFieldMap& moduleFieldMap = scriptComponent.ModuleFieldMap;
@@ -909,17 +913,25 @@ namespace Chroma
 		CSharpScript &scriptComponent = entity.GetComponent<CSharpScript>();
 		auto &moduleName = scriptComponent.ModuleName;
 
-		EntityInstanceData &entityInstanceData = GetEntityInstanceData(scene.GetID(), id);
-		EntityInstance &entityInstance = entityInstanceData.Instance;
-
-		//Set public fields
-		ScriptModuleFieldMap &moduleFieldMap = scriptComponent.ModuleFieldMap;
-		if (moduleFieldMap.contains(moduleName))
+		EntityInstanceData* entityInstanceData = GetEntityInstanceData(scene.GetID(), id);
+		if (entityInstanceData)
 		{
-			auto &publicFields = moduleFieldMap.at(moduleName);
-			for (auto &[name, field] : publicFields)
-				field.CopyStoredValueToRuntime(entityInstance);
+			EntityInstance &entityInstance = entityInstanceData->Instance;
+
+			//Set public fields
+			ScriptModuleFieldMap &moduleFieldMap = scriptComponent.ModuleFieldMap;
+			if (moduleFieldMap.contains(moduleName))
+			{
+				auto &publicFields = moduleFieldMap.at(moduleName);
+				for (auto &[name, field] : publicFields)
+					field.CopyStoredValueToRuntime(entityInstance);
+			}
 		}
+		else
+		{
+			CHROMA_CORE_WARN("Could not find entity instance of given id {}", entity.GetID());
+		}
+
 	}
 
 	void MonoScripting::CopyFieldsFromRuntime(Entity entity)
@@ -930,17 +942,25 @@ namespace Chroma
 		CSharpScript &scriptComponent = entity.GetComponent<CSharpScript>();
 		auto &moduleName = scriptComponent.ModuleName;
 
-		EntityInstanceData &entityInstanceData = GetEntityInstanceData(scene.GetID(), id);
-		EntityInstance &entityInstance = entityInstanceData.Instance;
-
-		//Set public fields
-		ScriptModuleFieldMap &moduleFieldMap = scriptComponent.ModuleFieldMap;
-		if (moduleFieldMap.contains(moduleName))
+		EntityInstanceData* entityInstanceData = GetEntityInstanceData(scene.GetID(), id);
+		if (entityInstanceData)
 		{
-			auto &publicFields = moduleFieldMap.at(moduleName);
-			for (auto &[name, field] : publicFields)
-				field.CopyStoredValueFromRuntime(entityInstance);
+			EntityInstance &entityInstance = entityInstanceData->Instance;
+
+			//Set public fields
+			ScriptModuleFieldMap &moduleFieldMap = scriptComponent.ModuleFieldMap;
+			if (moduleFieldMap.contains(moduleName))
+			{
+				auto &publicFields = moduleFieldMap.at(moduleName);
+				for (auto &[name, field] : publicFields)
+					field.CopyStoredValueFromRuntime(entityInstance);
+			}
 		}
+		else
+		{
+			CHROMA_CORE_WARN("Could not find entity instance of given id {}", entity.GetID());
+		}
+
 	}
 
 
@@ -968,14 +988,22 @@ namespace Chroma
 		mono_property_set_value(prop2, nullptr, data2, nullptr);
 	}
 
-	EntityInstanceData &MonoScripting::GetEntityInstanceData(GUID sceneID, EntityID entityID)
+	EntityInstanceData *MonoScripting::GetEntityInstanceData(GUID sceneID, EntityID entityID)
 	{
-		auto &entityIDMap = entityInstanceMap.at(sceneID);
+		if (entityInstanceMap.contains(sceneID))
+		{
+			auto &entityIDMap = entityInstanceMap.at(sceneID);
 
-		if (!entityIDMap.contains(entityID))
-			InitScriptEntity(Entity(entityID, sceneContext));
+			if (!entityIDMap.contains(entityID))
+				InitScriptEntity(Entity(entityID, sceneContext));
 
-		return entityIDMap.at(entityID);
+			if (entityIDMap.contains(entityID))
+			{
+				return &entityIDMap.at(entityID);
+			}
+
+		}
+		return nullptr;
 	}
 
 	EntityInstanceMap &MonoScripting::GetEntityInstanceMap()
@@ -985,96 +1013,96 @@ namespace Chroma
 
 	void MonoScripting::PreInit(Entity entity)
 	{
-		EntityInstanceData &entityInstance = GetEntityInstanceData(entity.GetScene().GetID(), entity.GetID());
-		if (entityInstance.Instance.ScriptClass->PreInitMethod)
+		EntityInstanceData* entityInstance = GetEntityInstanceData(entity.GetScene().GetID(), entity.GetID());
+		if (entityInstance && entityInstance->Instance.ScriptClass->PreInitMethod)
 		{
-			CallMethod(entityInstance.Instance.GetInstance(), entityInstance.Instance.ScriptClass->PreInitMethod);
+			CallMethod(entityInstance->Instance.GetInstance(), entityInstance->Instance.ScriptClass->PreInitMethod);
 		}
 	}
 
 	void MonoScripting::Init(Entity entity)
 	{
-		EntityInstanceData &entityInstance = GetEntityInstanceData(entity.GetScene().GetID(), entity.GetID());
-		if (entityInstance.Instance.ScriptClass->InitMethod)
+		EntityInstanceData* entityInstance = GetEntityInstanceData(entity.GetScene().GetID(), entity.GetID());
+		if (entityInstance && entityInstance->Instance.ScriptClass->InitMethod)
 		{
-			CallMethod(entityInstance.Instance.GetInstance(), entityInstance.Instance.ScriptClass->InitMethod);
+			CallMethod(entityInstance->Instance.GetInstance(), entityInstance->Instance.ScriptClass->InitMethod);
 		}
 	}
 
 	void MonoScripting::PostInit(Entity entity)
 	{
-		EntityInstanceData &entityInstance = GetEntityInstanceData(entity.GetScene().GetID(), entity.GetID());
-		if (entityInstance.Instance.ScriptClass->PostInitMethod)
+		EntityInstanceData* entityInstance = GetEntityInstanceData(entity.GetScene().GetID(), entity.GetID());
+		if (entityInstance && entityInstance->Instance.ScriptClass->PostInitMethod)
 		{
-			CallMethod(entityInstance.Instance.GetInstance(), entityInstance.Instance.ScriptClass->PostInitMethod);
+			CallMethod(entityInstance->Instance.GetInstance(), entityInstance->Instance.ScriptClass->PostInitMethod);
 		}
 	}
 
 	void MonoScripting::EarlyUpdate(Entity entity, Time t)
 	{
-		EntityInstanceData &entityInstance = GetEntityInstanceData(entity.GetScene().GetID(), entity.GetID());
-		if (entityInstance.Instance.ScriptClass->EarlyUpdateMethod)
+		EntityInstanceData *entityInstance = GetEntityInstanceData(entity.GetScene().GetID(), entity.GetID());
+		if (entityInstance && entityInstance->Instance.ScriptClass->EarlyUpdateMethod)
 		{
-			CallMethod(entityInstance.Instance.GetInstance(), entityInstance.Instance.ScriptClass->EarlyUpdateMethod);
+			CallMethod(entityInstance->Instance.GetInstance(), entityInstance->Instance.ScriptClass->EarlyUpdateMethod);
 		}
 	}
 
 	void MonoScripting::Update(Entity entity, Time t)
 	{
-		EntityInstanceData &entityInstance = GetEntityInstanceData(entity.GetScene().GetID(), entity.GetID());
-		if (entityInstance.Instance.ScriptClass->InternalUpdateMethod)
+		EntityInstanceData *entityInstance = GetEntityInstanceData(entity.GetScene().GetID(), entity.GetID());
+		if (entityInstance && entityInstance->Instance.ScriptClass->InternalUpdateMethod)
 		{
-			CallMethod(entityInstance.Instance.GetInstance(), entityInstance.Instance.ScriptClass->InternalUpdateMethod);
+			CallMethod(entityInstance->Instance.GetInstance(), entityInstance->Instance.ScriptClass->InternalUpdateMethod);
 		}
-		if (entityInstance.Instance.ScriptClass->UpdateMethod)
+		if (entityInstance && entityInstance->Instance.ScriptClass->UpdateMethod)
 		{
-			CallMethod(entityInstance.Instance.GetInstance(), entityInstance.Instance.ScriptClass->UpdateMethod);
+			CallMethod(entityInstance->Instance.GetInstance(), entityInstance->Instance.ScriptClass->UpdateMethod);
 		}
 	}
 
 	void MonoScripting::LateUpdate(Entity entity, Time t)
 	{
-		EntityInstanceData &entityInstance = GetEntityInstanceData(entity.GetScene().GetID(), entity.GetID());
-		if (entityInstance.Instance.ScriptClass->LateUpdateMethod)
+		EntityInstanceData *entityInstance = GetEntityInstanceData(entity.GetScene().GetID(), entity.GetID());
+		if (entityInstance && entityInstance->Instance.ScriptClass->LateUpdateMethod)
 		{
-			CallMethod(entityInstance.Instance.GetInstance(), entityInstance.Instance.ScriptClass->LateUpdateMethod);
+			CallMethod(entityInstance->Instance.GetInstance(), entityInstance->Instance.ScriptClass->LateUpdateMethod);
 		}
 	}
 
 	void MonoScripting::EarlyDraw(Entity entity, Time t)
 	{
-		EntityInstanceData &entityInstance = GetEntityInstanceData(entity.GetScene().GetID(), entity.GetID());
-		if (entityInstance.Instance.ScriptClass->EarlyDrawMethod)
+		EntityInstanceData *entityInstance = GetEntityInstanceData(entity.GetScene().GetID(), entity.GetID());
+		if (entityInstance && entityInstance->Instance.ScriptClass->EarlyDrawMethod)
 		{
-			CallMethod(entityInstance.Instance.GetInstance(), entityInstance.Instance.ScriptClass->EarlyDrawMethod);
+			CallMethod(entityInstance->Instance.GetInstance(), entityInstance->Instance.ScriptClass->EarlyDrawMethod);
 		}
 	}
 
 	void MonoScripting::Draw(Entity entity, Time t)
 	{
-		EntityInstanceData &entityInstance = GetEntityInstanceData(entity.GetScene().GetID(), entity.GetID());
-		if (entityInstance.Instance.ScriptClass->DrawMethod)
+		EntityInstanceData *entityInstance = GetEntityInstanceData(entity.GetScene().GetID(), entity.GetID());
+		if (entityInstance && entityInstance->Instance.ScriptClass->DrawMethod)
 		{
-			CallMethod(entityInstance.Instance.GetInstance(), entityInstance.Instance.ScriptClass->DrawMethod);
+			CallMethod(entityInstance->Instance.GetInstance(), entityInstance->Instance.ScriptClass->DrawMethod);
 		}
 	}
 
 	void MonoScripting::LateDraw(Entity entity, Time t)
 	{
-		EntityInstanceData &entityInstance = GetEntityInstanceData(entity.GetScene().GetID(), entity.GetID());
-		if (entityInstance.Instance.ScriptClass->LateDrawMethod)
+		EntityInstanceData *entityInstance = GetEntityInstanceData(entity.GetScene().GetID(), entity.GetID());
+		if (entityInstance && entityInstance->Instance.ScriptClass->LateDrawMethod)
 		{
-			CallMethod(entityInstance.Instance.GetInstance(), entityInstance.Instance.ScriptClass->LateDrawMethod);
+			CallMethod(entityInstance->Instance.GetInstance(), entityInstance->Instance.ScriptClass->LateDrawMethod);
 		}
 	}
 
 	void MonoScripting::OnCollide(Entity entity, EntityID collisionEntity)
 	{
-		EntityInstanceData &entityInstance = GetEntityInstanceData(entity.GetScene().GetID(), entity.GetID());
-		if (entityInstance.Instance.ScriptClass->OnCollideMethod)
+		EntityInstanceData *entityInstance = GetEntityInstanceData(entity.GetScene().GetID(), entity.GetID());
+		if (entityInstance && entityInstance->Instance.ScriptClass->OnCollideMethod)
 		{
 			void *param[] = { &collisionEntity };
-			CallMethod(entityInstance.Instance.GetInstance(), entityInstance.Instance.ScriptClass->OnCollideMethod, param);
+			CallMethod(entityInstance->Instance.GetInstance(), entityInstance->Instance.ScriptClass->OnCollideMethod, param);
 		}
 	}
 
@@ -1168,10 +1196,10 @@ namespace Chroma
 		{
 			if (scriptA->IsEnabled())
 			{
-				EntityInstanceData &entityInstance = GetEntityInstanceData(sceneContext->GetID(), entityA);
-				if (entityInstance.Instance.ScriptClass->OnCollideMethod)
+				EntityInstanceData *entityInstance = GetEntityInstanceData(sceneContext->GetID(), entityA);
+				if (entityInstance && entityInstance->Instance.ScriptClass->OnCollideMethod)
 				{
-					CallMethod(entityInstance.Instance.GetInstance(), entityInstance.Instance.ScriptClass->OnCollideMethod, onCollideParams);
+					CallMethod(entityInstance->Instance.GetInstance(), entityInstance->Instance.ScriptClass->OnCollideMethod, onCollideParams);
 				}
 			}
 		}
@@ -1179,10 +1207,10 @@ namespace Chroma
 		{
 			if (scriptB->IsEnabled())
 			{
-				EntityInstanceData &entityInstance = GetEntityInstanceData(sceneContext->GetID(), entityA);
-				if (entityInstance.Instance.ScriptClass->OnCollideMethod)
+				EntityInstanceData *entityInstance = GetEntityInstanceData(sceneContext->GetID(), entityA);
+				if (entityInstance && entityInstance->Instance.ScriptClass->OnCollideMethod)
 				{
-					CallMethod(entityInstance.Instance.GetInstance(), entityInstance.Instance.ScriptClass->OnCollideMethod, onCollideParams);
+					CallMethod(entityInstance->Instance.GetInstance(), entityInstance->Instance.ScriptClass->OnCollideMethod, onCollideParams);
 				}
 			}
 		}

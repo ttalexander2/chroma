@@ -53,7 +53,7 @@ namespace Chroma
 					spriteRenderer.SetAnimation(spriteRenderer.Animation);
 
 					Sprite::Animation animation = sprite->Animations[spriteRenderer.Animation];
-					if (spriteRenderer.time_till_next_frame >= sprite->Frames[spriteRenderer.CurrentFrame].Durration)
+					if (spriteRenderer.time_till_next_frame >= sprite->Frames[spriteRenderer.CurrentFrame].Duration)
 					{
 						spriteRenderer.time_till_next_frame = 0;
 						int start = sprite->Animations[spriteRenderer.Animation].Start;

@@ -46,12 +46,11 @@ namespace Chroma
 		return m_Rotation;
 	}
 
-	Reflection::TypeFactory<RectangleCollider> RectangleCollider::RegisterType()
+	Reflection::type_factory<RectangleCollider> RectangleCollider::register_type()
 	{
-		return Reflection::Register<RectangleCollider>("RectangleCollider")
-		       .Base<Collider>()
-		       .Require("RigidBody")
-		       .Data<static_cast<void (RectangleCollider::*)(const Math::vec2 &)>(&RectangleCollider::SetSize), &RectangleCollider::GetSize>("Size")
-		       .Data<&RectangleCollider::SetRotation, &RectangleCollider::GetRotation>("Rotation");
+		return Reflection::RegisterComponent<RectangleCollider>("RectangleCollider")
+		       .base<Collider>()
+		       .data<&RectangleCollider::GetSize, static_cast<void (RectangleCollider::*)(const Math::vec2 &)>(&RectangleCollider::SetSize)>("Size")
+		       .data<&RectangleCollider::GetRotation, &RectangleCollider::SetRotation>("Rotation");
 	}
 }

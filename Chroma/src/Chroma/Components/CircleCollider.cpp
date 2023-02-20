@@ -25,10 +25,10 @@ namespace Chroma
 		m_Shape.m_p = { value.x * Physics::GetScale(), value.y * Physics::GetScale() };
 	}
 
-	Reflection::TypeFactory<CircleCollider> CircleCollider::RegisterType()
+	Reflection::type_factory<CircleCollider> CircleCollider::register_type()
 	{
-		return Reflection::Register<CircleCollider>("CircleCollider")
-		       .Base<Collider>()
-		       .Data<&CircleCollider::SetRadius, &CircleCollider::GetRadius>("Radius");
+		return Reflection::RegisterComponent<CircleCollider>("CircleCollider")
+		       .base<Collider>()
+		       .data<&CircleCollider::GetRadius, &CircleCollider::SetRadius>("Radius");
 	}
 }

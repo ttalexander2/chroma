@@ -4,7 +4,7 @@
 
 namespace Chroma
 {
-	struct EdgeCollider : public Collider
+	struct EdgeCollider : Collider
 	{
 		CHROMA_COMPONENT(EdgeCollider, Collider);
 		b2Shape *GetShapeHandle() override { return &m_Shape; }

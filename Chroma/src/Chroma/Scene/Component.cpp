@@ -5,9 +5,9 @@ namespace Chroma
 {
 	unsigned int Component::comparison_counter = 0;
 
-	Reflection::TypeFactory<Component> Component::RegisterType()
+	Component::type_factory Component::register_type()
 	{
-		return Reflection::Register<Component>("Component")
-				.Data<&Component::SetEnabled, &Component::IsEnabled>("Enabled");
+		return Chroma::Reflection::register_type<Component>("Component")
+			.data<&Component::IsEnabled, &Component::SetEnabled>("Enabled");
 	}
 } //namespace Chroma

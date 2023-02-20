@@ -19,7 +19,6 @@
 #include "EditorApp.h"
 #include "Hierarchy.h"
 #include "UndoRedo.h"
-#include "Project.h"
 #include "Viewport.h"
 #include "ComponentDebugGizmos.h"
 
@@ -41,23 +40,10 @@ namespace Polychrome
 
 	void ComponentWidgets::Draw(Chroma::Component* c)
 	{
-
-		DrawObject(c, c->ToAnyRef());
-
-		return;
-
-		
-		if (c->IsType<Chroma::Transform>()) DrawTransform(c);
-		if (c->IsType<Chroma::CSharpScript>()) DrawCSharpScript(c);
-		if (c->IsType<Chroma::AudioSource>()) DrawAudioSource(c);
-		//if (c->IsTypeOf<Chroma::Collider>()) DrawCollider(c);
-		if (c->IsType<Chroma::SpriteRenderer>()) DrawSpriteRenderer(c);
-		if (c->IsType<Chroma::Camera>()) DrawCameraComponent(c);
-		if (c->IsType<Chroma::ParticleEmitter>())
-			DrawParticleEmitter(c);
+		DrawObject(c);
 	}
 
-	void ComponentWidgets::DrawTransform(Chroma::Component* c)
+	/*void ComponentWidgets::DrawTransform(Chroma::Component* c)
 	{
 		Chroma::Transform* t = reinterpret_cast<Chroma::Transform*>(c);
 		DrawComponentValue(t, "Position");
@@ -93,38 +79,42 @@ namespace Polychrome
 		{
 			Chroma::EntityID entity = Hierarchy::SelectedEntity;
 			//Chroma::MonoScripting::getEntity
-			auto& entityInstanceData = Chroma::MonoScripting::GetEntityInstanceData(EditorApp::CurrentScene->GetID(), entity);
-			for (auto& [name, field] : script->ModuleFieldMap[script->ModuleName])
+			auto* entityInstanceData = Chroma::MonoScripting::GetEntityInstanceData(EditorApp::CurrentScene->GetID(), entity);
+			if (entityInstanceData)
 			{
-				DrawComponentValue(script, name);
-				std::string hash = "##" + script->ModuleName + name;
-				if (field.Type == Chroma::FieldType::Float)
+				for (auto& [name, field] : script->ModuleFieldMap[script->ModuleName])
 				{
-					float val = field.GetRuntimeValue<float>(entityInstanceData.Instance);
-					ImGui::InputFloat(hash.c_str(), &val);
-					field.SetRuntimeValue<float>(entityInstanceData.Instance, val);
-				}
-				else if (field.Type == Chroma::FieldType::Int)
-				{
-					int val = field.GetRuntimeValue<int>(entityInstanceData.Instance);
-					ImGui::InputInt(hash.c_str(), &val);
-					field.SetRuntimeValue<int>(entityInstanceData.Instance, val);
-				}
-				else if (field.Type == Chroma::FieldType::String)
-				{
-					std::string val = field.GetRuntimeValue<std::string>(entityInstanceData.Instance);
-					ImGui::InputText(hash.c_str(), &val);
-					field.SetRuntimeValue(entityInstanceData.Instance, val);
-				}
-				else if (field.Type == Chroma::FieldType::Entity)
-				{
-					//Chroma::Entity entity = field.GetRuntimeValue<Chroma::Entity>(entityInstanceData.Instance);
-					//int id = (int)entity.GetID();
-					//ImGui::InputInt(hash, &id, 1, 100);
-					//if (EditorApp::CurrentScene->Registry.valid((Chroma::EntityID)id))
-					//	field.SetRuntimeValue<Chroma::Entity>(entityInstanceData.Instance, Chroma::Entity((Chroma::EntityID)id, EditorApp::CurrentScene));
-				}
+					DrawComponentValue(script, name);
+					std::string hash = "##" + script->ModuleName + name;
+					if (field.Type == Chroma::FieldType::Float)
+					{
+						float val = field.GetRuntimeValue<float>(entityInstanceData->Instance);
+						ImGui::InputFloat(hash.c_str(), &val);
+						field.SetRuntimeValue<float>(entityInstanceData->Instance, val);
+					}
+					else if (field.Type == Chroma::FieldType::Int)
+					{
+						int val = field.GetRuntimeValue<int>(entityInstanceData->Instance);
+						ImGui::InputInt(hash.c_str(), &val);
+						field.SetRuntimeValue<int>(entityInstanceData->Instance, val);
+					}
+					else if (field.Type == Chroma::FieldType::String)
+					{
+						std::string val = field.GetRuntimeValue<std::string>(entityInstanceData->Instance);
+						ImGui::InputText(hash.c_str(), &val);
+						field.SetRuntimeValue(entityInstanceData->Instance, val);
+					}
+					else if (field.Type == Chroma::FieldType::Entity)
+					{
+						//Chroma::Entity entity = field.GetRuntimeValue<Chroma::Entity>(entityInstanceData->Instance);
+						//int id = (int)entity.GetID();
+						//ImGui::InputInt(hash, &id, 1, 100);
+						//if (EditorApp::CurrentScene->Registry.valid((Chroma::EntityID)id))
+						//	field.SetRuntimeValue<Chroma::Entity>(entityInstanceData->Instance, Chroma::Entity((Chroma::EntityID)id, EditorApp::CurrentScene));
+					}
+				}	
 			}
+
 		}
 		else
 		{
@@ -419,91 +409,346 @@ namespace Polychrome
 			UndoRedo::ImGuiRegister<float>(&emitter->PreWarmSeconds, oldPreWarmSeconds, "Modify Particle Emitter Settings");
 		}
 
-	}
+	*/
 
-	void ComponentWidgets::DrawBool(Chroma::Component *c, Chroma::Reflection::Data data, Chroma::Reflection::AnyRef handle)
+	void ComponentWidgets::DrawBool(Chroma::Component *c, Chroma::Reflection::data data)
 	{
-		ImGui::PushID(handle.RawPointer());
+		auto handle = c->ToHandle();
 		
-		DrawComponentValue(c, data.GetName());
-		bool temp = data.Get(handle.Handle()).Cast<bool>();
-		ImGui::Checkbox("##bool", &temp);
-		data.Set(handle.Handle(), temp);
+		ImGui::PushID(data.get(handle).data());
+		
+		DrawComponentValue(c, data.name());
+		bool temp = data.get(handle).cast<bool>();
+		if (ImGui::Checkbox("##bool", &temp))
+		{
+			if (data.get(handle).cast<bool>() != temp && !data.set(handle, temp))
+			{
+				CHROMA_CORE_WARN("Could not set data [{}] for component [{}] -- entity {}", data.name(), handle.type().name(), c->GetEntityID());
+			}
+		}
 		
 		ImGui::PopID();
 		
 	}
 
-	void ComponentWidgets::DrawFloat(Chroma::Component *c, Chroma::Reflection::Data data, Chroma::Reflection::AnyRef handle)
+	void ComponentWidgets::DrawFloat(Chroma::Component *c, Chroma::Reflection::data data)
 	{
+		auto handle = c->ToHandle();
+		
+		ImGui::PushID(data.get(handle).data());
+		
+		DrawComponentValue(c, data.name());
+		float temp = data.get(handle).cast<float>();
+		if (ImGui::InputFloat("##bool", &temp))
+		{
+			if (data.get(handle).cast<float>() != temp && !data.set(handle, temp))
+			{
+				CHROMA_CORE_WARN("Could not set data [{}] for component [{}] -- entity {}", data.name(), handle.type().name(), c->GetEntityID());
+			}
+		}
+		
+		ImGui::PopID();
 	}
 
-	void ComponentWidgets::DrawDouble(Chroma::Component *c, Chroma::Reflection::Data data, Chroma::Reflection::AnyRef handle)
+	void ComponentWidgets::DrawDouble(Chroma::Component *c, Chroma::Reflection::data data)
 	{
+		auto handle = c->ToHandle();
+		
+		ImGui::PushID(data.get(handle).data());
+		
+		DrawComponentValue(c, data.name());
+		double temp = data.get(handle).cast<double>();
+		if (ImGui::InputDouble("##double", &temp))
+		{
+			if (!data.set(handle, temp))
+			{
+				CHROMA_CORE_WARN("Could not set data [{}] for component [{}] -- entity {}", data.name(), handle.type().name(), c->GetEntityID());
+			}
+		}
+
+		
+		ImGui::PopID();
 	}
 
-	void ComponentWidgets::DrawInt32(Chroma::Component *c, Chroma::Reflection::Data data, Chroma::Reflection::AnyRef handle)
+	void ComponentWidgets::DrawInt32(Chroma::Component *c, Chroma::Reflection::data data)
 	{
+		auto handle = c->ToHandle();
+		
+		ImGui::PushID(data.get(handle).data());
+		
+		DrawComponentValue(c, data.name());
+		int32_t temp = data.get(handle).cast<int32_t>();
+		if (ImGui::InputInt("##int32", &temp))
+		{
+			if (!data.set(handle, temp))
+			{
+				CHROMA_CORE_WARN("Could not set data [{}] for component [{}] -- entity {}", data.name(), handle.type().name(), c->GetEntityID());
+			}
+		}
+
+		
+		ImGui::PopID();
 	}
 
-	void ComponentWidgets::DrawUInt32(Chroma::Component *c, Chroma::Reflection::Data data, Chroma::Reflection::AnyRef handle)
+	void ComponentWidgets::DrawUInt32(Chroma::Component *c, Chroma::Reflection::data data)
 	{
+		auto handle = c->ToHandle();
+		
+		ImGui::PushID(data.get(handle).data());
+		
+		DrawComponentValue(c, data.name());
+		uint32_t temp = data.get(handle).cast<uint32_t>();
+		const char* format = (ImGuiInputTextFlags_CharsHexadecimal) ? "%08X" : "%d";
+		constexpr int step = 1;
+		constexpr int step_fast = 100;
+		constexpr ImGuiInputTextFlags flags = 0;
+		
+		// ReSharper disable once CppCStyleCast
+		if (ImGui::InputScalar("##uint32", ImGuiDataType_U32, (void*)&temp, &step, &step_fast, format, flags))
+		{
+			if (!data.set(handle, temp))
+			{
+				CHROMA_CORE_WARN("Could not set data [{}] for component [{}] -- entity {}", data.name(), handle.type().name(), c->GetEntityID());
+			}	
+		}
+
+		
+		ImGui::PopID();
 	}
 
-	void ComponentWidgets::DrawInt64(Chroma::Component *c, Chroma::Reflection::Data data, Chroma::Reflection::AnyRef handle)
+	void ComponentWidgets::DrawInt64(Chroma::Component *c, Chroma::Reflection::data data)
 	{
+		auto handle = c->ToHandle();
+		
+		ImGui::PushID(data.get(handle).data());
+		
+		DrawComponentValue(c, data.name());
+		int64_t temp = data.get(handle).cast<int64_t>();
+		const char* format = (ImGuiInputTextFlags_CharsHexadecimal) ? "%08X" : "%d";
+		constexpr int step = 1;
+		constexpr int step_fast = 100;
+		constexpr ImGuiInputTextFlags flags = 0;
+		
+		// ReSharper disable once CppCStyleCast
+		if (ImGui::InputScalar("##int64", ImGuiDataType_S64, (void*)&temp, &step, &step_fast, format, flags))
+		{
+			if (!data.set(handle, temp))
+        	{
+        		CHROMA_CORE_WARN("Could not set data [{}] for component [{}] -- entity {}", data.name(), handle.type().name(), c->GetEntityID());
+        	}	
+		}
+
+		
+		ImGui::PopID();
 	}
 
-	void ComponentWidgets::DrawUInt64(Chroma::Component *c, Chroma::Reflection::Data data, Chroma::Reflection::AnyRef handle)
+	void ComponentWidgets::DrawUInt64(Chroma::Component *c, Chroma::Reflection::data data)
 	{
+		auto handle = c->ToHandle();
+		
+		ImGui::PushID(data.get(handle).data());
+		
+		DrawComponentValue(c, data.name());
+		uint64_t temp = data.get(handle).cast<uint64_t>();
+		const char* format = (ImGuiInputTextFlags_CharsHexadecimal) ? "%08X" : "%d";
+		constexpr int step = 1;
+		constexpr int step_fast = 100;
+		constexpr ImGuiInputTextFlags flags = 0;
+		
+		// ReSharper disable once CppCStyleCast
+		if (ImGui::InputScalar("##uint64", ImGuiDataType_U64, (void*)&temp, &step, &step_fast, format, flags))
+		{
+			if (!data.set(handle, temp))
+			{
+				CHROMA_CORE_WARN("Could not set data [{}] for component [{}] -- entity {}", data.name(), handle.type().name(), c->GetEntityID());
+			}
+		}
+
+		
+		ImGui::PopID();
 	}
 
-	void ComponentWidgets::DrawChar(Chroma::Component *c, Chroma::Reflection::Data data, Chroma::Reflection::AnyRef handle)
+	void ComponentWidgets::DrawChar(Chroma::Component *c, Chroma::Reflection::data data)
 	{
+		auto handle = c->ToHandle();
+		
+		ImGui::PushID(data.get(handle).data());
+		
+		DrawComponentValue(c, data.name());
+		char temp = data.get(handle).cast<char>();
+		const char* format = (ImGuiInputTextFlags_CharsHexadecimal) ? "%08X" : "%d";
+		constexpr int step = 1;
+		constexpr int step_fast = 100;
+		constexpr ImGuiInputTextFlags flags = 0;
+		
+		// ReSharper disable once CppCStyleCast
+		if (ImGui::InputScalar("##char", ImGuiDataType_S8, (void*)&temp, &step, &step_fast, format, flags))
+		{
+			if (!data.set(handle, temp))
+			{
+				CHROMA_CORE_WARN("Could not set data [{}] for component [{}] -- entity {}", data.name(), handle.type().name(), c->GetEntityID());
+			}
+		}
+
+		
+		ImGui::PopID();
 	}
 
-	void ComponentWidgets::DrawUChar(Chroma::Component *c, Chroma::Reflection::Data data, Chroma::Reflection::AnyRef handle)
+	void ComponentWidgets::DrawUChar(Chroma::Component *c, Chroma::Reflection::data data)
 	{
+		auto handle = c->ToHandle();
+		
+		ImGui::PushID(data.get(handle).data());
+		
+		DrawComponentValue(c, data.name());
+		unsigned char temp = data.get(handle).cast<unsigned char>();
+		const char* format = (ImGuiInputTextFlags_CharsHexadecimal) ? "%08X" : "%d";
+		constexpr int step = 1;
+		constexpr int step_fast = 100;
+		constexpr ImGuiInputTextFlags flags = 0;
+		
+		// ReSharper disable once CppCStyleCast
+		if (ImGui::InputScalar("##uchar", ImGuiDataType_U8, (void*)&temp, &step, &step_fast, format, flags))
+		{
+			if (!data.set(handle, temp))
+			{
+				CHROMA_CORE_WARN("Could not set data [{}] for component [{}] -- entity {}", data.name(), handle.type().name(), c->GetEntityID());
+			}
+		}
+
+		
+		ImGui::PopID();
 	}
 
-	void ComponentWidgets::DrawString(Chroma::Component *c, Chroma::Reflection::Data data, Chroma::Reflection::AnyRef handle)
+	void ComponentWidgets::DrawString(Chroma::Component *c, Chroma::Reflection::data data)
 	{
+		auto handle = c->ToHandle();
+		
+		ImGui::PushID(data.get(handle).data());
+		
+		DrawComponentValue(c, data.name());
+		std::string temp = data.get(handle).cast<std::string>();
+		if (ImGui::InputText("##string", &temp))
+		{
+			if (!data.set(handle, temp))
+			{
+				CHROMA_CORE_WARN("Could not set data [{}] for component [{}] -- entity {}", data.name(), handle.type().name(), c->GetEntityID());
+			}	
+		}
+
+		
+		ImGui::PopID();
 	}
 
-	void ComponentWidgets::DrawAsset(Chroma::Component *c, Chroma::Reflection::Data data, Chroma::Reflection::AnyRef handle)
+	void ComponentWidgets::DrawAsset(Chroma::Component *c, Chroma::Reflection::data data)
 	{
+		auto handle = c->ToHandle();
+		
+		ImGui::PushID(data.get(handle).data());
+		
+		DrawComponentValue(c, data.name());
+		
+		ImGui::PopID();
 	}
 
-	void ComponentWidgets::DrawVec2(Chroma::Component *c, Chroma::Reflection::Data data, Chroma::Reflection::AnyRef handle)
+	void ComponentWidgets::DrawVec2(Chroma::Component *c, Chroma::Reflection::data data)
 	{
+		auto handle = c->ToHandle();
+		
+		ImGui::PushID(data.get(handle).data());
+		
+		DrawComponentValue(c, data.name());
+		auto temp = data.get(handle).cast<Math::vec2>();
+		if (ImGui::Vec2IntWithLabels("##vec2", temp))
+		{
+			if (!data.set(handle, temp))
+			{
+				CHROMA_CORE_WARN("Could not set data [{}] for component [{}] -- entity {}", data.name(), handle.type().name(), c->GetEntityID());
+			}	
+		}
+
+		
+		ImGui::PopID();
 	}
 
-	void ComponentWidgets::DrawVec3(Chroma::Component *c, Chroma::Reflection::Data data, Chroma::Reflection::AnyRef handle)
+	void ComponentWidgets::DrawVec3(Chroma::Component *c, Chroma::Reflection::data data)
 	{
+		auto handle = c->ToHandle();
+		
+		ImGui::PushID(data.get(handle).data());
+		
+		DrawComponentValue(c, data.name());
+		auto temp = data.get(handle).cast<Math::vec3>();
+		if (ImGui::Vec3IntWithLabels("##vec2", temp))
+		{
+			if (!data.set(handle, temp))
+			{
+				CHROMA_CORE_WARN("Could not set data [{}] for component [{}] -- entity {}", data.name(), handle.type().name(), c->GetEntityID());
+			}
+		}
+
+		
+		ImGui::PopID();
 	}
 
-	void ComponentWidgets::DrawVec4(Chroma::Component *c, Chroma::Reflection::Data data, Chroma::Reflection::AnyRef handle)
+	void ComponentWidgets::DrawVec4(Chroma::Component *c, Chroma::Reflection::data data)
 	{
+		auto handle = c->ToHandle();
+		
+		ImGui::PushID(data.get(handle).data());
+		
+		DrawComponentValue(c, data.name());
+		
+		ImGui::PopID();
 	}
 
-	void ComponentWidgets::DrawUVec2(Chroma::Component *c, Chroma::Reflection::Data data, Chroma::Reflection::AnyRef handle)
+	void ComponentWidgets::DrawUVec2(Chroma::Component *c, Chroma::Reflection::data data)
 	{
+		auto handle = c->ToHandle();
+		
+		ImGui::PushID(data.get(handle).data());
+		
+		DrawComponentValue(c, data.name());
+		
+		ImGui::PopID();
 	}
 
-	void ComponentWidgets::DrawUVec3(Chroma::Component *c, Chroma::Reflection::Data data, Chroma::Reflection::AnyRef handle)
+	void ComponentWidgets::DrawUVec3(Chroma::Component *c, Chroma::Reflection::data data)
 	{
+		auto handle = c->ToHandle();
+		
+		ImGui::PushID(data.get(handle).data());
+		
+		DrawComponentValue(c, data.name());
+		
+		ImGui::PopID();
 	}
 
-	void ComponentWidgets::DrawUVec4(Chroma::Component *c, Chroma::Reflection::Data data, Chroma::Reflection::AnyRef handle)
+	void ComponentWidgets::DrawUVec4(Chroma::Component *c, Chroma::Reflection::data data)
 	{
+		auto handle = c->ToHandle();
+		
+		ImGui::PushID(data.get(handle).data());
+		
+		DrawComponentValue(c, data.name());
+		
+		ImGui::PopID();
 	}
 
-	void ComponentWidgets::DrawEntity(Chroma::Component *c, Chroma::Reflection::Data data, Chroma::Reflection::AnyRef handle)
+	void ComponentWidgets::DrawEntity(Chroma::Component *c, Chroma::Reflection::data data)
 	{
+		auto handle = c->ToHandle();
+		
+		ImGui::PushID(data.get(handle).data());
+		
+		DrawComponentValue(c, data.name());
+		
+		ImGui::PopID();
 	}
 
 
 
+	/*
 	void ComponentWidgets::DrawSpriteRenderer(Chroma::Component* c)
 	{
 		Chroma::SpriteRenderer* spr = reinterpret_cast<Chroma::SpriteRenderer*>(c);
@@ -552,7 +797,7 @@ namespace Polychrome
 			}
 			ImGui::EndCombo();
 		}
-		*/
+		#1#
 
 
 		if (spr->GetSprite())
@@ -687,7 +932,7 @@ namespace Polychrome
 
 
 				ImGui::SameLine();
-				ImGui::Text((std::to_string(s->Frames[spr->GetCurrentFrame()].Durration) + " ms").c_str());
+				ImGui::Text((std::to_string(s->Frames[spr->GetCurrentFrame()].Duration) + " ms").c_str());
 			}
 
 
@@ -785,14 +1030,14 @@ namespace Polychrome
 			}
 		}
 
-		*/
+		#1#
 
 
 		//bool open = DrawComponentValueCollapsible("Layer");
 		//ImGui::EditableList(this->ListTest, open);
 
 
-	}
+	}*/
 
 	void ComponentWidgets::DrawComponentValue(Chroma::Component* c, const std::string& label)
 	{
@@ -847,14 +1092,92 @@ namespace Polychrome
 
 	}
 
-	void ComponentWidgets::DrawObject(Chroma::Component* c, Chroma::Reflection::AnyRef val)
+	void ComponentWidgets::DrawObject(Chroma::Component* c)
 	{
-		for (auto data : val.Type().Data())
+		ImGui::PushID(c);
+		//CHROMA_CORE_TRACE("{}", val.type().name());
+		for (auto data : c->GetType().data())
 		{
-			if (data.Type() == Chroma::Reflection::Resolve<bool>())
+			ImGui::PushID(data.name().c_str());
+			//CHROMA_CORE_TRACE("\t{} - {}", data.name(), data.type().name());
+			
+			if (data.type().is<bool>())
 			{
-				DrawBool(c, data, val);
+				DrawBool(c, data);
 			}
+			else if (data.type().is<float>())
+			{
+				DrawFloat(c, data);
+			}
+			else if (data.type().is<double>())
+			{
+				DrawDouble(c, data);
+			}
+			else if (data.type().is<int32_t>())
+			{
+				DrawInt32(c, data);
+			}
+			else if (data.type().is<uint32_t>())
+			{
+				DrawUInt32(c, data);
+			}
+			else if (data.type().is<int64_t>())
+			{
+				DrawInt64(c, data);
+			}
+			else if (data.type().is<uint64_t>())
+			{
+				DrawUInt64(c, data);
+			}
+			else if (data.type().is<char>())
+			{
+				DrawChar(c, data);
+			}
+			else if (data.type().is<unsigned char>())
+			{
+				DrawUChar(c, data);
+			}
+			else if (data.type().is<std::string>())
+			{
+				DrawString(c, data);
+			}
+			else if (data.type().is<Chroma::Asset>())
+			{
+				DrawAsset(c, data);
+			}
+			else if (data.type().is<Math::vec2>())
+			{
+				DrawVec2(c, data);
+			}
+			else if (data.type().is<Math::vec3>())
+			{
+				DrawVec3(c, data);
+			}
+			else if (data.type().is<Math::vec4>())
+			{
+				DrawVec4(c, data);
+			}
+			else if (data.type().is<Math::uvec2>())
+			{
+				DrawUVec2(c, data);
+			}
+			else if (data.type().is<Math::uvec3>())
+			{
+				DrawUVec3(c, data);
+			}
+			else if (data.type().is<Math::vec4>())
+			{
+				DrawUVec4(c, data);
+			}
+			else if (data.type().is<Chroma::EntityID>())
+			{
+				DrawEntity(c, data);
+			}
+
+
+			ImGui::PopID();
 		}
+
+		ImGui::PopID();
 	}
 }

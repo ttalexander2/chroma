@@ -9,7 +9,7 @@ namespace Chroma
 	/// @brief Audio Source Component.
 	///
 	/// This component plays an audio event. Spacial controlling is not yet supported.
-	struct AudioSource : public Component
+	struct AudioSource : Component
 	{
 		CHROMA_COMPONENT(AudioSource, Component);
 		/// @brief Whether the event is currently muted.

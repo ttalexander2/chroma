@@ -106,10 +106,10 @@ namespace Chroma
 		return true;
 	}
 
-	Reflection::TypeFactory<PolygonCollider> PolygonCollider::RegisterType()
+	Reflection::type_factory<PolygonCollider> PolygonCollider::register_type()
 	{
-		return Reflection::Register<PolygonCollider>("PolygonCollider")
-				.Data<&PolygonCollider::SetVertices, &PolygonCollider::GetVertices>("Vertices");
+		return Reflection::RegisterComponent<PolygonCollider>("PolygonCollider")
+				.data<&PolygonCollider::GetVertices, &PolygonCollider::SetVertices>("Vertices");
 	}
 
 	void PolygonCollider::SetVertices(const std::vector<Vertex> &vertices)

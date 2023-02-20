@@ -19,14 +19,19 @@ namespace Chroma
 			//MonoScripting::InitScriptEntity(entityObj);
 			MonoScripting::InstantiateEntityClass(entityObj);
 
-			auto &entityInstanceData = MonoScripting::GetEntityInstanceData(m_Scene->GetID(), entity);
+			auto entityInstanceData = MonoScripting::GetEntityInstanceData(m_Scene->GetID(), entity);
 
 			//CHROMA_CORE_TRACE("Loaded [{}] fields from '{}'", script.ModuleFieldMap[script.ModuleName].size(), script.ModuleName);
 
-			for (auto &[name, field] : script.ModuleFieldMap[script.ModuleName])
+			if (entityInstanceData)
 			{
-				field.CopyStoredValueToRuntime(entityInstanceData.Instance);
+				for (auto &[name, field] : script.ModuleFieldMap[script.ModuleName])
+				{
+					field.CopyStoredValueToRuntime(entityInstanceData->Instance);
+				}
 			}
+			
+
 
 			script.ExecutionOrder = MonoScripting::GetModuleExecutionOrder(script.ModuleName);
 		}

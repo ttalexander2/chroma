@@ -87,7 +87,7 @@ namespace Chroma
 		template <ComponentType T>
 		T &AddComponent(EntityID id)
 		{
-			return static_cast<T &>(*ComponentRegistry::AddComponent(Reflection::Resolve<T>().Id(), id, &Registry));
+			return static_cast<T &>(*ComponentRegistry::AddComponent(Reflection::resolve<T>().id(), id, &Registry));
 		}
 
 		Component *AddComponent(const std::string &component, EntityID entity)
@@ -114,7 +114,7 @@ namespace Chroma
 			return ComponentRegistry::GetComponent(component_id, entity, &Registry);
 		}
 
-		static std::vector<Reflection::Type> GetComponentTypes();
+		static std::vector<Reflection::type> GetComponentTypes();
 
 		template <ComponentType T>
 		bool HasComponent(EntityID id)

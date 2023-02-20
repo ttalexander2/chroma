@@ -70,14 +70,14 @@ namespace Chroma
 		return Math::vec2(m_Shape.m_vertex3.x / Physics::GetScale(), m_Shape.m_vertex3.y / Physics::GetScale());
 	}
 
-	Reflection::TypeFactory<EdgeCollider> EdgeCollider::RegisterType()
+	Reflection::type_factory<EdgeCollider> EdgeCollider::register_type()
 	{
-		return Reflection::Register<EdgeCollider>("EdgeCollider")
-		       .Base<Collider>()
-		       .Data<&EdgeCollider::SetV0, &EdgeCollider::GetV0>("V0")
-		       .Data<&EdgeCollider::SetV1, &EdgeCollider::GetV1>("V1")
-		       .Data<&EdgeCollider::SetV2, &EdgeCollider::GetV2>("V2")
-		       .Data<&EdgeCollider::SetV3, &EdgeCollider::GetV3>("V3")
-		       .Data<&EdgeCollider::SetOneSided, &EdgeCollider::IsOneSided>("OneSided");
+		return Reflection::RegisterComponent<EdgeCollider>("EdgeCollider")
+		       .base<Collider>()
+		       .data<&EdgeCollider::GetV0, &EdgeCollider::SetV0>("V0")
+		       .data<&EdgeCollider::GetV1, &EdgeCollider::SetV1>("V1")
+		       .data<&EdgeCollider::GetV2, &EdgeCollider::SetV2>("V2")
+		       .data<&EdgeCollider::GetV3, &EdgeCollider::SetV3>("V3")
+		       .data<&EdgeCollider::IsOneSided, &EdgeCollider::SetOneSided>("OneSided");
 	}
 }

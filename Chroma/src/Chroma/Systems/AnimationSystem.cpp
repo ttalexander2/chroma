@@ -76,10 +76,10 @@ namespace Chroma
 
 					if (track->update == Animation::UpdateType::continuous)
 					{
-						if (kf->value.IsType<Math::vec2>())
+						if (kf->value.is_type<Math::vec2>())
 						{
-							Math::vec2 a = *kf->value.TryCast<Math::vec2>();
-							Math::vec2 b = *next->value.TryCast<Math::vec2>();
+							Math::vec2 a = kf->value.cast<Math::vec2>();
+							Math::vec2 b = next->value.cast<Math::vec2>();
 
 							Animation::Transition t = kf->transition;
 
@@ -89,8 +89,13 @@ namespace Chroma
 
 							Component *c = m_Scene->GetComponent(track->componentID, track->entityID);
 
-							auto meta_handle = c->GetType().Data(track->propertyID);
-							meta_handle.Set(c->ToHandle(), val);
+							auto data_handle = c->GetType().data(track->propertyID);
+
+							auto comp_handle = c->ToHandle();
+							if (!data_handle.set(comp_handle, val))
+							{
+								CHROMA_CORE_WARN("Animation unable to update keyframe for property {} for entity {}", track->propertyID, track->entityID);
+							}
 						}
 					}
 					else
@@ -99,8 +104,12 @@ namespace Chroma
 						{
 							Component *c = m_Scene->GetComponent(track->componentID, track->entityID);
 
-							auto meta_handle = c->GetType().Data(track->propertyID);
-							meta_handle.Set(c->ToHandle(), kf->value);
+							auto meta_handle = c->GetType().data(track->propertyID);
+							auto comp_handle = c->ToHandle();
+							if (!meta_handle.set(comp_handle, kf->value))
+							{
+								CHROMA_CORE_WARN("Animation unable to update keyframe for property {} for entity {}", track->propertyID, track->entityID);
+							}
 						}
 					}
 				}

@@ -30,6 +30,8 @@
 #include <Chroma/Reflection/Reflection.h>
 #include <mirr/mirr.h>
 
+#include <ranges>
+
 
 namespace Chroma
 {
@@ -74,7 +76,15 @@ namespace Chroma
 			auto newEntity = out->Registry.create(oldEntity);
 			for (Component *c : GetAllComponents(oldEntity))
 			{
-				ComponentRegistry::ComponentCopyFunctions()[c->TypeId()](newEntity, &out->Registry, &Registry);
+				if (c != nullptr && c->GetType().valid())
+				{
+					auto func = ComponentRegistry::ComponentCopyFunctions()[c->GetType().id()];
+					if (func)
+					{
+						func(newEntity, &out->Registry, &Registry);
+					}
+					
+				}
 			}
 			if (oldEntity == PrimaryCameraEntity)
 			{
@@ -125,16 +135,23 @@ namespace Chroma
 		if (!Registry.valid(entity))
 			return Math::vec2();
 
-		Transform &transform = Registry.get<Transform>(entity);
-		if (!transform.IsChild())
-			return transform.Position;
-		Math::vec2 finalPos = transform.Position;
-		auto parentID = transform.Parent;
+		const Transform* transform = Registry.try_get<Transform>(entity);
+
+		if (transform == nullptr)
+		{
+			CHROMA_CORE_WARN("Entity {} does not contain a transform! Something went very wrong.", entity);
+			return Math::vec2();
+		}
+		
+		if (!transform->IsChild())
+			return transform->Position;
+		Math::vec2 finalPos = transform->Position;
+		auto parentID = transform->Parent;
 		while (parentID != ENTITY_NULL)
 		{
-			Transform &parentTransform = Registry.get<Transform>(parentID);
-			finalPos += parentTransform.Position;
-			parentID = parentTransform.Parent;
+			const Transform* parentTransform = Registry.try_get<Transform>(parentID);
+			finalPos += parentTransform->Position;
+			parentID = parentTransform->Parent;
 		}
 		return finalPos;
 	}
@@ -356,7 +373,7 @@ namespace Chroma
 			return false;
 
 		auto sceneName = data["Scene"].as<std::string>();
-		//CHROMA_CORE_TRACE("Deserializing Scene '{}'", sceneName);
+		CHROMA_CORE_TRACE("Deserializing Scene '{}'", sceneName);
 
 		if (!data["GUID"])
 			return false;
@@ -487,23 +504,23 @@ namespace Chroma
 	}
 
 
-	std::vector<Reflection::Type> Scene::GetComponentTypes()
+	std::vector<Reflection::type> Scene::GetComponentTypes()
 	{
-		std::vector<Reflection::Type> types;
+		std::vector<Reflection::type> types;
 
-		auto comp_type = Reflection::Resolve<Component>();
+		auto comp_type = Reflection::resolve<Component>();
 
-		for (auto type : Reflection::Resolve())
+		for (auto type : Reflection::resolve())
 		{
-			if (type.Is<Component>())
+			if (type.is<Component>())
 				continue;
-			if (type.IsAbstract())
+			if (type.is_abstract())
 				continue;
 			//CHROMA_CORE_TRACE("{}", type.GetName());
-			for (auto &base : type.Base())
+			for (const auto id : type.bases())
 			{
 				//CHROMA_CORE_TRACE("\t{}", base.GetName());
-				if (base.Is<Component>())
+				if (Reflection::type base = Reflection::resolve(id); base.is<Component>())
 				{
 					types.push_back(type);
 					break;
@@ -519,7 +536,7 @@ namespace Chroma
 	std::vector<Component *> Scene::GetAllComponents(EntityID entity)
 	{
 		std::vector<Component *> retval;
-		for (auto &[type, func] : ComponentRegistry::ComponentGetFunctions())
+		for (auto &func : ComponentRegistry::ComponentGetFunctions() | std::views::values)
 		{
 			Component *comp = func(entity, &Registry);
 			if (comp != nullptr)
@@ -544,15 +561,14 @@ namespace Chroma
 
 		for (Component *comp : components)
 		{
-			if (comp->IsType<Tag>())
+			if (comp->TypeInfo.is<Tag>())
 			{
 				continue;
 			}
 			out << YAML::BeginMap << YAML::Key;
-			out << comp->GetType().GetName();
+			out << comp->GetType().name();
 			out << YAML::Value;
-			Reflection::Any compAny = comp->ToAny();
-			Reflection::SerializeObjectYAML(out, compAny);
+			Reflection::Serializer::SerializeObjectYAML(out, comp->ToHandle());
 			out << YAML::EndMap;
 		}
 
@@ -572,41 +588,16 @@ namespace Chroma
 					auto key = component.first.as<std::string>();
 					//CHROMA_CORE_INFO("{}", key);
 					
-					auto type = Reflection::Resolve(key);
-					if (!type.Valid())
+					auto type = Reflection::resolve(key);
+					if (!type.valid())
 						CHROMA_CORE_ERROR("Type {} not valid!", key);
-					Component *compPtr = ComponentRegistry::AddComponent(key, id, &out->Registry);
-
-					Reflection::Any comp = compPtr->ToAny();
+					
+					Component *comp = ComponentRegistry::AddComponent(key, id, &out->Registry);
 
 					if (!comp)
 						CHROMA_CORE_ERROR("Component construction with entity id failed!");
 
-					//CHROMA_CORE_INFO("{}", static_cast<void *>(comp.TryCast<Component *>()));
-
-					if (type.Id() == Reflection::Resolve<SpriteRenderer>().Id())
-					{
-						//comp = ((SpriteRenderer*)compPtr)->ToAnyRef();
-						auto color = comp.Get("Color").Cast<Math::vec4>();
-						CHROMA_CORE_INFO("before set(reflection): {}, {}, {}, {}", color.r, color.g, color.b, color.a);
-						comp.Set("Color", Math::vec4(0, 0, 0, 0));
-						color = comp.Get("Color").Cast<Math::vec4>();
-						CHROMA_CORE_INFO("after set(reflection): {}, {}, {}, {}", color.r, color.g, color.b, color.a);
-					}
-
-					Reflection::DeserializeObjectYAML(comp, type, component.second);
-
-					if (type.Id() == Reflection::Resolve<SpriteRenderer>().Id())
-					{
-						//comp = ((SpriteRenderer*)compPtr)->ToAnyRef();
-						auto color = comp.Get("Color").Cast<Math::vec4>();
-						CHROMA_CORE_INFO("after deserialization(reflection): {}, {}, {}, {}", color.r, color.g, color.b, color.a);
-						color = dynamic_cast<SpriteRenderer *>(compPtr)->Color;
-						CHROMA_CORE_INFO("after deserialization: {}, {}, {}, {}", color.r, color.g, color.b, color.a);
-					}
-
-					Component *outPtr = comp.TryCast<Component>();
-					ComponentRegistry::EmplaceOrReplaceComponentFromPtr(key, id, outPtr, &out->Registry);
+					//Reflection::Serializer::DeserializeObjectYAML(comp->ToHandle(), component.second);
 				}
 			}
 		}

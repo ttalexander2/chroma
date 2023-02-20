@@ -31,8 +31,6 @@
 #include "Chroma/Components/PolygonCollider.h"
 #include "Chroma/Components/RectangleCollider.h"
 #include "Chroma/Components/RigidBody.h"
-
-#include <entt/entt.hpp>
 #include "Chroma/Utilities/StringHash.h"
 #include <any>
 #include <Chroma/Assets/FMODBank.h>
@@ -53,6 +51,8 @@ namespace Chroma
 			s_Instance = this;
 		}
 
+		Reflection::Initializer::Initialize();
+
 		WindowProps props;
 		props.Title = title;
 		props.Width = width;
@@ -70,8 +70,6 @@ namespace Chroma
 		{
 			MonoScripting::Init("Chroma.Mono.dll");
 			ScriptEngineRegistry::RegisterAll();
-
-			Reflection::InitializeDataTypes();
 
 			AssetManager::Register<Sprite>();
 			AssetManager::Register<FMODBank>();

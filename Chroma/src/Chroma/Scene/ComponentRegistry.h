@@ -9,7 +9,6 @@ namespace Chroma
 {
 	class Scene;
 	struct Component;
-	struct Reflection;
 
 	struct ComponentRegistry
 	{
@@ -64,6 +63,13 @@ namespace Chroma
 			};
 		}
 
+		template <typename T>
+		static void RegisterComponent(const std::string& name)
+		{
+			const auto hash = BasicHash<uint32_t>::Hash(name.c_str()).m_Hash;
+			RegisterComponent<T>(hash);
+		}
+		
 		template <typename T>
 		static bool IsComponentRegistered()
 		{

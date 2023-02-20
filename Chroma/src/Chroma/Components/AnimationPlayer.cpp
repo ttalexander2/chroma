@@ -39,10 +39,10 @@ namespace Chroma
 		m_Current = animation;
 	}
 
-	Reflection::TypeFactory<AnimationPlayer> AnimationPlayer::RegisterType()
+	Reflection::type_factory<AnimationPlayer> AnimationPlayer::register_type()
 	{
-		return Reflection::Register<AnimationPlayer>("AnimationPlayer")
-		       .Base<Component>()
-		       .Data<&AnimationPlayer::PlayOnStart>("PlayOnStart");
+		return Reflection::RegisterComponent<AnimationPlayer>("AnimationPlayer")
+		       .base<Component>()
+		       .data<&AnimationPlayer::PlayOnStart>("PlayOnStart");
 	}
 }

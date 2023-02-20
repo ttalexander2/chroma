@@ -2,6 +2,7 @@
 #include "Camera.h"
 
 #include "Chroma/Reflection/Reflection.h"
+#include "Chroma/Renderer/RendererAPI.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -20,19 +21,19 @@ namespace Chroma
 		glm::mat4 transform = translate(glm::mat4(1.0f), { position, 0.f });
 
 		viewMatrix = inverse(transform);
-
 		//OpenGL order, reverse for DirectX, as it uses row major order instead
 		viewProjectionMatrix = projectionMatrix * viewMatrix;
 	}
 
-	Reflection::TypeFactory<Camera> Camera::RegisterType()
+	Reflection::type_factory<Camera> Camera::register_type()
 	{
-		return Reflection::Register<Camera>("Camera")
-		       .Base<Component>()
-		       .Data<&Camera::SetSize, &Camera::GetSize>("Size")
-		       .Data<&Camera::SetPosition, &Camera::GetPosition>("Position", false)
-		       .Func<&Camera::GetProjectionMatrix>("GetProjectionMatrix")
-		       .Func<&Camera::GetViewMatrix>("ViewMatrix")
-		       .Func<&Camera::GetViewProjectionMatrix>("ViewProjectionMatrix");
+		auto factory =  Reflection::RegisterComponent<Camera>("Camera")
+		       .base<Component>();
+		
+		       return factory.data<&Camera::GetSize, &Camera::SetSize>("Size")
+		       .data<&Camera::GetPosition, &Camera::SetPosition>("Position")
+		       .function<&Camera::GetProjectionMatrix>("GetProjectionMatrix")
+		       .function<&Camera::GetViewMatrix>("GetViewMatrix")
+		       .function<&Camera::GetViewProjectionMatrix>("GetViewProjectionMatrix");
 	}
 }

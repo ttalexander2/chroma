@@ -5,10 +5,10 @@
 
 namespace Chroma
 {
-	Reflection::TypeFactory<CSharpScript> CSharpScript::RegisterType()
+	Reflection::type_factory<CSharpScript> CSharpScript::register_type()
 	{
-		return Reflection::Register<CSharpScript>("CSharpScript")
-		       .Base<Component>()
-		       .Data<&CSharpScript::ModuleName>("Module");
+		return Reflection::RegisterComponent<CSharpScript>("CSharpScript")
+		       .base<Component>()
+		       .data<&CSharpScript::ModuleName>("Module");
 	}
 } //namespace Chroma

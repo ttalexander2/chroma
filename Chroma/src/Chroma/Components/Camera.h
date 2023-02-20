@@ -7,7 +7,7 @@ namespace Chroma
 	class Scene;
 	class CameraSystem;
 
-	struct Camera : public Component
+	struct Camera : Component
 	{
 		CHROMA_COMPONENT(Camera, Component);
 

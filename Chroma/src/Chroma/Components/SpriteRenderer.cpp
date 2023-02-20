@@ -5,8 +5,6 @@
 
 #include <functional>
 
-#include "Chroma/Reflection/Reflection.h"
-
 namespace Chroma
 {
 	/// @brief Set the sprite to render.
@@ -249,36 +247,36 @@ namespace Chroma
 		}
 	}
 
-	Reflection::TypeFactory<SpriteRenderer> SpriteRenderer::RegisterType()
+	Reflection::type_factory<SpriteRenderer> SpriteRenderer::register_type()
 	{
-		Reflection::Register<SpriteOrigin>("SpriteOrigin")
-				.Data<SpriteOrigin::Center>("Center")
-				.Data<SpriteOrigin::Left>("Left")
-				.Data<SpriteOrigin::Right>("Right")
-				.Data<SpriteOrigin::Top>("Top")
-				.Data<SpriteOrigin::Bottom>("Bottom")
-				.Data<SpriteOrigin::TopLeft>("TopLeft")
-				.Data<SpriteOrigin::TopRight>("TopRight")
-				.Data<SpriteOrigin::BottomLeft>("BottomLeft")
-				.Data<SpriteOrigin::BottomRight>("BottomRight")
-				.Data<SpriteOrigin::Custom>("Custom")
-				.Data<SpriteOrigin::Default>("Default");
+		Reflection::register_type<SpriteOrigin>("SpriteOrigin")
+				.data<SpriteOrigin::Center>("Center")
+				.data<SpriteOrigin::Left>("Left")
+				.data<SpriteOrigin::Right>("Right")
+				.data<SpriteOrigin::Top>("Top")
+				.data<SpriteOrigin::Bottom>("Bottom")
+				.data<SpriteOrigin::TopLeft>("TopLeft")
+				.data<SpriteOrigin::TopRight>("TopRight")
+				.data<SpriteOrigin::BottomLeft>("BottomLeft")
+				.data<SpriteOrigin::BottomRight>("BottomRight")
+				.data<SpriteOrigin::Custom>("Custom")
+				.data<SpriteOrigin::Default>("Default");
 
-		return Reflection::Register<SpriteRenderer>("SpriteRenderer")
-		       .Base<Component>()
-		       .Data<&SpriteRenderer::Color>("Color")
-		       .Data<&SpriteRenderer::Offset>("Offset")
-		       .Data<&SpriteRenderer::SortingPoint>("SortingPoint")
-		       .Data<&SpriteRenderer::PlayOnStart>("PlayOnStart")
-		       .Data<&SpriteRenderer::Playing>("Playing")
-		       .Data<&SpriteRenderer::Loop>("Loop")
-		       .Data<&SpriteRenderer::SpeedMultiplier>("SpeedMultiplier")
-		       .Data<&SpriteRenderer::SetSprite, &SpriteRenderer::GetSpriteID>("SpriteID")
-		       .Data<&SpriteRenderer::SetCurrentFrame, &SpriteRenderer::GetCurrentFrame>("CurrentFrame", false)
-		       .Data<static_cast<void (SpriteRenderer::*)(unsigned int)>(&SpriteRenderer::SetAnimation), &SpriteRenderer::GetAnimation>("Animation", false)
-		       .Data<static_cast<void (SpriteRenderer::*)(SpriteOrigin)>(&SpriteRenderer::SetSpriteOrigin), &GetSpriteOrigin>("SpriteOrigin")
-		       .Func<&SpriteRenderer::GetSpritePath>("GetSpritePath")
-		       .Func<&SpriteRenderer::RestartAnimation>("RestartAnimation")
-		       .Func<static_cast<void (SpriteRenderer::*)(const std::string &)>(&SpriteRenderer::SetAnimation)>("SetAnimation");
+		return Reflection::RegisterComponent<SpriteRenderer>("SpriteRenderer")
+		       .base<Component>()
+		       .data<&SpriteRenderer::Color>("Color")
+		       .data<&SpriteRenderer::Offset>("Offset")
+		       .data<&SpriteRenderer::SortingPoint>("SortingPoint")
+		       .data<&SpriteRenderer::PlayOnStart>("PlayOnStart")
+		       .data<&SpriteRenderer::Playing>("Playing")
+		       .data<&SpriteRenderer::Loop>("Loop")
+		       .data<&SpriteRenderer::SpeedMultiplier>("SpeedMultiplier")
+		       .data<&SpriteRenderer::GetSpriteID, &SpriteRenderer::SetSprite>("SpriteID")
+		       .data<&SpriteRenderer::GetCurrentFrame, &SpriteRenderer::SetCurrentFrame>("CurrentFrame") // Serialize = false
+		       .data<&SpriteRenderer::GetAnimation, static_cast<void (SpriteRenderer::*)(unsigned int)>(&SpriteRenderer::SetAnimation)>("Animation")
+		       .data<&SpriteRenderer::GetSpriteOrigin, static_cast<void (SpriteRenderer::*)(SpriteOrigin)>(&SpriteRenderer::SetSpriteOrigin)>("SpriteOrigin")
+		       .function<&SpriteRenderer::GetSpritePath>("GetSpritePath")
+		       .function<&SpriteRenderer::RestartAnimation>("RestartAnimation")
+		       .function<static_cast<void (SpriteRenderer::*)(const std::string &)>(&SpriteRenderer::SetAnimation)>("SetAnimation");
 	}
 }

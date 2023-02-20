@@ -31,7 +31,7 @@ namespace Chroma
 			for (auto &frame : a.frames)
 			{
 				Frame fr;
-				fr.Durration = frame.duration;
+				fr.Duration = frame.duration;
 				fr.Texture = Texture2D::Create(a.width, a.height);
 				frame.image.FlipVertically();
 				frame.image.GetData(data);

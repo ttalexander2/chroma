@@ -3,36 +3,6 @@
 
 namespace YAML
 {
-	Emitter &YAML::operator<<(Emitter &out, const c2Poly &v)
-	{
-		out << Flow;
-		out << BeginMap << Key << "Count" << Value << v.count;
-
-		out << Key << "Norms" << Value;
-		out << BeginSeq;
-		for (int i = 0; i < v.count; i++)
-		{
-			out << BeginSeq;
-			out << v.norms[i].x;
-			out << v.norms[i].y;
-			out << EndSeq;
-		}
-		out << EndSeq;
-
-		out << Key << "Verts" << Value;
-		out << BeginSeq;
-		for (int i = 0; i < v.count; i++)
-		{
-			out << BeginSeq;
-			out << v.verts[i].x;
-			out << v.verts[i].y;
-			out << EndSeq;
-		}
-		out << EndSeq;
-
-		out << EndMap;
-		return out;
-	}
 
 	Emitter &YAML::operator<<(Emitter &out, const Chroma::GUID &v)
 	{

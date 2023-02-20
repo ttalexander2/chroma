@@ -7,7 +7,7 @@ namespace Chroma
 {
 	class AnimationSystem;
 
-	struct AnimationPlayer : public Component
+	struct AnimationPlayer : Component
 	{
 		CHROMA_COMPONENT(AnimationPlayer, Component);
 

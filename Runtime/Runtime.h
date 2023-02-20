@@ -7,7 +7,7 @@ class Runtime : public Chroma::Application
 {
 public:
 	Runtime();
-	~Runtime();
+	~Runtime() override;
 	void Init() override;
 	void Update(Time delta) override;
 	void Draw(Time delta) override;

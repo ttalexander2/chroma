@@ -118,7 +118,7 @@ namespace Polychrome
 
 		for (Chroma::Component* c : comps)
 		{
-			if (c->IsType<Chroma::Tag>())
+			if (c->GetType().is<Chroma::Tag>())
 			{
 				i++;
 				continue;
@@ -139,8 +139,8 @@ namespace Polychrome
 				icon = ICON_FK_CARET_DOWN;
 
 			bool selected = true;
-			std::string comp_name(c->TypeName());
-			if (c->IsType<Chroma::CSharpScript>())
+			std::string comp_name(c->GetType().name());
+			if (c->GetType().is<Chroma::CSharpScript>())
 			{
 				try
 				{
@@ -158,12 +158,12 @@ namespace Polychrome
 				c->editor_inspector_open = !c->editor_inspector_open;
 			}
 
-			if (comp_name != Chroma::Reflection::Resolve<Chroma::Transform>().GetName() && ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
+			if (comp_name != Chroma::Reflection::resolve<Chroma::Transform>().name() && ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
 			{
 				ImGui::SetDragDropPayload("COMPONENT_REORDER", &i, sizeof(int));
 				ImGui::EndDragDropSource();
 			}
-			if (comp_name != Chroma::Reflection::Resolve<Chroma::Transform>().GetName() && ImGui::BeginDragDropTarget())
+			if (comp_name != Chroma::Reflection::resolve<Chroma::Transform>().name() && ImGui::BeginDragDropTarget())
 			{
 				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("COMPONENT_REORDER"))
 				{
@@ -198,7 +198,7 @@ namespace Polychrome
 
 			
 
-			if (!c->IsType<Chroma::Transform>())
+			if (!c->GetType().is<Chroma::Transform>())
 			{
 				ImGui::SameLine(ImGui::GetWindowWidth() - 50);
 				bool enabled = c->IsEnabled();
@@ -221,11 +221,11 @@ namespace Polychrome
 
 			if (ImGui::BeginPopup(("##MENU_BAR_INSPECTOR_" + std::to_string(unique)).c_str()))
 			{
-				if (!c->IsType<Chroma::Transform>())
+				if (!c->GetType().is<Chroma::Transform>())
 				{
 					if (ImGui::MenuItem(("Delete##MENU_BAR_INSPECTOR_" + std::to_string(unique)).c_str()))
 					{
-						scene->RemoveComponent(c->TypeName(), Hierarchy::SelectedEntity);
+						scene->RemoveComponent(c->GetType().name(), Hierarchy::SelectedEntity);
 					}
 				}
 
@@ -240,11 +240,11 @@ namespace Polychrome
 			if (c->editor_inspector_open)
 			{
 				ImGui::TableNextRow();
-				ImGui::PushID(unique);
+				//ImGui::PushID(unique);
 
 				ComponentWidgets::Draw(c);
 
-				ImGui::PopID();
+				//ImGui::PopID();
 			}
 
 			ImGui::TableNextRow();
@@ -269,17 +269,17 @@ namespace Polychrome
 
 		if (ImGui::BeginPopup("##ENTITY_ADD_COMPONENT"))
 		{
-			for (auto& name : Chroma::Scene::GetComponentTypes())
+			for (auto& type : Chroma::Scene::GetComponentTypes())
 			{
-				if (name.Is<Chroma::Transform>() || name.Is<Chroma::Tag>())
+				if (type.is<Chroma::Transform>() || type.is<Chroma::Tag>())
 					continue;
 				bool enabled = true;
-				if (scene->HasComponent(name.GetName(), Hierarchy::SelectedEntity))
+				if (scene->HasComponent(type.name(), Hierarchy::SelectedEntity))
 					enabled = false;
 
-				if (ImGui::MenuItem((name.GetName() + "##ENTITY_ADD_COMPONENT").c_str(), "", false, enabled))
+				if (ImGui::MenuItem((type.name() + "##ENTITY_ADD_COMPONENT").c_str(), "", false, enabled))
 				{
-					scene->AddComponent(name.GetName(), Hierarchy::SelectedEntity);
+					scene->AddComponent(type.name(), Hierarchy::SelectedEntity);
 				}
 			}
 			ImGui::EndPopup();

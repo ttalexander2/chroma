@@ -737,13 +737,13 @@ namespace Polychrome
 			{
 				for (auto& component_type : Chroma::Scene::GetComponentTypes())
 				{
-					if (component_type.Is<Chroma::Transform>() || component_type.Is<Chroma::Tag>())
+					if (component_type.is<Chroma::Transform>() || component_type.is<Chroma::Tag>())
 						continue;
 
-					if (ImGui::MenuItem(component_type.GetName().c_str()))
+					if (ImGui::MenuItem(component_type.name().c_str()))
 					{
 						Chroma::Entity ent = CurrentScene->NewEntity();
-						ent.AddComponent(component_type.GetName());
+						ent.AddComponent(component_type.name());
 					}
 				}
 				ImGui::EndMenu();

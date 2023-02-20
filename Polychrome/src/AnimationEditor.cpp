@@ -79,13 +79,13 @@ namespace Polychrome
 			{
 				Chroma::Component* comp = EditorApp::CurrentScene->GetComponent(track.componentID, track.entityID);
 
-				auto type = Chroma::Reflection::Resolve(track.componentID);
+				auto type = Chroma::Reflection::resolve(track.componentID);
 
 				for (auto& keyframe : track.keyframes)
 				{
 					if (TimeSelection < keyframe.time)
 					{
-						type.Set(track.propertyID, Chroma::Reflection::Handle(comp), keyframe.value);
+						//type.data(track.propertyID).set(Chroma::Reflection::handle(*comp), keyframe.value);
 						break;
 					}
 						
@@ -111,8 +111,8 @@ namespace Polychrome
 				animation.length = 5.f;
 				{				
 					Chroma::Animation::Track track;
-					track.componentID = Chroma::Reflection::Resolve<Chroma::Transform>().Id();
-					track.propertyID = Chroma::Reflection::Resolve<Chroma::Transform>().Data("Position").Id();
+					track.componentID = Chroma::Reflection::resolve<Chroma::Transform>().id();
+					track.propertyID = Chroma::Reflection::resolve<Chroma::Transform>().data("Position").id();
 					track.update = Chroma::Animation::UpdateType::continuous;
 					track.entityID = Hierarchy::SelectedEntity;
 					Chroma::Animation::Keyframe kf1;
@@ -136,8 +136,8 @@ namespace Polychrome
 
 				{
 					Chroma::Animation::Track track;
-					track.componentID = entt::resolve<Chroma::Transform>().id();
-					track.propertyID = entt::resolve<Chroma::Transform>().data(StringHash::Hash("Rotation")).id();
+					track.componentID = Chroma::Reflection::resolve<Chroma::Transform>().id();
+					track.propertyID = Chroma::Reflection::resolve<Chroma::Transform>().data("Rotation").id();
 					track.update = Chroma::Animation::UpdateType::continuous;
 					track.entityID = Hierarchy::SelectedEntity;
 					Chroma::Animation::Keyframe kf1;
@@ -163,8 +163,8 @@ namespace Polychrome
 
 
 				Chroma::Animation::Track track2;
-				track2.componentID = entt::resolve<Chroma::Transform>().id();
-				track2.propertyID = entt::resolve<Chroma::Transform>().data(StringHash::Hash("Scale")).id();
+				track2.componentID = Chroma::Reflection::resolve<Chroma::Transform>().id();
+				track2.propertyID = Chroma::Reflection::resolve<Chroma::Transform>().data(StringHash::Hash("Scale")).id();
 				track2.update = Chroma::Animation::UpdateType::continuous;
 				track2.entityID = Hierarchy::SelectedEntity;
 				Chroma::Animation::Keyframe kf1;
@@ -174,8 +174,8 @@ namespace Polychrome
 				animation.tracks.push_back(track2);
 				//{
 				//	Chroma::Animation::Track track3;
-				//	track3.componentID = entt::resolve<Chroma::Transform>().id();
-				//	track3.propertyID = entt::resolve<Chroma::Transform>().data(StringHash::Hash("Position")).id();
+				//	track3.componentID = Chroma::Reflection::resolve<Chroma::Transform>().id();
+				//	track3.propertyID = Chroma::Reflection::resolve<Chroma::Transform>().data(StringHash::Hash("Position")).id();
 				//	track3.update = Chroma::Animation::UpdateType::continuous;
 				//	track3.entityID = (Chroma::EntityID)((uint32_t)Hierarchy::SelectedEntity + 1);
 				//	kf1.time = 0.1f;
@@ -194,8 +194,8 @@ namespace Polychrome
 				//}
 				//{
 				//	Chroma::Animation::Track track3;
-				//	track3.componentID = entt::resolve<Chroma::Transform>().id();
-				//	track3.propertyID = entt::resolve<Chroma::Transform>().data(StringHash::Hash("Rotation")).id();
+				//	track3.componentID = Chroma::Reflection::resolve<Chroma::Transform>().id();
+				//	track3.propertyID = Chroma::Reflection::resolve<Chroma::Transform>().data(StringHash::Hash("Rotation")).id();
 				//	track3.update = Chroma::Animation::UpdateType::continuous;
 				//	track3.entityID = (Chroma::EntityID)((uint32_t)Hierarchy::SelectedEntity + 1);
 				//	kf1.time = 0.f;
@@ -217,8 +217,8 @@ namespace Polychrome
 				//}
 				//{
 				//	Chroma::Animation::Track track3;
-				//	track3.componentID = entt::resolve<Chroma::Transform>().id();
-				//	track3.propertyID = entt::resolve<Chroma::Transform>().data(StringHash::Hash("Position")).id();
+				//	track3.componentID = Chroma::Reflection::resolve<Chroma::Transform>().id();
+				//	track3.propertyID = Chroma::Reflection::resolve<Chroma::Transform>().data(StringHash::Hash("Position")).id();
 				//	track3.update = Chroma::Animation::UpdateType::continuous;
 				//	track3.entityID = (Chroma::EntityID)((uint32_t)Hierarchy::SelectedEntity + 2);
 				//	kf1.time = 0.1f;
@@ -237,8 +237,8 @@ namespace Polychrome
 				//}
 				//{
 				//	Chroma::Animation::Track track3;
-				//	track3.componentID = entt::resolve<Chroma::Transform>().id();
-				//	track3.propertyID = entt::resolve<Chroma::Transform>().data(StringHash::Hash("Rotation")).id();
+				//	track3.componentID = Chroma::Reflection::resolve<Chroma::Transform>().id();
+				//	track3.propertyID = Chroma::Reflection::resolve<Chroma::Transform>().data(StringHash::Hash("Rotation")).id();
 				//	track3.update = Chroma::Animation::UpdateType::continuous;
 				//	track3.entityID = (Chroma::EntityID)((uint32_t)Hierarchy::SelectedEntity + 2);
 				//	kf1.time = 0.f;
@@ -710,7 +710,7 @@ namespace Polychrome
 								visible_track_map[entity_id][component_id] = std::map<uint32_t, Chroma::Animation::Track*>();
 							ImGui::TableNextRow();
 							ImGui::TableNextColumn();
-							std::string component_name = Chroma::Reflection::Resolve(component_id).GetName();
+							std::string component_name = Chroma::Reflection::resolve(component_id).name();
 
 							if (ImGui::TreeNodeEx(component_name.c_str(), ImGuiTreeNodeFlags_FramePadding | ImGuiTreeNodeFlags_DefaultOpen))
 							{
@@ -721,7 +721,7 @@ namespace Polychrome
 									ImGui::TableNextRow();
 									ImGui::TableNextColumn();
 									ImGui::TableSetBgColor(ImGuiTableBgTarget_CellBg, ImGui::ColorConvertFloat4ToU32(ImGui::GetStyleColorVec4(ImGuiCol_TableRowBgAlt)));
-									std::string property_name = Chroma::Reflection::Resolve(component_id).Data(property_id).GetName();
+									std::string property_name = Chroma::Reflection::resolve(component_id).data(property_id).name();
 									ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_FramePadding;
 									if (selectedTrack == track)
 										flags |= ImGuiTreeNodeFlags_Selected;
@@ -772,8 +772,8 @@ namespace Polychrome
 											Chroma::Animation::Keyframe kf;
 											kf.time = TimeSelection;
 											Chroma::Component* component = EditorApp::CurrentScene->GetComponent(component_name, entity_id);
-											auto type = Chroma::Reflection::Resolve(component_id);
-											kf.value = type.Get(property_id, Chroma::Reflection::Handle(component));
+											auto type = Chroma::Reflection::resolve(component_id);
+											kf.value = type.data(property_id).get(Chroma::Reflection::handle(component));
 											track->keyframes.emplace(kf);
 											selectedKeyframe = const_cast<Chroma::Animation::Keyframe*>(&*std::prev(track->keyframes.end()));
 										}
@@ -984,7 +984,7 @@ namespace Polychrome
 					for (auto& [component_id, _properties] : _components)
 					{
 						ImGui::TableNextColumn();
-						std::string component_name = Chroma::Reflection::Resolve(component_id).GetName();
+						std::string component_name = Chroma::Reflection::resolve(component_id).name();
 
 						ImGui::Selectable(("##" + component_name).c_str(), false, ImGuiSelectableFlags_Disabled, ImVec2(0 * Zoom, selectable_height));
 
@@ -994,7 +994,7 @@ namespace Polychrome
 							ImGui::TableNextRow();
 							ImGui::TableNextColumn();
 							ImGui::TableSetBgColor(ImGuiTableBgTarget_CellBg, ImGui::ColorConvertFloat4ToU32(ImGui::GetStyleColorVec4(ImGuiCol_TableRowBgAlt)));
-							std::string property_name = Chroma::Reflection::Resolve(component_id).Data(property_id).GetName();
+							std::string property_name = Chroma::Reflection::resolve(component_id).data(property_id).name();
 							ImGui::Selectable(("##" + property_name).c_str(), false, ImGuiSelectableFlags_Disabled, ImVec2(0 * Zoom, selectable_height));
 							for (const Chroma::Animation::Keyframe& keyframe : track->keyframes)
 							{

@@ -116,28 +116,28 @@ namespace Chroma
 		return m_FixtureDef.isSensor;
 	}
 
-	Reflection::TypeFactory<Collider> Collider::RegisterType()
+	Reflection::type_factory<Collider> Collider::register_type()
 	{
-		Reflection::Register<Vertex>("Collider::Vertex")
-				.Data<&Vertex::vertex>("vertex")
-				.Data<&Vertex::normal>("normal");
+		Reflection::register_type<Vertex>("Collider::Vertex")
+				.data<&Vertex::vertex>("vertex")
+				.data<&Vertex::normal>("normal");
 
-		Reflection::Register<ColliderType>("Collider::ColliderType")
-				.Data<ColliderType::Circle>("Circle")
-				.Data<ColliderType::Edge>("Edge")
-				.Data<ColliderType::Polygon>("Polygon")
-				.Data<ColliderType::Rectangle>("Rectangle");
+		Reflection::register_type<ColliderType>("Collider::ColliderType")
+				.data<ColliderType::Circle>("Circle")
+				.data<ColliderType::Edge>("Edge")
+				.data<ColliderType::Polygon>("Polygon")
+				.data<ColliderType::Rectangle>("Rectangle");
 
-		return Reflection::Register<Collider>("Collider")
-		       .Base<Component>()
-		       .Data<&Collider::Mask>("Mask")
-		       .Data<&Collider::Layer>("Layer")
-		       .Data<&Collider::SetPosition, &Collider::GetPosition>("Position", false)
-		       .Data<&Collider::SetFriction, &Collider::GetFriction>("Friction")
-		       .Data<&Collider::SetRestitution, &Collider::GetRestitution>("Restitution")
-		       .Data<&Collider::SetRestitutionThreshold, &Collider::GetRestitutionThreshold>("RestitutionThreshold")
-		       .Data<&Collider::SetDensity, &Collider::GetDensity>("Density")
-		       .Data<&Collider::SetSensor, &Collider::IsSensor>("Sensor")
-		       .Data<nullptr, &Collider::GetColliderType>("ColliderType", false);
+		return Reflection::register_type<Collider>("Collider")
+		       .base<Component>()
+		       .data<&Collider::Mask>("Mask")
+		       .data<&Collider::Layer>("Layer")
+		       .data<&Collider::GetPosition, &Collider::SetPosition>("Position")
+		       .data<&Collider::GetFriction, &Collider::SetFriction>("Friction")
+		       .data<&Collider::GetRestitution, &Collider::SetRestitution>("Restitution")
+		       .data<&Collider::GetRestitutionThreshold, &Collider::SetRestitutionThreshold>("RestitutionThreshold")
+		       .data<&Collider::GetDensity, &Collider::SetDensity>("Density")
+		       .data<&Collider::IsSensor, &Collider::SetSensor>("Sensor")
+		       .data<&Collider::GetColliderType, nullptr>("ColliderType");
 	}
 } //namespace Chroma

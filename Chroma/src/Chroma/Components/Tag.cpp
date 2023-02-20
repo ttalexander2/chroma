@@ -1,16 +1,15 @@
 #include "chromapch.h"
 #include "Tag.h"
 
-#include "Chroma/Reflection/Reflection.h"
 
 
 namespace Chroma
 {
-	Reflection::TypeFactory<Tag> Tag::RegisterType()
+	Reflection::type_factory<Tag> Tag::register_type()
 	{
-		return Reflection::Register<Tag>("Tag")
-		       .Base<Component>()
-		       .Data<&Tag::EntityName>("EntityName")
-		       .Data<&Tag::Ordering>("Ordering");
+		return Reflection::RegisterComponent<Tag>("Tag")
+		       .base<Component>()
+		       .data<&Tag::EntityName>("EntityName")
+		       .data<&Tag::Ordering>("Ordering");
 	}
 }

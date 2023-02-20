@@ -8,7 +8,7 @@
 namespace Chroma
 {
 	/// @brief Transform component, provides position, rotation and scale for entities.
-	struct Transform : public Component
+	struct Transform : Component
 	{
 		CHROMA_COMPONENT(Transform, Component);
 
@@ -22,7 +22,7 @@ namespace Chroma
 		const bool HasChildren() const { return Children.size() > 0; };
 		const bool IsChild() const { return Parent != ENTITY_NULL; };
 
-		const bool HasChild(EntityID child) const { return std::find(Children.begin(), Children.end(), child) != Children.end(); }
+		const bool HasChild(EntityID child) const { return std::ranges::find(Children, child) != Children.end(); }
 
 		/// @brief Get the transform as a 4x4 matrix.
 		/// @return mat4 transform.

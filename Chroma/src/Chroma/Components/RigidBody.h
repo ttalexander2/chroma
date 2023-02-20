@@ -8,7 +8,7 @@ namespace Chroma
 {
 	class PhysicsSystem;
 
-	struct RigidBody : public Component
+	struct RigidBody : Component
 	{
 		CHROMA_COMPONENT(RigidBody, Component);
 

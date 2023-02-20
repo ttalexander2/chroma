@@ -1,4 +1,5 @@
 #include "Runtime.h"
+
 #include "Chroma/Utilities/FileDialogs.h"
 #include <Chroma/Core/EntryPoint.h>
 #include <Chroma/Components/SpriteRenderer.h>
@@ -10,6 +11,7 @@
 #include <Chroma/Scripting/ScriptEngineRegistry.h>
 #include <Chroma/Components/CSharpScript.h>
 #include <Chroma/Assets/AssetManager.h>
+#include <mirr/mirr.h>
 #include "../../Chroma/third_party/GLFW/include/GLFW/glfw3.h"
 
 using namespace Chroma;

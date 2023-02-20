@@ -4,7 +4,7 @@
 
 namespace Chroma
 {
-	struct RectangleCollider : public Collider
+	struct RectangleCollider : Collider
 	{
 		CHROMA_COMPONENT(RectangleCollider, Collider);
 

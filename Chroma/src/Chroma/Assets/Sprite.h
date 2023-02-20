@@ -8,9 +8,9 @@ namespace Chroma
 	/// @brief Animated or Static Sprite.
 	///
 	/// Class for Game Sprite. This sprite can be static or animated.
-	struct Sprite : public Asset
+	struct Sprite : Asset
 	{
-		CHROMA_ASSET(Sprite, Asset);
+		CHROMA_ASSET(Sprite, Asset)
 
 		/// @brief Enum for looping direction
 		enum class LoopDirection
@@ -23,7 +23,7 @@ namespace Chroma
 		/// @brief Single animation frame.
 		struct Frame
 		{
-			unsigned int Durration = 100;
+			unsigned int Duration = 100;
 			Ref<Texture2D> Texture;
 		};
 

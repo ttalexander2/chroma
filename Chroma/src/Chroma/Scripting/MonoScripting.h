@@ -121,7 +121,7 @@ namespace Chroma
 
 
 		static EntityInstanceMap &GetEntityInstanceMap();
-		static EntityInstanceData &GetEntityInstanceData(GUID sceneID, EntityID entityID);
+		static EntityInstanceData* GetEntityInstanceData(GUID sceneID, EntityID entityID);
 
 
 	private:

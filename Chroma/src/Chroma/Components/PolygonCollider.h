@@ -4,7 +4,7 @@
 
 namespace Chroma
 {
-	struct PolygonCollider : public Collider
+	struct PolygonCollider : Collider
 	{
 		CHROMA_COMPONENT(PolygonCollider, Collider);
 
@@ -12,7 +12,7 @@ namespace Chroma
 
 		const ColliderType GetColliderType() const override { return ColliderType::Edge; }
 
-		static const size_t MaxVertices = b2_maxPolygonVertices;
+		static constexpr size_t MaxVertices = b2_maxPolygonVertices;
 
 		/// @brief Validates convexity. This is a very time consuming operation.
 		/// @return Returns true if valid

@@ -1,5 +1,8 @@
 #pragma once
 
+#include <string>
+#include <vector>
+#include <type_traits>
 #include <Chroma/IO/Endian.h>
 
 struct PHYSFS_File;
