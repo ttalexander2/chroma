@@ -26,7 +26,6 @@ group "Dependencies"
     include "Chroma/third_party/physfs"
     include "Chroma/third_party/box2d"
     include "Chroma/third_party/range-v3"
-    include "Chroma/third_party/mirr"
 group "Dependencies/msdf"
     include "Chroma/third_party/msdf-atlas-gen"
 group "" -- end of dependencies
@@ -100,8 +99,7 @@ project "Chroma"
         "%{IncludeDir.msdfgen}",
         "%{IncludeDir.msdf_atlasgen}",
         "%{IncludeDir.better_enums}",
-        "%{IncludeDir.rangev3}",
-        "%{IncludeDir.mirr}"
+        "%{IncludeDir.rangev3}"
 
     }
 
@@ -115,7 +113,6 @@ project "Chroma"
         "PhysicsFS",
         "box2d",
         "msdf-atlas-gen",
-        "mirr",
         "%{Library.Vulkan}",
         "%{Library.VulkanUtils}",
 
@@ -243,8 +240,7 @@ project "Polychrome"
         "%{IncludeDir.msdfgen}",
         "%{IncludeDir.msdf_atlasgen}",
         "%{IncludeDir.better_enums}",
-        "%{IncludeDir.rangev3}",
-        "%{IncludeDir.mirr}"
+        "%{IncludeDir.rangev3}"
     }
 
 
@@ -359,8 +355,7 @@ project "Runtime"
         "%{IncludeDir.msdfgen}",
         "%{IncludeDir.msdf_atlasgen}",
         "%{IncludeDir.better_enums}",
-        "%{IncludeDir.rangev3}",
-        "%{IncludeDir.mirr}"
+        "%{IncludeDir.rangev3}"
     }
 
     links

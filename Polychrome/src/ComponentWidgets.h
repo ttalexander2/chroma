@@ -1,3 +1,4 @@
+#pragma once
 #include <Chroma/Scene/Component.h>
 
 namespace Polychrome
@@ -10,8 +11,7 @@ namespace Polychrome
 	public:
 		static void Draw(Chroma::Component* c);
 	private:
-
-
+		
 		static void DrawComponentValue(Chroma::Component* c, const std::string& label);
 		static bool DrawComponentValueCollapsible(Chroma::Component* c, const std::string& label);
 
@@ -38,5 +38,6 @@ namespace Polychrome
 		static void DrawUVec3(Chroma::Component* c, Chroma::Reflection::data data);
 		static void DrawUVec4(Chroma::Component* c, Chroma::Reflection::data data);
 		static void DrawEntity(Chroma::Component* c, Chroma::Reflection::data data);
+		
 	};
 }

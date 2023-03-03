@@ -49,7 +49,7 @@ namespace Chroma
 		typeName(const typeName &) = default;																							\
 		typeName &operator=(const typeName &) = default;																				\
 	private:																															\
-		using type_factory = mirr::type_factory<typeName>;																				\
+		using type_factory = Reflection::type_factory<typeName>;																				\
 		static inline Reflection::ComponentInitializer<typeName> type_initializer{};													\
 		static type_factory register_type();																							\
 		static inline Reflection::type TypeInfo = Reflection::resolve<typeName>();														\
@@ -57,7 +57,7 @@ namespace Chroma
 	public:																																\
 		friend class Scene;																												\
 		virtual Reflection::type GetType() const noexcept override { return TypeInfo; }													\
-		virtual Reflection::handle ToHandle() const noexcept override { return mirr::handle(*((typeName*)this)); }											
+		virtual Reflection::handle ToHandle() const noexcept override { return Reflection::handle(*((typeName*)this)); }											
 
 #define CHROMA_ABSTRACT_COMPONENT(typeName, baseTypeName)																				\
 		using ClassName = typeName;																										\
@@ -69,7 +69,7 @@ namespace Chroma
 		typeName(const typeName &) = default;																							\
 		typeName &operator=(const typeName &) = default;																				\
 	private:																															\
-		using type_factory = mirr::type_factory<typeName>;																				\
+		using type_factory = Reflection::type_factory<typeName>;																				\
 		static inline Reflection::ComponentInitializer<typeName> type_initializer{};													\
 		static type_factory register_type();																							\
 		static inline Reflection::type TypeInfo = Reflection::resolve<typeName>();														\
@@ -78,7 +78,7 @@ namespace Chroma
 	public:																																\
 		friend class Scene;																												\
 		virtual Reflection::type GetType() const noexcept override { return TypeInfo; }													\
-		virtual Reflection::handle ToHandle() const noexcept override { return mirr::handle(*((typeName*)this)); }
+		virtual Reflection::handle ToHandle() const noexcept override { return Reflection::handle(*((typeName*)this)); }
 
 		Component() :
 			m_EntityID(ENTITY_NULL)
@@ -112,7 +112,7 @@ namespace Chroma
 		int GetOrderID() const { return order_id; }
 
 		virtual Reflection::type GetType() const noexcept { return this->TypeInfo; }
-		virtual Reflection::handle ToHandle() const noexcept { return mirr::handle(*this); }
+		virtual Reflection::handle ToHandle() const noexcept { return Reflection::handle(*this); }
 
 	protected:
 		virtual void NO_TYPE_INFO() = 0;

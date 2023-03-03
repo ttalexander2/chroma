@@ -18,6 +18,7 @@ Runtime/Chroma.Mono.dll
 **.vcxproj
 **.vcxproj.filters
 **.vcxproj.user
+**.csproj
 
 scripts\__pycache__
 Chroma/third_party/VulkanSDK

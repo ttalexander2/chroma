@@ -14,6 +14,7 @@
 #include <Chroma/Components/SpriteRenderer.h>
 #include <Chroma/Components/ParticleEmitter.h>
 #include <Chroma/Assets/AssetManager.h>
+
 #include "AssetBrowser.h"
 
 #include "EditorApp.h"

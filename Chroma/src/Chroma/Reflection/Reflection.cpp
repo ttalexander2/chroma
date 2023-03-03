@@ -14,7 +14,7 @@ namespace Chroma::Reflection
 	
 	const std::vector<uint32_t>& GetTypeRequirements(uint32_t type_id)
 	{
-		any type_requirements = mirr::resolve(type_id).user_data(static_cast<uint32_t>(MetaFlags::TYPE_REQUIREMENTS));
+		any type_requirements = resolve(type_id).user_data(static_cast<uint32_t>(MetaFlags::TYPE_REQUIREMENTS));
 		if (type_requirements && type_requirements.can_cast<std::vector<uint32_t>>())
 		{
 			return *type_requirements.try_cast<std::vector<uint32_t>>();
@@ -129,81 +129,81 @@ namespace Chroma::Reflection
 	void Initializer::Initialize()
 	{
 		
-		mirr::register_type<bool>("bool")
+		Reflection::register_type<bool>("bool")
 		.user_data(MetaFlags::SERIALIZE_YAML_FUNC, &Serializer::SerializeTypeYAML<bool>)
 		.user_data(MetaFlags::DESERIALIZE_YAML_FUNC, &Serializer::DeserializeTypeYAML<bool>);
 		
-		mirr::register_type<float>("float")
+		Reflection::register_type<float>("float")
 		.user_data(MetaFlags::SERIALIZE_YAML_FUNC, &Serializer::SerializeTypeYAML<float>)
 		.user_data(MetaFlags::DESERIALIZE_YAML_FUNC, &Serializer::DeserializeTypeYAML<float>);
 		
-		mirr::register_type<double>("double")
+		Reflection::register_type<double>("double")
 		.user_data(MetaFlags::SERIALIZE_YAML_FUNC, &Serializer::SerializeTypeYAML<double>)
 		.user_data(MetaFlags::DESERIALIZE_YAML_FUNC, &Serializer::DeserializeTypeYAML<double>);
 		
-		mirr::register_type<int32_t>("int32")
+		Reflection::register_type<int32_t>("int32")
 		.user_data(MetaFlags::SERIALIZE_YAML_FUNC, &Serializer::SerializeTypeYAML<int32_t>)
 		.user_data(MetaFlags::DESERIALIZE_YAML_FUNC, &Serializer::DeserializeTypeYAML<int32_t>);
 		
-		mirr::register_type<int64_t>("int64")
+		Reflection::register_type<int64_t>("int64")
 		.user_data(MetaFlags::SERIALIZE_YAML_FUNC, &Serializer::SerializeTypeYAML<int64_t>)
 		.user_data(MetaFlags::DESERIALIZE_YAML_FUNC, &Serializer::DeserializeTypeYAML<int64_t>);
 		
-		mirr::register_type<uint32_t>("uint32")
+		Reflection::register_type<uint32_t>("uint32")
 		.user_data(MetaFlags::SERIALIZE_YAML_FUNC, &Serializer::SerializeTypeYAML<uint32_t>)
 		.user_data(MetaFlags::DESERIALIZE_YAML_FUNC, &Serializer::DeserializeTypeYAML<uint32_t>);
 		
-		mirr::register_type<uint64_t>("uint64")
+		Reflection::register_type<uint64_t>("uint64")
 		.user_data(MetaFlags::SERIALIZE_YAML_FUNC, &Serializer::SerializeTypeYAML<uint64_t>)
 		.user_data(MetaFlags::DESERIALIZE_YAML_FUNC, &Serializer::DeserializeTypeYAML<uint64_t>);
 		
-		mirr::register_type<char>("char")
+		Reflection::register_type<char>("char")
 		.user_data(MetaFlags::SERIALIZE_YAML_FUNC, &Serializer::SerializeTypeYAML<char>)
 		.user_data(MetaFlags::DESERIALIZE_YAML_FUNC, &Serializer::DeserializeTypeYAML<char>);
 		
-		mirr::register_type<unsigned char>("uchar")
+		Reflection::register_type<unsigned char>("uchar")
 		.user_data(MetaFlags::SERIALIZE_YAML_FUNC, &Serializer::SerializeTypeYAML<unsigned char>)
 		.user_data(MetaFlags::DESERIALIZE_YAML_FUNC, &Serializer::DeserializeTypeYAML<unsigned char>);
 		
-		mirr::register_type<const char *>("cstring");
+		Reflection::register_type<const char *>("cstring");
 		
-		mirr::register_type<std::string>("string")
+		Reflection::register_type<std::string>("string")
 		.user_data(MetaFlags::SERIALIZE_YAML_FUNC, &Serializer::SerializeTypeYAML<std::string>)
 		.user_data(MetaFlags::DESERIALIZE_YAML_FUNC, &Serializer::DeserializeTypeYAML<std::string>);
 
-		mirr::register_type<Asset>("Asset")
+		Reflection::register_type<Asset>("Asset")
 		.user_data(MetaFlags::SERIALIZE_YAML_FUNC, &Serializer::SerializeTypeYAML<Ref<Asset>>)
 		.user_data(MetaFlags::DESERIALIZE_YAML_FUNC, &Serializer::DeserializeTypeYAML<Ref<Asset>>);
 
-		mirr::register_type<Math::vec2>("vec2")
+		Reflection::register_type<Math::vec2>("vec2")
 		.user_data(MetaFlags::SERIALIZE_YAML_FUNC, &Serializer::SerializeTypeYAML<Math::vec2>)
 		.user_data(MetaFlags::DESERIALIZE_YAML_FUNC, &Serializer::DeserializeTypeYAML<Math::vec2>);
 		
-		mirr::register_type<Math::vec3>("vec3")
+		Reflection::register_type<Math::vec3>("vec3")
 		.user_data(MetaFlags::SERIALIZE_YAML_FUNC, &Serializer::SerializeTypeYAML<Math::vec3>)
 		.user_data(MetaFlags::DESERIALIZE_YAML_FUNC, &Serializer::DeserializeTypeYAML<Math::vec3>);
 		
-		mirr::register_type<Math::vec4>("vec4")
+		Reflection::register_type<Math::vec4>("vec4")
 		.user_data(MetaFlags::SERIALIZE_YAML_FUNC, &Serializer::SerializeTypeYAML<Math::vec4>)
 		.user_data(MetaFlags::DESERIALIZE_YAML_FUNC, &Serializer::DeserializeTypeYAML<Math::vec4>);
 		
-		mirr::register_type<Math::uvec2>("uvec2")
+		Reflection::register_type<Math::uvec2>("uvec2")
 		.user_data(MetaFlags::SERIALIZE_YAML_FUNC, &Serializer::SerializeTypeYAML<Math::uvec2>)
 		.user_data(MetaFlags::DESERIALIZE_YAML_FUNC, &Serializer::DeserializeTypeYAML<Math::uvec2>);
 		
-		mirr::register_type<Math::uvec3>("uvec3")
+		Reflection::register_type<Math::uvec3>("uvec3")
 		.user_data(MetaFlags::SERIALIZE_YAML_FUNC, &Serializer::SerializeTypeYAML<Math::uvec3>)
 		.user_data(MetaFlags::DESERIALIZE_YAML_FUNC, &Serializer::DeserializeTypeYAML<Math::uvec3>);
 		
-		mirr::register_type<Math::uvec4>("uvec4")
+		Reflection::register_type<Math::uvec4>("uvec4")
 		.user_data(MetaFlags::SERIALIZE_YAML_FUNC, &Serializer::SerializeTypeYAML<Math::uvec4>)
 		.user_data(MetaFlags::DESERIALIZE_YAML_FUNC, &Serializer::DeserializeTypeYAML<Math::uvec4>);
 		
-		mirr::register_type<EntityID>("EntityID")
+		Reflection::register_type<EntityID>("EntityID")
 		.user_data(MetaFlags::SERIALIZE_YAML_FUNC, &Serializer::SerializeTypeYAML<EntityID>)
 		.user_data(MetaFlags::DESERIALIZE_YAML_FUNC, &Serializer::DeserializeTypeYAML<EntityID>);
 		
-		mirr::register_type<GUID>("GUID")
+		Reflection::register_type<GUID>("GUID")
 		.user_data(MetaFlags::SERIALIZE_YAML_FUNC, &Serializer::SerializeTypeYAML<GUID>)
 		.user_data(MetaFlags::DESERIALIZE_YAML_FUNC, &Serializer::DeserializeTypeYAML<GUID>);
 
