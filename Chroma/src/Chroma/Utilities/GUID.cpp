@@ -15,7 +15,7 @@ namespace Chroma
 		std::uniform_int_distribution<> dis(0, 255);
 		return static_cast<uint8_t>(dis(gen));
 	}
-
+	
 	const GUID GUID::CreateGUID()
 	{
 		GUID result;

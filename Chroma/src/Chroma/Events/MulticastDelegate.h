@@ -1,23 +1,28 @@
 ﻿#pragma once
-
-#include "EventBase.h"
 #include "Delegate.h"
 #include <vector>
 #include <functional>
 
 namespace Chroma
 {
-	
-	template <typename Owner, typename Ret, typename... Args>
-	class Event<Owner, Ret(Args...)> : private EventBase<Ret, Args...> {
-	    friend Owner;
+
+	template <typename Ret, typename... Args>
+	class MulticastDelegate<Ret(Args...)> : private DelegateBase<Ret(Args...)> {
 	public:
-	    Event() = default;
-	    ~Event() {
+	    MulticastDelegate() = default;
+	    ~MulticastDelegate() {
 	        clear();
 	    }
 
-	    bool empty() const { return this->invocation_list.size() < 1; }
+	    void clear() {
+	        for (auto& element : invocation_list)
+	        {
+	            delete element;
+	        }
+	        invocation_list.clear(); 
+	    }
+
+	    bool empty() const { return invocation_list.size() < 1; }
 
 	    bool operator==(void* ptr) const {
 	        return (ptr == nullptr) && this->empty();
@@ -27,17 +32,17 @@ namespace Chroma
 	        return (ptr != nullptr) || (!this->empty());
 	    }
 
-	    size_t size() const { return this->invocation_list.size(); }
+	    size_t size() const { return invocation_list.size(); }
 
-	    Event& operator=(const Event&) = delete;
-	    Event(const Event&) = delete;
+	    MulticastDelegate& operator=(const MulticastDelegate&) = delete;
+	    MulticastDelegate(const MulticastDelegate&) = delete;
 
-	    bool operator==(const Event& other) const {
-	        if (this->invocation_list.size() != other.invocation_list.size()) {
+	    bool operator==(const MulticastDelegate& other) const {
+	        if (invocation_list.size() != other.invocation_list.size()) {
 	            return false;
 	        }
 	        auto otherIt = other.invocation_list.begin();
-	        for (auto it = this->invocation_list.begin(); it != this->invocation_list.end(); it++) {
+	        for (auto it = invocation_list.begin(); it != invocation_list.end(); it++) {
 	            if (**it != **otherIt) {
 	                return false;
 	            }
@@ -45,7 +50,7 @@ namespace Chroma
 	        return true;
 	    }
 
-	    bool operator !=(const Event& other) const {
+	    bool operator !=(const MulticastDelegate& other) const {
 	        return !(*this==other);
 	    }
 
@@ -56,14 +61,14 @@ namespace Chroma
 	        if (other.empty() || (size() != 1)) {
 	            return false;
 	        }
-	        return (other.invocation == **this->invocation_list.begin());
+	        return (other.invocation == **invocation_list.begin());
 	    }
 
 	    bool operator != (const Delegate<Ret(Args...)>& other) const {
 	        return !(*this == other);
 	    }
 
-	    Event& operator +=(const Event& other) {
+	    MulticastDelegate& operator +=(const MulticastDelegate& other) {
 	        for (auto& item : other.invocation_list) {
 	            this->invocation_list.push_back(new typename DelegateBase<Ret(Args...)>::InvocationElement(item->object, item->stub));
 	        }
@@ -71,12 +76,12 @@ namespace Chroma
 	    }
 
 	    template <typename Lambda>
-	    Event& operator +=(const Lambda& lambda) {
+	    MulticastDelegate& operator +=(const Lambda& lambda) {
 	        Delegate<Ret(Args...)> d = Delegate<Ret(Args...)>::template create<Lambda>(lambda);
 	        return *this += d;
 	    }
 
-	    Event& operator +=(const Delegate<Ret(Args...)>& other) {
+	    MulticastDelegate& operator +=(const Delegate<Ret(Args...)>& other) {
 	        if (other.is_null()) {
 	            return *this;
 	        }
@@ -112,19 +117,8 @@ namespace Chroma
 	        return *this += d;
 	    }
 
-
-	private:
-
-	    void clear() {
-	        for (auto& element : this->invocation_list)
-	        {
-	            delete element;
-	        }
-	        this->invocation_list.clear(); 
-	    }
-
 	    void operator()(Args... args) const {
-	        for (auto& item : this->invocation_list) {
+	        for (auto& item : invocation_list) {
 	            (*(item->stub))(item->object, args...);
 	        }
 	    }
@@ -132,7 +126,7 @@ namespace Chroma
 	    template<typename Handler>
 	    void operator()(Args... args, Handler handler) const {
 	        size_t index = 0;
-	        for (auto& item : this->invocation_list) {
+	        for (auto& item : invocation_list) {
 	            Ret value = (*(item->stub))(item->object, args...);
 	            handler(index, &value);
 	            index++;
@@ -164,5 +158,8 @@ namespace Chroma
 	        operator()<decltype(handler)>(args..., handler);
 	    }
 
-	};
+	private:
+	    std::vector<typename DelegateBase<Ret(Args...)>::InvocationElement*> invocation_list;
+
+	};	
 }

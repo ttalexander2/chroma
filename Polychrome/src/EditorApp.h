@@ -10,7 +10,7 @@
 #include <Chroma/Systems/SpriteRendererSystem.h>
 #include "EditorCamera.h"
 #include <imgui.h>
-#include <Chroma/Events/Event.h>
+#include <Chroma/Events/SystemEvent.h>
 
 
 #define CHROMA_EDITOR
@@ -25,7 +25,7 @@ namespace Polychrome
 		~EditorApp();
 
 		void Init() override;
-		void OnEvent(Chroma::Event& e) override;
+		void OnEvent(Chroma::SystemEvent& e) override;
 		void Update(Chroma::Time time) override;
 		void Draw(Chroma::Time time) override;
 		void ImGuiDraw(Chroma::Time time) override;
@@ -94,7 +94,7 @@ namespace Polychrome
 
 		Chroma::SpriteRendererSystem sprite_system;
 
-		using EventCallbackFn = std::function<void(Chroma::Event&)>;
+		using EventCallbackFn = std::function<void(Chroma::SystemEvent&)>;
 
 		struct WindowData
 		{

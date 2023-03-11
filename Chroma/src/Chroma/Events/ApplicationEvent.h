@@ -1,12 +1,12 @@
 #pragma once
 
 #include "chromapch.h"
-#include "Event.h"
+#include "SystemEvent.h"
 
 namespace Chroma
 {
 	/// @brief Event created when the window is resized.
-	class CHROMA_API WindowResizeEvent : public Event
+	class WindowResizeEvent : public SystemEvent
 	{
 	public:
 		/// @brief Constructs a window resize event.
@@ -44,7 +44,7 @@ namespace Chroma
 
 
 	/// @brief Event called when the window is closed.
-	class CHROMA_API WindowCloseEvent : public Event
+	class WindowCloseEvent : public SystemEvent
 	{
 	public:
 		/// @brief Constructs a window close event.
@@ -57,7 +57,7 @@ namespace Chroma
 	};
 
 	/// @brief Event called when the app is updated. Once per frame.
-	class CHROMA_API AppUpdateEvent : public Event
+	class AppUpdateEvent : public SystemEvent
 	{
 	public:
 		/// @brief Constructs an app update event.
@@ -70,7 +70,7 @@ namespace Chroma
 	};
 
 	/// @brief Event called when the app renders a frame.
-	class CHROMA_API AppRenderEvent : public Event
+	class AppRenderEvent : public SystemEvent
 	{
 	public:
 		/// @brief Constructs an app render event.

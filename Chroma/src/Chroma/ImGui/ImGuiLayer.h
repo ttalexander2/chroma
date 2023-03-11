@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Chroma/Events/Event.h"
+#include "Chroma/Events/SystemEvent.h"
 #include "Chroma/Events/MouseEvent.h"
 #include "Chroma/Events/KeyEvent.h"
 #include "Chroma/Events/ApplicationEvent.h"
@@ -8,7 +8,7 @@
 namespace Chroma
 {
 	/// @brief Layer for rendering ImGui components.
-	class CHROMA_API ImGuiLayer
+	class ImGuiLayer
 	{
 	public:
 		/// @brief Construct a new ImGuiLayer.
@@ -23,7 +23,7 @@ namespace Chroma
 
 		/// @brief Called on Events. Allows ImGuiLayer to handle its own events.
 		/// @param e Event to be handled.
-		virtual void OnEvent(Event &e);
+		virtual void OnEvent(SystemEvent &e);
 
 		/// @brief Begins the ImGui step for this frame.
 		void Begin();

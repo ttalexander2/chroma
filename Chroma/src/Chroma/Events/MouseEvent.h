@@ -1,14 +1,14 @@
 #pragma once
 
 #include "chromapch.h"
-#include "Event.h"
+#include "SystemEvent.h"
 
 namespace Chroma
 {
 	/// @brief Mouse moved event, created when the mouse is moved.
 	///
 	/// Holds an x,y coordinate in pixels representing the mouse's position, relative to the window.
-	class CHROMA_API MouseMovedEvent : public Event
+	class MouseMovedEvent : public SystemEvent
 	{
 	public:
 		/// @brief Constructs a MouseMovedEvent.
@@ -49,7 +49,7 @@ namespace Chroma
 	/// @brief Mouse scrolled event, created when the mouse wheel is scrolled.
 	///
 	/// Holds an x,y coordinate in pixels representing the mouse's position, relative to the window.
-	class CHROMA_API MouseScrolledEvent : public Event
+	class MouseScrolledEvent : public SystemEvent
 	{
 	public:
 		/// @brief Constructs a MouseScrolledEvent
@@ -90,7 +90,7 @@ namespace Chroma
 	///
 	/// Holds a mouse button code.
 	/// @see MouseButtonCodes.h
-	class CHROMA_API MouseButtonEvent : public Event
+	class MouseButtonEvent : public SystemEvent
 	{
 	public:
 		/// @brief Get the mouse button that was clicked.
@@ -115,7 +115,7 @@ namespace Chroma
 	///
 	/// Holds a mouse button code.
 	/// @see MouseButtonCodes.h
-	class CHROMA_API MouseButtonPressedEvent : public MouseButtonEvent
+	class MouseButtonPressedEvent : public MouseButtonEvent
 	{
 	public:
 		/// @brief Constructs a MouseButtonPressedEvent
@@ -142,7 +142,7 @@ namespace Chroma
 	///
 	/// Holds a mouse button code.
 	/// @see MouseButtonCodes.h
-	class CHROMA_API MouseButtonReleasedEvent : public MouseButtonEvent
+	class MouseButtonReleasedEvent : public MouseButtonEvent
 	{
 	public:
 		/// @brief Constructs a MouseButtonReleasedEvent

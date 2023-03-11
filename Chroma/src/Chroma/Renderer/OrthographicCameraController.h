@@ -13,7 +13,7 @@ namespace Chroma
 	public:
 		OrthographicCameraController(float aspect_ratio, bool rotation = false);
 
-		void OnEvent(Event &e);
+		void OnEvent(SystemEvent &e);
 		void OnUpdate(Time ts);
 
 		OrthographicCamera &GetCamera() { return m_Camera; }

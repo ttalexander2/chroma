@@ -30,7 +30,7 @@ namespace Chroma
 	/// 	return new Runtime();
 	/// }
 	/// ```
-	class CHROMA_API Application
+	class Application
 	{
 	public:
 		/// @brief Constructs a new Chroma Engine Application.
@@ -51,7 +51,7 @@ namespace Chroma
 
 		/// @brief Processes and propagates application events.
 		/// @param e Event to process.
-		void ProcessEvents(Event &e);
+		void ProcessEvents(SystemEvent &e);
 
 		/// @brief Initialization phase, called before the main update loop, after EarlyInit() and before LateInit().
 		virtual void Init()
@@ -78,7 +78,7 @@ namespace Chroma
 
 		/// @brief Event handling function. All events will call this function.
 		/// @param e Current event.
-		virtual void OnEvent(Event &e)
+		virtual void OnEvent(SystemEvent &e)
 		{
 		};
 

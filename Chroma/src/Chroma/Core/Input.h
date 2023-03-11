@@ -5,7 +5,7 @@
 namespace Chroma
 {
 	/// @brief Input class for polling mouse and keyboard input.
-	class CHROMA_API Input
+	class Input
 	{
 	public:
 		//For lua bindings

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "chromapch.h"
-#include "Event.h"
+#include "SystemEvent.h"
 
 namespace Chroma
 {
@@ -9,7 +9,7 @@ namespace Chroma
 	///
 	/// This event only occurs once per key press.
 	/// @see KeyCodes.h for list of Key Codes.
-	class CHROMA_API KeyEvent : public Event
+	class KeyEvent : public SystemEvent
 	{
 	public:
 		/// @brief Gets the keycode of the key pressed.
@@ -34,7 +34,7 @@ namespace Chroma
 	/// This event repeates while being held down.
 	/// This is often used for handling typing.
 	/// @see KeyCodes.h for list of Key Codes.
-	class CHROMA_API KeyPressedEvent : public KeyEvent
+	class KeyPressedEvent : public KeyEvent
 	{
 	public:
 		/// @brief Constructs a KeyPressedEvent
@@ -70,7 +70,7 @@ namespace Chroma
 	///
 	/// This event only occurs once per key press, on released.
 	/// @see KeyCodes.h for list of Key Codes.
-	class CHROMA_API KeyReleasedEvent : public KeyEvent
+	class KeyReleasedEvent : public KeyEvent
 	{
 	public:
 		/// @brief Constructs a KeyReleasedEvent
@@ -96,7 +96,7 @@ namespace Chroma
 	///
 	/// This event only occurs once per key press.
 	/// @see KeyCodes.h for list of Key Codes.
-	class CHROMA_API KeyTypedEvent : public KeyEvent
+	class KeyTypedEvent : public KeyEvent
 	{
 	public:
 		/// @brief Constructs a KeyTypedEvent.
@@ -116,7 +116,5 @@ namespace Chroma
 		}
 
 		EVENT_CLASS_TYPE(KeyTyped)
-
-	private:
 	};
 }

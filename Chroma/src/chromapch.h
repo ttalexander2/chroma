@@ -2,6 +2,9 @@
 
 #include "Chroma/Core/Log.h"
 #include "Chroma/Core/Core.h"
+#include "Chroma/Events/Event.h"
+#include "Chroma/Events/Delegate.h"
+#include "Chroma/Events/MulticastDelegate.h"
 
 #include <iostream>
 #include <memory>

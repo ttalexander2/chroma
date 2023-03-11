@@ -1106,7 +1106,7 @@ namespace Polychrome
 		}
 	}
 
-	void EditorApp::OnEvent(Chroma::Event& e)
+	void EditorApp::OnEvent(Chroma::SystemEvent& e)
 	{
 		Chroma::EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<Chroma::MouseScrolledEvent>(CHROMA_BIND_EVENT_FN(EditorApp::OnMouseScrolled));

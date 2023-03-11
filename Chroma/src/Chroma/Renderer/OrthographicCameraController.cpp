@@ -37,7 +37,7 @@ namespace Chroma
 		m_Camera.SetPosition(m_CameraPosition);
 	}
 
-	void OrthographicCameraController::OnEvent(Event &e)
+	void OrthographicCameraController::OnEvent(SystemEvent &e)
 	{
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<MouseScrolledEvent>(CHROMA_BIND_EVENT_FN(OrthographicCameraController::OnMouseScrolled));

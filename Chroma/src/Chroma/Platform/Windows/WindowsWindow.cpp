@@ -4,7 +4,7 @@
 #include "Chroma/Events/ApplicationEvent.h"
 #include "Chroma/Events/KeyEvent.h"
 #include "Chroma/Events/MouseEvent.h"
-#include "Chroma/Events/Event.h"
+#include "Chroma/Events/SystemEvent.h"
 #include "Chroma/Platform/OpenGL/OpenGLContext.h"
 #include "Chroma/Platform/Vulkan/VulkanContext.h"
 #include "Chroma/Renderer/RendererAPI.h"

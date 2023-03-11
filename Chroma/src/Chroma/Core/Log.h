@@ -14,7 +14,7 @@ namespace Chroma
 	/// Levels occur in the following order: Trace, Info, Warning, Error, and Fatal, from least to most significant.
 	/// 
 	/// spdlog can be configured in such a way to only provide warnings at a certain level.
-	class CHROMA_API Log
+	class Log
 	{
 	public:
 		/// @brief Initialize the logging system.

@@ -58,7 +58,7 @@ namespace Chroma
 		ImGui::DestroyContext();
 	}
 
-	void ImGuiLayer::OnEvent(Event &e)
+	void ImGuiLayer::OnEvent(SystemEvent &e)
 	{
 		if (m_BlockEvents)
 		{

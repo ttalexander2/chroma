@@ -3,7 +3,7 @@
 #include "chromapch.h"
 
 #include "Chroma/Core/Core.h"
-#include "Chroma/Events/Event.h"
+#include "Chroma/Events/SystemEvent.h"
 
 
 namespace Chroma
@@ -39,11 +39,11 @@ namespace Chroma
 	};
 
 	/// @brief Abstract window class, to be implemented by underlying implementation.
-	class CHROMA_API Window
+	class Window
 	{
 	public:
 		/// @brief Defines an event callback function type.
-		using EventCallbackFn = std::function<void(Event &)>;
+		using EventCallbackFn = std::function<void(SystemEvent &)>;
 
 		/// @brief Window destructor.
 		virtual ~Window()

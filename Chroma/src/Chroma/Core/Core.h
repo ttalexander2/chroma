@@ -12,17 +12,7 @@
 #endif
 #endif
 
-#ifdef CHROMA_PLATFORM_WINDOWS
-#if CHROMA_DYNAMIC_LINK
-#ifdef CHROMA_BUILD_DLL
-		#define CHROMA_API __declspec(dllexport)
-#else
-		#define	CHROMA_API __declspec(dllimport)	
-#endif
-#else
-#define CHROMA_API
-#endif
-#else
+#ifndef CHROMA_PLATFORM_WINDOWS
 	#error Chroma only builds on windows at the moment!
 #endif
 
@@ -71,7 +61,7 @@ namespace Chroma
 	}
 
 	template <typename T>
-	using Ref = std::shared_ptr<T>; // Possible overhead from atomic increment/decrement, but likely negligible
+	using Ref = std::shared_ptr<T>;
 	template <typename T, typename ... Args>
 	constexpr Ref<T> CreateRef(Args && ... args)
 	{

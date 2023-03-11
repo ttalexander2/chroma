@@ -14,6 +14,7 @@
 #include "World.h"
 #include "Chroma/Components/Transform.h"
 #include "ComponentRegistry.h"
+#include "Chroma/Events/Event.h"
 
 
 namespace Polychrome
@@ -40,6 +41,7 @@ namespace Chroma
 	{
 	public:
 		std::string Name = "Scene";
+		Event<Scene, void()> onCreate;
 
 		const GUID GetID();
 
@@ -47,6 +49,7 @@ namespace Chroma
 
 		Scene(const Scene &)
 		{
+			onCreate.broadcast();
 		}
 
 		~Scene();
@@ -55,6 +58,8 @@ namespace Chroma
 
 		Entity NewEntity();
 		Entity NewChild(Entity id);
+
+		
 
 		std::string CreatePrefab(EntityID entity);
 		void MakeUnique(EntityID entity);

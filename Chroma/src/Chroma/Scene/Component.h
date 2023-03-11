@@ -39,6 +39,9 @@ namespace Chroma
 
 		//I don't like macros and i've tried everything I could to avoid this macro, but unfortunately it is the cleanest
 		//and simplest way to add reflection to components, and enforce how components behave.
+
+		//Macro to be used in the body of a component class, at the top in public scope. This macro creates all of the boilerplate required
+		//by the engine for creating a new component type.
 #define CHROMA_COMPONENT(typeName, baseTypeName)																						\
 		using ClassName = typeName;																										\
 		using BaseClass = baseTypeName;																									\
@@ -49,7 +52,7 @@ namespace Chroma
 		typeName(const typeName &) = default;																							\
 		typeName &operator=(const typeName &) = default;																				\
 	private:																															\
-		using type_factory = Reflection::type_factory<typeName>;																				\
+		using type_factory = Reflection::type_factory<typeName>;																		\
 		static inline Reflection::ComponentInitializer<typeName> type_initializer{};													\
 		static type_factory register_type();																							\
 		static inline Reflection::type TypeInfo = Reflection::resolve<typeName>();														\
@@ -69,7 +72,7 @@ namespace Chroma
 		typeName(const typeName &) = default;																							\
 		typeName &operator=(const typeName &) = default;																				\
 	private:																															\
-		using type_factory = Reflection::type_factory<typeName>;																				\
+		using type_factory = Reflection::type_factory<typeName>;																		\
 		static inline Reflection::ComponentInitializer<typeName> type_initializer{};													\
 		static type_factory register_type();																							\
 		static inline Reflection::type TypeInfo = Reflection::resolve<typeName>();														\

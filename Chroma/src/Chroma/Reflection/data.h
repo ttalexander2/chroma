@@ -131,16 +131,28 @@ namespace Chroma::Reflection
 		 */
     	[[nodiscard]] any user_data(uint32_t hash) const;
 
+
+    	/**
+    	 * @brief Gets a piece of user data associated with the provided key.
+    	 * @param key - Hashable key type.
+    	 * @return Any object containing the stored user data.
+    	 */
     	template <typename KeyType, typename = std::enable_if_t<std::is_same_v<std::underlying_type_t<KeyType>, uint32_t>>>
 		[[nodiscard]] any user_data(KeyType&& key) const
     	{
     		return user_data(static_cast<uint32_t>(key));
     	}
 
-
-    	
+    	/**
+    	 * @brief Checks whether user data contained with the key exists.
+    	 * @param key - String key.
+    	 */
     	[[nodiscard]] bool has_user_data(const std::string& key) const;
-    	
+
+    	/**
+    	 * @brief Checks whether user data is associated with this type under the provided key.
+    	 * @param hash - Key of the user aata to retrieve.
+    	 */
     	[[nodiscard]] bool has_user_data(uint32_t hash) const;
 
     	template <typename KeyType, typename = std::enable_if_t<std::is_same_v<std::underlying_type_t<KeyType>, uint32_t>>>

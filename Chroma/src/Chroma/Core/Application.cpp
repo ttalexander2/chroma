@@ -81,7 +81,7 @@ namespace Chroma
 	{
 	}
 
-	void Application::ProcessEvents(Event &e)
+	void Application::ProcessEvents(SystemEvent &e)
 	{
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<WindowCloseEvent>(CHROMA_BIND_EVENT_FN(Application::OnWindowClose));
@@ -138,8 +138,11 @@ namespace Chroma
 			const double newTime = glfwGetTime();
 			double frameTime = newTime - currentTime;
 
+
+			// Limit system frame time
 			if (frameTime > 0.25)
 			{
+				CHROMA_CORE_WARN("A frame took more than 0.25 seconds!");
 				frameTime = 0.25;
 			}
 
@@ -159,8 +162,7 @@ namespace Chroma
 			}
 
 			m_VariableTime = frameTime;
-
-			//this->Update(frameTime);
+			
 			this->Draw(frameTime);
 
 			m_ImGuiLayer->Begin();
