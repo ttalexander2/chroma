@@ -129,7 +129,7 @@ namespace Chroma
 				.data<ColliderType::Rectangle>("Rectangle");
 
 		return Reflection::register_type<Collider>("Collider")
-		       .base<Component>()
+		       .base<Component>() 
 		       .data<&Collider::Mask>("Mask")
 		       .data<&Collider::Layer>("Layer")
 		       .data<&Collider::GetPosition, &Collider::SetPosition>("Position")

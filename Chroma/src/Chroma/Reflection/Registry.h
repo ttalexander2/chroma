@@ -1,7 +1,7 @@
 #pragma once
 
 #include <iostream>
-#include "type.h"
+#include "Type.h"
 #include "type_data.h"
 #include "type_hash.h"
 #include "type_factory.h"
@@ -15,10 +15,10 @@ namespace Chroma::Reflection
     /**
      * Class for registering and resolving types within the reflection system.
      */
-    class registry
+    class Registry
     {
     public:
-        using id_hash = basic_hash<uint32_t>;
+        using id_hash = BasicHash<uint32_t>;
 
         /**
          * @brief Registers a type to the reflection system.
@@ -49,7 +49,7 @@ namespace Chroma::Reflection
          * @return The type object with information about the type. If the symbol could not be found,
          * the type object will be invalid. Use the type.valid() to check whether the type is valid.
          */
-        static type resolve(const std::string &name) noexcept;
+        static Type resolve(const std::string &name) noexcept;
 
         /**
         * @brief Resolves the provided ID to its associated type.
@@ -57,7 +57,7 @@ namespace Chroma::Reflection
         * @return The type object with information about the type. If the symbol could not be found,
         * the type object will be invalid. Use the type.valid() to check whether the type is valid.
         */
-        static type resolve(uint32_t id) noexcept;
+        static Type resolve(uint32_t id) noexcept;
 
         /**
          * @brief Gets an iterable container containing all of the types registered in the system.
@@ -72,16 +72,16 @@ namespace Chroma::Reflection
          * the type object will be invalid. Use the type.valid() to check whether the type is valid.
          */
         template<typename T>
-        static type resolve() noexcept
+        static Type resolve() noexcept
         {
-            uint32_t hash = internal::type_hash<std::decay_t<T>>::value();
+            uint32_t hash = Internal::type_hash<std::decay_t<T>>::value();
             auto val = type_data::instance().types.find(hash);
             if (val == type_data::instance().types.end())
             {
                 auto factory = type_factory<T>(typeid(T).name());
                 return factory._type;
             }
-            return type(val->first);
+            return Type(val->first);
         }
 
         /**

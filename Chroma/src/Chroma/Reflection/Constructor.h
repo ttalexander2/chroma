@@ -1,15 +1,15 @@
 #pragma once
 
 #include <cstdint>
-#include "type.h"
-#include "any.h"
+#include "Type.h"
+#include "Any.h"
 
 namespace Chroma::Reflection
 {
 
     // Forward Declarations
     class type_data;
-    class registry;
+    class Registry;
     struct ctor_info;
     struct type_info;
     class constructor_container;
@@ -22,14 +22,14 @@ namespace Chroma::Reflection
      * @brief Class representing a constructor for a specific type.
      * This class is a wrapper for data registered in the reflection system.
      */
-    class constructor
+    class Constructor
     {
         // Friend classes
         friend class type_data;
-        friend class registry;
-        friend class any;
-        friend class handle;
-        friend class type;
+        friend class Registry;
+        friend class Any;
+        friend class Handle;
+        friend class Type;
         friend class argument_container;
         friend class constructor_container;
         template<typename T>
@@ -39,19 +39,19 @@ namespace Chroma::Reflection
         /**
          * @brief Creates an empty constructor object.
          */
-        constructor();
+        Constructor();
 
         /**
          * @brief Default copy constructor.
          */
-        constructor(const constructor &) = default;
+        Constructor(const Constructor &) = default;
 
         /**
          * @brief Equality comparison operator. Compares two constructors.
          * @param rhs - Other constructor to compare to.
          * @return Returns true if the two constructors are the same, false otherwise.
          */
-        bool operator==(const constructor &rhs) const;
+        bool operator==(const Constructor &rhs) const;
 
         /**
          * @brief Whether this constructor object is valid (i.e. has a reference to a valid type, and the reference to
@@ -77,7 +77,7 @@ namespace Chroma::Reflection
          * @brief Gets the type this constructor constructs.
          * @return Type object containing information about the type.
          */
-        [[nodiscard]] Reflection::type type() const;
+        [[nodiscard]] Reflection::Type type() const;
 
         /**
          * @brief Gets the arity of this constructor.
@@ -91,7 +91,7 @@ namespace Chroma::Reflection
          * @return Type object representing the type of the argument. If the constructor or index is invalid,
          * the type will be void.
          */
-        [[nodiscard]] Reflection::type args(size_t index) const;
+        [[nodiscard]] Reflection::Type args(size_t index) const;
 
         /**
          * @brief Invokes the constructor with the given arguments.
@@ -100,9 +100,9 @@ namespace Chroma::Reflection
          * @return Any object containing a new instance of the type.
          */
         template<typename... Args>
-        any invoke(Args &&...args)
+        Any invoke(Args &&...args)
         {
-            any arguments[sizeof...(Args) + 1u]{std::forward<Args>(args)...};
+            Any arguments[sizeof...(Args) + 1u]{std::forward<Args>(args)...};
             return invoke_internal(arguments, sizeof...(Args));
         }
 
@@ -112,7 +112,7 @@ namespace Chroma::Reflection
          * @param id - ID of the constructor.
          * @param type_id - ID of the type.
          */
-        constructor(uint32_t id, uint32_t type_id);
+        Constructor(uint32_t id, uint32_t type_id);
 
         /**
          * @brief Internal invoke function, used to invoke the constructor given a list of args.
@@ -120,7 +120,7 @@ namespace Chroma::Reflection
          * @param count - Number of arguments provided.
          * @return Any object containing the newly constructed object.
          */
-        [[maybe_unused]] any invoke_internal([[maybe_unused]]any *args, size_t count) const;
+        [[maybe_unused]] Any invoke_internal([[maybe_unused]]Any *args, size_t count) const;
 
         uint32_t _id; // ID of the constructor.
         uint32_t _type_id; // ID of the type.

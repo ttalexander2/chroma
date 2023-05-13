@@ -55,12 +55,12 @@ namespace Chroma
 		using type_factory = Reflection::type_factory<typeName>;																		\
 		static inline Reflection::ComponentInitializer<typeName> type_initializer{};													\
 		static type_factory register_type();																							\
-		static inline Reflection::type TypeInfo = Reflection::resolve<typeName>();														\
+		static inline Reflection::Type TypeInfo = Reflection::resolve<typeName>();														\
 		virtual void NO_TYPE_INFO() override {}																							\
 	public:																																\
 		friend class Scene;																												\
-		virtual Reflection::type GetType() const noexcept override { return TypeInfo; }													\
-		virtual Reflection::handle ToHandle() const noexcept override { return Reflection::handle(*((typeName*)this)); }											
+		virtual Reflection::Type GetType() const noexcept override { return TypeInfo; }													\
+		virtual Reflection::Handle ToHandle() const noexcept override { return Reflection::Handle(*((typeName*)this)); }											
 
 #define CHROMA_ABSTRACT_COMPONENT(typeName, baseTypeName)																				\
 		using ClassName = typeName;																										\
@@ -75,13 +75,13 @@ namespace Chroma
 		using type_factory = Reflection::type_factory<typeName>;																		\
 		static inline Reflection::ComponentInitializer<typeName> type_initializer{};													\
 		static type_factory register_type();																							\
-		static inline Reflection::type TypeInfo = Reflection::resolve<typeName>();														\
+		static inline Reflection::Type TypeInfo = Reflection::resolve<typeName>();														\
 		virtual void NO_TYPE_INFO() override {}																							\
 																																		\
 	public:																																\
 		friend class Scene;																												\
-		virtual Reflection::type GetType() const noexcept override { return TypeInfo; }													\
-		virtual Reflection::handle ToHandle() const noexcept override { return Reflection::handle(*((typeName*)this)); }
+		virtual Reflection::Type GetType() const noexcept override { return TypeInfo; }													\
+		virtual Reflection::Handle ToHandle() const noexcept override { return Reflection::Handle(*((typeName*)this)); }
 
 		Component() :
 			m_EntityID(ENTITY_NULL)
@@ -114,8 +114,8 @@ namespace Chroma
 
 		int GetOrderID() const { return order_id; }
 
-		virtual Reflection::type GetType() const noexcept { return this->TypeInfo; }
-		virtual Reflection::handle ToHandle() const noexcept { return Reflection::handle(*this); }
+		virtual Reflection::Type GetType() const noexcept { return this->TypeInfo; }
+		virtual Reflection::Handle ToHandle() const noexcept { return Reflection::Handle(*this); }
 
 	protected:
 		virtual void NO_TYPE_INFO() = 0;
@@ -124,7 +124,7 @@ namespace Chroma
 		using type_factory = Reflection::type_factory<Component>;
 		static inline Reflection::ComponentInitializer<Component> type_initializer{};
 		static type_factory register_type();
-		static inline Reflection::type TypeInfo = Reflection::resolve<Component>();
+		static inline Reflection::Type TypeInfo = Reflection::resolve<Component>();
 
 		EntityID m_EntityID;
 		bool m_Enabled = true;

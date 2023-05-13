@@ -1,7 +1,7 @@
 #include "chromapch.h"
 #include "type_data.h"
 
-#include "type.h"
+#include "Type.h"
 
 
 namespace Chroma::Reflection

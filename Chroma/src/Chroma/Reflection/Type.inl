@@ -4,14 +4,14 @@
 
 #pragma once
 
-#include "any.h"
-#include "type.h"
+#include "Any.h"
+#include "Type.h"
 
 namespace Chroma::Reflection
 {
 
     template<typename KeyType, typename>
-    any type::user_data(KeyType &&key) const
+    Any Type::user_data(KeyType &&key) const
     {
         return user_data(static_cast<uint32_t>(key));
     }

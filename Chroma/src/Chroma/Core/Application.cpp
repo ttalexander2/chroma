@@ -142,7 +142,7 @@ namespace Chroma
 			// Limit system frame time
 			if (frameTime > 0.25)
 			{
-				CHROMA_CORE_WARN("A frame took more than 0.25 seconds!");
+				// CHROMA_CORE_WARN("A frame took more than 0.25 seconds!");
 				frameTime = 0.25;
 			}
 

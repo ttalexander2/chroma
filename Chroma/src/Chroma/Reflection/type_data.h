@@ -5,10 +5,10 @@
 #include <string>
 #include <vector>
 
-#include "basic_hash.h"
+#include "BasicHash.h"
 #include "type_traits.h"
 #include "type_flags.h"
-#include "any.h"
+#include "Any.h"
 
 // Note: For the current sake of simplicity, currently type data structs are stored
 // within std::unordered_map (s), however I would like to make the storage for this
@@ -27,8 +27,8 @@ namespace Chroma::Reflection
     struct data_info;
     struct func_info;
     struct ctor_info;
-    class any;
-    class handle;
+    class Any;
+    class Handle;
 
     /**
      * @brief Struct storing meta info for a single piece of type data.
@@ -40,13 +40,13 @@ namespace Chroma::Reflection
         id_type id;
         id_type type_id;
 
-        bool (*set)(handle&, any);
+        bool (*set)(Handle&, Any);
 
-        any (*get)(handle);
+        Any (*get)(Handle);
 
         data_flags flags;
 
-        std::unordered_map<uint32_t, any> user_data;
+        std::unordered_map<uint32_t, Any> user_data;
     };
 
     /**
@@ -64,13 +64,13 @@ namespace Chroma::Reflection
 
         id_type (*arg)(const size_type) noexcept;
 
-        any (*invoke)(handle, any *const);
+        Any (*invoke)(Handle, Any *const);
 
 
         bool is_const;
         bool is_static;
 
-        std::unordered_map<uint32_t, any> user_data;
+        std::unordered_map<uint32_t, Any> user_data;
     };
 
     /**
@@ -88,7 +88,7 @@ namespace Chroma::Reflection
 
         id_type (*arg)(const size_type) noexcept;
 
-        any (*invoke)(any *const);
+        Any (*invoke)(Any *const);
     };
 
     /**
@@ -98,7 +98,7 @@ namespace Chroma::Reflection
     {
         uint32_t id;
 
-        any (*helper_func)(any);
+        Any (*helper_func)(Any);
     };
 
     /**
@@ -117,7 +117,7 @@ namespace Chroma::Reflection
         std::unordered_map<uint32_t, func_info> functions;
         std::unordered_map<uint32_t, conv_info> conversions;
         std::unordered_map<uint32_t, ctor_info> constructors;
-        std::unordered_map<uint32_t, any> user_data;
+        std::unordered_map<uint32_t, Any> user_data;
         std::vector<uint32_t> bases;
     };
 
@@ -126,21 +126,21 @@ namespace Chroma::Reflection
      */
     class type_data
     {
-        friend class type;
+        friend class Type;
         friend class type_container;
-        friend class data;
+        friend class Data;
         friend class data_container;
-        friend class function;
+        friend class Function;
         friend class function_container;
-        friend class registry;
-        friend class any;
+        friend class Registry;
+        friend class Any;
         friend class argument_container;
-        friend class constructor;
+        friend class Constructor;
         friend class constructor_container;
         template<typename T>
         friend class type_factory;
 
-        using id_hash = basic_hash<uint32_t>;
+        using id_hash = BasicHash<uint32_t>;
 
         /**
          * @brief Gets the single instance of the type_data system.
@@ -190,15 +190,15 @@ namespace Chroma::Reflection
             {
                 flags |= type_flags::is_pointer;
             }
-            if constexpr (internal::is_pointer_like_v<T>)
+            if constexpr (Internal::is_pointer_like_v<T>)
             {
                 flags |= type_flags::is_pointer_like;
             }
-            if constexpr (internal::is_sequence_container_v<T>)
+            if constexpr (Internal::is_sequence_container_v<T>)
             {
                 flags |= type_flags::is_sequence_container;
             }
-            if constexpr (internal::is_associative_container_v<T>)
+            if constexpr (Internal::is_associative_container_v<T>)
             {
                 flags |= type_flags::is_associative_container;
             }

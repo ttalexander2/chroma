@@ -4,12 +4,12 @@
 #include "type_factory.h"
 #include "type_data.h"
 #include "type_flags.h"
-#include "type.h"
-#include "type.inl"
-#include "data.h"
-#include "function.h"
-#include "registry.h"
-#include "initializer.h"
+#include "Type.h"
+#include "Type.inl"
+#include "Data.h"
+#include "Function.h"
+#include "Registry.h"
+#include "TypeInitializer.h"
 #include "iterators/data_container.h"
 #include "iterators/function_container.h"
 #include "iterators/type_container.h"
@@ -50,7 +50,7 @@ namespace Chroma
 	    template<typename T>
 	    inline type_factory<T> register_type(const std::string &name)
 	    {
-	        return registry::register_type<T>(name);
+	        return Registry::register_type<T>(name);
 	    }
 
 	    /**
@@ -62,7 +62,7 @@ namespace Chroma
 	    template<template<typename> typename T>
 	    inline auto register_type(const std::string &name)
 	    {
-	        return registry::register_type<T>(name);
+	        return Registry::register_type<T>(name);
 	    }
 
 	    /**
@@ -70,9 +70,9 @@ namespace Chroma
 	     * @param - name The type's existing identifier.
 	     * @return Object containing information about the type.
 	     */
-	    inline type resolve(const std::string &name) noexcept
+	    inline Type resolve(const std::string &name) noexcept
 	    {
-	        return registry::resolve(name);
+	        return Registry::resolve(name);
 	    }
 
 	    /**
@@ -80,9 +80,9 @@ namespace Chroma
 	     * @param - name The type's id.
 	     * @return Object containing information about the type.
 	     */
-	    inline type resolve(uint32_t id) noexcept
+	    inline Type resolve(uint32_t id) noexcept
 	    {
-	        return registry::resolve(id);
+	        return Registry::resolve(id);
 	    }
 
 	    /**
@@ -91,7 +91,7 @@ namespace Chroma
 	     */
 	    inline type_container resolve() noexcept
 	    {
-	        return registry::resolve();
+	        return Registry::resolve();
 	    }
 
 	    /**
@@ -100,9 +100,9 @@ namespace Chroma
 	     * @return Object containing information about the type.
 	     */
 	    template<typename T>
-	    inline type resolve() noexcept
+	    inline Type resolve() noexcept
 	    {
-	        return registry::resolve<T>();
+	        return Registry::resolve<T>();
 	    }
 
 	    /**
@@ -112,7 +112,7 @@ namespace Chroma
 	     */
 	    inline bool valid(const std::string &name)
 	    {
-	        return registry::valid(name);
+	        return Registry::valid(name);
 	    }
 
 	    /**
@@ -122,7 +122,7 @@ namespace Chroma
 	     */
 	    inline bool valid(uint32_t id)
 	    {
-	        return registry::valid(id);
+	        return Registry::valid(id);
 	    }
 
 	    /**
@@ -132,7 +132,7 @@ namespace Chroma
 	     */
 	    inline std::string type_name_from_id(uint32_t id)
 	    {
-	        return registry::resolve(id).name();
+	        return Registry::resolve(id).name();
 	    }
 
 	    /**
@@ -142,7 +142,7 @@ namespace Chroma
 	 */
 	    inline uint32_t type_id_from_name(const std::string &name)
 	    {
-	        return registry::resolve(name).id();
+	        return Registry::resolve(name).id();
 	    }
 
 
@@ -158,19 +158,19 @@ namespace Chroma
 		class Serializer
 		{
 			template<typename>
-			friend class type_initializer;
+			friend class TypeInitializer;
 			friend class Application;
 			friend class Initializer;
 		public:
 
 
-			static void SerializeObjectYAML(YAML::Emitter &out, handle object);
-			static void DeserializeObjectYAML(handle object, YAML::Node &node);
+			static void SerializeObjectYAML(YAML::Emitter &out, Handle object);
+			static void DeserializeObjectYAML(Handle object, YAML::Node &node);
 
 		private:
 
 			template <typename Type>
-			static void SerializeTypeYAML(YAML::Emitter& emitter, any value)
+			static void SerializeTypeYAML(YAML::Emitter& emitter, Handle value)
 			{
 				if (value.can_cast_or_convert<Type>())
 				{
@@ -179,9 +179,9 @@ namespace Chroma
 			}
 
 			template <typename Type>
-			static any DeserializeTypeYAML(YAML::Node& node)
+			static Any DeserializeTypeYAML(YAML::Node& node)
 			{
-				return any{node.as<Type>()};
+				return Any{node.as<Type>()};
 			}
 		};
 

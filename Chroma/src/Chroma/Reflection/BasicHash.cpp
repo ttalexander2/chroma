@@ -1,5 +1,5 @@
 #include "chromapch.h"
-#include "basic_hash.h"
+#include "BasicHash.h"
 
 namespace Chroma::Reflection
 {

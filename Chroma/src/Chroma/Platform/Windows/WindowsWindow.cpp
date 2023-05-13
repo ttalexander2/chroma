@@ -27,12 +27,12 @@ namespace Chroma
 
 	WindowsWindow::WindowsWindow(const WindowProps &props)
 	{
-		Init(props);
+		WindowsWindow::Init(props);
 	}
 
 	WindowsWindow::~WindowsWindow()
 	{
-		Shutdown();
+		WindowsWindow::Shutdown();
 	}
 
 	void WindowsWindow::Init(const WindowProps &props)

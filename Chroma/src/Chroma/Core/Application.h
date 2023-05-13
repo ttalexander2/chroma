@@ -41,8 +41,7 @@ namespace Chroma
 		virtual ~Application();
 
 		virtual void BindScripts()
-		{
-		};
+		{};
 
 		/// @brief Main update loop for the chroma engine application.
 		///

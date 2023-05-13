@@ -6,7 +6,7 @@
 namespace Chroma::Reflection
 {
     // Forward declarations
-    class type;
+    class Type;
 
 
     /**
@@ -18,7 +18,7 @@ namespace Chroma::Reflection
      * @tparam T - Resulting integral hash value.
      */
     template<typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
-    class basic_hash
+    class BasicHash
     {
     public:
 
@@ -27,9 +27,9 @@ namespace Chroma::Reflection
          * @param str - String to hash.
          * @return basic_hash object containing the hash.
          */
-        static constexpr basic_hash hash(const char *const str) noexcept
+        static constexpr BasicHash hash(const char *const str) noexcept
         {
-            return basic_hash(hash_internal(str, val_const));
+            return BasicHash(hash_internal(str, val_const));
         }
 
         /**
@@ -37,16 +37,16 @@ namespace Chroma::Reflection
          * @param str - String to hash.
          * @return basic_hash object containing the hash.
          */
-        static constexpr basic_hash hash(const std::string &str) noexcept
+        static constexpr BasicHash hash(const std::string &str) noexcept
         {
-            return basic_hash(hash_internal(str.c_str(), val_const));
+            return BasicHash(hash_internal(str.c_str(), val_const));
         }
 
         /**
          * @brief Constructs a basic_hash object from an existing value.
          * @param hash - Hash value.
          */
-        explicit constexpr basic_hash(const T hash) noexcept:
+        explicit constexpr BasicHash(const T hash) noexcept:
                 m_Hash(hash)
         {
         }
@@ -55,7 +55,7 @@ namespace Chroma::Reflection
          * @brief Constructs a basic_hash object from a C string.
          * @param hash - String to hash.
          */
-        explicit constexpr basic_hash(const char *const pText) noexcept:
+        explicit constexpr BasicHash(const char *const pText) noexcept:
                 m_Hash(hash_internal(pText, val_const))
         {
         }
@@ -64,7 +64,7 @@ namespace Chroma::Reflection
          * @brief Constructs a basic_hash object from a std::string.
          * @param text - String to hash.
          */
-        explicit basic_hash(const std::string &text) :
+        explicit BasicHash(const std::string &text) :
                 m_Hash(hash_internal(text.c_str(), val_const))
         {
         }
@@ -81,7 +81,7 @@ namespace Chroma::Reflection
          * @param rhs - Other hash value to compare to.
          * @return Returns true if the hash values are the same, false otherwise.
          */
-        bool operator==(const basic_hash &rhs) const
+        bool operator==(const BasicHash &rhs) const
         { return m_Hash == rhs.m_Hash; }
 
         /**
@@ -89,7 +89,7 @@ namespace Chroma::Reflection
          * @param rhs - Other hash value to compare to.
          * @return Returns false if the hash values are the same, true otherwise.
          */
-        bool operator!=(const basic_hash &rhs) const
+        bool operator!=(const BasicHash &rhs) const
         { return m_Hash != rhs.m_Hash; }
 
         /**
@@ -97,7 +97,7 @@ namespace Chroma::Reflection
          * @param rhs - Other hash value to compare to.
          * @return Returns true if the left hash is less than the right hash value, false otherwise.
          */
-        bool operator<(const basic_hash &rhs) const
+        bool operator<(const BasicHash &rhs) const
         { return m_Hash < rhs.m_Hash; }
 
         /**
@@ -105,7 +105,7 @@ namespace Chroma::Reflection
          * @param rhs - Other hash value to compare to.
          * @return Returns true if the left hash is greater than than the right hash value, false otherwise.
          */
-        bool operator>(const basic_hash &rhs) const
+        bool operator>(const BasicHash &rhs) const
         { return m_Hash > rhs.m_Hash; }
 
     private:
@@ -131,7 +131,7 @@ namespace Chroma::Reflection
     /**
      * @brief 64-bit string hash.
      */
-    using string_hash = basic_hash<size_t>;
+    using string_hash = BasicHash<size_t>;
 }
 
 namespace std

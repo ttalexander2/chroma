@@ -119,7 +119,7 @@ namespace Chroma
 			return ComponentRegistry::GetComponent(component_id, entity, &Registry);
 		}
 
-		static std::vector<Reflection::type> GetComponentTypes();
+		static std::vector<Reflection::Type> GetComponentTypes();
 
 		template <ComponentType T>
 		bool HasComponent(EntityID id)

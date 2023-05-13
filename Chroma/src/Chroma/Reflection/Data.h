@@ -1,17 +1,17 @@
 #pragma once
 
 #include <cstdint>
-#include "type.h"
-#include "any.h"
+#include "Type.h"
+#include "Any.h"
 
 namespace Chroma::Reflection
 {
 
     // Forward declarations
     class type_data;
-    class registry;
-    class any;
-    class handle;
+    class Registry;
+    class Any;
+    class Handle;
     struct data_info;
     struct type_info;
     template<typename T>
@@ -21,14 +21,14 @@ namespace Chroma::Reflection
      * @brief Class representing a field or piece of data within a type.
      * This class is a wrapper for data registered in the reflection system.
      */
-    class data
+    class Data
     {
         // Friend classes
         friend class type_data;
-        friend class registry;
-        friend class any;
-        friend class handle;
-        friend class type;
+        friend class Registry;
+        friend class Any;
+        friend class Handle;
+        friend class Type;
         friend class data_container;
         template<typename T>
         friend class type_factory;
@@ -37,19 +37,19 @@ namespace Chroma::Reflection
         /**
          * @brief Creates an empty data object.
          */
-        data();
+        Data();
 
         /**
          * @brief Default copy constructor.
          */
-        data(const data &) = default;
+        Data(const Data &) = default;
 
         /**
          * @brief Equality comparison operator.
          * @param rhs - Other data object to compare to.
          * @return Returns true if both data have the same ID and they are contained in the same type.
          */
-        bool operator==(const data &rhs) const;
+        bool operator==(const Data &rhs) const;
 
         /**
          * @brief Checks whether this data object is valid (i.e. has a reference to a valid type, and the reference
@@ -81,13 +81,13 @@ namespace Chroma::Reflection
          * @brief The type of the data.
          * @return A type object containing the type of this data.
          */
-        [[nodiscard]] Reflection::type type() const;
+        [[nodiscard]] Reflection::Type type() const;
 
         /**
          * @brief The owning type of this data.
 
          */
-         [[nodiscard]] Reflection::type owner() const;
+         [[nodiscard]] Reflection::Type owner() const;
 
         /**
          * @brief Flag representing whether this data is const.
@@ -106,7 +106,7 @@ namespace Chroma::Reflection
          * @param handle - Object to retrieve the data.
          * @return Returns an any object containing the data.
          */
-        [[nodiscard]] any get(Reflection::handle handle) const;
+        [[nodiscard]] Any get(Reflection::Handle handle) const;
 
         /**
          * @brief Sets the data on a given object.
@@ -114,14 +114,14 @@ namespace Chroma::Reflection
          * @param value - Value to set the data to.
          * @return Returns true if the set operation was successful, false otherwise.
          */
-        bool set(Reflection::handle& handle, any value) const;
+        bool set(Reflection::Handle& handle, Any value) const;
 
     	/**
 		 * @brief Gets a piece of user data associated with this type, from the given key.
 		 * @param key - Key of the user data to retrieve.
 		 * @return Any object containing the stored user data.
 		 */
-    	[[nodiscard]] any user_data(const std::string& key) const;
+    	[[nodiscard]] Any user_data(const std::string& key) const;
 
 
     	/**
@@ -129,7 +129,7 @@ namespace Chroma::Reflection
 		 * @param hash - Key of the user data to retrieve.
 		 * @return Any object containing the stored user data.
 		 */
-    	[[nodiscard]] any user_data(uint32_t hash) const;
+    	[[nodiscard]] Any user_data(uint32_t hash) const;
 
 
     	/**
@@ -138,7 +138,7 @@ namespace Chroma::Reflection
     	 * @return Any object containing the stored user data.
     	 */
     	template <typename KeyType, typename = std::enable_if_t<std::is_same_v<std::underlying_type_t<KeyType>, uint32_t>>>
-		[[nodiscard]] any user_data(KeyType&& key) const
+		[[nodiscard]] Any user_data(KeyType&& key) const
     	{
     		return user_data(static_cast<uint32_t>(key));
     	}
@@ -167,7 +167,7 @@ namespace Chroma::Reflection
          * @param id
          * @param type_id
          */
-        explicit data(uint32_t id, uint32_t owner);
+        explicit Data(uint32_t id, uint32_t owner);
 
         uint32_t _id; // ID of the data.
     	uint32_t _owner; // ID of the type containing this data

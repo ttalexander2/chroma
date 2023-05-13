@@ -3,7 +3,7 @@
 
 #include <utility>
 #include <iostream>
-#include "type.h"
+#include "Type.h"
 #include "type_hash.h"
 #include "type_traits.h"
 
@@ -12,16 +12,16 @@ namespace Chroma::Reflection
 {
 
     // Forward declarations
-    class any;
-    class handle;
+    class Any;
+    class Handle;
 
 
-    namespace internal
+    namespace Internal
     {
         /**
          * @brief Internal operations to perform using the vtable.
          */
-        enum class any_operation : uint8_t
+        enum class AnyOperation : uint8_t
         {
             copy,
             move,
@@ -36,7 +36,7 @@ namespace Chroma::Reflection
         /**
          * @brief Policy for any objects.
          */
-        enum class any_policy : uint8_t
+        enum class AnyPolicy : uint8_t
         {
             owner,
             ref,
@@ -48,16 +48,16 @@ namespace Chroma::Reflection
     /**
      * @brief Opaque container for storing data of any type.
      */
-    class any
+    class Any
     {
-        friend class handle;
+        friend class Handle;
 
         // Defines length and alignment for in situ storage.
         static constexpr std::size_t Len = sizeof(double[2]);
         static constexpr std::size_t Align = alignof(std::aligned_storage_t<Len + !Len>);
 
         using storage_type = std::aligned_storage_t<Len + !Len, Align>;
-        using vtable_type = const void *(const internal::any_operation, const any &, const void *);
+        using vtable_type = const void *(const Internal::AnyOperation, const Any &, const void *);
 
         template<typename Type>
         static constexpr bool in_situ = Len && alignof(Type) <= alignof(storage_type) &&
@@ -69,10 +69,10 @@ namespace Chroma::Reflection
         /**
          * @brief Constructs an empty any object.
          */
-        any() noexcept // NOLINT(cppcoreguidelines-pro-type-member-init)
+        Any() noexcept // NOLINT(cppcoreguidelines-pro-type-member-init)
                 : instance{},
-                  type_info{internal::type_hash<void>::value()},
-                  policy{internal::any_policy::owner},
+                  type_info{Internal::type_hash<void>::value()},
+                  policy{Internal::AnyPolicy::owner},
                   vtable{}
         {}
 
@@ -81,14 +81,14 @@ namespace Chroma::Reflection
          * @tparam - Type Type of the object to store.
          * @param - value Value to store.
          */
-        template<typename Type, typename = std::enable_if_t<!std::is_same_v<std::decay_t<Type>, any>>>
-        any(Type &&value) // NOLINT(google-explicit-constructor)
-                :any{}
+        template<typename Type, typename = std::enable_if_t<!std::is_same_v<std::decay_t<Type>, Any>>>
+        Any(Type &&value) // NOLINT(google-explicit-constructor)
+                :Any{}
         {
             initialize<std::decay_t<Type>>(std::forward<Type>(value));
         }
 
-        any(const any& other, const internal::any_policy policy) noexcept
+        Any(const Any& other, const Internal::AnyPolicy policy) noexcept
         : instance{other.data()},
         type_info{other.type_info},
         vtable{other.vtable},
@@ -105,8 +105,8 @@ namespace Chroma::Reflection
          * @param args - Arguments to pass to the constructor.
          */
         template<typename Type, typename... Args>
-        explicit any(std::in_place_type_t<Type>, Args &&... args)
-                :any{}
+        explicit Any(std::in_place_type_t<Type>, Args &&... args)
+                :Any{}
         {
             initialize<Type>(std::forward<Args>(args)...);
         }
@@ -115,12 +115,12 @@ namespace Chroma::Reflection
          * @brief Copy constructor. Copies the value from another any object to this object.
          * @param other - Other any to copy to this object.
          */
-        any(const any &other)
-                : any{}
+        Any(const Any &other)
+                : Any{}
         {
             if (other.vtable)
             {
-                other.vtable(internal::any_operation::copy, other, this);
+                other.vtable(Internal::AnyOperation::copy, other, this);
             }
         }
 
@@ -128,7 +128,7 @@ namespace Chroma::Reflection
          * @brief Move constructor. Moves the value and metadata from the other object to this.
          * @param other - Object to move.
          */
-        any(const any &&other) noexcept // NOLINT(cppcoreguidelines-pro-type-member-init)
+        Any(const Any &&other) noexcept // NOLINT(cppcoreguidelines-pro-type-member-init)
                 : instance{},
                   type_info{other.type_info},
                   vtable{other.vtable},
@@ -136,7 +136,7 @@ namespace Chroma::Reflection
         {
             if (other.vtable)
             {
-                other.vtable(internal::any_operation::move, other, this);
+                other.vtable(Internal::AnyOperation::move, other, this);
             }
         }
 
@@ -144,11 +144,11 @@ namespace Chroma::Reflection
          * @brief Deconstructor. Destroys the any object. Will only destroy the value if this any
          * object is the owner of the value.
          */
-        ~any()
+        ~Any()
         {
             if (vtable && owner())
             {
-                vtable(internal::any_operation::destroy, *this, nullptr);
+                vtable(Internal::AnyOperation::destroy, *this, nullptr);
             }
         }
 
@@ -157,12 +157,12 @@ namespace Chroma::Reflection
          * @param other - Object to assign value from.
          * @return Reference to the any object.
          */
-        any &operator=(const any &other) noexcept // NOLINT(bugprone-unhandled-self-assignment)
+        Any &operator=(const Any &other) noexcept // NOLINT(bugprone-unhandled-self-assignment)
         {
             reset();
             if (other.vtable)
             {
-                other.vtable(internal::any_operation::copy, other, this);
+                other.vtable(Internal::AnyOperation::copy, other, this);
             }
             return *this;
         }
@@ -172,12 +172,12 @@ namespace Chroma::Reflection
          * @param - other Any object to move.
          * @return Reference to the any object.
          */
-        any &operator=(any &&other) noexcept // NOLINT(bugprone-unhandled-self-assignment)
+        Any &operator=(Any &&other) noexcept // NOLINT(bugprone-unhandled-self-assignment)
         {
             reset();
             if (other.vtable)
             {
-                other.vtable(internal::any_operation::move, other, this);
+                other.vtable(Internal::AnyOperation::move, other, this);
                 type_info = other.type_info;
                 vtable = other.vtable;
                 policy = other.policy;
@@ -191,7 +191,7 @@ namespace Chroma::Reflection
          * @param value - Value to assign.
          */
         template<typename Type>
-        std::enable_if_t<!std::is_same_v<std::decay_t<Type>, any>, any &> // NOLINT(misc-unconventional-assign-operator)
+        std::enable_if_t<!std::is_same_v<std::decay_t<Type>, Any>, Any &> // NOLINT(misc-unconventional-assign-operator)
         operator=(Type &&value)
         {
             emplace<std::decay_t<Type>>(std::forward<Type>(value));
@@ -204,7 +204,7 @@ namespace Chroma::Reflection
          */
         [[nodiscard]] const void *data() const noexcept
         {
-            return vtable ? vtable(internal::any_operation::get, *this, nullptr) : nullptr;
+            return vtable ? vtable(Internal::AnyOperation::get, *this, nullptr) : nullptr;
         }
 
         /**
@@ -224,9 +224,9 @@ namespace Chroma::Reflection
          */
         [[nodiscard]] void *data() noexcept
         {
-            return (!vtable || policy == internal::any_policy::cref) ? nullptr
+            return (!vtable || policy == Internal::AnyPolicy::cref) ? nullptr
                                                                      : const_cast<void *>(vtable(
-                            internal::any_operation::get, *this, nullptr));
+                            Internal::AnyOperation::get, *this, nullptr));
         }
 
         /**
@@ -245,7 +245,7 @@ namespace Chroma::Reflection
          * @brief Gets the type of the value stored in the any object.
          * @return Type object containing information about the type.
          */
-        [[nodiscard]] const type &type() const noexcept
+        [[nodiscard]] const Type &type() const noexcept
         {
             return type_info;
         }
@@ -256,7 +256,7 @@ namespace Chroma::Reflection
          */
         [[nodiscard]] bool owner() const noexcept
         {
-            return policy == internal::any_policy::owner;
+            return policy == Internal::AnyPolicy::owner;
         }
 
         /**
@@ -266,12 +266,12 @@ namespace Chroma::Reflection
         {
             if (vtable && owner())
             {
-                vtable(internal::any_operation::destroy, *this, nullptr);
+                vtable(Internal::AnyOperation::destroy, *this, nullptr);
             }
 
-            type_info._id = internal::type_hash_v<void>;
+            type_info._id = Internal::type_hash_v<void>;
             vtable = nullptr;
-            policy = internal::any_policy::owner;
+            policy = Internal::AnyPolicy::owner;
         }
 
         /**
@@ -292,11 +292,11 @@ namespace Chroma::Reflection
          * @param other - Other any object used to assign.
          * @return Returns true if the assign operation was successful, false otherwise.
          */
-        bool assign(const any &other)
+        bool assign(const Any &other)
         {
-            if (vtable && policy != internal::any_policy::cref && type_info == other.type_info)
+            if (vtable && policy != Internal::AnyPolicy::cref && type_info == other.type_info)
             {
-                return (vtable(internal::any_operation::assign, *this, other.data()) != nullptr);
+                return (vtable(Internal::AnyOperation::assign, *this, other.data()) != nullptr);
             }
             return false;
         }
@@ -315,11 +315,11 @@ namespace Chroma::Reflection
          * @param other - Other any object to compare to.
          * @return Returns true if the object contain the same type and values, false otherwise.
          */
-        bool operator==(const any &other) const noexcept
+        bool operator==(const Any &other) const noexcept
         {
             if (vtable && type_info == other.type_info)
             {
-                return (vtable(internal::any_operation::compare, *this, other.data()) != nullptr);
+                return (vtable(Internal::AnyOperation::compare, *this, other.data()) != nullptr);
             }
             return (!vtable && !other.vtable);
         }
@@ -332,7 +332,7 @@ namespace Chroma::Reflection
     	template<typename Type>
     	[[nodiscard]] bool is_type() const noexcept
         {
-	        return type_info.id() == internal::type_hash_v<Type>;
+	        return type_info.id() == Internal::type_hash_v<Type>;
         }
 
         /**
@@ -343,7 +343,7 @@ namespace Chroma::Reflection
         template<typename Type>
         Type *try_cast() noexcept
         {
-            auto id = internal::type_hash<std::remove_cv_t<std::remove_reference_t<Type>>>::value();
+            auto id = Internal::type_hash<std::remove_cv_t<std::remove_reference_t<Type>>>::value();
             if (id == type_info._id)
             {
                 Type* data = static_cast<Type *>(this->data(id));
@@ -356,7 +356,7 @@ namespace Chroma::Reflection
     	template<typename Type>
 		const Type *try_cast() const noexcept
         {
-        	auto id = internal::type_hash<std::remove_cv_t<std::remove_reference_t<Type>>>::value();
+        	auto id = Internal::type_hash<std::remove_cv_t<std::remove_reference_t<Type>>>::value();
         	if (id == type_info._id)
         	{
         		const Type* data = static_cast<const Type *>(this->data(id));
@@ -379,7 +379,7 @@ namespace Chroma::Reflection
         template<typename Type>
         Type *try_cast_or_convert() noexcept
         {
-            auto id = internal::type_hash<std::remove_cv_t<std::remove_reference_t<Type>>>::value();
+            auto id = Internal::type_hash<std::remove_cv_t<std::remove_reference_t<Type>>>::value();
             if (id == type_info._id)
             {
                 return static_cast<Type *>(this->data(id));
@@ -387,11 +387,11 @@ namespace Chroma::Reflection
 
         	if (type_info.is_convertible<Type>())
             {
-                any result = try_conversion(id);
+                Any result = try_conversion(id);
                 reset();
                 if (result.vtable)
                 {
-                    result.vtable(internal::any_operation::move, result, this);
+                    result.vtable(Internal::AnyOperation::move, result, this);
                     type_info = result.type_info;
                     vtable = result.vtable;
                     policy = result.policy;
@@ -407,14 +407,14 @@ namespace Chroma::Reflection
          * @return Any object with the type converted to the new type.
          */
         template<typename Type>
-        any convert() noexcept
+        Any convert() noexcept
         {
-            auto id = internal::type_hash<std::remove_cv_t<std::remove_reference_t<Type>>>::value();
+            auto id = Internal::type_hash<std::remove_cv_t<std::remove_reference_t<Type>>>::value();
         	if (type_info.is_convertible<Type>())
             {
                 return try_conversion(id);
             }
-            return any{};
+            return Any{};
         }
 
         /**
@@ -455,7 +455,7 @@ namespace Chroma::Reflection
         {
             if (can_convert<Ret>())
             {
-                any val = convert<Ret>();
+                Any val = convert<Ret>();
                 return *val.try_cast<Ret>();
             }
             return *try_cast<Ret>();
@@ -510,14 +510,14 @@ namespace Chroma::Reflection
         {
             if constexpr (!std::is_void_v<Type>)
             {
-                type_info._id = internal::type_hash_v<Type>;
+                type_info._id = Internal::type_hash_v<Type>;
                 vtable = basic_vtable<std::remove_cv_t<std::remove_reference_t<Type>>>;
 
                 if constexpr (std::is_lvalue_reference_v<Type>)
                 {
                     instance = (std::addressof(args), ...);
                     policy = std::is_const_v<std::remove_reference_t<Type>> ?
-                             internal::any_policy::cref : internal::any_policy::ref;
+                             Internal::AnyPolicy::cref : Internal::AnyPolicy::ref;
                 } else if constexpr (in_situ<Type>)
                 {
                     if constexpr (sizeof...(Args) != 0u && std::is_aggregate_v<Type>)
@@ -550,7 +550,7 @@ namespace Chroma::Reflection
          * @return Any data returned by the operation.
          */
         template<typename Type>
-        static const void *basic_vtable(const internal::any_operation op, const any &value, const void *other)
+        static const void *basic_vtable(const Internal::AnyOperation op, const Any &value, const void *other)
         {
             static_assert(
                     !std::is_void_v<Type> && std::is_same_v<std::remove_cv_t<std::remove_reference_t<Type>>, Type>,
@@ -570,38 +570,38 @@ namespace Chroma::Reflection
 
             switch (op)
             {
-                case internal::any_operation::copy:
+                case Internal::AnyOperation::copy:
                     if constexpr (std::is_copy_constructible_v<Type>)
                     {
-                        static_cast<any *>(const_cast<void *>(other))->initialize<Type>(*val);
+                        static_cast<Any *>(const_cast<void *>(other))->initialize<Type>(*val);
                     }
                     break;
-                case internal::any_operation::move:
+                case Internal::AnyOperation::move:
                     if constexpr (in_situ<Type>)
                     {
                         if (value.owner())
                         {
-                            return new(&static_cast<any *>(const_cast<void *>(other))->storage)
+                            return new(&static_cast<Any *>(const_cast<void *>(other))->storage)
                                     Type{std::move(*const_cast<Type *>(val))};
                         }
                     }
-                    return (static_cast<any *>(const_cast<void *>(other))->instance =
-                                    std::exchange(const_cast<any &>(value).instance, nullptr));
-                case internal::any_operation::transfer:
+                    return (static_cast<Any *>(const_cast<void *>(other))->instance =
+                                    std::exchange(const_cast<Any &>(value).instance, nullptr));
+                case Internal::AnyOperation::transfer:
                     if constexpr (std::is_move_assignable_v<Type>)
                     {
                         *const_cast<Type *>(val) = std::move(*static_cast<Type *>(const_cast<void *>(other)));
                         return other;
                     }
                     [[fallthrough]];
-                case internal::any_operation::assign:
+                case Internal::AnyOperation::assign:
                     if constexpr (std::is_copy_assignable_v<Type>)
                     {
                         *const_cast<Type *>(val) = *static_cast<const Type *>(other);
                         return other;
                     }
                     break;
-                case internal::any_operation::destroy:
+                case Internal::AnyOperation::destroy:
                     if constexpr (in_situ<Type>)
                     {
                         val->~Type();
@@ -613,16 +613,16 @@ namespace Chroma::Reflection
                         delete val;
                     }
                     break;
-                case internal::any_operation::compare:
+                case Internal::AnyOperation::compare:
                     if constexpr (!std::is_function_v<Type> && !std::is_array_v<Type> &&
-                                  internal::is_equality_comparable_v<Type>)
+                                  Internal::is_equality_comparable_v<Type>)
                     {
                         return *val == *static_cast<const Type * >(other) ? other : nullptr;
                     } else
                     {
                         return (val == other) ? other : nullptr;
                     }
-                case internal::any_operation::get:
+                case Internal::AnyOperation::get:
                     return val;
             }
 
@@ -634,7 +634,7 @@ namespace Chroma::Reflection
          * @param type_id - ID of the type to convert to.
          * @return Converted any object.
          */
-        any try_conversion(uint32_t type_id);
+        Any try_conversion(uint32_t type_id);
 
     private:
         union
@@ -642,21 +642,28 @@ namespace Chroma::Reflection
             const void *instance{};
             storage_type storage;
         };
-        Reflection::type type_info{};
-        internal::any_policy policy = internal::any_policy::owner;
+        Reflection::Type type_info{};
+        Internal::AnyPolicy policy = Internal::AnyPolicy::owner;
         vtable_type *vtable;
     };
 
-    class handle : public any
+    class Handle : public Any
     {
     public:
-        template<typename Type, typename = std::enable_if_t<!std::is_same_v<std::decay_t<Type>, any>>>
-        explicit handle(Type &value)
+    	
+	    /**
+         * @brief Creates a handle for some value from an lvalue reference.
+         * @tparam Type 
+         * @param value 
+         */
+        template<typename Type, typename = std::enable_if_t<!std::is_same_v<std::decay_t<Type>, Any>>>
+        explicit Handle(Type &value)
         {
             initialize<Type&>(std::forward<Type&>(value));
         }
 
-        explicit handle(any& value) : any(value, internal::any_policy::ref)
+	    // ReSharper disable once CppParameterMayBeConstPtrOrRef
+	    explicit Handle(Any& value) : Any(value, Internal::AnyPolicy::ref)
         {
         	type_info = value.type_info;
         }

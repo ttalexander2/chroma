@@ -11,7 +11,7 @@
 #include <set>
 #include <unordered_set>
 
-namespace Chroma::Reflection::internal
+namespace Chroma::Reflection::Internal
 {
     // Pointer-like
     template<typename>

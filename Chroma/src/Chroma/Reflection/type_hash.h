@@ -6,7 +6,7 @@ namespace Chroma::Reflection
 {
     using type_id = uint32_t;
 
-    namespace internal
+    namespace Internal
     {
 
         namespace util

@@ -35,12 +35,12 @@ namespace Chroma::Reflection
 
     argument_container::iterator::reference argument_container::iterator::operator*() const
     {
-        return type(type_data::instance().types[_type_id].functions[_func_id].arg(index));
+        return Type(type_data::instance().types[_type_id].functions[_func_id].arg(index));
     }
 
     argument_container::iterator::pointer argument_container::iterator::operator->() const
     {
-        return type(type_data::instance().types[_type_id].functions[_func_id].arg(index));
+        return Type(type_data::instance().types[_type_id].functions[_func_id].arg(index));
     }
 
     argument_container::argument_container(uint32_t type_id, uint32_t func_id)

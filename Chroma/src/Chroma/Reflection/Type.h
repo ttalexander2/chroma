@@ -12,13 +12,13 @@ namespace Chroma::Reflection
     // Forward declarations
     class type_data;
     class func_data;
-    class registry;
-    class any;
-    class handle;
+    class Registry;
+    class Any;
+    class Handle;
     struct type_info;
-    class data;
-    class function;
-    class constructor;
+    class Data;
+    class Function;
+    class Constructor;
     class data_container;
     class function_container;
     class constructor_container;
@@ -29,18 +29,18 @@ namespace Chroma::Reflection
      * @brief Class representing meta information about a type registered with the reflection system.
      * This class is a wrapper for data stored within the reflection system.
      */
-    class type
+    class Type
     {
         friend class type_data;
         friend class func_data;
-        friend class registry;
-        friend class any;
-        friend class handle;
-        friend class data;
-        friend class function;
+        friend class Registry;
+        friend class Any;
+        friend class Handle;
+        friend class Data;
+        friend class Function;
         friend class type_container;
         friend class argument_container;
-        friend class constructor;
+        friend class Constructor;
         friend class constructor_container;
         template<typename T>
         friend class type_factory;
@@ -49,19 +49,21 @@ namespace Chroma::Reflection
         /**
          * @brief Creates an empty type object.
          */
-        type();
+        Type();
 
         /**
          * @brief Default copy constructor.
          */
-        type(const type &) = default;
+        Type(const Type &) = default;
+        
+        ~Type() = default;
 
         /**
          * @brief Equality comparison operator.
          * @param rhs - Other type object to compare to.
          * @return Returns true if the two types are the same, false otherwise.
          */
-        inline bool operator==(const type &rhs) const
+        inline bool operator==(const Type &rhs) const
         { return id() == rhs.id(); }
 
         /**
@@ -172,14 +174,14 @@ namespace Chroma::Reflection
          * @brief Gets the underlying type, where applicable.
          * @return Returns the underlying type if the type has an underlying type, otherwise returns an invalid type object.
          */
-        [[nodiscard]] type underlying_type() const;
+        [[nodiscard]] Type underlying_type() const;
         
         /**
          * @brief Gets a constructor for this type, from the given constructor ID.
          * @param id - ID of the constructor.
          * @return Constructor object associated with a constructor for this type.
          */
-        [[nodiscard]] Reflection::constructor constructor(uint32_t id) const;
+        [[nodiscard]] Reflection::Constructor constructor(uint32_t id) const;
 
         /**
          * @brief Gets an iterable container representing all registered constructors for this type.
@@ -192,14 +194,14 @@ namespace Chroma::Reflection
          * @param name - Name of the data.
          * @return Returns a data object. The data object will be valid if no data under the given name could be found.
          */
-        [[nodiscard]] Reflection::data data(const std::string &name) const;
+        [[nodiscard]] Reflection::Data data(const std::string &name) const;
 
         /**
          * @brief Gets data from this type associated with the given ID.
          * @param id - ID of the data.
          * @return Returns a data object.
          */
-        [[nodiscard]] Reflection::data data(uint32_t id) const;
+        [[nodiscard]] Reflection::Data data(uint32_t id) const;
 
         /**
          * @brief Gets an iterable container providing all data members of this type.
@@ -212,14 +214,14 @@ namespace Chroma::Reflection
          * @param name - Name of the function.
          * @return Function object associated with the type and function.
          */
-        [[nodiscard]] Reflection::function func(const std::string &name) const;
+        [[nodiscard]] Reflection::Function func(const std::string &name) const;
 
         /**
          * @brief Gets a function associated with this type from the given ID.
          * @param id - ID of the function.
          * @return Function object associated with the type and function.
          */
-        [[nodiscard]] Reflection::function func(uint32_t id) const;
+        [[nodiscard]] Reflection::Function func(uint32_t id) const;
 
         /**
          * @brief Gets an iterable container of all functions associated with this type.
@@ -233,7 +235,7 @@ namespace Chroma::Reflection
          * @param key - Key of the user data to retrieve.
          * @return Any object containing the stored user data.
          */
-        [[nodiscard]] any user_data(const std::string& key) const;
+        [[nodiscard]] Any user_data(const std::string& key) const;
 
 
         /**
@@ -241,10 +243,10 @@ namespace Chroma::Reflection
          * @param hash - Key of the user data to retrieve.
          * @return Any object containing the stored user data.
          */
-        [[nodiscard]] any user_data(uint32_t hash) const;
+        [[nodiscard]] Any user_data(uint32_t hash) const;
 
         template <typename KeyType, typename = std::enable_if_t<std::is_same_v<std::underlying_type_t<KeyType>, uint32_t>>>
-        [[nodiscard]] any user_data(KeyType&& key) const;
+        [[nodiscard]] Any user_data(KeyType&& key) const;
 
 
         [[nodiscard]] bool has_user_data(const std::string& key) const;
@@ -272,19 +274,19 @@ namespace Chroma::Reflection
         template<typename To>
         [[nodiscard]] bool is_convertible() const
         {
-            return is_convertible(internal::type_hash_v<To>);
+            return is_convertible(Internal::type_hash_v<To>);
         }
 
     	template<typename T>
     	[[nodiscard]] bool is()
         {
-	        return id() == internal::type_hash_v<T>;
+	        return id() == Internal::type_hash_v<T>;
         }
 
     	template<typename T>
     	[[nodiscard]] bool is() const
         {
-	        return id() == internal::type_hash_v<T>;
+	        return id() == Internal::type_hash_v<T>;
         }
 
     	[[nodiscard]] std::vector<uint32_t> bases() const;
@@ -301,7 +303,7 @@ namespace Chroma::Reflection
 
 
     private:
-        explicit type(type_id id);
+        explicit Type(type_id id);
 
         type_id _id;
 

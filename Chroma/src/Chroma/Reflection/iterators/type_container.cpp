@@ -44,11 +44,11 @@ namespace Chroma::Reflection
 
     type_container::iterator::reference type_container::iterator::operator*() const
     {
-        return type(itr->first);
+        return Type(itr->first);
     }
 
     type_container::iterator::pointer type_container::iterator::operator->()
     {
-        return type(itr->first);
+        return Type(itr->first);
     }
 }

@@ -412,7 +412,7 @@ namespace Polychrome
 
 	*/
 
-	void ComponentWidgets::DrawBool(Chroma::Component *c, Chroma::Reflection::data data)
+	void ComponentWidgets::DrawBool(Chroma::Component *c, Chroma::Reflection::Data data)
 	{
 		auto handle = c->ToHandle();
 		
@@ -432,7 +432,7 @@ namespace Polychrome
 		
 	}
 
-	void ComponentWidgets::DrawFloat(Chroma::Component *c, Chroma::Reflection::data data)
+	void ComponentWidgets::DrawFloat(Chroma::Component *c, Chroma::Reflection::Data data)
 	{
 		auto handle = c->ToHandle();
 		
@@ -440,7 +440,7 @@ namespace Polychrome
 		
 		DrawComponentValue(c, data.name());
 		float temp = data.get(handle).cast<float>();
-		if (ImGui::InputFloat("##bool", &temp))
+		if (ImGui::InputFloat("##float", &temp))
 		{
 			if (data.get(handle).cast<float>() != temp && !data.set(handle, temp))
 			{
@@ -451,7 +451,7 @@ namespace Polychrome
 		ImGui::PopID();
 	}
 
-	void ComponentWidgets::DrawDouble(Chroma::Component *c, Chroma::Reflection::data data)
+	void ComponentWidgets::DrawDouble(Chroma::Component *c, Chroma::Reflection::Data data)
 	{
 		auto handle = c->ToHandle();
 		
@@ -471,7 +471,7 @@ namespace Polychrome
 		ImGui::PopID();
 	}
 
-	void ComponentWidgets::DrawInt32(Chroma::Component *c, Chroma::Reflection::data data)
+	void ComponentWidgets::DrawInt32(Chroma::Component *c, Chroma::Reflection::Data data)
 	{
 		auto handle = c->ToHandle();
 		
@@ -491,7 +491,7 @@ namespace Polychrome
 		ImGui::PopID();
 	}
 
-	void ComponentWidgets::DrawUInt32(Chroma::Component *c, Chroma::Reflection::data data)
+	void ComponentWidgets::DrawUInt32(Chroma::Component *c, Chroma::Reflection::Data data)
 	{
 		auto handle = c->ToHandle();
 		
@@ -517,7 +517,7 @@ namespace Polychrome
 		ImGui::PopID();
 	}
 
-	void ComponentWidgets::DrawInt64(Chroma::Component *c, Chroma::Reflection::data data)
+	void ComponentWidgets::DrawInt64(Chroma::Component *c, Chroma::Reflection::Data data)
 	{
 		auto handle = c->ToHandle();
 		
@@ -543,7 +543,7 @@ namespace Polychrome
 		ImGui::PopID();
 	}
 
-	void ComponentWidgets::DrawUInt64(Chroma::Component *c, Chroma::Reflection::data data)
+	void ComponentWidgets::DrawUInt64(Chroma::Component *c, Chroma::Reflection::Data data)
 	{
 		auto handle = c->ToHandle();
 		
@@ -569,7 +569,7 @@ namespace Polychrome
 		ImGui::PopID();
 	}
 
-	void ComponentWidgets::DrawChar(Chroma::Component *c, Chroma::Reflection::data data)
+	void ComponentWidgets::DrawChar(Chroma::Component *c, Chroma::Reflection::Data data)
 	{
 		auto handle = c->ToHandle();
 		
@@ -595,7 +595,7 @@ namespace Polychrome
 		ImGui::PopID();
 	}
 
-	void ComponentWidgets::DrawUChar(Chroma::Component *c, Chroma::Reflection::data data)
+	void ComponentWidgets::DrawUChar(Chroma::Component *c, Chroma::Reflection::Data data)
 	{
 		auto handle = c->ToHandle();
 		
@@ -621,7 +621,7 @@ namespace Polychrome
 		ImGui::PopID();
 	}
 
-	void ComponentWidgets::DrawString(Chroma::Component *c, Chroma::Reflection::data data)
+	void ComponentWidgets::DrawString(Chroma::Component *c, Chroma::Reflection::Data data)
 	{
 		auto handle = c->ToHandle();
 		
@@ -641,7 +641,7 @@ namespace Polychrome
 		ImGui::PopID();
 	}
 
-	void ComponentWidgets::DrawAsset(Chroma::Component *c, Chroma::Reflection::data data)
+	void ComponentWidgets::DrawAsset(Chroma::Component *c, Chroma::Reflection::Data data)
 	{
 		auto handle = c->ToHandle();
 		
@@ -652,7 +652,7 @@ namespace Polychrome
 		ImGui::PopID();
 	}
 
-	void ComponentWidgets::DrawVec2(Chroma::Component *c, Chroma::Reflection::data data)
+	void ComponentWidgets::DrawVec2(Chroma::Component *c, Chroma::Reflection::Data data)
 	{
 		auto handle = c->ToHandle();
 		
@@ -672,7 +672,7 @@ namespace Polychrome
 		ImGui::PopID();
 	}
 
-	void ComponentWidgets::DrawVec3(Chroma::Component *c, Chroma::Reflection::data data)
+	void ComponentWidgets::DrawVec3(Chroma::Component *c, Chroma::Reflection::Data data)
 	{
 		auto handle = c->ToHandle();
 		
@@ -692,7 +692,7 @@ namespace Polychrome
 		ImGui::PopID();
 	}
 
-	void ComponentWidgets::DrawVec4(Chroma::Component *c, Chroma::Reflection::data data)
+	void ComponentWidgets::DrawVec4(Chroma::Component *c, Chroma::Reflection::Data data)
 	{
 		auto handle = c->ToHandle();
 		
@@ -703,7 +703,7 @@ namespace Polychrome
 		ImGui::PopID();
 	}
 
-	void ComponentWidgets::DrawUVec2(Chroma::Component *c, Chroma::Reflection::data data)
+	void ComponentWidgets::DrawUVec2(Chroma::Component *c, Chroma::Reflection::Data data)
 	{
 		auto handle = c->ToHandle();
 		
@@ -714,7 +714,7 @@ namespace Polychrome
 		ImGui::PopID();
 	}
 
-	void ComponentWidgets::DrawUVec3(Chroma::Component *c, Chroma::Reflection::data data)
+	void ComponentWidgets::DrawUVec3(Chroma::Component *c, Chroma::Reflection::Data data)
 	{
 		auto handle = c->ToHandle();
 		
@@ -725,7 +725,7 @@ namespace Polychrome
 		ImGui::PopID();
 	}
 
-	void ComponentWidgets::DrawUVec4(Chroma::Component *c, Chroma::Reflection::data data)
+	void ComponentWidgets::DrawUVec4(Chroma::Component *c, Chroma::Reflection::Data data)
 	{
 		auto handle = c->ToHandle();
 		
@@ -736,7 +736,7 @@ namespace Polychrome
 		ImGui::PopID();
 	}
 
-	void ComponentWidgets::DrawEntity(Chroma::Component *c, Chroma::Reflection::data data)
+	void ComponentWidgets::DrawEntity(Chroma::Component *c, Chroma::Reflection::Data data)
 	{
 		auto handle = c->ToHandle();
 		

@@ -57,11 +57,11 @@ namespace Chroma::Reflection
 
     function_container::iterator::reference function_container::iterator::operator*() const
     {
-        return function(itr->first, _type_id);
+        return Function(itr->first, _type_id);
     }
 
     function_container::iterator::pointer function_container::iterator::operator->() const
     {
-        return function(itr->first, _type_id);
+        return Function(itr->first, _type_id);
     }
 }

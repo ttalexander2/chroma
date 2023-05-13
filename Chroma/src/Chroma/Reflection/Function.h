@@ -1,14 +1,14 @@
 #pragma once
 
 #include <cstdint>
-#include "type.h"
-#include "any.h"
+#include "Type.h"
+#include "Any.h"
 
 namespace Chroma::Reflection
 {
     // Forward declarations
     class type_data;
-    class registry;
+    class Registry;
     struct func_info;
     struct type_info;
     class argument_container;
@@ -19,14 +19,14 @@ namespace Chroma::Reflection
     /**
      * @brief Class representing a function contained in a type.
      */
-    class function
+    class Function
     {
         // Friend classes
         friend class type_data;
-        friend class registry;
-        friend class any;
-        friend class handle;
-        friend class type;
+        friend class Registry;
+        friend class Any;
+        friend class Handle;
+        friend class Type;
         friend class function_container;
         template<typename T>
         friend class type_factory;
@@ -35,19 +35,19 @@ namespace Chroma::Reflection
         /**
          * @brief Creates an empty function object.
          */
-        function();
+        Function();
 
         /**
          * @brief Default copy constructor.
          */
-        function(const function &) = default;
+        Function(const Function &) = default;
 
         /**
          * @brief Equality comparable operator.
          * @param rhs - Other function to compare this function to.
          * @return Returns true if both functions are the same, and belong to the same type. False otherwise.
          */
-        bool operator==(const function &rhs) const;
+        bool operator==(const Function &rhs) const;
 
         /**
          * @brief Checks whether the function object represents a valid, registered function.
@@ -78,7 +78,7 @@ namespace Chroma::Reflection
          * @brief Gets the containing type of this function.
          * @return Type object representing the type.
          */
-        [[nodiscard]] Reflection::type type() const;
+        [[nodiscard]] Reflection::Type type() const;
 
         /**
          * @brief Gets the arity of the function.
@@ -90,14 +90,14 @@ namespace Chroma::Reflection
          * @brief Gets the return type of the function.
          * @return Type object for the return type.
          */
-        [[nodiscard]] Reflection::type return_type() const;
+        [[nodiscard]] Reflection::Type return_type() const;
 
         /**
          * @brief Gets the type of an argument for the function.
          * @param index - Index of the argument to retrieve.
          * @return Type object representing the type of the argument.
          */
-        [[nodiscard]] Reflection::type args(size_t index) const;
+        [[nodiscard]] Reflection::Type args(size_t index) const;
 
         /**
          * @brief Gets an iterable container containing all of the arguments for a function.
@@ -113,13 +113,13 @@ namespace Chroma::Reflection
          * @return Result of the function contained in an any object.
          */
         template<typename... Args>
-        [[maybe_unused]] any invoke([[maybe_unused]] Reflection::handle handle, Args &&...args)
+        [[maybe_unused]] Any invoke([[maybe_unused]] Reflection::Handle handle, Args &&...args)
         {
-            any arguments[sizeof...(Args) + 1u]{std::forward<Args>(args)...};
+            Any arguments[sizeof...(Args) + 1u]{std::forward<Args>(args)...};
             return invoke_internal(std::move(handle), arguments, sizeof...(Args));
         }
 
-        [[nodiscard]] any user_data(const std::string& key) const;
+        [[nodiscard]] Any user_data(const std::string& key) const;
 
     private:
         /**
@@ -127,7 +127,7 @@ namespace Chroma::Reflection
          * @param id
          * @param type_id
          */
-        explicit function(uint32_t id, uint32_t type_id);
+        explicit Function(uint32_t id, uint32_t type_id);
 
         /**
          * @brief Internal function to invoke the function given a handle and list of args.
@@ -135,7 +135,7 @@ namespace Chroma::Reflection
          * @param count
          * @return
          */
-        [[maybe_unused]] any invoke_internal([[maybe_unused]] Reflection::handle, any *args, size_t count) const;
+        [[maybe_unused]] Any invoke_internal([[maybe_unused]] Reflection::Handle, Any *args, size_t count) const;
 
         uint32_t _id; // Function ID
         uint32_t _type_id; // Type ID

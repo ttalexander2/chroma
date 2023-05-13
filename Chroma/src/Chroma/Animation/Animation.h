@@ -38,7 +38,7 @@ namespace Chroma
 		{
 			float time;
 			Transition transition;
-			Reflection::any value;
+			Reflection::Any value;
 		};
 
 		struct TimeSort

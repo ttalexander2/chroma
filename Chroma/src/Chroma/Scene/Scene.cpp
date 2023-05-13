@@ -503,9 +503,9 @@ namespace Chroma
 	}
 
 
-	std::vector<Reflection::type> Scene::GetComponentTypes()
+	std::vector<Reflection::Type> Scene::GetComponentTypes()
 	{
-		std::vector<Reflection::type> types;
+		std::vector<Reflection::Type> types;
 
 		auto comp_type = Reflection::resolve<Component>();
 
@@ -519,7 +519,7 @@ namespace Chroma
 			for (const auto id : type.bases())
 			{
 				//CHROMA_CORE_TRACE("\t{}", base.GetName());
-				if (Reflection::type base = Reflection::resolve(id); base.is<Component>())
+				if (Reflection::Type base = Reflection::resolve(id); base.is<Component>())
 				{
 					types.push_back(type);
 					break;
@@ -557,20 +557,19 @@ namespace Chroma
 
 		std::vector<Component *> components = this->GetAllComponents(entity);
 		std::sort(components.begin(), components.end(), [](Component *a, Component *b) { return a->order_id < b->order_id; });
-
+		
 		for (Component *comp : components)
 		{
 			if (comp->TypeInfo.is<Tag>())
 			{
 				continue;
 			}
-			out << YAML::BeginMap << YAML::Key;
-			out << comp->GetType().name();
-			out << YAML::Value;
+			out << YAML::BeginMap;
+			out << YAML::Key << comp->GetType().name() << YAML::Value;
 			Reflection::Serializer::SerializeObjectYAML(out, comp->ToHandle());
 			out << YAML::EndMap;
 		}
-
+		
 		out << YAML::EndSeq;
 		out << YAML::EndMap;
 	}

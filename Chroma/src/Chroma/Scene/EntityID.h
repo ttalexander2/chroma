@@ -4,5 +4,7 @@
 namespace Chroma
 {
 	using EntityID = entt::entity;
-	constexpr EntityID ENTITY_NULL = entt::null;
+	constexpr EntityID EntityNull = entt::null;
+
+	#define ENTITY_NULL EntityNull
 }

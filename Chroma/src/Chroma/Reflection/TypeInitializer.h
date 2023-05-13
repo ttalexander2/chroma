@@ -22,13 +22,13 @@ namespace Chroma::Reflection
      * @endcode
      */
     template<typename Type>
-    class type_initializer
+    class TypeInitializer
     {
     public:
         /**
          * Constructs a type initializer, which on construction, registers the type anonymously.
          */
-        type_initializer()
+        TypeInitializer()
         {
             Type::register_type();
         }
@@ -37,7 +37,7 @@ namespace Chroma::Reflection
          * Constructs a type initializer, which registers the type with the given name on construction.
          * @param name
          */
-        explicit type_initializer(const std::string &name)
+        explicit TypeInitializer(const std::string &name)
         {
             type_factory<Type> factory(name);
             Type::register_type();
@@ -48,7 +48,7 @@ namespace Chroma::Reflection
          * Constructs a type initializer, which calls the provided function on construction.
          * @param initialization_function User provided function to be called in place of "register_type".
          */
-        explicit type_initializer(std::function<type_factory<Type>(void)> initialization_function)
+        explicit TypeInitializer(std::function<type_factory<Type>(void)> initialization_function)
         {
             initialization_function();
         }

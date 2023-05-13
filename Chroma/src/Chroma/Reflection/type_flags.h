@@ -103,7 +103,7 @@ namespace Chroma::Reflection
         return a = a ^ b;
     }
 
-    namespace internal
+    namespace Internal
     {
         inline bool has_flag(type_flags val, type_flags flag)
         {

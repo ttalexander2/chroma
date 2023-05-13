@@ -773,7 +773,7 @@ namespace Polychrome
 											kf.time = TimeSelection;
 											Chroma::Component* component = EditorApp::CurrentScene->GetComponent(component_name, entity_id);
 											auto type = Chroma::Reflection::resolve(component_id);
-											kf.value = type.data(property_id).get(Chroma::Reflection::handle(component));
+											kf.value = type.data(property_id).get(Chroma::Reflection::Handle(component));
 											track->keyframes.emplace(kf);
 											selectedKeyframe = const_cast<Chroma::Animation::Keyframe*>(&*std::prev(track->keyframes.end()));
 										}

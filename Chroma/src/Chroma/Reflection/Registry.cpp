@@ -1,5 +1,5 @@
 #include "chromapch.h"
-#include "registry.h"
+#include "Registry.h"
 
 #include <limits>
 #include "iterators/type_container.h"
@@ -7,33 +7,33 @@
 namespace Chroma::Reflection
 {
 
-    type registry::resolve(const std::string &name) noexcept
+    Type Registry::resolve(const std::string &name) noexcept
     {
-        return type(id_from_name(name));
+        return Type(id_from_name(name));
     }
 
-    type registry::resolve(uint32_t id) noexcept
+    Type Registry::resolve(uint32_t id) noexcept
     {
-        return type(id);
+        return Type(id);
     }
 
-    type_container registry::resolve() noexcept
+    type_container Registry::resolve() noexcept
     {
         return {};
     }
 
-    bool registry::valid(uint32_t id)
+    bool Registry::valid(uint32_t id)
     {
         return type_data::instance().types.find(id) != type_data::instance().types.end();
     }
 
-    bool registry::valid(const std::string &name)
+    bool Registry::valid(const std::string &name)
     {
         auto id = id_from_name(name);
         return valid(id);
     }
 
-    uint32_t registry::id_from_name(const std::string &name)
+    uint32_t Registry::id_from_name(const std::string &name)
     {
         auto val = type_data::instance().type_aliases.find(id_hash::hash(name));
         if (val != type_data::instance().type_aliases.end())

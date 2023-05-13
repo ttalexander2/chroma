@@ -5,7 +5,7 @@
 #include <unordered_map>
 
 #include "../type_data.h"
-#include "../constructor.h"
+#include "../Constructor.h"
 
 namespace Chroma::Reflection
 {
@@ -13,15 +13,15 @@ namespace Chroma::Reflection
     {
         friend class type_data;
 
-        friend class registry;
+        friend class Registry;
 
-        friend class any;
+        friend class Any;
 
-        friend class handle;
+        friend class Handle;
 
-        friend class type;
+        friend class Type;
 
-        friend class constructor;
+        friend class Constructor;
 
         template<typename T>
         friend
@@ -34,7 +34,7 @@ namespace Chroma::Reflection
 
             using iterator_category = std::random_access_iterator_tag;
             using difference_type = std::ptrdiff_t;
-            using value_type = constructor;
+            using value_type = Constructor;
             using pointer = value_type;
             using reference = value_type;
 
