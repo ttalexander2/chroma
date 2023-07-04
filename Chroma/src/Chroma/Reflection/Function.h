@@ -7,13 +7,13 @@
 namespace Chroma::Reflection
 {
     // Forward declarations
-    class type_data;
+    class TypeData;
     class Registry;
-    struct func_info;
-    struct type_info;
+    struct FuncInfo;
+    struct TypeInfo;
     class argument_container;
     template<typename T>
-    class type_factory;
+    class TypeFactory;
 
 
     /**
@@ -22,14 +22,14 @@ namespace Chroma::Reflection
     class Function
     {
         // Friend classes
-        friend class type_data;
+        friend class TypeData;
         friend class Registry;
         friend class Any;
         friend class Handle;
         friend class Type;
         friend class function_container;
         template<typename T>
-        friend class type_factory;
+        friend class TypeFactory;
 
     public:
         /**

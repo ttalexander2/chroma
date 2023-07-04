@@ -8,14 +8,14 @@ namespace Chroma::Reflection
 {
 
     // Forward declarations
-    class type_data;
+    class TypeData;
     class Registry;
     class Any;
     class Handle;
-    struct data_info;
-    struct type_info;
+    struct DataInfo;
+    struct TypeInfo;
     template<typename T>
-    class type_factory;
+    class TypeFactory;
 
     /**
      * @brief Class representing a field or piece of data within a type.
@@ -24,14 +24,14 @@ namespace Chroma::Reflection
     class Data
     {
         // Friend classes
-        friend class type_data;
+        friend class TypeData;
         friend class Registry;
         friend class Any;
         friend class Handle;
         friend class Type;
         friend class data_container;
         template<typename T>
-        friend class type_factory;
+        friend class TypeFactory;
 
     public:
         /**
@@ -133,10 +133,10 @@ namespace Chroma::Reflection
 
 
     	/**
-    	 * @brief Gets a piece of user data associated with the provided key.
-    	 * @param key - Hashable key type.
-    	 * @return Any object containing the stored user data.
-    	 */
+		 * @brief Gets a piece of user data associated with the provided key.
+		 * @param key - Hashable key type.
+		 * @return Any object containing the stored user data.
+		 */
     	template <typename KeyType, typename = std::enable_if_t<std::is_same_v<std::underlying_type_t<KeyType>, uint32_t>>>
 		[[nodiscard]] Any user_data(KeyType&& key) const
     	{
@@ -144,15 +144,15 @@ namespace Chroma::Reflection
     	}
 
     	/**
-    	 * @brief Checks whether user data contained with the key exists.
-    	 * @param key - String key.
-    	 */
+		 * @brief Checks whether user data contained with the key exists.
+		 * @param key - String key.
+		 */
     	[[nodiscard]] bool has_user_data(const std::string& key) const;
 
     	/**
-    	 * @brief Checks whether user data is associated with this type under the provided key.
-    	 * @param hash - Key of the user aata to retrieve.
-    	 */
+		 * @brief Checks whether user data is associated with this type under the provided key.
+		 * @param hash - Key of the user aata to retrieve.
+		 */
     	[[nodiscard]] bool has_user_data(uint32_t hash) const;
 
     	template <typename KeyType, typename = std::enable_if_t<std::is_same_v<std::underlying_type_t<KeyType>, uint32_t>>>
@@ -165,7 +165,7 @@ namespace Chroma::Reflection
         /**
          * @brief Constructs a data object given an ID for the data, and the type of the data.
          * @param id
-         * @param type_id
+         * @param owner
          */
         explicit Data(uint32_t id, uint32_t owner);
 

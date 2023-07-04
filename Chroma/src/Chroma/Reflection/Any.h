@@ -4,8 +4,8 @@
 #include <utility>
 #include <iostream>
 #include "Type.h"
-#include "type_hash.h"
-#include "type_traits.h"
+#include "TypeHash.h"
+#include "TypeTraits.h"
 
 
 namespace Chroma::Reflection
@@ -71,7 +71,7 @@ namespace Chroma::Reflection
          */
         Any() noexcept // NOLINT(cppcoreguidelines-pro-type-member-init)
                 : instance{},
-                  type_info{Internal::type_hash<void>::value()},
+                  type_info{Internal::TypeHash<void>::value()},
                   policy{Internal::AnyPolicy::owner},
                   vtable{}
         {}
@@ -213,7 +213,7 @@ namespace Chroma::Reflection
          * @return Returns a const pointer to the data if the provided type matches the type of data
          * stored, else returns nullptr.
          */
-        [[nodiscard]] const void *data(type_id info) const noexcept
+        [[nodiscard]] const void *data(TypeId info) const noexcept
         {
             return type_info._id == info ? data() : nullptr;
         }
@@ -235,7 +235,7 @@ namespace Chroma::Reflection
          * @return Returns a pointer to the data if the provided type matches the type of data
          * stored, else returns nullptr.
          */
-        [[nodiscard]] void *data(type_id info) noexcept
+        [[nodiscard]] void *data(TypeId info) noexcept
         {
             return type_info._id == info ? data() : nullptr;
         }
@@ -335,6 +335,12 @@ namespace Chroma::Reflection
 	        return type_info.id() == Internal::type_hash_v<Type>;
         }
 
+    	template <typename Type>
+    	Type* unsafe_cast() noexcept
+        {
+	        return static_cast<Type*>(this->data());
+        }
+
         /**
          * @brief Tries to cast this object to the provided type.
          * @tparam Type - Type to cast this object to.
@@ -343,7 +349,7 @@ namespace Chroma::Reflection
         template<typename Type>
         Type *try_cast() noexcept
         {
-            auto id = Internal::type_hash<std::remove_cv_t<std::remove_reference_t<Type>>>::value();
+            auto id = Internal::TypeHash<std::remove_cv_t<std::remove_reference_t<Type>>>::value();
             if (id == type_info._id)
             {
                 Type* data = static_cast<Type *>(this->data(id));
@@ -356,7 +362,7 @@ namespace Chroma::Reflection
     	template<typename Type>
 		const Type *try_cast() const noexcept
         {
-        	auto id = Internal::type_hash<std::remove_cv_t<std::remove_reference_t<Type>>>::value();
+        	auto id = Internal::TypeHash<std::remove_cv_t<std::remove_reference_t<Type>>>::value();
         	if (id == type_info._id)
         	{
         		const Type* data = static_cast<const Type *>(this->data(id));
@@ -379,7 +385,7 @@ namespace Chroma::Reflection
         template<typename Type>
         Type *try_cast_or_convert() noexcept
         {
-            auto id = Internal::type_hash<std::remove_cv_t<std::remove_reference_t<Type>>>::value();
+            auto id = Internal::TypeHash<std::remove_cv_t<std::remove_reference_t<Type>>>::value();
             if (id == type_info._id)
             {
                 return static_cast<Type *>(this->data(id));
@@ -409,7 +415,7 @@ namespace Chroma::Reflection
         template<typename Type>
         Any convert() noexcept
         {
-            auto id = Internal::type_hash<std::remove_cv_t<std::remove_reference_t<Type>>>::value();
+            auto id = Internal::TypeHash<std::remove_cv_t<std::remove_reference_t<Type>>>::value();
         	if (type_info.is_convertible<Type>())
             {
                 return try_conversion(id);

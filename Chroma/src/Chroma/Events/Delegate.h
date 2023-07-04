@@ -8,10 +8,10 @@ namespace Chroma
 	template <typename O, typename R, typename... A> class Event;
 
 	template<typename Ret, typename ...Args>
-	class Delegate<Ret(Args...)> final : private DelegateBase<Ret(Args...)>
+	class Delegate<Ret(Args...)> final : DelegateBase<Ret(Args...)>
 	{
 	public:
-	    Delegate() = default;
+	    Delegate();
 	    
 	    bool is_null() const { return invocation.stub == nullptr; }
 	    bool operator==(void* ptr) const { return (ptr == nullptr) && this->is_null(); }
@@ -148,5 +148,10 @@ namespace Chroma
 
 
 	};
+
+	template <typename Ret, typename ... Args>
+	Delegate<Ret(Args...)>::Delegate()
+	{
+	}
 }
 

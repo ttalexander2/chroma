@@ -28,7 +28,7 @@ namespace Chroma
 
 		void SetName(const std::string &name);
 
-		template <ComponentType T>
+		template <typename T, typename = std::enable_if_t<std::is_base_of_v<Component, T>>>
 		bool HasComponent()
 		{
 			return m_Scene->HasComponent<T>(m_EntityID);
@@ -39,7 +39,7 @@ namespace Chroma
 			return m_Scene->HasComponent(component, m_EntityID);
 		}
 
-		template <ComponentType T>
+		template <typename T, typename = std::enable_if_t<std::is_base_of_v<Component, T>>>
 		T &AddComponent()
 		{
 			return m_Scene->AddComponent<T>(m_EntityID);
@@ -50,7 +50,7 @@ namespace Chroma
 			return m_Scene->AddComponent(component, m_EntityID);
 		}
 
-		template <ComponentType T>
+		template <typename T, typename = std::enable_if_t<std::is_base_of_v<Component, T>>>
 		T &GetComponent()
 		{
 			return m_Scene->GetComponent<T>(m_EntityID);
@@ -61,7 +61,7 @@ namespace Chroma
 			return m_Scene->GetComponent(component, m_EntityID);
 		}
 
-		template <ComponentType T>
+		template <typename T, typename = std::enable_if_t<std::is_base_of_v<Component, T>>>
 		size_t RemoveComponent()
 		{
 			return m_Scene->RemoveComponent<T>(m_EntityID);

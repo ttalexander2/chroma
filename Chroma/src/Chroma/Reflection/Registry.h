@@ -2,9 +2,10 @@
 
 #include <iostream>
 #include "Type.h"
-#include "type_data.h"
-#include "type_hash.h"
-#include "type_factory.h"
+#include "Type.inl"
+#include "TypeData.h"
+#include "TypeHash.h"
+#include "TypeFactory.h"
 
 
 namespace Chroma::Reflection
@@ -26,9 +27,9 @@ namespace Chroma::Reflection
          * @return type_factory object used to provide metadata about the type.
          */
         template<typename T>
-        static type_factory<T> register_type()
+        static TypeFactory<T> register_type()
         {
-            return type_factory<T>();
+            return TypeFactory<T>();
         }
 
         /**
@@ -38,9 +39,9 @@ namespace Chroma::Reflection
          * @return type_factory object used to provide metadata about the type.
          */
         template<typename T>
-        static type_factory<T> register_type(const std::string &name)
+        static TypeFactory<T> register_type(const std::string &name)
         {
-            return type_factory<T>(name);
+            return TypeFactory<T>(name);
         }
 
         /**
@@ -74,11 +75,11 @@ namespace Chroma::Reflection
         template<typename T>
         static Type resolve() noexcept
         {
-            uint32_t hash = Internal::type_hash<std::decay_t<T>>::value();
-            auto val = type_data::instance().types.find(hash);
-            if (val == type_data::instance().types.end())
+            uint32_t hash = Internal::TypeHash<std::decay_t<T>>::value();
+            auto val = TypeData::instance().types.find(hash);
+            if (val == TypeData::instance().types.end())
             {
-                auto factory = type_factory<T>(typeid(T).name());
+                auto factory = TypeFactory<T>(typeid(T).name());
                 return factory._type;
             }
             return Type(val->first);

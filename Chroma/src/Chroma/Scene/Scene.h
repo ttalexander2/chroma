@@ -40,27 +40,21 @@ namespace Chroma
 	class Scene
 	{
 	public:
+		
 		std::string Name = "Scene";
-		Event<Scene, void()> onCreate;
+		
 
 		const GUID GetID();
 
 		Scene();
-
-		Scene(const Scene &)
-		{
-			onCreate.broadcast();
-		}
-
+		Scene(const Scene &) = delete;
 		~Scene();
 
 		Scene *Copy();
 
 		Entity NewEntity();
-		Entity NewChild(Entity id);
-
+		Entity NewChild(Entity entity);
 		
-
 		std::string CreatePrefab(EntityID entity);
 		void MakeUnique(EntityID entity);
 
@@ -89,7 +83,7 @@ namespace Chroma
 		Entity FindEntityByName(const std::string &name);
 
 
-		template <ComponentType T>
+		template <typename T, typename = std::enable_if_t<std::is_base_of_v<Component, T>>>
 		T &AddComponent(EntityID id)
 		{
 			return static_cast<T &>(*ComponentRegistry::AddComponent(Reflection::resolve<T>().id(), id, &Registry));
@@ -100,7 +94,7 @@ namespace Chroma
 			return ComponentRegistry::AddComponent(component, entity, &Registry);
 		}
 
-		template <ComponentType T>
+		template <typename T, typename = std::enable_if_t<std::is_base_of_v<Component, T>>>
 		T &GetComponent(EntityID id)
 		{
 			T *comp = Registry.try_get<T>(id);
@@ -121,7 +115,7 @@ namespace Chroma
 
 		static std::vector<Reflection::Type> GetComponentTypes();
 
-		template <ComponentType T>
+		template <typename T, typename = std::enable_if_t<std::is_base_of_v<Component, T>>>
 		bool HasComponent(EntityID id)
 		{
 			return Registry.try_get<T>(id) != nullptr;
@@ -132,7 +126,7 @@ namespace Chroma
 			return ComponentRegistry::HasComponent(component, entity, &Registry);
 		}
 
-		template <ComponentType T>
+		template <typename T, typename = std::enable_if_t<std::is_base_of_v<Component, T>>>
 		size_t RemoveComponent(EntityID entity)
 		{
 			return Registry.remove<T>(entity);
@@ -163,9 +157,7 @@ namespace Chroma
 		entt::registry Registry;
 
 		std::unordered_map<size_t, EntityID> Tags;
-		//std::unordered_map<unsigned int, EntityID> Layers;
-
-
+		
 		std::vector<Layer> Layers;
 
 	private:

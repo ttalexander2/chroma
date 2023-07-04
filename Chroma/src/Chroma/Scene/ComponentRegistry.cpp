@@ -83,10 +83,10 @@ namespace Chroma
 	{
 		//CHROMA_CORE_TRACE("Looking for requirements for {}", component_id);
 
-		for (auto comp : Reflection::GetTypeRequirements(component_id))
-		{
-			if (ComponentAddFunctions().contains(comp))
-				ComponentAddFunctions()[comp](entity, r);
-		}
+		//for (auto comp : Reflection::GetTypeRequirements(component_id))
+		//{
+		//	if (ComponentAddFunctions().contains(comp))
+		//		ComponentAddFunctions()[comp](entity, r);
+		//}
 	}
 } //namespace Chroma

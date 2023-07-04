@@ -106,7 +106,7 @@ namespace Chroma
 		return true;
 	}
 
-	Reflection::type_factory<PolygonCollider> PolygonCollider::register_type()
+	Reflection::TypeFactory<PolygonCollider> PolygonCollider::register_type()
 	{
 		return Reflection::RegisterComponent<PolygonCollider>("PolygonCollider")
 				.data<&PolygonCollider::GetVertices, &PolygonCollider::SetVertices>("Vertices");

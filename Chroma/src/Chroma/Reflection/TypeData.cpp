@@ -1,5 +1,5 @@
 #include "chromapch.h"
-#include "type_data.h"
+#include "TypeData.h"
 
 #include "Type.h"
 

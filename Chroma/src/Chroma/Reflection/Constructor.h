@@ -8,14 +8,14 @@ namespace Chroma::Reflection
 {
 
     // Forward Declarations
-    class type_data;
+    class TypeData;
     class Registry;
-    struct ctor_info;
-    struct type_info;
+    struct CtorInfo;
+    struct TypeInfo;
     class constructor_container;
     class argument_container;
     template<typename T>
-    class type_factory;
+    class TypeFactory;
 
 
     /**
@@ -25,7 +25,7 @@ namespace Chroma::Reflection
     class Constructor
     {
         // Friend classes
-        friend class type_data;
+        friend class TypeData;
         friend class Registry;
         friend class Any;
         friend class Handle;
@@ -33,7 +33,7 @@ namespace Chroma::Reflection
         friend class argument_container;
         friend class constructor_container;
         template<typename T>
-        friend class type_factory;
+        friend class TypeFactory;
 
     public:
         /**

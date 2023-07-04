@@ -70,7 +70,7 @@ namespace Chroma
 		return Math::vec2(m_Shape.m_vertex3.x / Physics::GetScale(), m_Shape.m_vertex3.y / Physics::GetScale());
 	}
 
-	Reflection::type_factory<EdgeCollider> EdgeCollider::register_type()
+	Reflection::TypeFactory<EdgeCollider> EdgeCollider::register_type()
 	{
 		return Reflection::RegisterComponent<EdgeCollider>("EdgeCollider")
 		       .base<Collider>()

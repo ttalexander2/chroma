@@ -2,3 +2,6 @@
 // such as names of functions and macros.
 // For more information see https://go.microsoft.com/fwlink/?linkid=865984
 #define CHROMA_COMPONENT(componentTypename)
+#define META(__VA_ARGS__) __attribute__((annotate(#__VA_ARGS__)))
+#define META(__VA_ARGS__)
+#define META(__VA_ARGS__) REFLECT_PP_MAP_INDEX(META_APPLY_NAMESPACE, __VA_ARGS__)

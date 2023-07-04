@@ -363,8 +363,10 @@ namespace Chroma
 	}
 
 
-	RigidBody::type_factory RigidBody::register_type()
+	RigidBody::TypeFactory RigidBody::register_type()
 	{
+		using namespace Reflection;
+		
 		Reflection::register_type<MassData>("RigidBody::MassData")
 				.data<&MassData::mass>("mass")
 				.data<&MassData::center>("center")

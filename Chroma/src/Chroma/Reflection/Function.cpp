@@ -1,7 +1,7 @@
 #include "chromapch.h"
 #include "Function.h"
 
-#include "type_data.h"
+#include "TypeData.h"
 #include "Registry.h"
 #include "iterators/argument_container.h"
 
@@ -22,8 +22,8 @@ namespace Chroma::Reflection
     bool Function::valid() const
     {
         return Registry::valid(_type_id)
-               && type_data::instance().types[_type_id].functions.find(_id)
-                  != type_data::instance().types[_type_id].functions.end();
+               && TypeData::instance().types[_type_id].functions.find(_id)
+                  != TypeData::instance().types[_type_id].functions.end();
     }
 
     bool Function::operator==(const Function &rhs) const
@@ -39,7 +39,7 @@ namespace Chroma::Reflection
     std::string Function::name() const
     {
         if (valid())
-            return type_data::instance().types[_type_id].functions[_id].name;
+            return TypeData::instance().types[_type_id].functions[_id].name;
         return std::string{};
     }
 
@@ -51,28 +51,28 @@ namespace Chroma::Reflection
     size_t Function::arity() const
     {
         if (valid())
-            return type_data::instance().types[_type_id].functions[_id].arity;
+            return TypeData::instance().types[_type_id].functions[_id].arity;
         return 0;
     }
 
     Reflection::Type Function::return_type() const
     {
         if (valid())
-            return Reflection::Type(type_data::instance().types[_type_id].functions[_id].return_type);
+            return Reflection::Type(TypeData::instance().types[_type_id].functions[_id].return_type);
         return Registry::resolve<void>();
     }
 
     Reflection::Type Function::args(size_t index) const
     {
         if (valid() && index < arity())
-            return Reflection::Type(type_data::instance().types[_type_id].functions[_id].arg(index));
+            return Reflection::Type(TypeData::instance().types[_type_id].functions[_id].arg(index));
         return Registry::resolve<void>();
     }
 
     Any Function::invoke_internal(Reflection::Handle handle, Any *args, size_t count) const
     {
         if (valid())
-            return type_data::instance().types[_type_id].functions[_id].invoke(std::move(handle), args);
+            return TypeData::instance().types[_type_id].functions[_id].invoke(std::move(handle), args);
         return Any{};
     }
 
@@ -81,13 +81,14 @@ namespace Chroma::Reflection
         return argument_container(_type_id, _id);
     }
 
-    Any Function::user_data(const std::string& key) const
+	Any Function::user_data(const std::string& key) const
     {
-        uint32_t hash = BasicHash<uint32_t>::hash(key);
-        if (valid())
-        {
-            return type_data::instance().types[_type_id].functions[_id].user_data[hash];
-        }
-        return Any{};
+    	uint32_t hash = BasicHash<uint32_t>::hash(key);
+    	if (valid())
+    	{
+    		return TypeData::instance().types[_type_id].functions[_id].user_data[hash];
+    	}
+    	return Any{};
     }
+	
 }

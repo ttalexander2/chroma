@@ -6,8 +6,8 @@
 #include <vector>
 
 #include "BasicHash.h"
-#include "type_traits.h"
-#include "type_flags.h"
+#include "TypeTraits.h"
+#include "TypeFlags.h"
 #include "Any.h"
 
 // Note: For the current sake of simplicity, currently type data structs are stored
@@ -23,17 +23,17 @@
 namespace Chroma::Reflection
 {
     // Forward declarations
-    struct type_info;
-    struct data_info;
-    struct func_info;
-    struct ctor_info;
+    struct TypeInfo;
+    struct DataInfo;
+    struct FuncInfo;
+    struct CtorInfo;
     class Any;
     class Handle;
 
     /**
      * @brief Struct storing meta info for a single piece of type data.
      */
-    struct data_info
+    struct DataInfo
     {
         using id_type = uint32_t;
         std::string name;
@@ -44,15 +44,16 @@ namespace Chroma::Reflection
 
         Any (*get)(Handle);
 
-        data_flags flags;
+        DataFlags flags;
 
-        std::unordered_map<uint32_t, Any> user_data;
+        std::unordered_map<uint32_t, Any> metadata;
+    	std::unordered_map<uint32_t, Any> user_data;
     };
 
     /**
      * @brief Struct storing meta info for a single type function.
      */
-    struct func_info
+    struct FuncInfo
     {
         using id_type = uint32_t;
         using size_type = std::size_t;
@@ -70,13 +71,14 @@ namespace Chroma::Reflection
         bool is_const;
         bool is_static;
 
-        std::unordered_map<uint32_t, Any> user_data;
+        std::unordered_map<uint32_t, Any> metadata;
+    	std::unordered_map<uint32_t, Any> user_data;
     };
 
     /**
      * @brief Struct storing meta info for a single type constructor.
      */
-    struct ctor_info
+    struct CtorInfo
     {
         using id_type = uint32_t;
         using size_type = std::size_t;
@@ -94,7 +96,7 @@ namespace Chroma::Reflection
     /**
      * @brief Struct storing meta info for a single type conversion.
      */
-    struct conv_info
+    struct ConvInfo
     {
         uint32_t id;
 
@@ -104,27 +106,28 @@ namespace Chroma::Reflection
     /**
      * @brief Struct storing meta info for a single type.
      */
-    struct type_info
+    struct TypeInfo
     {
         std::string name;
-        uint32_t id;
+        uint32_t id{};
 
-        type_flags flags;
+        TypeFlags flags;
 
-        uint32_t underlying_type_id;
+        uint32_t underlying_type_id{};
 
-        std::unordered_map<uint32_t, data_info> data;
-        std::unordered_map<uint32_t, func_info> functions;
-        std::unordered_map<uint32_t, conv_info> conversions;
-        std::unordered_map<uint32_t, ctor_info> constructors;
-        std::unordered_map<uint32_t, Any> user_data;
+        std::unordered_map<uint32_t, DataInfo> data;
+        std::unordered_map<uint32_t, FuncInfo> functions;
+        std::unordered_map<uint32_t, ConvInfo> conversions;
+        std::unordered_map<uint32_t, CtorInfo> constructors;
+        std::unordered_map<uint32_t, Any> metadata;
+    	std::unordered_map<uint32_t, Any> user_data;
         std::vector<uint32_t> bases;
     };
 
     /**
      * @brief Monolithic class containing all data stored in the reflection system.
      */
-    class type_data
+    class TypeData
     {
         friend class Type;
         friend class type_container;
@@ -138,7 +141,7 @@ namespace Chroma::Reflection
         friend class Constructor;
         friend class constructor_container;
         template<typename T>
-        friend class type_factory;
+        friend class TypeFactory;
 
         using id_hash = BasicHash<uint32_t>;
 
@@ -146,9 +149,9 @@ namespace Chroma::Reflection
          * @brief Gets the single instance of the type_data system.
          * @return
          */
-        static type_data &instance()
+        static TypeData &instance()
         {
-            static type_data instance;
+            static TypeData instance;
             return instance;
         }
 
@@ -158,53 +161,53 @@ namespace Chroma::Reflection
          * @return type_flags enum representing all flags for a type.
          */
         template<typename T>
-        static type_flags get_flags()
+        static TypeFlags get_flags()
         {
-            type_flags flags = type_flags::none;
+            TypeFlags flags = TypeFlags::none;
 
             if constexpr (std::is_class_v<T>)
             {
-                flags |= type_flags::is_class;
+                flags |= TypeFlags::is_class;
             }
             if constexpr (std::is_abstract_v<T>)
             {
-                flags |= type_flags::is_abstract;
+                flags |= TypeFlags::is_abstract;
             }
             if constexpr (std::is_integral_v<T>)
             {
-                flags |= type_flags::is_integral;
+                flags |= TypeFlags::is_integral;
             }
         	if constexpr (std::is_floating_point_v<T>)
         	{
-        		flags |= type_flags::is_floating_point;
+        		flags |= TypeFlags::is_floating_point;
         	}
             if constexpr (std::is_array_v<T>)
             {
-                flags |= type_flags::is_array;
+                flags |= TypeFlags::is_array;
             }
             if constexpr (std::is_enum_v<T>)
             {
-                flags |= type_flags::is_enum;
+                flags |= TypeFlags::is_enum;
             }
             if constexpr (std::is_pointer_v<T>)
             {
-                flags |= type_flags::is_pointer;
+                flags |= TypeFlags::is_pointer;
             }
             if constexpr (Internal::is_pointer_like_v<T>)
             {
-                flags |= type_flags::is_pointer_like;
+                flags |= TypeFlags::is_pointer_like;
             }
             if constexpr (Internal::is_sequence_container_v<T>)
             {
-                flags |= type_flags::is_sequence_container;
+                flags |= TypeFlags::is_sequence_container;
             }
             if constexpr (Internal::is_associative_container_v<T>)
             {
-                flags |= type_flags::is_associative_container;
+                flags |= TypeFlags::is_associative_container;
             }
             if constexpr (false)
             {
-                flags |= type_flags::is_template_specialization;
+                flags |= TypeFlags::is_template_specialization;
             }
 
             return flags;
@@ -213,7 +216,7 @@ namespace Chroma::Reflection
         /**
          * @brief Map of application type info by type hash
          */
-        std::unordered_map<uint32_t, type_info> types;
+        std::unordered_map<uint32_t, TypeInfo> types;
 
         /**
          * @brief Stores name to ID aliases. Key is name hash, value is type hash
@@ -223,7 +226,7 @@ namespace Chroma::Reflection
         /**
          * @brief Default constructor.
          */
-        type_data() = default;
+        TypeData() = default;
 
     };
 

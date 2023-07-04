@@ -21,8 +21,8 @@ namespace Chroma::Reflection
     bool Constructor::valid() const
     {
         return Registry::valid(_type_id)
-               && type_data::instance().types[_type_id].constructors.find(_id)
-                  != type_data::instance().types[_type_id].constructors.end();
+               && TypeData::instance().types[_type_id].constructors.find(_id)
+                  != TypeData::instance().types[_type_id].constructors.end();
     }
 
     bool Constructor::operator==(const Constructor &rhs) const
@@ -43,7 +43,7 @@ namespace Chroma::Reflection
     size_t Constructor::arity() const
     {
         if (valid())
-            return type_data::instance().types[_type_id].constructors[_id].arity;
+            return TypeData::instance().types[_type_id].constructors[_id].arity;
         return 0;
     }
 
@@ -51,7 +51,7 @@ namespace Chroma::Reflection
     {
         if (valid() && index < arity())
         {
-            return Reflection::Type(type_data::instance().types[_type_id].constructors[_id].arg(index));
+            return Reflection::Type(TypeData::instance().types[_type_id].constructors[_id].arg(index));
         }
 
         return Registry::resolve<void>();
@@ -60,7 +60,7 @@ namespace Chroma::Reflection
     Any Constructor::invoke_internal(Any *args, size_t count) const
     {
         if (valid())
-            return type_data::instance().types[_type_id].constructors[_id].invoke(args);
+            return TypeData::instance().types[_type_id].constructors[_id].invoke(args);
         return Any{};
     }
 

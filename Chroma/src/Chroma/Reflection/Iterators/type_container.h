@@ -4,14 +4,14 @@
 #include <cstddef>
 #include <unordered_map>
 
-#include "../type_data.h"
-#include "../Constructor.h"
+#include "../TypeData.h"
+#include "../Type.h"
 
 namespace Chroma::Reflection
 {
-    class constructor_container
+    class type_container
     {
-        friend class type_data;
+        friend class TypeData;
 
         friend class Registry;
 
@@ -21,24 +21,27 @@ namespace Chroma::Reflection
 
         friend class Type;
 
-        friend class Constructor;
+        friend class Function;
+
+        friend class Data;
 
         template<typename T>
         friend
-        class type_factory;
+        class TypeFactory;
 
     public:
         class iterator
         {
-            friend class constructor_container;
+            friend class type_container;
 
             using iterator_category = std::random_access_iterator_tag;
             using difference_type = std::ptrdiff_t;
-            using value_type = Constructor;
+            using value_type = Type;
             using pointer = value_type;
             using reference = value_type;
 
         public:
+
             iterator &operator++();
 
             iterator operator++(int);
@@ -47,33 +50,25 @@ namespace Chroma::Reflection
 
             friend bool operator!=(const iterator &a, const iterator &b);
 
+
             reference operator*() const;
 
-            pointer operator->() const;
+            pointer operator->();
 
         private:
             iterator() = default;
 
-            explicit iterator(uint32_t id, std::unordered_map<uint32_t, ctor_info>::iterator iterator);
+            explicit iterator(std::unordered_map<uint32_t, TypeInfo>::iterator iterator);
 
-            std::unordered_map<uint32_t, ctor_info>::iterator itr;
-            uint32_t _type_id{};
-
+            std::unordered_map<uint32_t, TypeInfo>::iterator itr;
         };
-
-        [[nodiscard]] bool valid() const;
 
         [[nodiscard]] iterator begin() const;
 
         [[nodiscard]] iterator end() const;
 
-        [[nodiscard]] size_t arity() const;
-
     private:
-        explicit constructor_container(uint32_t type_id);
-
-        uint32_t _type_id{};
+        type_container() = default;
     };
-
 }
 

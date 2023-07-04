@@ -25,7 +25,7 @@ namespace Chroma
 		viewProjectionMatrix = projectionMatrix * viewMatrix;
 	}
 
-	Reflection::type_factory<Camera> Camera::register_type()
+	Reflection::TypeFactory<Camera> Camera::register_type()
 	{
 		auto factory =  Reflection::RegisterComponent<Camera>("Camera")
 		       .base<Component>();

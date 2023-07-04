@@ -3,7 +3,7 @@
 
 #include <utility>
 
-#include "type_data.h"
+#include "TypeData.h"
 #include "Registry.h"
 
 namespace Chroma::Reflection
@@ -21,8 +21,8 @@ namespace Chroma::Reflection
     bool Data::valid() const
     {
         return Registry::valid(_owner)
-               && type_data::instance().types[_owner].data.find(_id)
-                  != type_data::instance().types[_owner].data.end();
+               && TypeData::instance().types[_owner].data.find(_id)
+                  != TypeData::instance().types[_owner].data.end();
     }
 
     uint32_t Data::id() const
@@ -33,28 +33,28 @@ namespace Chroma::Reflection
     std::string Data::name() const
     {
         if (valid())
-            return type_data::instance().types[_owner].data[_id].name;
+            return TypeData::instance().types[_owner].data[_id].name;
         return std::string{};
     }
 
     Reflection::Type Data::type() const
     {
     	if (valid())
-    		return Reflection::Type(type_data::instance().types[_owner].data[_id].type_id);
+    		return Reflection::Type(TypeData::instance().types[_owner].data[_id].type_id);
     	return Registry::resolve<void>();
     }
 
     bool Data::is_const() const
     {
         if (valid())
-            return Internal::has_flag(type_data::instance().types[_owner].data[_id].flags, data_flags::is_const);
+            return Internal::has_flag(TypeData::instance().types[_owner].data[_id].flags, DataFlags::is_const);
         return false;
     }
 
     bool Data::is_static() const
     {
         if (valid())
-            return Internal::has_flag(type_data::instance().types[_owner].data[_id].flags, data_flags::is_static);
+            return Internal::has_flag(TypeData::instance().types[_owner].data[_id].flags, DataFlags::is_static);
         return false;
     }
 
@@ -62,14 +62,14 @@ namespace Chroma::Reflection
     {
         if (!valid())
             return Any{};
-        return type_data::instance().types[_owner].data[_id].get(std::move(handle));
+        return TypeData::instance().types[_owner].data[_id].get(std::move(handle));
     }
 
     bool Data::set(Reflection::Handle& handle, Any value) const
     {
         if (!valid())
             return false;
-        return type_data::instance().types[_owner].data[_id].set(handle, std::move(value));
+        return TypeData::instance().types[_owner].data[_id].set(handle, std::move(value));
     }
 
     bool Data::operator==(const Data &rhs) const
@@ -82,13 +82,13 @@ namespace Chroma::Reflection
     	return Reflection::Type(_owner);
     }
 
-    Any Data::user_data(uint32_t hash) const
+	Any Data::user_data(uint32_t hash) const
     {
-        if (valid())
-        {
-            return type_data::instance().types[_owner].data[_id].user_data[hash];
-        }
-        return Any{};
+    	if (valid())
+    	{
+    		return TypeData::instance().types[_owner].data[_id].user_data[hash];
+    	}
+    	return Any{};
     }
 	
 	Any Data::user_data(const std::string& key) const
@@ -98,13 +98,12 @@ namespace Chroma::Reflection
 
 	bool Data::has_user_data(uint32_t hash) const
     {
-    	return valid() && type_data::instance().types[_owner].data[_id].user_data.find(hash) != type_data::instance().types[_owner].data[_id].user_data.end();
+    	return valid() && TypeData::instance().types[_owner].data[_id].user_data.find(hash) != TypeData::instance().types[_owner].data[_id].user_data.end();
     }
 
 	bool Data::has_user_data(const std::string& key) const
     {
     	return has_user_data(BasicHash<uint32_t>(key));
     }
-
 
 }

@@ -8,7 +8,7 @@ namespace Chroma
 {
 	class PhysicsSystem;
 
-	struct RigidBody : Component
+	struct RigidBody final : Component
 	{
 		CHROMA_COMPONENT(RigidBody, Component);
 
@@ -56,7 +56,7 @@ namespace Chroma
 
 		void SetBullet(bool value);
 		bool IsBullet() const;
-
+		
 		void SetGravityScale(float scale);
 		float GetGravityScale() const;
 
@@ -79,6 +79,10 @@ namespace Chroma
 		void ApplyLinearImpulse(const Math::vec2 &impulse, bool wake);
 		void ApplyAngularImpulse(float impulse);
 		void ApplyAngularImpulse(float impulse, bool wake);
+
+
+		META(Range(10.f, 50.f))
+		float Poop = 10;
 
 	private:
 		b2BodyDef m_BodyDefinition;

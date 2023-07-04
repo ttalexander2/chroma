@@ -12,22 +12,22 @@ namespace Chroma::Reflection
     {
         if (!valid())
             return {};
-        return constructor_container::iterator(_type_id, type_data::instance().types[_type_id].constructors.begin());
+        return constructor_container::iterator(_type_id, TypeData::instance().types[_type_id].constructors.begin());
     }
 
     constructor_container::iterator constructor_container::end() const // NOLINT(readability-make-member-ctor-const)
     {
         if (!valid())
             return {};
-        return constructor_container::iterator(_type_id, type_data::instance().types[_type_id].constructors.end());
+        return constructor_container::iterator(_type_id, TypeData::instance().types[_type_id].constructors.end());
     }
 
     bool constructor_container::valid() const
     {
-        return type_data::instance().types.find(_type_id) != type_data::instance().types.end();
+        return TypeData::instance().types.find(_type_id) != TypeData::instance().types.end();
     }
 
-    constructor_container::iterator::iterator(uint32_t id, std::unordered_map<uint32_t, ctor_info>::iterator iterator)
+    constructor_container::iterator::iterator(uint32_t id, std::unordered_map<uint32_t, CtorInfo>::iterator iterator)
             : itr(iterator), _type_id(id)
     {
     }

@@ -1,11 +1,10 @@
 ﻿#pragma once
 
 
-#include "type_factory.h"
-#include "type_data.h"
-#include "type_flags.h"
+#include "TypeFactory.h"
+#include "TypeData.h"
+#include "TypeFlags.h"
 #include "Type.h"
-#include "Type.inl"
 #include "Data.h"
 #include "Function.h"
 #include "Registry.h"
@@ -16,6 +15,7 @@
 #include "iterators/argument_container.h"
 #include "Chroma/IO/File.h"
 #include "Chroma/Scene/ComponentRegistry.h"
+#include "Metadata/Properties.h"
 
 #include "yaml-cpp/emitter.h"
 #include "yaml-cpp/node/node.h"
@@ -28,18 +28,7 @@ namespace Chroma
 	
 	namespace Reflection
 	{
-
-		enum class MetaFlags : uint32_t
-		{
-			SERIALIZE = 0,
-			TYPE_REQUIREMENTS = 1 << 0,
-			SERIALIZE_YAML_FUNC = 2 << 0,
-			DESERIALIZE_YAML_FUNC = 3 << 0,
-			SERIALIZE_BINARY_FUNC = 4 << 0,
-			DESERIALIZE_BINARY_FUNC = 5 << 0
-		};
-	
-		const std::vector<uint32_t>& GetTypeRequirements(uint32_t type_id);
+		//const std::vector<uint32_t>& GetTypeRequirements(uint32_t type_id);
 
 			    /**
 	     * @brief Registers a type to the reflection system.
@@ -48,7 +37,7 @@ namespace Chroma
 	     * @return Type factory object, used as named parameter idiom, to declare information about the type.
 	     */
 	    template<typename T>
-	    inline type_factory<T> register_type(const std::string &name)
+	    inline TypeFactory<T> register_type(const std::string &name)
 	    {
 	        return Registry::register_type<T>(name);
 	    }
@@ -148,42 +137,14 @@ namespace Chroma
 
 
 		template <typename Type, typename = std::enable_if_t<std::is_base_of_v<Component, Type> && !std::is_abstract_v<Type>>>
-		type_factory<Type> RegisterComponent(const std::string& name)
+		TypeFactory<Type> RegisterComponent(const std::string& name)
 		{
 			auto factory = register_type<Type>(name);
 			ComponentRegistry::RegisterComponent<Type>(name);
 			return factory;
 		}
 
-		class Serializer
-		{
-			template<typename>
-			friend class TypeInitializer;
-			friend class Application;
-			friend class Initializer;
-		public:
 
-
-			static void SerializeObjectYAML(YAML::Emitter &out, Handle object);
-			static void DeserializeObjectYAML(Handle object, YAML::Node &node);
-
-		private:
-
-			template <typename Type>
-			static void SerializeTypeYAML(YAML::Emitter& emitter, Handle value)
-			{
-				if (value.can_cast_or_convert<Type>())
-				{
-					emitter << value.cast_or_convert<Type>();
-				}
-			}
-
-			template <typename Type>
-			static Any DeserializeTypeYAML(YAML::Node& node)
-			{
-				return Any{node.as<Type>()};
-			}
-		};
 
 		class Initializer
 		{
@@ -206,8 +167,11 @@ namespace Chroma
 		};
 		
 	}
-
-
+	
+	#undef typeof
+	// Gets the type data for a provided type. Equivalent to Chroma::Reflection::resolve<T>()
+	// ReSharper disable once CppInconsistentNaming
+	#define typeof(TYPE) Chroma::Reflection::resolve<TYPE>()
 
 }
 

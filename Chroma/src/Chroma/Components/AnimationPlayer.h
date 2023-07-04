@@ -12,7 +12,7 @@ namespace Chroma
 		CHROMA_COMPONENT(AnimationPlayer, Component);
 
 		bool PlayOnStart = true;
-
+	
 		void Start();
 		void Restart();
 		void Pause();

@@ -2,6 +2,8 @@
 
 #include "Scene.h"
 #include "Entity.h"
+#include "Chroma/Reflection/Serialization/Serializer.h"
+
 #include <Chroma/Components/Transform.h>
 #include <Chroma/Components/Tag.h>
 #include <Chroma/Components/AudioSource.h>
@@ -51,6 +53,7 @@ namespace Chroma
 		particle_system->m_Scene = this;
 		camera_system->m_Scene = this;
 	}
+
 
 	Scene::~Scene()
 	{
@@ -566,7 +569,7 @@ namespace Chroma
 			}
 			out << YAML::BeginMap;
 			out << YAML::Key << comp->GetType().name() << YAML::Value;
-			Reflection::Serializer::SerializeObjectYAML(out, comp->ToHandle());
+			Reflection::Serializer::SerializeObjectToYaml(out, comp->ToHandle());
 			out << YAML::EndMap;
 		}
 		
@@ -595,7 +598,7 @@ namespace Chroma
 					if (!comp)
 						CHROMA_CORE_ERROR("Component construction with entity id failed!");
 
-					//Reflection::Serializer::DeserializeObjectYAML(comp->ToHandle(), component.second);
+					Reflection::Serializer::DeserializeObjectFromYaml(comp->ToHandle(), component.second);
 				}
 			}
 		}

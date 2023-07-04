@@ -39,7 +39,7 @@ namespace Chroma
 		m_Current = animation;
 	}
 
-	Reflection::type_factory<AnimationPlayer> AnimationPlayer::register_type()
+	Reflection::TypeFactory<AnimationPlayer> AnimationPlayer::register_type()
 	{
 		return Reflection::RegisterComponent<AnimationPlayer>("AnimationPlayer")
 		       .base<Component>()

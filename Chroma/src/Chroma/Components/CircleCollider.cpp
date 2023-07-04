@@ -25,7 +25,7 @@ namespace Chroma
 		m_Shape.m_p = { value.x * Physics::GetScale(), value.y * Physics::GetScale() };
 	}
 
-	Reflection::type_factory<CircleCollider> CircleCollider::register_type()
+	Reflection::TypeFactory<CircleCollider> CircleCollider::register_type()
 	{
 		return Reflection::RegisterComponent<CircleCollider>("CircleCollider")
 		       .base<Collider>()

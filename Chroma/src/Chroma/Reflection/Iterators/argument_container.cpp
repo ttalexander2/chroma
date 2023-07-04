@@ -35,12 +35,12 @@ namespace Chroma::Reflection
 
     argument_container::iterator::reference argument_container::iterator::operator*() const
     {
-        return Type(type_data::instance().types[_type_id].functions[_func_id].arg(index));
+        return Type(TypeData::instance().types[_type_id].functions[_func_id].arg(index));
     }
 
     argument_container::iterator::pointer argument_container::iterator::operator->() const
     {
-        return Type(type_data::instance().types[_type_id].functions[_func_id].arg(index));
+        return Type(TypeData::instance().types[_type_id].functions[_func_id].arg(index));
     }
 
     argument_container::argument_container(uint32_t type_id, uint32_t func_id)
@@ -51,9 +51,9 @@ namespace Chroma::Reflection
 
     bool argument_container::valid() const
     {
-        return type_data::instance().types.find(_type_id) != type_data::instance().types.end()
-               && type_data::instance().types[_type_id].functions.find(_func_id)
-                  != type_data::instance().types[_type_id].functions.end();
+        return TypeData::instance().types.find(_type_id) != TypeData::instance().types.end()
+               && TypeData::instance().types[_type_id].functions.find(_func_id)
+                  != TypeData::instance().types[_type_id].functions.end();
     }
 
     argument_container::iterator argument_container::begin() const
@@ -76,6 +76,6 @@ namespace Chroma::Reflection
     {
         if (!valid())
             return 0;
-        return type_data::instance().types[_type_id].functions[_func_id].arity;
+        return TypeData::instance().types[_type_id].functions[_func_id].arity;
     }
 }

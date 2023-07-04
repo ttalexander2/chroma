@@ -1,15 +1,9 @@
 #pragma once
 
-
-#ifndef _AUDIO_ENGINE_H_
-#define _AUDIO_ENGINE_H_
-
 #include "fmod_studio.hpp"
 #include <string>
 #include <map>
 #include <iostream>
-
-#endif
 
 #include "Chroma/Math/Math.h"
 #include "Chroma/Audio/ChromaFMOD.h"

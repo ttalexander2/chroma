@@ -5,7 +5,7 @@
 
 namespace Chroma
 {
-	Reflection::type_factory<CSharpScript> CSharpScript::register_type()
+	Reflection::TypeFactory<CSharpScript> CSharpScript::register_type()
 	{
 		return Reflection::RegisterComponent<CSharpScript>("CSharpScript")
 		       .base<Component>()

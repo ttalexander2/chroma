@@ -247,7 +247,7 @@ namespace Chroma
 		}
 	}
 
-	Reflection::type_factory<SpriteRenderer> SpriteRenderer::register_type()
+	Reflection::TypeFactory<SpriteRenderer> SpriteRenderer::register_type()
 	{
 		Reflection::register_type<SpriteOrigin>("SpriteOrigin")
 				.data<SpriteOrigin::Center>("Center")

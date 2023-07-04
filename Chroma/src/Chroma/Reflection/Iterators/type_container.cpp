@@ -6,15 +6,15 @@ namespace Chroma::Reflection
 
     type_container::iterator type_container::begin() const  // NOLINT(readability-make-member-func-const)
     {
-        return type_container::iterator(type_data::instance().types.begin());
+        return type_container::iterator(TypeData::instance().types.begin());
     }
 
     type_container::iterator type_container::end() const // NOLINT(readability-make-member-func-const)
     {
-        return type_container::iterator(type_data::instance().types.end());
+        return type_container::iterator(TypeData::instance().types.end());
     }
 
-    type_container::iterator::iterator(std::unordered_map<uint32_t, type_info>::iterator iterator)
+    type_container::iterator::iterator(std::unordered_map<uint32_t, TypeInfo>::iterator iterator)
             : itr(iterator)
     {
     }

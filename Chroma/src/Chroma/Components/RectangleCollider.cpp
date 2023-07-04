@@ -46,7 +46,7 @@ namespace Chroma
 		return m_Rotation;
 	}
 
-	Reflection::type_factory<RectangleCollider> RectangleCollider::register_type()
+	Reflection::TypeFactory<RectangleCollider> RectangleCollider::register_type()
 	{
 		return Reflection::RegisterComponent<RectangleCollider>("RectangleCollider")
 		       .base<Collider>()

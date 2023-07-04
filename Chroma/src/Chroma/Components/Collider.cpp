@@ -116,7 +116,7 @@ namespace Chroma
 		return m_FixtureDef.isSensor;
 	}
 
-	Reflection::type_factory<Collider> Collider::register_type()
+	Reflection::TypeFactory<Collider> Collider::register_type()
 	{
 		Reflection::register_type<Vertex>("Collider::Vertex")
 				.data<&Vertex::vertex>("vertex")

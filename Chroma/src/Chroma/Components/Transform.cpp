@@ -16,7 +16,7 @@ namespace Chroma
 				* rotation * scale(glm::mat4(1.0f), { Scale, 0 });
 	}
 
-	Reflection::type_factory<Transform> Transform::register_type()
+	Reflection::TypeFactory<Transform> Transform::register_type()
 	{
 		return Reflection::RegisterComponent<Transform>("Transform")
 		       .base<Component>()

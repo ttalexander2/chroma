@@ -4,15 +4,15 @@
 #include <cstddef>
 #include <unordered_map>
 
-#include "../type_data.h"
-#include "../Function.h"
+#include "../TypeData.h"
+#include "../Data.h"
 
 namespace Chroma::Reflection
 {
 
-    class function_container
+    class data_container
     {
-        friend class type_data;
+        friend class TypeData;
 
         friend class Registry;
 
@@ -24,16 +24,16 @@ namespace Chroma::Reflection
 
         template<typename T>
         friend
-        class type_factory;
+        class TypeFactory;
 
     public:
         class iterator
         {
-            friend class function_container;
+            friend class data_container;
 
             using iterator_category = std::random_access_iterator_tag;
             using difference_type = std::ptrdiff_t;
-            using value_type = Function;
+            using value_type = Data;
             using pointer = value_type;
             using reference = value_type;
 
@@ -50,14 +50,14 @@ namespace Chroma::Reflection
 
             reference operator*() const;
 
-            pointer operator->() const;
+            pointer operator->();
 
         private:
             iterator() = default;
 
-            explicit iterator(uint32_t id, std::unordered_map<uint32_t, func_info>::iterator iterator);
+            explicit iterator(uint32_t id, std::unordered_map<uint32_t, DataInfo>::iterator iterator);
 
-            std::unordered_map<uint32_t, func_info>::iterator itr;
+            std::unordered_map<uint32_t, DataInfo>::iterator itr;
             uint32_t _type_id{};
         };
 
@@ -68,10 +68,8 @@ namespace Chroma::Reflection
         [[nodiscard]] iterator end() const;
 
     private:
-        explicit function_container(uint32_t type_id);
+        explicit data_container(uint32_t type_id);
 
         uint32_t _type_id{};
     };
-
 }
-

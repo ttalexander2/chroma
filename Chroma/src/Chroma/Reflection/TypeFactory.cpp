@@ -1,5 +1,5 @@
 #include "chromapch.h"
-#include "type_factory.h"
+#include "TypeFactory.h"
 
 
 namespace Chroma::Reflection

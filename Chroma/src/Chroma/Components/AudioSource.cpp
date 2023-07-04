@@ -5,7 +5,7 @@
 
 namespace Chroma
 {
-	Reflection::type_factory<AudioSource> AudioSource::register_type()
+	Reflection::TypeFactory<AudioSource> AudioSource::register_type()
 	{
 		return Reflection::RegisterComponent<AudioSource>("AudioSource")
 		       .base<Component>()

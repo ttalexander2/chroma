@@ -1,29 +1,32 @@
 #pragma once
 
+#include "MetaData.h"
+
 #include <cstdint>
 #include <string>
 #include <vector>
-#include "type_flags.h"
-#include "type_hash.h"
+#include "TypeFlags.h"
+#include "TypeHash.h"
 
 namespace Chroma::Reflection
 {
 
     // Forward declarations
-    class type_data;
+    class TypeData;
     class func_data;
     class Registry;
     class Any;
     class Handle;
-    struct type_info;
+    struct TypeInfo;
     class Data;
     class Function;
     class Constructor;
     class data_container;
     class function_container;
     class constructor_container;
+	
     template<typename T>
-    class type_factory;
+    class TypeFactory;
 
     /**
      * @brief Class representing meta information about a type registered with the reflection system.
@@ -31,7 +34,7 @@ namespace Chroma::Reflection
      */
     class Type
     {
-        friend class type_data;
+        friend class TypeData;
         friend class func_data;
         friend class Registry;
         friend class Any;
@@ -43,7 +46,7 @@ namespace Chroma::Reflection
         friend class Constructor;
         friend class constructor_container;
         template<typename T>
-        friend class type_factory;
+        friend class TypeFactory;
 
     public:
         /**
@@ -228,36 +231,7 @@ namespace Chroma::Reflection
          * @return function_container object associated with this type.
          */
         [[nodiscard]] Reflection::function_container func() const;
-
-
-        /**
-         * @brief Gets a piece of user data associated with this type, from the given key.
-         * @param key - Key of the user data to retrieve.
-         * @return Any object containing the stored user data.
-         */
-        [[nodiscard]] Any user_data(const std::string& key) const;
-
-
-        /**
-         * @brief Gets a piece of user data associated with this type, from the given key.
-         * @param hash - Key of the user data to retrieve.
-         * @return Any object containing the stored user data.
-         */
-        [[nodiscard]] Any user_data(uint32_t hash) const;
-
-        template <typename KeyType, typename = std::enable_if_t<std::is_same_v<std::underlying_type_t<KeyType>, uint32_t>>>
-        [[nodiscard]] Any user_data(KeyType&& key) const;
-
-
-        [[nodiscard]] bool has_user_data(const std::string& key) const;
     	
-    	[[nodiscard]] bool has_user_data(uint32_t hash) const;
-
-    	template <typename KeyType, typename = std::enable_if_t<std::is_same_v<std::underlying_type_t<KeyType>, uint32_t>>>
-		[[nodiscard]] bool has_user_data(KeyType&& key) const
-    	{
-    		return has_user_data(static_cast<uint32_t>(key));
-    	}
 
         /**
          * @brief Checks whether the type is convertible to the specified type.
@@ -296,16 +270,58 @@ namespace Chroma::Reflection
          * which can either be checked using this enum, or any of the is_... functions.
          * @return Enum holding all of the flags of this type.
          */
-        [[nodiscard]] type_flags flags() const;
+        [[nodiscard]] TypeFlags flags() const;
+
+
+
+
+    	/**
+		 * @brief Gets a piece of user data associated with this type, from the given key.
+		 * @param key - Key of the user data to retrieve.
+		 * @return Any object containing the stored user data.
+		 */
+    	[[nodiscard]] Any user_data(const std::string& key) const;
+
+
+    	/**
+		 * @brief Gets a piece of user data associated with this type, from the given key.
+		 * @param hash - Key of the user data to retrieve.
+		 * @return Any object containing the stored user data.
+		 */
+    	[[nodiscard]] Any user_data(uint32_t hash) const;
+
+    	template <typename KeyType, typename = std::enable_if_t<std::is_same_v<std::underlying_type_t<KeyType>, uint32_t>>>
+		[[nodiscard]] Any user_data(KeyType&& key) const;
+
+
+    	[[nodiscard]] bool has_user_data(const std::string& key) const;
+    	
+    	[[nodiscard]] bool has_user_data(uint32_t hash) const;
+
+    	template <typename KeyType, typename = std::enable_if_t<std::is_same_v<std::underlying_type_t<KeyType>, uint32_t>>>
+		[[nodiscard]] bool has_user_data(KeyType&& key) const
+    	{
+    		return has_user_data(static_cast<uint32_t>(key));
+    	}
+
+		[[nodiscard]] bool has_metadata(uint32_t type_id) const;
+
+    	template <typename MetaDataType, typename = std::enable_if_t<std::is_base_of_v<MetaData, std::remove_pointer_t<MetaDataType>>>>
+    	[[nodiscard]] bool has_metadata() const;
+
+    	[[nodiscard]] Any get_metadata(uint32_t type_id) const;
+
+    	template <typename MetaDataType, typename = std::enable_if_t<std::is_base_of_v<MetaData, std::remove_pointer_t<MetaDataType>>>>
+    	[[nodiscard]] MetaDataType get_metadata() const;
 
     private:
-        [[nodiscard]] type_info *info() const;
+        [[nodiscard]] TypeInfo *info() const;
 
 
     private:
-        explicit Type(type_id id);
+        explicit Type(TypeId id);
 
-        type_id _id;
+        TypeId _id;
 
     };
 

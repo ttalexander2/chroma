@@ -1,7 +1,7 @@
 #pragma once
 
-#include "util.h"
-#include "type_factory.h"
+#include "Util.h"
+#include "TypeFactory.h"
 
 namespace Chroma::Reflection
 {
@@ -39,7 +39,7 @@ namespace Chroma::Reflection
          */
         explicit TypeInitializer(const std::string &name)
         {
-            type_factory<Type> factory(name);
+            TypeFactory<Type> factory(name);
             Type::register_type();
         }
 
@@ -48,7 +48,7 @@ namespace Chroma::Reflection
          * Constructs a type initializer, which calls the provided function on construction.
          * @param initialization_function User provided function to be called in place of "register_type".
          */
-        explicit TypeInitializer(std::function<type_factory<Type>(void)> initialization_function)
+        explicit TypeInitializer(std::function<TypeFactory<Type>(void)> initialization_function)
         {
             initialization_function();
         }

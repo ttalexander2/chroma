@@ -24,7 +24,7 @@ namespace Chroma::Reflection
 
     bool Registry::valid(uint32_t id)
     {
-        return type_data::instance().types.find(id) != type_data::instance().types.end();
+        return TypeData::instance().types.find(id) != TypeData::instance().types.end();
     }
 
     bool Registry::valid(const std::string &name)
@@ -35,8 +35,8 @@ namespace Chroma::Reflection
 
     uint32_t Registry::id_from_name(const std::string &name)
     {
-        auto val = type_data::instance().type_aliases.find(id_hash::hash(name));
-        if (val != type_data::instance().type_aliases.end())
+        auto val = TypeData::instance().type_aliases.find(id_hash::hash(name));
+        if (val != TypeData::instance().type_aliases.end())
         {
             return val->second;
         }

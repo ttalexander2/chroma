@@ -27,7 +27,7 @@ namespace Chroma
 		pos = (pos + 1) % Particles.size();
 	}
 
-	Reflection::type_factory<ParticleEmitter> ParticleEmitter::register_type()
+	Reflection::TypeFactory<ParticleEmitter> ParticleEmitter::register_type()
 	{
 		Reflection::register_type<Particle>("Particle")
 				.data<&Particle::Active>("Active")

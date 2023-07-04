@@ -5,7 +5,7 @@
 
 namespace Chroma
 {
-	Reflection::type_factory<Tag> Tag::register_type()
+	Reflection::TypeFactory<Tag> Tag::register_type()
 	{
 		return Reflection::RegisterComponent<Tag>("Tag")
 		       .base<Component>()

@@ -12,7 +12,7 @@
 #include "yaml-cpp/node/node.h"
 #include "yaml-cpp/node/parse.h"
 #include "Chroma/Utilities/StringHash.h"
-#include <Chroma/Core/TypeInfo.h>
+#include "Chroma/Core/TypeInfo.h"
 #include "Chroma/Scene/EntityID.h"
 #include "Chroma/Utilities/StringHash.h"
 #include "Chroma/Utilities/ComponentDataType.h"
@@ -52,15 +52,15 @@ namespace Chroma
 		typeName(const typeName &) = default;																							\
 		typeName &operator=(const typeName &) = default;																				\
 	private:																															\
-		using type_factory = Reflection::type_factory<typeName>;																		\
+		using TypeFactory = Reflection::TypeFactory<typeName>;																		\
 		static inline Reflection::ComponentInitializer<typeName> type_initializer{};													\
-		static type_factory register_type();																							\
+		static TypeFactory register_type();																							\
 		static inline Reflection::Type TypeInfo = Reflection::resolve<typeName>();														\
 		virtual void NO_TYPE_INFO() override {}																							\
 	public:																																\
 		friend class Scene;																												\
 		virtual Reflection::Type GetType() const noexcept override { return TypeInfo; }													\
-		virtual Reflection::Handle ToHandle() const noexcept override { return Reflection::Handle(*((typeName*)this)); }											
+		virtual Reflection::Handle ToHandle() const noexcept override { return Reflection::Handle(*((typeName*)this)); }				
 
 #define CHROMA_ABSTRACT_COMPONENT(typeName, baseTypeName)																				\
 		using ClassName = typeName;																										\
@@ -72,9 +72,9 @@ namespace Chroma
 		typeName(const typeName &) = default;																							\
 		typeName &operator=(const typeName &) = default;																				\
 	private:																															\
-		using type_factory = Reflection::type_factory<typeName>;																		\
+		using TypeFactory = Reflection::TypeFactory<typeName>;																		\
 		static inline Reflection::ComponentInitializer<typeName> type_initializer{};													\
-		static type_factory register_type();																							\
+		static TypeFactory register_type();																							\
 		static inline Reflection::Type TypeInfo = Reflection::resolve<typeName>();														\
 		virtual void NO_TYPE_INFO() override {}																							\
 																																		\
@@ -121,9 +121,9 @@ namespace Chroma
 		virtual void NO_TYPE_INFO() = 0;
 
 	private:
-		using type_factory = Reflection::type_factory<Component>;
+		using TypeFactory = Reflection::TypeFactory<Component>;
 		static inline Reflection::ComponentInitializer<Component> type_initializer{};
-		static type_factory register_type();
+		static TypeFactory register_type();
 		static inline Reflection::Type TypeInfo = Reflection::resolve<Component>();
 
 		EntityID m_EntityID;
@@ -149,13 +149,4 @@ namespace Chroma
 		friend struct EntityInfo;
 		friend struct ComponentRegistry;
 	};
-
-#ifdef CHROMA_DEBUG
-
-	template <typename T>
-	concept ComponentType = std::is_base_of_v<Component, T>;
-
-#else
-	#define ComponentType typename
-#endif
 }

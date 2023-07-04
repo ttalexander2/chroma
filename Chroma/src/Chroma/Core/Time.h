@@ -4,9 +4,6 @@
 namespace Chroma
 {
 	/// @brief Time object, for keeping track of the current time.
-	///
-	/// TODO: I'd prefer a static implementation of this, rather than propogated via update functions.
-	///		  For example: Time::Delta could return delta time in seconds.
 	class Time
 	{
 	public:
