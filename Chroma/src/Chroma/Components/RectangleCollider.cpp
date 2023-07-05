@@ -48,7 +48,7 @@ namespace Chroma
 
 	Reflection::TypeFactory<RectangleCollider> RectangleCollider::register_type()
 	{
-		return Reflection::RegisterComponent<RectangleCollider>("RectangleCollider")
+		return Reflection::register_type<RectangleCollider>("RectangleCollider")
 		       .base<Collider>()
 		       .data<&RectangleCollider::GetSize, static_cast<void (RectangleCollider::*)(const Math::vec2 &)>(&RectangleCollider::SetSize)>("Size")
 		       .data<&RectangleCollider::GetRotation, &RectangleCollider::SetRotation>("Rotation");

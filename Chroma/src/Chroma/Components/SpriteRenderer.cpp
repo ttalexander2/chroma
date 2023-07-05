@@ -262,7 +262,7 @@ namespace Chroma
 				.data<SpriteOrigin::Custom>("Custom")
 				.data<SpriteOrigin::Default>("Default");
 
-		return Reflection::RegisterComponent<SpriteRenderer>("SpriteRenderer")
+		return Reflection::register_type<SpriteRenderer>("SpriteRenderer")
 		       .base<Component>()
 		       .data<&SpriteRenderer::Color>("Color")
 		       .data<&SpriteRenderer::Offset>("Offset")

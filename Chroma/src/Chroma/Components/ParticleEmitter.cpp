@@ -37,7 +37,7 @@ namespace Chroma
 				.data<&Particle::Speed>("Speed")
 				.data<&Particle::Angle>("Angle");
 
-		return Reflection::RegisterComponent<ParticleEmitter>("ParticleEmitter")
+		return Reflection::register_type<ParticleEmitter>("ParticleEmitter")
 		       .base<Component>()
 		       .data<&ParticleEmitter::PositionVariance>("PositionVariance")
 		       .data<&ParticleEmitter::StartColor>("StartColor")

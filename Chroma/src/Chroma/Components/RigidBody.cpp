@@ -377,7 +377,7 @@ namespace Chroma
 				.data<BodyType::Kinematic>("Kinematic")
 				.data<BodyType::Dynamic>("Dynamic");
 
-		return Reflection::RegisterComponent<RigidBody>("RigidBody")
+		return Reflection::register_type<RigidBody>("RigidBody")
 		       .base<Component>()
 		       .data<&RigidBody::GetBodyType, &RigidBody::SetBodyType>("BodyType")
 		       .data<&RigidBody::GetLinearVelocity, &RigidBody::SetLinearVelocity>("LinearVelocity")

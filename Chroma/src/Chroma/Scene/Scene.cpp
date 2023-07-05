@@ -80,7 +80,7 @@ namespace Chroma
 			{
 				if (c != nullptr && c->GetType().valid())
 				{
-					auto func = ComponentRegistry::ComponentCopyFunctions()[c->GetType().id()];
+					auto func = ComponentRegistry::ComponentCopyFunctions()[BasicHash<uint32_t>::Hash(c->GetType().name())];
 					if (func)
 					{
 						func(newEntity, &out->Registry, &Registry);
@@ -415,7 +415,7 @@ namespace Chroma
 				if (name)
 					tag.EntityName = name.as<std::string>();
 
-				CHROMA_CORE_TRACE("Deserialized Entity with ID = {0} (hint={1}) (name={2})", newEntity, id, tag.EntityName);
+				//CHROMA_CORE_TRACE("Deserialized Entity with ID = {0} (hint={1}) (name={2})", newEntity, id, tag.EntityName);
 				DeserializeEntity(id, entity, out);
 			}
 		}

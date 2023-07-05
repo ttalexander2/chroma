@@ -108,7 +108,7 @@ namespace Chroma
 
 	Reflection::TypeFactory<PolygonCollider> PolygonCollider::register_type()
 	{
-		return Reflection::RegisterComponent<PolygonCollider>("PolygonCollider")
+		return Reflection::register_type<PolygonCollider>("PolygonCollider")
 				.data<&PolygonCollider::GetVertices, &PolygonCollider::SetVertices>("Vertices");
 	}
 

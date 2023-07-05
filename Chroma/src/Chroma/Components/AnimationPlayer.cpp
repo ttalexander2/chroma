@@ -41,7 +41,7 @@ namespace Chroma
 
 	Reflection::TypeFactory<AnimationPlayer> AnimationPlayer::register_type()
 	{
-		return Reflection::RegisterComponent<AnimationPlayer>("AnimationPlayer")
+		return Reflection::register_type<AnimationPlayer>("AnimationPlayer")
 		       .base<Component>()
 		       .data<&AnimationPlayer::PlayOnStart>("PlayOnStart");
 	}

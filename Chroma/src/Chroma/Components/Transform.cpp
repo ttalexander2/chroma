@@ -18,7 +18,7 @@ namespace Chroma
 
 	Reflection::TypeFactory<Transform> Transform::register_type()
 	{
-		return Reflection::RegisterComponent<Transform>("Transform")
+		return Reflection::register_type<Transform>("Transform")
 		       .base<Component>()
 		       .data<&Transform::Position>("Position")
 		       .data<&Transform::Rotation>("Rotation")

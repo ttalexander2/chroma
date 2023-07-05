@@ -247,9 +247,6 @@ namespace Chroma
 					* rotate(glm::mat4(1.0f), rotation, { 0.0f, 0.0f, 1.0f })
 					* scale(glm::mat4(1.0f), { size, 0.f });
 
-		//if (!s_CullingFrustum.CubeIntersects(glm::min(position, p2), glm::max(position, p2)))
-		//return;
-
 		constexpr size_t quadVertexCount = 4;
 
 		if (s_Data.QuadIndexCount + 6 >= s_Data.MaxIndices)
@@ -340,12 +337,6 @@ namespace Chroma
 					* scale(glm::mat4(1.0f), size);
 
 		glm::vec3 p2 = position + size;
-
-		//CHROMA_CORE_WARN("POS: ({0}, {1}, {2}), SIZE: ({3}, {4}, {5})", position.x, position.y, position.z, size.x, size.y, size.z);
-		//CHROMA_CORE_WARN("MIN: ({0}, {1}, {2}), MAX: ({3}, {4}, {5})", glm::min(position, p2).x, glm::min(position, p2).y, glm::min(position, p2).z, glm::max(position, p2).x, glm::max(position, p2).y, glm::max(position, p2).z);
-
-		//if (!s_CullingFrustum.CubeIntersects(glm::min(position, p2), glm::max(position, p2)))
-		//return;
 
 		if (s_Data.QuadIndexCount + 6 >= s_Data.MaxIndices)
 			FlushAndReset();
@@ -629,24 +620,28 @@ namespace Chroma
 
 	static std::string To_UTF8(const std::u16string &s)
 	{
+		// ReSharper disable once CppDeprecatedEntity
 		std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t> conv;
 		return conv.to_bytes(s);
 	}
 
 	static std::string To_UTF8(const std::u32string &s)
 	{
+		// ReSharper disable once CppDeprecatedEntity
 		std::wstring_convert<std::codecvt_utf8<char32_t>, char32_t> conv;
 		return conv.to_bytes(s);
 	}
 
 	static std::u16string To_UTF16(const std::string &s)
 	{
+		// ReSharper disable once CppDeprecatedEntity
 		std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t> conv;
 		return conv.from_bytes(s);
 	}
 
 	static std::u16string To_UTF16(const std::u32string &s)
 	{
+		// ReSharper disable once CppDeprecatedEntity
 		std::wstring_convert<std::codecvt_utf16<char32_t>, char32_t> conv;
 		std::string bytes = conv.to_bytes(s);
 		return std::u16string(reinterpret_cast<const char16_t *>(bytes.c_str()), bytes.length() / sizeof(char16_t));
@@ -655,12 +650,14 @@ namespace Chroma
 	static std::u32string To_UTF32(const std::u16string &s)
 	{
 		const char16_t *pData = s.c_str();
+		// ReSharper disable once CppDeprecatedEntity
 		std::wstring_convert<std::codecvt_utf16<char32_t>, char32_t> conv;
 		return conv.from_bytes(reinterpret_cast<const char *>(pData), reinterpret_cast<const char *>(pData + s.length()));
 	}
 
 	static std::u32string To_UTF32(const std::string &s)
 	{
+		// ReSharper disable once CppDeprecatedEntity
 		std::wstring_convert<std::codecvt_utf16<char32_t>, char32_t> conv;
 		return conv.from_bytes(s);
 	}

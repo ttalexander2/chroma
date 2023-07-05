@@ -341,7 +341,6 @@ namespace Chroma::Reflection
         {
 	        if (TypeInfo *info = _type.info(); info != nullptr)
         	{
-	        	std::cout << "Registering metadata\n";
         		// Add the metadata
         		((info->metadata[Internal::type_hash_v<Args>] = args), ...);
         	}

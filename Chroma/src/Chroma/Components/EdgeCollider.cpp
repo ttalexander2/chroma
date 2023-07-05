@@ -72,7 +72,7 @@ namespace Chroma
 
 	Reflection::TypeFactory<EdgeCollider> EdgeCollider::register_type()
 	{
-		return Reflection::RegisterComponent<EdgeCollider>("EdgeCollider")
+		return Reflection::register_type<EdgeCollider>("EdgeCollider")
 		       .base<Collider>()
 		       .data<&EdgeCollider::GetV0, &EdgeCollider::SetV0>("V0")
 		       .data<&EdgeCollider::GetV1, &EdgeCollider::SetV1>("V1")

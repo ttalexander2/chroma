@@ -27,7 +27,7 @@ namespace Chroma
 
 	Reflection::TypeFactory<CircleCollider> CircleCollider::register_type()
 	{
-		return Reflection::RegisterComponent<CircleCollider>("CircleCollider")
+		return Reflection::register_type<CircleCollider>("CircleCollider")
 		       .base<Collider>()
 		       .data<&CircleCollider::GetRadius, &CircleCollider::SetRadius>("Radius");
 	}

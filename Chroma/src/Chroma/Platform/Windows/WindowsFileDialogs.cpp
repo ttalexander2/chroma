@@ -2,6 +2,8 @@
 #include "Chroma/Utilities/FileDialogs.h"
 #include "Chroma/Core/Application.h"
 
+#include <codecvt>
+
 #if _WIN32
 #include <commdlg.h>
 #include <shobjidl.h>
@@ -89,7 +91,11 @@ namespace Chroma
 					if (SUCCEEDED(hr))
 					{
 						std::wstring ss(pszFilePath);
-						return std::string(ss.begin(), ss.end());
+
+						// No replacement exists in the standard, so we'll use this.
+						// Could use Win32 functions, but Win32 is annoying and i'm lazy
+						// ReSharper disable once CppDeprecatedEntity
+						return std::wstring_convert<std::codecvt_utf8<wchar_t>>().to_bytes(ss);
 					}
 				}
 			}

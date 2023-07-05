@@ -27,7 +27,7 @@ namespace Chroma
 
 	Reflection::TypeFactory<Camera> Camera::register_type()
 	{
-		auto factory =  Reflection::RegisterComponent<Camera>("Camera")
+		auto factory =  Reflection::register_type<Camera>("Camera")
 		       .base<Component>();
 		
 		       return factory.data<&Camera::GetSize, &Camera::SetSize>("Size")

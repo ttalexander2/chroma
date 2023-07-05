@@ -39,7 +39,12 @@ namespace Chroma
 	    template<typename T>
 	    inline TypeFactory<T> register_type(const std::string &name)
 	    {
-	        return Registry::register_type<T>(name);
+	    	auto factory = Registry::register_type<T>(name);
+	    	if constexpr (std::is_base_of_v<Component, T> && !std::is_abstract_v<T>)
+	    	{
+	    		ComponentRegistry::RegisterComponent<T>(name);
+	    	}
+	        return factory;
 	    }
 
 	    /**
@@ -133,16 +138,7 @@ namespace Chroma
 	    {
 	        return Registry::resolve(name).id();
 	    }
-
-
-
-		template <typename Type, typename = std::enable_if_t<std::is_base_of_v<Component, Type> && !std::is_abstract_v<Type>>>
-		TypeFactory<Type> RegisterComponent(const std::string& name)
-		{
-			auto factory = register_type<Type>(name);
-			ComponentRegistry::RegisterComponent<Type>(name);
-			return factory;
-		}
+		
 
 
 

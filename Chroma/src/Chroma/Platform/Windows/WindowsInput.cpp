@@ -34,7 +34,7 @@ namespace Chroma
 		auto window = static_cast<GLFWwindow *>(Application::Get().GetWindow().GetNativeWindow());
 		double x, y;
 		glfwGetCursorPos(window, &x, &y);
-		return std::pair<float, float>(x, y);
+		return std::pair<float, float>(static_cast<float>(x), static_cast<float>(y));
 	}
 
 

@@ -19,8 +19,6 @@ namespace Chroma::Reflection
 			return;
 		}
 	
-		CHROMA_CORE_TRACE("Serializing: {}", object.type().name());
-	
 		if (object.type().has_metadata<IYamlSerializer*>())
 		{
 			if (const auto serializer = object.type().get_metadata<IYamlSerializer*>())
@@ -105,8 +103,6 @@ namespace Chroma::Reflection
 			CHROMA_CORE_ERROR("Could not deserialize object!");
 			return;
 		}
-
-		CHROMA_CORE_TRACE("Deserializing: {}", object.type().name());
 
 		if (object.type().has_metadata<IYamlSerializer*>())
 		{
