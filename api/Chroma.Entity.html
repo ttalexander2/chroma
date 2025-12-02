@@ -1,0 +1,951 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class Entity
+   </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class Entity
+   ">
+    <meta name="generator" content="docfx 2.56.7.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc">
+    <meta property="docfx:tocrel" content="toc">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+                <span class="navbar-title">
+                  <h3>Chroma Engine</h3>
+                </span>
+              
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+                
+                <ul class="nav level1 navbar-nav">
+                      <li>
+                          <a href="../index.html" title="Home">Home</a>
+                      </li>
+                      <li>
+                          <a href="../articles/intro.html" title="Articles">Articles</a>
+                      </li>
+                      <li>
+                          <a href="../api/index.html" title="Api Documentation">Api Documentation</a>
+                      </li>
+                </ul>    </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list">Search Results for <span></span></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination" data-first="First" data-prev="Previous" data-next="Next" data-last="Last"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div>
+              <div class="sidefilter">
+                <form class="toc-filter">
+                  <span class="glyphicon glyphicon-filter filter-icon"></span>
+                  <input type="text" id="toc_filter_input" placeholder="Enter here to filter..." onkeypress="if(event.keyCode==13) {return false;}">
+                </form>
+              </div>
+              <div class="sidetoc">
+                <div class="toc" id="toc">
+                  
+                  <ul class="nav level1">
+                    <li class="">
+                      <span class="expand-stub"></span>
+                      <a href="Chroma.html" title="Chroma" class="">Chroma</a>
+                        
+                        <ul class="nav level2">
+                          <li class="">
+                            <a href="Chroma.Audio.html" title="Audio" class="">Audio</a>
+                          </li>
+                          <li class="">
+                            <a href="Chroma.AudioSource.html" title="AudioSource" class="">AudioSource</a>
+                          </li>
+                          <li class="">
+                            <a href="Chroma.BoxCollider.html" title="BoxCollider" class="">BoxCollider</a>
+                          </li>
+                          <li class="">
+                            <a href="Chroma.Camera.html" title="Camera" class="">Camera</a>
+                          </li>
+                          <li class="">
+                            <a href="Chroma.CircleCollider.html" title="CircleCollider" class="">CircleCollider</a>
+                          </li>
+                          <li class="">
+                            <a href="Chroma.Color.html" title="Color" class="">Color</a>
+                          </li>
+                          <li class="">
+                            <a href="Chroma.Component.html" title="Component" class="">Component</a>
+                          </li>
+                          <li class="">
+                            <a href="Chroma.Coroutine.html" title="Coroutine" class="">Coroutine</a>
+                          </li>
+                          <li class="">
+                            <a href="Chroma.Coroutine.CoroutineFunction.html" title="Coroutine.CoroutineFunction" class="">Coroutine.CoroutineFunction</a>
+                          </li>
+                          <li class="active">
+                            <a href="Chroma.Entity.html" title="Entity" class="active">Entity</a>
+                          </li>
+                          <li class="">
+                            <a href="Chroma.ExecutionOrder.html" title="ExecutionOrder" class="">ExecutionOrder</a>
+                          </li>
+                          <li class="">
+                            <a href="Chroma.Input.html" title="Input" class="">Input</a>
+                          </li>
+                          <li class="">
+                            <a href="Chroma.Input.ConnectionState.html" title="Input.ConnectionState" class="">Input.ConnectionState</a>
+                          </li>
+                          <li class="">
+                            <a href="Chroma.Input.Gamepad.html" title="Input.Gamepad" class="">Input.Gamepad</a>
+                          </li>
+                          <li class="">
+                            <a href="Chroma.Input.GamepadAxis.html" title="Input.GamepadAxis" class="">Input.GamepadAxis</a>
+                          </li>
+                          <li class="">
+                            <a href="Chroma.Input.GamepadButton.html" title="Input.GamepadButton" class="">Input.GamepadButton</a>
+                          </li>
+                          <li class="">
+                            <a href="Chroma.Input.JoystickHatState.html" title="Input.JoystickHatState" class="">Input.JoystickHatState</a>
+                          </li>
+                          <li class="">
+                            <a href="Chroma.Input.Key.html" title="Input.Key" class="">Input.Key</a>
+                          </li>
+                          <li class="">
+                            <a href="Chroma.Input.Mouse.html" title="Input.Mouse" class="">Input.Mouse</a>
+                          </li>
+                          <li class="">
+                            <a href="Chroma.Log.html" title="Log" class="">Log</a>
+                          </li>
+                          <li class="">
+                            <a href="Chroma.Mathf.html" title="Mathf" class="">Mathf</a>
+                          </li>
+                          <li class="">
+                            <a href="Chroma.ParticleEmitter.html" title="ParticleEmitter" class="">ParticleEmitter</a>
+                          </li>
+                          <li class="">
+                            <a href="Chroma.RuntimeException.html" title="RuntimeException" class="">RuntimeException</a>
+                          </li>
+                          <li class="">
+                            <a href="Chroma.Scene.html" title="Scene" class="">Scene</a>
+                          </li>
+                          <li class="">
+                            <a href="Chroma.SpriteRenderer.html" title="SpriteRenderer" class="">SpriteRenderer</a>
+                          </li>
+                          <li class="">
+                            <a href="Chroma.StateMachine-1.html" title="StateMachine&lt;T&gt;" class="">StateMachine&lt;T&gt;</a>
+                          </li>
+                          <li class="">
+                            <a href="Chroma.Time.html" title="Time" class="">Time</a>
+                          </li>
+                          <li class="">
+                            <a href="Chroma.Transform.html" title="Transform" class="">Transform</a>
+                          </li>
+                          <li class="">
+                            <a href="Chroma.Vector2.html" title="Vector2" class="">Vector2</a>
+                          </li>
+                          <li class="">
+                            <a href="Chroma.Vector3.html" title="Vector3" class="">Vector3</a>
+                          </li>
+                          <li class="">
+                            <a href="Chroma.Vector4.html" title="Vector4" class="">Vector4</a>
+                          </li>
+                        </ul>  </li>
+                  </ul>        </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="Chroma.Entity">
+  
+  
+  <h1 id="Chroma_Entity" data-uid="Chroma.Entity" class="text-break">Class Entity
+  </h1>
+  <div class="markdown level0 summary"><p>Main class for game entities.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><span class="xref">Entity</span></div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="Chroma.html">Chroma</a></h6>
+  <h6><strong>Assembly</strong>: Chroma.Mono.dll</h6>
+  <h5 id="Chroma_Entity_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class Entity</code></pre>
+  </div>
+  <h3 id="constructors">Constructors
+  </h3>
+  
+  
+  <a id="Chroma_Entity__ctor_" data-uid="Chroma.Entity.#ctor*"></a>
+  <h4 id="Chroma_Entity__ctor" data-uid="Chroma.Entity.#ctor">Entity()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected Entity()</code></pre>
+  </div>
+  <h3 id="properties">Properties
+  </h3>
+  
+  
+  <a id="Chroma_Entity_ID_" data-uid="Chroma.Entity.ID*"></a>
+  <h4 id="Chroma_Entity_ID" data-uid="Chroma.Entity.ID">ID</h4>
+  <div class="markdown level1 summary"><p>Numeric ID for the entity.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ulong ID { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.UInt64</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Chroma_Entity_Name_" data-uid="Chroma.Entity.Name*"></a>
+  <h4 id="Chroma_Entity_Name" data-uid="Chroma.Entity.Name">Name</h4>
+  <div class="markdown level1 summary"><p>Name of the entity.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string Name { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  
+  
+  <a id="Chroma_Entity_CreateComponent_" data-uid="Chroma.Entity.CreateComponent*"></a>
+  <h4 id="Chroma_Entity_CreateComponent__1" data-uid="Chroma.Entity.CreateComponent``1">CreateComponent&lt;T&gt;()</h4>
+  <div class="markdown level1 summary"><p>Creates a component of the given type and attaches it to this entity.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public T CreateComponent&lt;T&gt;()
+    where T : Component, new()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">T</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Chroma_Entity_CreateCoroutine_" data-uid="Chroma.Entity.CreateCoroutine*"></a>
+  <h4 id="Chroma_Entity_CreateCoroutine" data-uid="Chroma.Entity.CreateCoroutine">CreateCoroutine()</h4>
+  <div class="markdown level1 summary"><p>Creates a coroutine and attaches it to this entity.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Coroutine CreateCoroutine()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Chroma.Coroutine.html">Coroutine</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Chroma_Entity_CreateCoroutine_" data-uid="Chroma.Entity.CreateCoroutine*"></a>
+  <h4 id="Chroma_Entity_CreateCoroutine_Chroma_Coroutine_CoroutineFunction_" data-uid="Chroma.Entity.CreateCoroutine(Chroma.Coroutine.CoroutineFunction)">CreateCoroutine(Coroutine.CoroutineFunction)</h4>
+  <div class="markdown level1 summary"><p>Creates a coroutine, sets the function provided, and attaches it to this entity.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Coroutine CreateCoroutine(Coroutine.CoroutineFunction function)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Chroma.Coroutine.CoroutineFunction.html">Coroutine.CoroutineFunction</a></td>
+        <td><span class="parametername">function</span></td>
+        <td><p>Function for the coroutine to execute.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Chroma.Coroutine.html">Coroutine</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Chroma_Entity_EarlyStart_" data-uid="Chroma.Entity.EarlyStart*"></a>
+  <h4 id="Chroma_Entity_EarlyStart" data-uid="Chroma.Entity.EarlyStart">EarlyStart()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void EarlyStart()</code></pre>
+  </div>
+  
+  
+  <a id="Chroma_Entity_EarlyUpdate_" data-uid="Chroma.Entity.EarlyUpdate*"></a>
+  <h4 id="Chroma_Entity_EarlyUpdate" data-uid="Chroma.Entity.EarlyUpdate">EarlyUpdate()</h4>
+  <div class="markdown level1 summary"><p>Early-Update function. Called once per frame at the begining of the frame.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void EarlyUpdate()</code></pre>
+  </div>
+  
+  
+  <a id="Chroma_Entity_Finalize_" data-uid="Chroma.Entity.Finalize*"></a>
+  <h4 id="Chroma_Entity_Finalize" data-uid="Chroma.Entity.Finalize">Finalize()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected void Finalize()</code></pre>
+  </div>
+  
+  
+  <a id="Chroma_Entity_FindEntityByName_" data-uid="Chroma.Entity.FindEntityByName*"></a>
+  <h4 id="Chroma_Entity_FindEntityByName_System_String_" data-uid="Chroma.Entity.FindEntityByName(System.String)">FindEntityByName(String)</h4>
+  <div class="markdown level1 summary"><p>Gets an entity its name. Returns <code>null</code> if an entity with the given name does not exist.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Entity FindEntityByName(string name)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">name</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Chroma.Entity.html">Entity</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Chroma_Entity_GetAbsolutePosition_" data-uid="Chroma.Entity.GetAbsolutePosition*"></a>
+  <h4 id="Chroma_Entity_GetAbsolutePosition" data-uid="Chroma.Entity.GetAbsolutePosition">GetAbsolutePosition()</h4>
+  <div class="markdown level1 summary"><p>Calculates the absolute position of an entity. This applies if this entity has a parent.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Vector2 GetAbsolutePosition()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Chroma.Vector2.html">Vector2</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Chroma_Entity_GetChildByName_" data-uid="Chroma.Entity.GetChildByName*"></a>
+  <h4 id="Chroma_Entity_GetChildByName_System_String_" data-uid="Chroma.Entity.GetChildByName(System.String)">GetChildByName(String)</h4>
+  <div class="markdown level1 summary"><p>Gets a child of this entity by its name. Returns <code>null</code> if no such child exists.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Entity GetChildByName(string name)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">name</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Chroma.Entity.html">Entity</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Chroma_Entity_GetChildren_" data-uid="Chroma.Entity.GetChildren*"></a>
+  <h4 id="Chroma_Entity_GetChildren" data-uid="Chroma.Entity.GetChildren">GetChildren()</h4>
+  <div class="markdown level1 summary"><p>Gets a list of this entities' children.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public List&lt;Entity&gt; GetChildren()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Chroma.Entity.html">Entity</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Chroma_Entity_GetComponent_" data-uid="Chroma.Entity.GetComponent*"></a>
+  <h4 id="Chroma_Entity_GetComponent__1" data-uid="Chroma.Entity.GetComponent``1">GetComponent&lt;T&gt;()</h4>
+  <div class="markdown level1 summary"><p>Gets this entity's component of a specific type.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public T GetComponent&lt;T&gt;()
+    where T : Component, new()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">T</span></td>
+        <td><p>Returns component of type <code>T</code>, or <code>null</code> if this entity doesn't have a component of type T.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td><p>Type of component.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Chroma_Entity_GetFirstChild_" data-uid="Chroma.Entity.GetFirstChild*"></a>
+  <h4 id="Chroma_Entity_GetFirstChild" data-uid="Chroma.Entity.GetFirstChild">GetFirstChild()</h4>
+  <div class="markdown level1 summary"><p>Gets the first child of this entity. Returns <code>null</code> if no children exist.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Entity GetFirstChild()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Chroma.Entity.html">Entity</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Chroma_Entity_HasChildren_" data-uid="Chroma.Entity.HasChildren*"></a>
+  <h4 id="Chroma_Entity_HasChildren" data-uid="Chroma.Entity.HasChildren">HasChildren()</h4>
+  <div class="markdown level1 summary"><p>Checks whether the given entity has children.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool HasChildren()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Chroma_Entity_HasComponent_" data-uid="Chroma.Entity.HasComponent*"></a>
+  <h4 id="Chroma_Entity_HasComponent_System_Type_" data-uid="Chroma.Entity.HasComponent(System.Type)">HasComponent(Type)</h4>
+  <div class="markdown level1 summary"><p>Checks whether this entity has a component of a given type.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool HasComponent(Type type)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Type</span></td>
+        <td><span class="parametername">type</span></td>
+        <td><p>Type of component.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Chroma_Entity_HasComponent_" data-uid="Chroma.Entity.HasComponent*"></a>
+  <h4 id="Chroma_Entity_HasComponent__1" data-uid="Chroma.Entity.HasComponent``1">HasComponent&lt;T&gt;()</h4>
+  <div class="markdown level1 summary"><p>Checks whether this entity has a component of a given type.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool HasComponent&lt;T&gt;()
+    where T : Component, new()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td><p>Type of component.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Chroma_Entity_Init_" data-uid="Chroma.Entity.Init*"></a>
+  <h4 id="Chroma_Entity_Init" data-uid="Chroma.Entity.Init">Init()</h4>
+  <div class="markdown level1 summary"><p>Initialization function. Called directly after <code>PreInit()</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void Init()</code></pre>
+  </div>
+  
+  
+  <a id="Chroma_Entity_LateStart_" data-uid="Chroma.Entity.LateStart*"></a>
+  <h4 id="Chroma_Entity_LateStart" data-uid="Chroma.Entity.LateStart">LateStart()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void LateStart()</code></pre>
+  </div>
+  
+  
+  <a id="Chroma_Entity_LateUpdate_" data-uid="Chroma.Entity.LateUpdate*"></a>
+  <h4 id="Chroma_Entity_LateUpdate" data-uid="Chroma.Entity.LateUpdate">LateUpdate()</h4>
+  <div class="markdown level1 summary"><p>Late-Update function. Called once per frame, directly after <code>Update()</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void LateUpdate()</code></pre>
+  </div>
+  
+  
+  <a id="Chroma_Entity_NumberChildren_" data-uid="Chroma.Entity.NumberChildren*"></a>
+  <h4 id="Chroma_Entity_NumberChildren" data-uid="Chroma.Entity.NumberChildren">NumberChildren()</h4>
+  <div class="markdown level1 summary"><p>Gets the number of children for this entity.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public uint NumberChildren()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.UInt32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Chroma_Entity_PostInit_" data-uid="Chroma.Entity.PostInit*"></a>
+  <h4 id="Chroma_Entity_PostInit" data-uid="Chroma.Entity.PostInit">PostInit()</h4>
+  <div class="markdown level1 summary"><p>Post-initialization function. Called directly after <code>Init()</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void PostInit()</code></pre>
+  </div>
+  
+  
+  <a id="Chroma_Entity_PreInit_" data-uid="Chroma.Entity.PreInit*"></a>
+  <h4 id="Chroma_Entity_PreInit" data-uid="Chroma.Entity.PreInit">PreInit()</h4>
+  <div class="markdown level1 summary"><p>Pre-initialization function. Called before init, after the scene is loaded.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void PreInit()</code></pre>
+  </div>
+  
+  
+  <a id="Chroma_Entity_SetAbsolutePosition_" data-uid="Chroma.Entity.SetAbsolutePosition*"></a>
+  <h4 id="Chroma_Entity_SetAbsolutePosition_Chroma_Vector2_" data-uid="Chroma.Entity.SetAbsolutePosition(Chroma.Vector2)">SetAbsolutePosition(Vector2)</h4>
+  <div class="markdown level1 summary"><p>Sets an absolute position of an entity.
+If this entity has a parent, this will set this entity's transform relative to the parent's transform.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void SetAbsolutePosition(Vector2 position)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Chroma.Vector2.html">Vector2</a></td>
+        <td><span class="parametername">position</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Chroma_Entity_Start_" data-uid="Chroma.Entity.Start*"></a>
+  <h4 id="Chroma_Entity_Start" data-uid="Chroma.Entity.Start">Start()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void Start()</code></pre>
+  </div>
+  
+  
+  <a id="Chroma_Entity_Update_" data-uid="Chroma.Entity.Update*"></a>
+  <h4 id="Chroma_Entity_Update" data-uid="Chroma.Entity.Update">Update()</h4>
+  <div class="markdown level1 summary"><p>Update function. Called once per frame, directly after <code>EarlyUpdate()</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void Update()</code></pre>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <div class="toggle-mode">
+                <div class="icon">
+                  <i aria-hidden="true">☀</i>
+                </div>
+                <label class="switch">
+                  <input type="checkbox" id="switch-style">
+                  <span class="slider round"></span>
+                </label>
+                <div class="icon">
+                  <i aria-hidden="true">☾</i>
+                </div>
+              </div>
+          
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <h5>In This Article</h5>
+              <div></div>
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            <div class="pull-left">
+              
+              <span>Generated by <strong>DocFX</strong></span>
+            </div>
+            <div class="toggle-mode pull-right visible-sm visible-xs">
+              <div class="icon">
+                <i aria-hidden="true">☀</i>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="switch-style-m">
+                <span class="slider round"></span>
+              </label>
+              <div class="icon">
+                <i aria-hidden="true">☾</i>
+              </div>
+            </div>
+          </div>
+        </div>
+        <script type="text/javascript" src="../styles/toggle-theme.js"></script>
+      </footer>    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>
